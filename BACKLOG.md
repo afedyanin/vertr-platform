@@ -1,3 +1,14 @@
+# 2025-01-15
+
+## Microsoft MarS
+
+- [MarS: A Financial Market Simulation Engine](https://github.com/microsoft/MarS)
+
+## Microsoft Qlib
+
+- [Qlib: An AI-oriented Quantitative Investment Platform](https://arxiv.org/abs/2009.11189)
+- [Qlib: Github](https://github.com/microsoft/qlib)
+
 # 2025-01-13
 
 ## ASP.NET Aspire

@@ -1,5 +1,14 @@
 # 2025-02-09
 
+### Modular monolith
+
+- [booking-modular-monolith](https://github.com/meysamhadeli/booking-modular-monolith)
+- [A Practical Guide to Modular Monoliths with .NET](https://chrlschn.dev/blog/2024/01/a-practical-guide-to-modular-monoliths/)
+- [modular-monolith-with-ddd](https://github.com/kgrzybek/modular-monolith-with-ddd)
+- [mm-articles](https://awesome-architecture.com/modular-monolith/#articles)
+- [RiverBooks](https://github.com/ardalis/RiverBooks)
+
+
 ## Market data service
 - клиент Т-инвест API
 - бэкграунд сервис для загрузки свечей

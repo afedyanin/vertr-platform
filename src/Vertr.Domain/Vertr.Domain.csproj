@@ -6,12 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Tinkoff.InvestApi" Version="0.6.14" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Vertr.Domain\Vertr.Domain.csproj" />
-  </ItemGroup>
-
 </Project>

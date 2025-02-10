@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Adapters.Tinvest", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Adapters.Tinvest.Tests", "tests\Vertr.Adapters.Tinvest.Tests\Vertr.Adapters.Tinvest.Tests.csproj", "{C6A67A51-DAE9-4758-8C51-9431F3506959}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Domain", "src\Vertr.Domain\Vertr.Domain.csproj", "{9E791279-C698-470F-A8D6-36289BC9F685}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{C6A67A51-DAE9-4758-8C51-9431F3506959}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6A67A51-DAE9-4758-8C51-9431F3506959}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6A67A51-DAE9-4758-8C51-9431F3506959}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E791279-C698-470F-A8D6-36289BC9F685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E791279-C698-470F-A8D6-36289BC9F685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E791279-C698-470F-A8D6-36289BC9F685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E791279-C698-470F-A8D6-36289BC9F685}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +45,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{98019A54-EC55-44A6-A535-BCB3EA6B0A78} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{C6A67A51-DAE9-4758-8C51-9431F3506959} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
+		{9E791279-C698-470F-A8D6-36289BC9F685} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 	EndGlobalSection
 EndGlobal

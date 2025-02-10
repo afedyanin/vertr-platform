@@ -1,15 +1,17 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Tinkoff.InvestApi;
 using Vertr.Domain.Ports;
 
 namespace Vertr.Adapters.Tinvest;
 
 public static class TinvestRegistrar
 {
-    public static IServiceCollection AddTinvestGateway(this IServiceCollection services)
+    public static IServiceCollection AddTinvestGateway(this IServiceCollection services, IConfiguration configuration)
     {
-        // TODO: refactor this
-        var config = new TinvestConfiguration();
-        services.AddInvestApiClient((_, settings) => settings.AccessToken = config.Token);
+        services.AddSingleton(configuration);
+        services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
+        services.AddInvestApiClient((_, settings) => configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
         services.AddScoped<ITinvestGateway, TinvestGateway>();
 
         return services;

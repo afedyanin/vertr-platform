@@ -1,3 +1,14 @@
+# 2025-02-12
+
+## Dapper
+
+- [github](https://github.com/DapperLib/Dapper)
+- [Dapper: опыт применения](https://habr.com/ru/articles/665836/)
+- [PostgreSQL CRUD operations with C# and Dapper](https://www.code4it.dev/blog/postgres-crud-dapper/)
+- [How to handle postgresql db connections with dapper using dependency injection](https://stackoverflow.com/questions/58929543/how-to-handle-postgresql-db-connections-with-dapper-using-dependency-injection-i)
+- [Connect to Postgres in C# with Dapper and ADO.NET](https://jasonwatmore.com/net-7-postgres-connect-to-postgresql-database-with-dapper-in-c-and-aspnet-core)
+- [Configuring Dapper to map snake_case results](https://andrewlock.net/using-snake-case-column-names-with-dapper-and-postgresql/#configuring-dapper-to-map-snake_case-results)
+
 # 2025-02-10
 
 ## Tinvest

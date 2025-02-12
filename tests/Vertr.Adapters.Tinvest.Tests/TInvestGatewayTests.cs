@@ -4,7 +4,8 @@ using Vertr.Domain.Ports;
 
 namespace Vertr.Adapters.Tinvest.Tests;
 
-public class TinvestGatewayTests : IDisposable
+[TestFixture(Category = "integration", Explicit = true)]
+public class TinvestGatewayTests
 {
     private const string _sber_uid = "e6123145-9665-43e0-8413-cd61b8aa9b13";
 
@@ -22,6 +23,12 @@ public class TinvestGatewayTests : IDisposable
         services.AddTinvestGateway(_configuration);
 
         _serviceProvider = services.BuildServiceProvider();
+    }
+
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _serviceProvider.Dispose();
     }
 
     [Test]
@@ -66,11 +73,6 @@ public class TinvestGatewayTests : IDisposable
         {
             Console.WriteLine($"{candle}");
         }
-    }
-
-    public void Dispose()
-    {
-        _serviceProvider?.Dispose();
     }
 
     private static IConfiguration InitConfiguration()

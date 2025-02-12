@@ -3,6 +3,8 @@ using Vertr.Domain.Ports;
 using Vertr.Adapters.Tinvest.Converters;
 using Vertr.Domain;
 using Microsoft.Extensions.Options;
+using DateTime = System.DateTime;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Vertr.Adapters.Tinvest;
 
@@ -31,7 +33,7 @@ internal class TinvestGateway : ITinvestGateway
         return response.Instruments.Convert();
     }
 
-    public async Task<Instrument> GetInstrument(string ticker, string classCode)
+    public async Task<InstrumentDetails> GetInstrument(string ticker, string classCode)
     {
         var request = new Tinkoff.InvestApi.V1.InstrumentRequest
         {
@@ -45,9 +47,29 @@ internal class TinvestGateway : ITinvestGateway
         return response.Instrument.Convert();
     }
 
-    public Task GetCandles()
+    public async Task<IEnumerable<HistoricCandle>> GetCandles(
+        string instrumentId,
+        CandleInterval interval,
+        DateTime from,
+        DateTime to,
+        int? limit)
     {
-        throw new NotImplementedException();
+        var request = new Tinkoff.InvestApi.V1.GetCandlesRequest
+        {
+            From = Timestamp.FromDateTime(from),
+            To = Timestamp.FromDateTime(to),
+            InstrumentId = instrumentId,
+            Interval = interval.Convert(),
+        };
+
+        if (limit.HasValue)
+        {
+            request.Limit = limit.Value;
+        }
+
+        var response = await _investApiClient.MarketData.GetCandlesAsync(request);
+
+        return response.Candles.Convert();
     }
 
 }

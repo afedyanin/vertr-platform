@@ -6,6 +6,8 @@ namespace Vertr.Adapters.Tinvest.Tests;
 
 public class TinvestGatewayTests : IDisposable
 {
+    private const string _sber_uid = "e6123145-9665-43e0-8413-cd61b8aa9b13";
+
     private readonly ServiceProvider _serviceProvider;
 
     private readonly IConfiguration _configuration;
@@ -32,6 +34,37 @@ public class TinvestGatewayTests : IDisposable
         foreach (var instrument in instruments)
         {
             Console.WriteLine($"{instrument}");
+        }
+    }
+
+    [Test]
+    public async Task CanGetInstrument()
+    {
+        var instrument = await Gateway.GetInstrument("SBER", "TQBR");
+
+        Assert.That(instrument, Is.Not.Null);
+
+        Console.WriteLine($"{instrument}");
+    }
+
+    [Test]
+    public async Task CanGetCandles()
+    {
+        var to = DateTime.UtcNow;
+        var from = to.AddDays(-1);
+
+        var candles = await Gateway.GetCandles(
+            _sber_uid,
+            Domain.CandleInterval.Min10,
+            from,
+            to);
+
+        Assert.That(candles, Is.Not.Null);
+        Assert.That(candles.Count, Is.GreaterThanOrEqualTo(1));
+
+        foreach (var candle in candles)
+        {
+            Console.WriteLine($"{candle}");
         }
     }
 

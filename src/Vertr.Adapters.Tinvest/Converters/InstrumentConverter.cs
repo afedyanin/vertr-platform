@@ -24,4 +24,20 @@ internal static class InstrumentConverter
             Ticker = instrument.Ticker,
             Uid = instrument.Uid,
         };
+
+    public static InstrumentDetails Convert(this Tinkoff.InvestApi.V1.Instrument instrument)
+        => new InstrumentDetails
+        {
+            ClassCode = instrument.ClassCode,
+            InstrumentKind = instrument.InstrumentKind.Convert(),
+            InstrumentType = instrument.InstrumentType,
+            Isin = instrument.Isin,
+            Name = instrument.Name,
+            Ticker = instrument.Ticker,
+            Uid = instrument.Uid,
+            Lot = instrument.Lot,
+            Currency = instrument.Currency,
+            Exchange = instrument.Exchange,
+            MinPriceIncrement = instrument.MinPriceIncrement,
+        };
 }

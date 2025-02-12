@@ -15,3 +15,15 @@ public record class Instrument
 
     public InstrumentType InstrumentKind { get; init; }
 }
+
+public record class InstrumentDetails : Instrument
+{
+    public int Lot { get; init; }
+
+    public string? Currency { get; init; }
+
+    public string? Exchange { get; init; }
+
+    public decimal MinPriceIncrement { get; init; }
+
+}

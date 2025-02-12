@@ -1,5 +1,17 @@
 # 2025-02-12
 
+## Quartz
+
+- [GitHub](https://github.com/quartznet/quartznet)
+- [Docs](https://www.quartz-scheduler.net/)
+- [DI integration](https://www.quartz-scheduler.net/documentation/quartz-3.x/packages/microsoft-di-integration.html)
+
+### Cron
+- https://www.freeformatter.com/cron-expression-generator-quartz.html
+- http://www.cronmaker.com/
+- 
+
+
 ## Dapper
 
 - [github](https://github.com/DapperLib/Dapper)

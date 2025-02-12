@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.13.1" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.13.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vertr.Adapters.DataAccess\Vertr.Adapters.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.Adapters.Tinvest\Vertr.Adapters.Tinvest.csproj" />
   </ItemGroup>
 
 </Project>

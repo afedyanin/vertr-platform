@@ -1,9 +1,13 @@
 
+using Quartz;
+using Quartz.Impl;
+using Vertr.Server.QuartzJobs;
+
 namespace Vertr.Server;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +29,30 @@ public class Program
 
         app.UseAuthorization();
 
-
         app.MapControllers();
+
+        // Quartz Jobs
+        /*
+        IJobDetail job = JobBuilder.Create<HelloJob>()
+            .WithIdentity("job1", "group1")
+            .Build();
+
+        ITrigger trigger = TriggerBuilder.Create()
+              .WithIdentity("trigger1", "group1")
+              .StartNow()
+              .WithSimpleSchedule(x => x
+                  .WithIntervalInSeconds(10)
+                  .RepeatForever())
+              .Build();
+
+        StdSchedulerFactory factory = new StdSchedulerFactory();
+        IScheduler scheduler = await factory.GetScheduler();
+
+        // and start it off
+        await scheduler.Start();
+
+        await scheduler.ScheduleJob(job, trigger);
+        */
 
         app.Run();
     }

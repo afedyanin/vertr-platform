@@ -1,7 +1,5 @@
 
-using Quartz;
-using Quartz.Impl;
-using Vertr.Server.QuartzJobs;
+using Vertr.Application;
 
 namespace Vertr.Server;
 
@@ -17,6 +15,8 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.ConfigureQuatrz(builder.Configuration);
+        builder.Services.AddApplication();
 
         var app = builder.Build();
 
@@ -30,29 +30,6 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
-
-        // Quartz Jobs
-        /*
-        IJobDetail job = JobBuilder.Create<HelloJob>()
-            .WithIdentity("job1", "group1")
-            .Build();
-
-        ITrigger trigger = TriggerBuilder.Create()
-              .WithIdentity("trigger1", "group1")
-              .StartNow()
-              .WithSimpleSchedule(x => x
-                  .WithIntervalInSeconds(10)
-                  .RepeatForever())
-              .Build();
-
-        StdSchedulerFactory factory = new StdSchedulerFactory();
-        IScheduler scheduler = await factory.GetScheduler();
-
-        // and start it off
-        await scheduler.Start();
-
-        await scheduler.ScheduleJob(job, trigger);
-        */
 
         app.Run();
     }

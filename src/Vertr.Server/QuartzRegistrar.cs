@@ -1,27 +1,50 @@
 using Quartz;
+using Vertr.Domain;
+using Vertr.Server.QuartzJobs;
 
 namespace Vertr.Server;
 
 internal static class QuartzRegistrar
 {
     // https://github.dev/246850/Calamus.TaskScheduler/blob/00b1c30c21bf23eaa5cd8497359f39f930562d7d/Calamus.TaskScheduler/Startup.cs#L34#L154
-    // https://github.dev/Nfactor26/pixel-identity/blob/fc898f6b2baaa70c0b117d20da93c09054f346f9/src/Pixel.Identity.Provider/Startup.cs#L298#L309
+    // https://www.quartz-scheduler.net/documentation/quartz-3.x/packages/microsoft-di-integration.html#persistent-job-stores
 
-    public static IServiceCollection ConfigureQuatrz(this IServiceCollection services)
+    public static IServiceCollection ConfigureQuatrz(this IServiceCollection services, IConfiguration configuration)
     {
+        // base configuration from appsettings.json
+        services.Configure<QuartzOptions>(configuration.GetSection("Quartz"));
+
+        services.Configure<QuartzOptions>(options =>
+        {
+            options.Scheduling.IgnoreDuplicates = false; // default: false
+            options.Scheduling.OverWriteExistingData = true; // default: true
+        });
+
         services.AddQuartz(options =>
         {
-            options.SchedulerId = "Vertr-Scheduler";
-            options.SchedulerName = "Quartz ASP.NET Core Vertr Scheduler";
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
             options.UseDefaultThreadPool(tp =>
             {
                 tp.MaxConcurrency = 10;
             });
+
+            var jobKey = new JobKey("load tinvest candles job", "market data group");
+
+            options.AddJob<LoadTinvestCandlesJob>(jobKey, j => j
+                   .WithDescription("Load candles from T-Invest API")
+                   .UsingJobData("symbols", "SBER, MGNT")
+                   .UsingJobData("interval", (int)CandleInterval.Min10)
+               );
+
+            options.AddTrigger(t => t
+                  .WithIdentity("Tinvest candles cron Trigger")
+                  .ForJob(jobKey)
+                  .StartAt(DateBuilder.EvenSecondDate(DateTimeOffset.UtcNow.AddSeconds(3)))
+                  .WithCronSchedule("0/10 * * * * ?")
+              );
         });
 
-        // Register the Quartz.NET service and configure it to block shutdown until jobs are complete.
         services.AddQuartzHostedService(options =>
         {
             options.WaitForJobsToComplete = true;

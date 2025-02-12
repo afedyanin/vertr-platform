@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Adapters.DataAccess.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Server", "src\Vertr.Server\Vertr.Server.csproj", "{881D631F-A117-410C-AC89-8A3788A10591}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Application", "src\Vertr.Application\Vertr.Application.csproj", "{7DC851F1-31F8-47FD-AD10-C24EAC772A11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{881D631F-A117-410C-AC89-8A3788A10591}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{881D631F-A117-410C-AC89-8A3788A10591}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{881D631F-A117-410C-AC89-8A3788A10591}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DC851F1-31F8-47FD-AD10-C24EAC772A11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DC851F1-31F8-47FD-AD10-C24EAC772A11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DC851F1-31F8-47FD-AD10-C24EAC772A11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DC851F1-31F8-47FD-AD10-C24EAC772A11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,5 +73,6 @@ Global
 		{1E9DE730-DAF4-4C09-B2CD-34E8A880C7F7} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{4722DB67-3D72-4B6B-BBE6-80CD356BBDA0} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 		{881D631F-A117-410C-AC89-8A3788A10591} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
+		{7DC851F1-31F8-47FD-AD10-C24EAC772A11} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 	EndGlobalSection
 EndGlobal

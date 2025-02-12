@@ -1,3 +1,25 @@
+# 2025-02-13
+
+## TODO
+
+- tinvest options
+- - добавить раздел с маппингами символов в uuid-ы
+  - использовать сеттинги для загрузки свечей
+  - юнит тесты на маппинги
+- appliaction:
+- - add repo
+  - get symbols from config
+  - add tinvest gateway
+  - get last candle
+  - request candles
+  - load candles
+- docker
+- - собрать докер имидж
+  - конфигурация и переменные окружения, порты
+  - собрать docker compose
+
+
+ 
 # 2025-02-12
 
 ## Quartz

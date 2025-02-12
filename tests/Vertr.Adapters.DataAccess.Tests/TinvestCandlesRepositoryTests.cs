@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Vertr.Domain;
 using Vertr.Domain.Ports;
 
 namespace Vertr.Adapters.DataAccess.Tests;
@@ -33,9 +34,9 @@ public class TinvestCandlesRepositoryTests
     public async Task CanGetCandles()
     {
         var to = DateTime.UtcNow;
-        var from = to.AddDays(-10);
+        var from = to.AddDays(-100);
 
-        var candles = await Repo.GetCandles("SBER", Domain.CandleInterval.Min10, from, to);
+        var candles = await Repo.Get("SBER", CandleInterval.Min10, from, to);
 
         Assert.That(candles, Is.Not.Null);
         Assert.That(candles.Count(), Is.GreaterThan(1));
@@ -51,9 +52,9 @@ public class TinvestCandlesRepositoryTests
     public async Task CanGetLastCandles(bool completedOnly, int count)
     {
         var to = DateTime.UtcNow;
-        var from = to.AddDays(-10);
+        var from = to.AddDays(-100);
 
-        var candles = await Repo.GetLastCandles("SBER", Domain.CandleInterval.Min10, count, completedOnly);
+        var candles = await Repo.GetLast("SBER", CandleInterval.Min10, count, completedOnly);
         var hasNonCompletedCandles = candles.Any(c => !c.IsCompleted);
 
         Assert.That(candles, Is.Not.Null);
@@ -70,6 +71,28 @@ public class TinvestCandlesRepositoryTests
         }
     }
 
+    [Test]
+    public async Task CanDeleteCandles()
+    {
+        var to = new DateTime(2025, 02, 12, 11, 10, 0, DateTimeKind.Utc);
+        var from = to.AddDays(-100);
+
+        var deletedCount = await Repo.Delete("TEST", CandleInterval.Min10, from, to);
+
+        Assert.That(deletedCount, Is.GreaterThan(1));
+    }
+
+    [Test]
+    public async Task CanInsertCandles()
+    {
+        var startDate = new DateTime(2025, 02, 10, 6, 0, 0, DateTimeKind.Utc);
+        var candels = GenerateCandles(startDate, 10);
+
+        var inserted = await Repo.Insert("TEST", CandleInterval.Min10, candels);
+
+        Assert.That(inserted, Is.EqualTo(10));
+    }
+
     private static IConfiguration InitConfiguration()
     {
         var config = new ConfigurationBuilder()
@@ -78,5 +101,23 @@ public class TinvestCandlesRepositoryTests
            .Build();
 
         return config;
+    }
+
+    private static IEnumerable<HistoricCandle> GenerateCandles(DateTime startDate, int count, int incMinutes = 10)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            yield return new HistoricCandle
+            {
+                CandleSource = 0,
+                IsCompleted = true,
+                TimeUtc = startDate.AddMinutes(incMinutes * i),
+                Open = 213.13m,
+                Close = 215.34m,
+                High = 234.56m,
+                Low = 206.78m,
+                Volume = 12345,
+            };
+        }
     }
 }

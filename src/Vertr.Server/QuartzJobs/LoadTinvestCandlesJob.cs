@@ -23,6 +23,7 @@ public class LoadTinvestCandlesJob : IJob
         _logger.LogInformation("LoadTinvestCandlesJob starting.");
         var dataMap = context.JobDetail.JobDataMap;
 
+        // TODO: Load this from job settings config section
         var symbolsString = dataMap.GetString("symbols");
         var intervalValue = dataMap.GetInt("interval");
 

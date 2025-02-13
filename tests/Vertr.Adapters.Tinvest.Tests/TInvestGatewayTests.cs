@@ -1,36 +1,8 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Vertr.Domain.Ports;
-
 namespace Vertr.Adapters.Tinvest.Tests;
 
 [TestFixture(Category = "integration", Explicit = true)]
-public class TinvestGatewayTests
+public class TinvestGatewayTests : TinvestTestBase
 {
-    private const string _sber_uid = "e6123145-9665-43e0-8413-cd61b8aa9b13";
-
-    private readonly ServiceProvider _serviceProvider;
-
-    private readonly IConfiguration _configuration;
-
-    protected ITinvestGateway Gateway => _serviceProvider.GetRequiredService<ITinvestGateway>();
-
-    public TinvestGatewayTests()
-    {
-        _configuration = InitConfiguration();
-
-        var services = new ServiceCollection();
-        services.AddTinvestGateway(_configuration);
-
-        _serviceProvider = services.BuildServiceProvider();
-    }
-
-    [OneTimeTearDown]
-    public void TearDown()
-    {
-        _serviceProvider.Dispose();
-    }
-
     [Test]
     public async Task CanFindInstrument()
     {
@@ -44,10 +16,23 @@ public class TinvestGatewayTests
         }
     }
 
-    [Test]
-    public async Task CanGetInstrument()
+    [TestCase("SBER", "TQBR")]
+    [TestCase("SBERP", "TQBR")]
+    [TestCase("T", "TQBR")]
+    [TestCase("VTBR", "TQBR")]
+    [TestCase("GAZP", "TQBR")]
+    [TestCase("LKOH", "TQBR")]
+    [TestCase("ROSN", "TQBR")]
+    [TestCase("AFKS", "TQBR")]
+    [TestCase("MOEX", "TQBR")]
+    [TestCase("GMKN", "TQBR")]
+    [TestCase("MGNT", "TQBR")]
+    [TestCase("X5", "TQBR")]
+    [TestCase("NLMK", "TQBR")]
+    [TestCase("OZON", "TQBR")]
+    public async Task CanGetInstrument(string ticker, string classCode)
     {
-        var instrument = await Gateway.GetInstrument("SBER", "TQBR");
+        var instrument = await Gateway.GetInstrument(ticker, classCode);
 
         Assert.That(instrument, Is.Not.Null);
 
@@ -60,8 +45,10 @@ public class TinvestGatewayTests
         var to = DateTime.UtcNow;
         var from = to.AddDays(-1);
 
+        var sberUid = Settings.GetSymbolId("SBER");
+
         var candles = await Gateway.GetCandles(
-            _sber_uid,
+            sberUid!,
             Domain.CandleInterval.Min10,
             from,
             to);
@@ -73,15 +60,5 @@ public class TinvestGatewayTests
         {
             Console.WriteLine($"{candle}");
         }
-    }
-
-    private static IConfiguration InitConfiguration()
-    {
-        var config = new ConfigurationBuilder()
-           .AddJsonFile("appsettings.test.json")
-           .AddEnvironmentVariables()
-           .Build();
-
-        return config;
     }
 }

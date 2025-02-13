@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace Vertr.Adapters.Tinvest.Tests;
 
 
-public class TInvestSettingsTests
+public class TInvestSettingsTests : TinvestTestBase
 {
     [Test]
     public void CanSerializeSettingsToJson()
@@ -29,7 +29,25 @@ public class TInvestSettingsTests
     }
 
     [Test]
-    public void CanLoadSymbolMappings()
+    public void CanGetSettings()
     {
+        var settings = Settings;
+
+        Assert.That(settings, Is.Not.Null);
+        Assert.That(settings.SymbolMappings, Has.Count.GreaterThan(0));
+    }
+
+    [Test]
+    public void CanGetSymbolIdFromSettings()
+    {
+        var symbolId = Settings.GetSymbolId("SBER");
+        Assert.That(symbolId, Is.EqualTo("e6123145-9665-43e0-8413-cd61b8aa9b13"));
+    }
+
+    [Test]
+    public void GetSymbolIdFromInvalidSymbolReturnsNull()
+    {
+        var symbolId = Settings.GetSymbolId("SSEE");
+        Assert.That(symbolId, Is.Null);
     }
 }

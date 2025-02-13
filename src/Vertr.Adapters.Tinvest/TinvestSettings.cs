@@ -8,4 +8,7 @@ public class TinvestSettings
     public string AccountId { get; set; } = string.Empty;
 
     public IDictionary<string, string> SymbolMappings { get; set; } = new Dictionary<string, string>();
+
+    public string? GetSymbolId(string symbol)
+        => SymbolMappings.TryGetValue(symbol, out var symbolId) ? symbolId : null;
 }

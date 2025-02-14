@@ -5,6 +5,16 @@ using Vertr.Domain;
 
 namespace Vertr.Server.QuartzJobs;
 
+internal static class LoadTinvestCandlesJobKeys
+{
+    public const string Name = "load tinvest candles job";
+    public const string Group = "tinvest";
+    public const string Symbols = "symbols";
+    public const string Interval = "interval";
+
+    public static readonly JobKey Key = new JobKey(Name, Group);
+}
+
 public class LoadTinvestCandlesJob : IJob
 {
     private readonly IMediator _mediator;
@@ -20,12 +30,11 @@ public class LoadTinvestCandlesJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        _logger.LogInformation("LoadTinvestCandlesJob starting.");
-        var dataMap = context.JobDetail.JobDataMap;
+        _logger.LogInformation("Load Tinvest Candles Job starting.");
 
-        // TODO: Load this from job settings config section
-        var symbolsString = dataMap.GetString("symbols");
-        var intervalValue = dataMap.GetInt("interval");
+        var dataMap = context.JobDetail.JobDataMap;
+        var symbolsString = dataMap.GetString(LoadTinvestCandlesJobKeys.Symbols);
+        var intervalValue = dataMap.GetInt(LoadTinvestCandlesJobKeys.Interval);
 
         var request = new LoadTinvestCandlesRequest
         {
@@ -34,6 +43,6 @@ public class LoadTinvestCandlesJob : IJob
         };
 
         await _mediator.Send(request);
-        _logger.LogInformation("LoadTinvestCandlesJob completed.");
+        _logger.LogInformation("Load Tinvest Candles Job completed.");
     }
 }

@@ -29,18 +29,18 @@ internal static class QuartzRegistrar
                 tp.MaxConcurrency = 10;
             });
 
-            var jobKey = new JobKey("load tinvest candles job", "market data group");
-
-            options.AddJob<LoadTinvestCandlesJob>(jobKey, j => j
+            options.AddJob<LoadTinvestCandlesJob>(LoadTinvestCandlesJobKeys.Key, j => j
                    .WithDescription("Load candles from T-Invest API")
-                   .UsingJobData("symbols", "SBER, MGNT")
-                   .UsingJobData("interval", (int)CandleInterval.Min10)
+                   // TODO: Should move it to jobOptions?
+                   .UsingJobData(LoadTinvestCandlesJobKeys.Symbols, "SBER, MGNT")
+                   .UsingJobData(LoadTinvestCandlesJobKeys.Interval, (int)CandleInterval.Min10)
                );
 
             options.AddTrigger(t => t
                   .WithIdentity("Tinvest candles cron Trigger")
-                  .ForJob(jobKey)
+                  .ForJob(LoadTinvestCandlesJobKeys.Key)
                   .StartAt(DateBuilder.EvenSecondDate(DateTimeOffset.UtcNow.AddSeconds(3)))
+                  // TODO: Should move it to jobOptions?
                   .WithCronSchedule("0/10 * * * * ?")
               );
         });

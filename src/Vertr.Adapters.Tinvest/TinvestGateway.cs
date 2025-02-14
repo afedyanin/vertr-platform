@@ -8,7 +8,7 @@ using Google.Protobuf.WellKnownTypes;
 
 namespace Vertr.Adapters.Tinvest;
 
-internal class TinvestGateway : ITinvestGateway
+internal sealed class TinvestGateway : ITinvestGateway
 {
     private readonly InvestApiClient _investApiClient;
     private readonly TinvestSettings _investConfiguration;

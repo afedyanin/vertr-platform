@@ -1,0 +1,7 @@
+services:
+  vertr.server:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=8080
+    ports:
+      - "8080"

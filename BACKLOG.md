@@ -1,3 +1,27 @@
+# 2025-02-14
+
+## Docker
+
+- [Запуск приложения ASP.NET Core в контейнерах Docker](https://learn.microsoft.com/ru-ru/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-9.0)
+- [dotnet-docker](https://github.com/dotnet/dotnet-docker)
+- [Tutorial: Containerize a .NET app](https://learn.microsoft.com/en-us/dotnet/core/docker/build-container?tabs=windows&pivots=dotnet-9-0)
+- [Run an ASP.NET Core app in Docker containers](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-9.0)
+- [Containerize a .NET app with dotnet publish](https://learn.microsoft.com/en-us/dotnet/core/containers/sdk-publish)
+- [Compose sample application: ASP.NET with MS SQL server database](https://github.com/docker/awesome-compose/tree/master/aspnet-mssql)
+- [Use containers for .NET development](https://docs.docker.com/guides/dotnet/develop/)
+- [Building a Multi-Container .NET App Using Docker Desktop](https://www.docker.com/blog/building-multi-container-net-app-using-docker-desktop)
+
+### TODO
+
+- собрать докер имидж
+- конфигурация и переменные окружения, порты
+- собрать docker compose
+
+``` schell
+docker network connect vertr-ml_default infra-pgsql-1
+```
+
+
 # 2025-02-13
 
 ## TODO
@@ -17,10 +41,6 @@
   - [x] get last candle
   - [x] request candles
   - [x] load candles
-- docker
-- - собрать докер имидж
-  - конфигурация и переменные окружения, порты
-  - собрать docker compose
 
 
  

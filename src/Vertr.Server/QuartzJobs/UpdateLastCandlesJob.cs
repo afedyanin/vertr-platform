@@ -7,22 +7,22 @@ namespace Vertr.Server.QuartzJobs;
 
 internal static class LoadTinvestCandlesJobKeys
 {
-    public const string Name = "load tinvest candles job";
-    public const string Group = "tinvest";
+    public const string Name = "Load latest candles job";
+    public const string Group = "Tinvest";
     public const string Symbols = "symbols";
     public const string Interval = "interval";
 
     public static readonly JobKey Key = new JobKey(Name, Group);
 }
 
-public class LoadTinvestCandlesJob : IJob
+public class UpdateLastCandlesJob : IJob
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<LoadTinvestCandlesJob> _logger;
+    private readonly ILogger<UpdateLastCandlesJob> _logger;
 
-    public LoadTinvestCandlesJob(
+    public UpdateLastCandlesJob(
         IMediator mediator,
-        ILogger<LoadTinvestCandlesJob> logger)
+        ILogger<UpdateLastCandlesJob> logger)
     {
         _mediator = mediator;
         _logger = logger;
@@ -30,19 +30,19 @@ public class LoadTinvestCandlesJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        _logger.LogInformation("Load Tinvest Candles Job starting.");
+        _logger.LogInformation($"{LoadTinvestCandlesJobKeys.Name} starting.");
 
         var dataMap = context.JobDetail.JobDataMap;
         var symbolsString = dataMap.GetString(LoadTinvestCandlesJobKeys.Symbols);
         var intervalValue = dataMap.GetInt(LoadTinvestCandlesJobKeys.Interval);
 
-        var request = new LoadTinvestCandlesRequest
+        var request = new UpdateLastCandlesRequest
         {
             Symbols = symbolsString!.Split(','),
             Interval = (CandleInterval)intervalValue
         };
 
         await _mediator.Send(request);
-        _logger.LogInformation("Load Tinvest Candles Job completed.");
+        _logger.LogInformation($"{LoadTinvestCandlesJobKeys.Name} completed.");
     }
 }

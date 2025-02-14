@@ -29,19 +29,21 @@ internal static class QuartzRegistrar
                 tp.MaxConcurrency = 10;
             });
 
-            options.AddJob<LoadTinvestCandlesJob>(LoadTinvestCandlesJobKeys.Key, j => j
-                   .WithDescription("Load candles from T-Invest API")
+            options.AddJob<UpdateLastCandlesJob>(LoadTinvestCandlesJobKeys.Key, j => j
+                   .WithDescription("Load latest candles from Tinvest API")
                    // TODO: Should move it to jobOptions?
-                   .UsingJobData(LoadTinvestCandlesJobKeys.Symbols, "SBER, MGNT")
+                   // .UsingJobData(LoadTinvestCandlesJobKeys.Symbols, "SBER")
+                   .UsingJobData(LoadTinvestCandlesJobKeys.Symbols, "AFKS, MOEX, OZON, SBER")
                    .UsingJobData(LoadTinvestCandlesJobKeys.Interval, (int)CandleInterval.Min10)
                );
 
             options.AddTrigger(t => t
-                  .WithIdentity("Tinvest candles cron Trigger")
+                  .WithIdentity("Tinvest update candles cron trigger")
                   .ForJob(LoadTinvestCandlesJobKeys.Key)
                   .StartAt(DateBuilder.EvenSecondDate(DateTimeOffset.UtcNow.AddSeconds(3)))
                   // TODO: Should move it to jobOptions?
-                  .WithCronSchedule("0/10 * * * * ?")
+                  // https://www.freeformatter.com/cron-expression-generator-quartz.html
+                  .WithCronSchedule("5 1/10,5/10,9/10 * * * ?")
               );
         });
 

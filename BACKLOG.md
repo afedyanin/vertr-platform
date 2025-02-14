@@ -11,12 +11,12 @@
   - [x] использовать сеттинги для загрузки свечей
   - [x] юнит тесты на маппинги
 - appliaction:
-- - add repo
-  - get symbols from config
-  - add tinvest gateway
-  - get last candle
-  - request candles
-  - load candles
+- - [x] add repo
+  - [x] get symbols from config
+  - [x] add tinvest gateway
+  - [x] get last candle
+  - [x] request candles
+  - [x] load candles
 - docker
 - - собрать докер имидж
   - конфигурация и переменные окружения, порты

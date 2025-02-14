@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,7 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vertr.Adapters.Tinvest\Vertr.Adapters.Tinvest.csproj" />
     <ProjectReference Include="..\Vertr.Domain\Vertr.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Vertr.Application.Tests"/>
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,21 @@
 # 2025-02-14
 
+### TODO
+
+- prediction API client: models+refit
+- signal generator + job
+- tinvest extensions
+- - get positions
+  - get operations
+  - exec order
+
+## Http files
+
+- [Use .http files in Visual Studio 2022](https://learn.microsoft.com/en-us/aspnet/core/test/http-files?view=aspnetcore-9.0)
+- [Использование HTTP-файлов в Visual Studio 2022](https://learn.microsoft.com/ru-ru/aspnet/core/test/http-files?view=aspnetcore-9.0)
+- [What is Api.http file in .NET 8](https://stackoverflow.com/questions/78119582/what-is-api-http-file-in-net-8)
+- [.http Files Explained](https://www.rahulpnath.com/blog/http-files-asp-net-core-dotnet/)
+
 ## Docker
 
 - [Запуск приложения ASP.NET Core в контейнерах Docker](https://learn.microsoft.com/ru-ru/aspnet/core/host-and-deploy/docker/building-net-docker-images?view=aspnetcore-9.0)
@@ -13,9 +29,9 @@
 
 ### TODO
 
-- собрать докер имидж
-- конфигурация и переменные окружения, порты
-- собрать docker compose
+- [x] собрать докер имидж
+- [x] конфигурация и переменные окружения, порты
+- [x] собрать docker compose
 
 ``` schell
 docker network connect vertr-ml_default infra-pgsql-1

@@ -32,6 +32,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Application.Tests", "
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2E6D2464-B31B-4041-A0E9-33209C7B76BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Adapters.Prediction", "src\Vertr.Adapters.Prediction\Vertr.Adapters.Prediction.csproj", "{614858B8-2981-4C30-94DA-B128F680DD1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Adapters.Prediction.Tests", "tests\Vertr.Adapters.Prediction.Tests\Vertr.Adapters.Prediction.Tests.csproj", "{9373B311-99B6-4FEA-9DC0-7C19F327D7C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,14 @@ Global
 		{2E6D2464-B31B-4041-A0E9-33209C7B76BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E6D2464-B31B-4041-A0E9-33209C7B76BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E6D2464-B31B-4041-A0E9-33209C7B76BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{614858B8-2981-4C30-94DA-B128F680DD1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{614858B8-2981-4C30-94DA-B128F680DD1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{614858B8-2981-4C30-94DA-B128F680DD1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{614858B8-2981-4C30-94DA-B128F680DD1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9373B311-99B6-4FEA-9DC0-7C19F327D7C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9373B311-99B6-4FEA-9DC0-7C19F327D7C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9373B311-99B6-4FEA-9DC0-7C19F327D7C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9373B311-99B6-4FEA-9DC0-7C19F327D7C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,5 +99,7 @@ Global
 		{881D631F-A117-410C-AC89-8A3788A10591} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{7DC851F1-31F8-47FD-AD10-C24EAC772A11} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{93F12324-95E6-4407-9F94-42F097C9A8D5} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
+		{614858B8-2981-4C30-94DA-B128F680DD1F} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
+		{9373B311-99B6-4FEA-9DC0-7C19F327D7C3} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 	EndGlobalSection
 EndGlobal

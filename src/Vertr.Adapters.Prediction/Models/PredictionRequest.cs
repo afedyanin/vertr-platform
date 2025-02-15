@@ -2,19 +2,19 @@ namespace Vertr.Adapters.Prediction.Models;
 
 internal record class PredictionRequest
 {
-    public string Symbol { get; set; }
+    public string Symbol { get; set; } = string.Empty;
 
     public int Interval { get; set; }
 
-    public PredictorType Predictor { get; set; }
+    public string Predictor { get; set; } = string.Empty;
 
-    public Algo Algo { get; set; }
+    public string Algo { get; set; } = string.Empty;
 
     public int CandlesCount { get; set; }
 
     public bool CompletedCandelsOnly { get; set; }
 
-    public string CandlesSource { get; set; }
+    public string CandlesSource { get; set; } = string.Empty;
 
     /*
      class PredictionRequest(BaseModel):

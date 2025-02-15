@@ -1,4 +1,5 @@
 namespace Vertr.Adapters.Prediction.Models;
+
 internal enum Action
 {
     Hold = 0,

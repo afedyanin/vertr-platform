@@ -1,6 +1,6 @@
-namespace Vertr.Adapters.Prediction.Models;
+namespace Vertr.Domain;
 
-internal record class PredictorType(string Name)
+public record class PredictorType(string Name)
 {
     public static readonly PredictorType Sb3 = new PredictorType("Sb3");
     public static readonly PredictorType RandomWalk = new PredictorType("RandomWalk");

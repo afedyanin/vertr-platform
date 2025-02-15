@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using Vertr.Adapters.Prediction.Converters;
 using Vertr.Adapters.Prediction.Models;
@@ -56,5 +58,22 @@ public class PredictionServiceTests
         {
             Console.WriteLine($"{item.Item1:O} : {item.Item2}");
         }
+    }
+
+    [Test]
+    public void CanUsePredictionServiceFromDi()
+    {
+        var configuration = ConfigFactory.GetConfiguration();
+        var predictionSettings = new PredictionSettings();
+        configuration.GetSection(nameof(PredictionSettings)).Bind(predictionSettings);
+
+        Assert.That(predictionSettings.BaseAddress, Is.EqualTo("http://127.0.0.1:8081"));
+
+        var services = new ServiceCollection();
+        services.AddPredictions(c => c.BaseAddress = new Uri(predictionSettings.BaseAddress));
+        var serviceProvider = services.BuildServiceProvider();
+
+        var service = serviceProvider.GetRequiredService<IPredictionService>();
+        Assert.That(service, Is.Not.Null);
     }
 }

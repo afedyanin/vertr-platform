@@ -6,7 +6,7 @@ using Vertr.Domain;
 using Vertr.Domain.Ports;
 
 namespace Vertr.Application.Candles;
-internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesRequest>
+internal class UpdateLastCandlesHandler : IRequestHandler<GenerateSignalsRequest>
 {
     private readonly ITinvestCandlesRepository _repository;
     private readonly ITinvestGateway _gateway;
@@ -26,7 +26,7 @@ internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesReque
         _tinvestSettings = settings.Value;
     }
 
-    public async Task Handle(UpdateLastCandlesRequest request, CancellationToken cancellationToken)
+    public async Task Handle(GenerateSignalsRequest request, CancellationToken cancellationToken)
     {
         var tasks = new List<Task>();
 

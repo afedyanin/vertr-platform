@@ -1,8 +1,8 @@
 using MediatR;
 using Vertr.Domain;
 
-namespace Vertr.Application.Candles;
-public class GenerateSignalsRequest : IRequest
+namespace Vertr.Application.Signals;
+internal class GenerateSignalsRequest : IRequest
 {
     public IEnumerable<string> Symbols { get; set; } = [];
 

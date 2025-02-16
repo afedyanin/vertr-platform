@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Vertr.Application.Tests"/>
+    <InternalsVisibleTo Include="Vertr.Application.Tests" />
   </ItemGroup>
 
 </Project>

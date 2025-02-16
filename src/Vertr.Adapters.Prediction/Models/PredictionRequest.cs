@@ -14,7 +14,7 @@ internal record class PredictionRequest
 
     public bool CompletedCandelsOnly { get; set; }
 
-    public string CandlesSource { get; set; } = string.Empty;
+    public string CandlesSource { get; set; } = "tinvest"; // "synthetic";
 
     /*
      class PredictionRequest(BaseModel):

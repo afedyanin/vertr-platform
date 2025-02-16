@@ -16,7 +16,7 @@ public class TinvestCandlesRepositoryTests
 
     public TinvestCandlesRepositoryTests()
     {
-        _configuration = InitConfiguration();
+        _configuration = ConfigFactory.InitConfiguration();
 
         var services = new ServiceCollection();
         services.AddDataAccess(_configuration);
@@ -91,16 +91,6 @@ public class TinvestCandlesRepositoryTests
         var inserted = await Repo.Insert("TEST", CandleInterval.Min10, candels);
 
         Assert.That(inserted, Is.EqualTo(10));
-    }
-
-    private static IConfiguration InitConfiguration()
-    {
-        var config = new ConfigurationBuilder()
-           .AddJsonFile("appsettings.test.json")
-           .AddEnvironmentVariables()
-           .Build();
-
-        return config;
     }
 
     private static IEnumerable<HistoricCandle> GenerateCandles(DateTime startDate, int count, int incMinutes = 10)

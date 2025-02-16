@@ -11,7 +11,9 @@ public static class DataAccessRegistrar
         services.AddSingleton(configuration);
         var connectionString = configuration.GetConnectionString(ConnectionStringName);
         services.AddSingleton<IDbConnectionFactory>(sp => new DbConnectionFactory(connectionString!));
+
         services.AddScoped<ITinvestCandlesRepository, TinvestCandlesRepository>();
+        services.AddScoped<ITradingSignalsRepository, TradingSignalsRepository>();
 
         return services;
     }

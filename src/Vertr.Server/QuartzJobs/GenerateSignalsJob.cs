@@ -1,6 +1,6 @@
 using MediatR;
 using Quartz;
-using Vertr.Application.Candles;
+using Vertr.Application.Signals;
 using Vertr.Domain;
 
 namespace Vertr.Server.QuartzJobs;
@@ -11,6 +11,8 @@ internal static class GenerateSignalsJobKeys
     public const string Group = "vertr";
     public const string Symbols = "symbols";
     public const string Interval = "interval";
+    public const string PredictorType = "predictor_type";
+    public const string Sb3Algo = "sb3_algo";
 
     public static readonly JobKey Key = new JobKey(Name, Group);
 }
@@ -35,11 +37,15 @@ public class GenerateSignalsJob : IJob
         var dataMap = context.JobDetail.JobDataMap;
         var symbolsString = dataMap.GetString(GenerateSignalsJobKeys.Symbols);
         var intervalValue = dataMap.GetInt(GenerateSignalsJobKeys.Interval);
+        var predictorType = new PredictorType(dataMap.GetString(GenerateSignalsJobKeys.PredictorType)!);
+        var sb3Algo = new Sb3Algo(dataMap.GetString(GenerateSignalsJobKeys.Sb3Algo)!);
 
         var request = new GenerateSignalsRequest
         {
             Symbols = symbolsString!.Split(','),
-            Interval = (CandleInterval)intervalValue
+            Interval = (CandleInterval)intervalValue,
+            PredictorType = predictorType,
+            Sb3Algo = sb3Algo
         };
 
         await _mediator.Send(request);

@@ -36,7 +36,7 @@ public class UpdateLastCandlesJob : IJob
         var symbolsString = dataMap.GetString(UpdateTinvestCandlesJobKeys.Symbols);
         var intervalValue = dataMap.GetInt(UpdateTinvestCandlesJobKeys.Interval);
 
-        var request = new GenerateSignalsRequest
+        var request = new UpdateLastCandlesRequest
         {
             Symbols = symbolsString!.Split(','),
             Interval = (CandleInterval)intervalValue

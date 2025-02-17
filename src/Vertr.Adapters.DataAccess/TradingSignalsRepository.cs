@@ -44,7 +44,7 @@ internal class TradingSignalsRepository : ITradingSignalsRepository
                 TimeUtc = row.time_utc,
                 CandleInterval = (CandleInterval)row.interval,
                 CandlesSource = row.candles_source,
-                Quantity = row.quantity,
+                Action = (TradeAction)row.action,
                 PredictorType = new PredictorType(row.predictor),
                 Sb3Algo = new Sb3Algo(row.algo),
             }
@@ -77,9 +77,9 @@ internal class TradingSignalsRepository : ITradingSignalsRepository
     public async Task<int> Insert(TradingSignal signal)
     {
         var sql = @$"INSERT INTO {_trading_signals_table}
-        (id, time_utc, symbol, quantity, interval, predictor, algo, candles_source)
+        (id, time_utc, symbol, action, interval, predictor, algo, candles_source)
         VALUES
-        (@Id, @TimeUtc, @Symbol, @Quantity, @Interval, @Predictor, @Algo, @CandlesSource)";
+        (@Id, @TimeUtc, @Symbol, @Action, @Interval, @Predictor, @Algo, @CandlesSource)";
 
         using var connection = _connectionFactory.GetConnection();
 
@@ -88,7 +88,7 @@ internal class TradingSignalsRepository : ITradingSignalsRepository
             signal.Id,
             signal.TimeUtc,
             signal.Symbol,
-            signal.Quantity,
+            signal.Action,
             Interval = signal.CandleInterval,
             Predictor = signal.PredictorType!.Name,
             Algo = signal.Sb3Algo!.Name,

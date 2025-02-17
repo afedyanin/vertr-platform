@@ -9,6 +9,8 @@ internal static class QuartzRegistrar
     // TODO: Should move it to config?
     private static readonly string _symbols = "SBER"; // "AFKS, MOEX, OZON, SBER";
     private static readonly CandleInterval _candleInterval = CandleInterval.Min10;
+    private static readonly PredictorType _predictorType = PredictorType.Sb3;
+    private static readonly Sb3Algo _sb3Algo = Sb3Algo.DQN;
 
     public static IServiceCollection ConfigureQuatrz(this IServiceCollection services, IConfiguration configuration)
     {
@@ -44,13 +46,15 @@ internal static class QuartzRegistrar
               );
 
             options.AddJob<GenerateSignalsJob>(GenerateSignalsJobKeys.Key, j => j
-                   .WithDescription("Generate trading signals from last candle")
+                   .WithDescription("Generate DQN trading signals")
                    .UsingJobData(GenerateSignalsJobKeys.Symbols, _symbols)
                    .UsingJobData(GenerateSignalsJobKeys.Interval, (int)_candleInterval)
+                   .UsingJobData(GenerateSignalsJobKeys.PredictorType, _predictorType.Name)
+                   .UsingJobData(GenerateSignalsJobKeys.Sb3Algo, _sb3Algo.Name)
                );
 
             options.AddTrigger(t => t
-                  .WithIdentity("Generate trading signals cron trigger")
+                  .WithIdentity("Generate DQN trading signals cron trigger")
                   .ForJob(GenerateSignalsJobKeys.Key)
                   .WithCronSchedule("10 9/10 * * * ?")
               );

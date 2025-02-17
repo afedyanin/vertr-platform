@@ -2,7 +2,7 @@ using MediatR;
 using Vertr.Domain;
 
 namespace Vertr.Application.Candles;
-public class GenerateSignalsRequest : IRequest
+public class UpdateLastCandlesRequest : IRequest
 {
     public IEnumerable<string> Symbols { get; set; } = [];
 

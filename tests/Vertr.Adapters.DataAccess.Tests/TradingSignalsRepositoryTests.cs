@@ -41,7 +41,7 @@ public class TradingSignalsRepositoryTests
             CandlesSource = "tinvest",
             PredictorType = PredictorType.Sb3,
             Sb3Algo = Sb3Algo.SAC,
-            Quantity = 1,
+            Action = TradeAction.Sell,
             TimeUtc = DateTime.UtcNow,
         };
 

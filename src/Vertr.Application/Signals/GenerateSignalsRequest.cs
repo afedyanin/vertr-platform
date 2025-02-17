@@ -2,9 +2,13 @@ using MediatR;
 using Vertr.Domain;
 
 namespace Vertr.Application.Signals;
-internal class GenerateSignalsRequest : IRequest
+public class GenerateSignalsRequest : IRequest
 {
     public IEnumerable<string> Symbols { get; set; } = [];
 
     public CandleInterval Interval { get; set; }
+
+    public PredictorType PredictorType { get; set; } = PredictorType.Undefined;
+
+    public Sb3Algo Sb3Algo { get; set; } = Sb3Algo.Undefined;
 }

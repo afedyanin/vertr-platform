@@ -47,7 +47,7 @@ public class UpdateLastCandlesHandlerTests : ApplicationTestBase
     {
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
 
-        var request = new GenerateSignalsRequest
+        var request = new UpdateLastCandlesRequest
         {
             Symbols = [_symbol],
             Interval = _interval,
@@ -63,7 +63,7 @@ public class UpdateLastCandlesHandlerTests : ApplicationTestBase
     {
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
 
-        var request = new GenerateSignalsRequest
+        var request = new UpdateLastCandlesRequest
         {
             Symbols = ["AFKS", "MOEX", "OZON"],
             Interval = _interval,

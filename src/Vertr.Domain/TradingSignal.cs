@@ -7,7 +7,7 @@ public record class TradingSignal
 
     public string Symbol { get; set; } = string.Empty;
 
-    public int Quantity { get; set; }
+    public TradeAction Action { get; set; }
 
     public CandleInterval CandleInterval { get; set; }
 

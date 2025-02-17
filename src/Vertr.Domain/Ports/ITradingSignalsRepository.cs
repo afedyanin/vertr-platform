@@ -6,7 +6,7 @@ public interface ITradingSignalsRepository
 
     Task<IEnumerable<TradingSignal>> GetLast(string symbol, CandleInterval interval, int count = 10);
 
-    Task<int> Insert(IEnumerable<TradingSignal> signals);
+    Task<int> Insert(TradingSignal signal);
 
     Task<int> Delete(Guid signalId);
 }

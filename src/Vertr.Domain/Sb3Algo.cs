@@ -1,6 +1,7 @@
 namespace Vertr.Domain;
 public record class Sb3Algo(string Name)
 {
+    public static readonly Sb3Algo Undefined = new Sb3Algo("Undefined");
     public static readonly Sb3Algo A2C = new Sb3Algo("a2c");
     public static readonly Sb3Algo DDPG = new Sb3Algo("ddpg");
     public static readonly Sb3Algo DQN = new Sb3Algo("dqn");

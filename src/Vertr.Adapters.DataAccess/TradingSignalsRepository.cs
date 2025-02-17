@@ -34,7 +34,21 @@ internal class TradingSignalsRepository : ITradingSignalsRepository
         };
 
         using var connection = _connectionFactory.GetConnection();
-        var res = await connection.QueryAsync<TradingSignal>(sql, param);
+        var dyn = await connection.QueryAsync(sql, param);
+
+        var res = dyn.Select(row =>
+            new TradingSignal
+            {
+                Id = row.id,
+                Symbol = row.symbol,
+                TimeUtc = row.time_utc,
+                CandleInterval = (CandleInterval)row.interval,
+                CandlesSource = row.candles_source,
+                Quantity = row.quantity,
+                PredictorType = new PredictorType(row.predictor),
+                Sb3Algo = new Sb3Algo(row.algo),
+            }
+        );
 
         return res;
     }
@@ -60,9 +74,30 @@ internal class TradingSignalsRepository : ITradingSignalsRepository
         return res;
     }
 
-    public Task<int> Insert(IEnumerable<TradingSignal> signals)
+    public async Task<int> Insert(TradingSignal signal)
     {
-        throw new NotImplementedException();
+        var sql = @$"INSERT INTO {_trading_signals_table}
+        (id, time_utc, symbol, quantity, interval, predictor, algo, candles_source)
+        VALUES
+        (@Id, @TimeUtc, @Symbol, @Quantity, @Interval, @Predictor, @Algo, @CandlesSource)";
+
+        using var connection = _connectionFactory.GetConnection();
+
+        var param = new
+        {
+            signal.Id,
+            signal.TimeUtc,
+            signal.Symbol,
+            signal.Quantity,
+            Interval = signal.CandleInterval,
+            Predictor = signal.PredictorType!.Name,
+            Algo = signal.Sb3Algo!.Name,
+            signal.CandlesSource,
+        };
+
+        var res = await connection.ExecuteAsync(sql, param);
+
+        return res;
     }
 
     public async Task<int> Delete(Guid signalId)

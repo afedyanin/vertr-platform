@@ -11,9 +11,9 @@ public record class TradingSignal
 
     public CandleInterval CandleInterval { get; set; }
 
-    public PredictorType? PredictorType { get; set; }
+    public PredictorType PredictorType { get; set; } = PredictorType.Undefined;
 
-    public Sb3Algo? Sb3Algo { get; set; }
+    public Sb3Algo Sb3Algo { get; set; } = Sb3Algo.Undefined;
 
     public string CandlesSource { get; set; } = string.Empty;
 }

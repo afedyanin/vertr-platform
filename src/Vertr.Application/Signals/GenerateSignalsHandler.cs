@@ -47,7 +47,7 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
         _logger.LogDebug($"Generating trading signals for {request.Symbols.Count()} symbols completed.");
     }
 
-    private async Task HandleSymbol(
+    internal async Task HandleSymbol(
         string symbol,
         CandleInterval interval,
         PredictorType predictorType,
@@ -110,7 +110,7 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
         }
     }
 
-    private async Task<bool> ShouldGenerateNewSignal(string symbol, CandleInterval interval)
+    internal async Task<bool> ShouldGenerateNewSignal(string symbol, CandleInterval interval)
     {
         var candles = await _tinvestCandlesRepository.GetLast(symbol, interval, 1, false);
 

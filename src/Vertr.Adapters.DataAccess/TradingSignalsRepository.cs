@@ -35,20 +35,7 @@ internal class TradingSignalsRepository : ITradingSignalsRepository
 
         using var connection = _connectionFactory.GetConnection();
         var dyn = await connection.QueryAsync(sql, param);
-
-        var res = dyn.Select(row =>
-            new TradingSignal
-            {
-                Id = row.id,
-                Symbol = row.symbol,
-                TimeUtc = row.time_utc,
-                CandleInterval = (CandleInterval)row.interval,
-                CandlesSource = row.candles_source,
-                Action = (TradeAction)row.action,
-                PredictorType = new PredictorType(row.predictor),
-                Sb3Algo = new Sb3Algo(row.algo),
-            }
-        );
+        var res = TradingSignalsFromDynamic(dyn);
 
         return res;
     }
@@ -69,7 +56,8 @@ internal class TradingSignalsRepository : ITradingSignalsRepository
         };
 
         using var connection = _connectionFactory.GetConnection();
-        var res = await connection.QueryAsync<TradingSignal>(sql, param);
+        var dyn = await connection.QueryAsync(sql, param);
+        var res = TradingSignalsFromDynamic(dyn);
 
         return res;
     }
@@ -112,6 +100,30 @@ internal class TradingSignalsRepository : ITradingSignalsRepository
 
         using var connection = _connectionFactory.GetConnection();
         var res = await connection.ExecuteAsync(sql, param);
+
+        return res;
+    }
+
+    private static IEnumerable<TradingSignal> TradingSignalsFromDynamic(IEnumerable<dynamic>? dyn)
+    {
+        if (dyn == null || !dyn.Any())
+        {
+            return [];
+        }
+
+        var res = dyn.Select(row =>
+            new TradingSignal
+            {
+                Id = row.id,
+                Symbol = row.symbol,
+                TimeUtc = row.time_utc,
+                CandleInterval = (CandleInterval)row.interval,
+                CandlesSource = row.candles_source,
+                Action = (TradeAction)row.action,
+                PredictorType = new PredictorType(row.predictor),
+                Sb3Algo = new Sb3Algo(row.algo),
+            }
+        );
 
         return res;
     }

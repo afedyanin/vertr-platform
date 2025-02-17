@@ -1,17 +1,18 @@
-# 2025-02-15
+# 2025-02-17
 
 ## TODO
 
-- [ ] signal generator + job
-- tinvest extensions
+- - tinvest extensions
 - - get positions
   - get operations
   - exec order
 
 
-# 2025-02-14
+# 2025-02-15
 
-### TODO
+- [x] signal generator + job
+
+# 2025-02-14
 
 - [x] prediction API client: models+refit
 

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using DateTime = System.DateTime;
 using Google.Protobuf.WellKnownTypes;
 
+
 namespace Vertr.Adapters.Tinvest;
 
 internal sealed class TinvestGateway : ITinvestGateway
@@ -72,4 +73,35 @@ internal sealed class TinvestGateway : ITinvestGateway
         return response.Candles.Convert();
     }
 
+    public async Task<string> CreateSandboxAccount(string name)
+    {
+        var request = new Tinkoff.InvestApi.V1.OpenSandboxAccountRequest
+        {
+            Name = name,
+        };
+
+        var response = await _investApiClient.Sandbox.OpenSandboxAccountAsync(request);
+
+        return response.AccountId;
+    }
+
+    public async Task<Money> SandboxPayIn(string accountId, Money amount)
+    {
+        var request = new Tinkoff.InvestApi.V1.SandboxPayInRequest
+        {
+            AccountId = accountId,
+            Amount = amount.Convert(),
+        };
+
+        var response = await _investApiClient.Sandbox.SandboxPayInAsync(request);
+
+        return response.Balance.Convert();
+    }
+
+    public async Task<IEnumerable<Account>> GetAccounts()
+    {
+        var response = await _investApiClient.Users.GetAccountsAsync();
+
+        return response.Accounts;
+    }
 }

@@ -5,8 +5,7 @@ namespace Vertr.Adapters.Tinvest.Converters;
 internal static class CandleIntervalConverter
 {
     public static Tinkoff.InvestApi.V1.CandleInterval Convert(this CandleInterval candleInterval)
-    {
-        return candleInterval switch
+        => candleInterval switch
         {
             CandleInterval.Unspecified => Tinkoff.InvestApi.V1.CandleInterval.Unspecified,
             CandleInterval.Day1 => Tinkoff.InvestApi.V1.CandleInterval.Day,
@@ -17,5 +16,4 @@ internal static class CandleIntervalConverter
             CandleInterval.Min1 => Tinkoff.InvestApi.V1.CandleInterval._1Min,
             _ => throw new InvalidOperationException($"Unknown candle interval={candleInterval}"),
         };
-    }
 }

@@ -4,8 +4,7 @@ namespace Vertr.Adapters.Tinvest.Converters;
 internal static class InstrumentTypeConverter
 {
     public static InstrumentType Convert(this Tinkoff.InvestApi.V1.InstrumentType instrumentIdType)
-    {
-        return instrumentIdType switch
+        => instrumentIdType switch
         {
             Tinkoff.InvestApi.V1.InstrumentType.Unspecified => InstrumentType.Unspecified,
             Tinkoff.InvestApi.V1.InstrumentType.Bond => InstrumentType.Bond,
@@ -20,5 +19,4 @@ internal static class InstrumentTypeConverter
             Tinkoff.InvestApi.V1.InstrumentType.Commodity => InstrumentType.Commodity,
             _ => throw new InvalidOperationException($"Unknown instrument type={instrumentIdType}"),
         };
-    }
 }

@@ -1,5 +1,7 @@
+using Vertr.Domain.Enums;
+
 namespace Vertr.Domain;
-public record class OrderResponse
+public record class PostOrderResponse
 {
     // Биржевой идентификатор заявки.
     public string OrderId { get; set; } = string.Empty;
@@ -7,14 +9,8 @@ public record class OrderResponse
     // UID идентификатор инструмента.
     public string OrderRequestId { get; set; } = string.Empty;
 
-    // Идентификатор трекинга
-    public string TrackingId { get; set; } = string.Empty;
-
-    // Серверное время
-    public DateTime ServerTime { get; set; }
-
     // Текущий статус заявки.
-    public OrderExecutionStatus Status { get; set; }
+    public OrderExecutionReportStatus ExecutionReportStatus { get; set; }
 
     // Запрошено лотов.
     public long LotsRequested { get; set; }
@@ -51,5 +47,5 @@ public record class OrderResponse
     public string Message { get; set; } = string.Empty;
 
     // UID идентификатор инструмента.
-    public string InstrumentId { get; set; } = string.Empty;
+    public string InstrumentUid { get; set; } = string.Empty;
 }

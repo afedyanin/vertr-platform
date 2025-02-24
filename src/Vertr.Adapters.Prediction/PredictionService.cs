@@ -1,6 +1,7 @@
 using Vertr.Adapters.Prediction.Converters;
 using Vertr.Adapters.Prediction.Models;
 using Vertr.Domain;
+using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 
 namespace Vertr.Adapters.Prediction;

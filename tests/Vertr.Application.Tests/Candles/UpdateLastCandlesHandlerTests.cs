@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Application.Candles;
+using Vertr.Domain.Enums;
 
 namespace Vertr.Application.Tests.Candles;
 
@@ -8,7 +9,7 @@ namespace Vertr.Application.Tests.Candles;
 public class UpdateLastCandlesHandlerTests : ApplicationTestBase
 {
     private const string _symbol = "SBER";
-    private const Domain.CandleInterval _interval = Domain.CandleInterval._10Min;
+    private const CandleInterval _interval = CandleInterval._10Min;
 
     [Test]
     public async Task CanGetLoadingInterval()

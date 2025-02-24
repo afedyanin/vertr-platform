@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.Domain;
+using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 
 namespace Vertr.Application.Signals;

@@ -1,12 +1,12 @@
 using Tinkoff.InvestApi;
 using Vertr.Domain.Ports;
-using Vertr.Adapters.Tinvest.Converters;
 using Vertr.Domain;
 using Microsoft.Extensions.Options;
 using DateTime = System.DateTime;
 using Google.Protobuf.WellKnownTypes;
 using AutoMapper;
 using Google.Protobuf.Collections;
+using Vertr.Domain.Enums;
 
 
 namespace Vertr.Adapters.Tinvest;
@@ -75,8 +75,9 @@ internal sealed class TinvestGateway : ITinvestGateway
         }
 
         var response = await _investApiClient.MarketData.GetCandlesAsync(request);
+        var candles = ToDomain(response.Candles);
 
-        return response.Candles.Convert();
+        return candles;
     }
 
     public async Task<string> CreateSandboxAccount(string name)
@@ -106,22 +107,24 @@ internal sealed class TinvestGateway : ITinvestGateway
         var request = new Tinkoff.InvestApi.V1.SandboxPayInRequest
         {
             AccountId = accountId,
-            Amount = amount.Convert(),
+            Amount = _mapper.Map<Tinkoff.InvestApi.V1.MoneyValue>(amount),
         };
 
         var response = await _investApiClient.Sandbox.SandboxPayInAsync(request);
+        var balance = _mapper.Map<Money>(response.Balance);
 
-        return response.Balance.Convert();
+        return balance;
     }
 
     public async Task<IEnumerable<Account>> GetAccounts()
     {
         var response = await _investApiClient.Users.GetAccountsAsync();
+        var accounts = ToDomain(response.Accounts);
 
-        return response.Accounts.Convert();
+        return accounts;
     }
 
-    public async Task<OrderResponse> PostOrder(
+    public async Task<PostOrderResponse> PostOrder(
         string accountId,
         string instrumentId,
         Guid requestId,
@@ -146,27 +149,7 @@ internal sealed class TinvestGateway : ITinvestGateway
         };
 
         var response = await _investApiClient.Orders.PostOrderAsync(request);
-
-        var orderResponse = new OrderResponse
-        {
-            OrderId = response.OrderId,
-            OrderRequestId = response.OrderRequestId,
-            TrackingId = response.ResponseMetadata.TrackingId,
-            ServerTime = response.ResponseMetadata.ServerTime.ToDateTime(),
-            Status = _mapper.Map<OrderExecutionStatus>(response.ExecutionReportStatus),
-            LotsRequested = response.LotsRequested,
-            LotsExecuted = response.LotsExecuted,
-            InitialOrderPrice = response.InitialOrderPrice,
-            ExecutedOrderPrice = response.ExecutedOrderPrice,
-            TotalOrderAmount = response.TotalOrderAmount,
-            InitialCommission = response.InitialCommission,
-            ExecutedCommission = response.ExecutedCommission,
-            Direction = _mapper.Map<OrderDirection>(response.Direction),
-            InitialSecurityPrice = response.InitialSecurityPrice,
-            OrderType = _mapper.Map<OrderType>(response.OrderType),
-            Message = response.Message,
-            InstrumentId = response.InstrumentUid
-        };
+        var orderResponse = _mapper.Map<PostOrderResponse>(response);
 
         return orderResponse;
     }
@@ -200,11 +183,9 @@ internal sealed class TinvestGateway : ITinvestGateway
 
         var response = await _investApiClient.Orders.GetOrderStateAsync(orderStateRequest);
 
-        return new OrderState
-        {
-            OrderId = response.OrderId,
-            // TODO: Implement this
-        };
+        var state = _mapper.Map<OrderState>(response);
+
+        return state;
     }
 
     private IEnumerable<Instrument> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.InstrumentShort> instruments)
@@ -212,6 +193,22 @@ internal sealed class TinvestGateway : ITinvestGateway
         foreach (var instrument in instruments)
         {
             yield return _mapper.Map<Instrument>(instrument);
+        }
+    }
+
+    private IEnumerable<Account> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.Account> accounts)
+    {
+        foreach (var account in accounts)
+        {
+            yield return _mapper.Map<Account>(account);
+        }
+    }
+
+    private IEnumerable<HistoricCandle> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.HistoricCandle> candles)
+    {
+        foreach (var candle in candles)
+        {
+            yield return _mapper.Map<HistoricCandle>(candle);
         }
     }
 }

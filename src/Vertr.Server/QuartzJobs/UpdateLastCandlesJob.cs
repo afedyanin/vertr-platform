@@ -1,7 +1,7 @@
 using MediatR;
 using Quartz;
 using Vertr.Application.Candles;
-using Vertr.Domain;
+using Vertr.Domain.Enums;
 
 namespace Vertr.Server.QuartzJobs;
 

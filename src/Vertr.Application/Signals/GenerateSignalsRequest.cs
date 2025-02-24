@@ -1,5 +1,6 @@
 using MediatR;
 using Vertr.Domain;
+using Vertr.Domain.Enums;
 
 namespace Vertr.Application.Signals;
 public class GenerateSignalsRequest : IRequest

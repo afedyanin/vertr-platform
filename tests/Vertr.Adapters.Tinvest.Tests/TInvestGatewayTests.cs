@@ -1,3 +1,5 @@
+using Vertr.Domain.Enums;
+
 namespace Vertr.Adapters.Tinvest.Tests;
 
 [TestFixture(Category = "integration", Explicit = true)]
@@ -49,7 +51,7 @@ public class TinvestGatewayTests : TinvestTestBase
 
         var candles = await Gateway.GetCandles(
             sberUid!,
-            Domain.CandleInterval._10Min,
+            CandleInterval._10Min,
             from,
             to);
 

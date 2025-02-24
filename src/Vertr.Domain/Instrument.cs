@@ -1,3 +1,5 @@
+using Vertr.Domain.Enums;
+
 namespace Vertr.Domain;
 public record class Instrument
 {

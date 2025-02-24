@@ -2,6 +2,7 @@ using MediatR;
 using Quartz;
 using Vertr.Application.Signals;
 using Vertr.Domain;
+using Vertr.Domain.Enums;
 
 namespace Vertr.Server.QuartzJobs;
 

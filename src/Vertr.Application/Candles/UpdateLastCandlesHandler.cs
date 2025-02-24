@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.Adapters.Tinvest;
-using Vertr.Domain;
+using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 
 namespace Vertr.Application.Candles;

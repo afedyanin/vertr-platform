@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Application.Signals;
 using Vertr.Domain;
+using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 
 namespace Vertr.Application.Tests.Signals;

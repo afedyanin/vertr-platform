@@ -1,5 +1,6 @@
 using Dapper;
 using Vertr.Domain;
+using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 
 namespace Vertr.Adapters.DataAccess;

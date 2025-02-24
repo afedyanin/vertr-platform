@@ -1,4 +1,4 @@
-using Vertr.Domain;
+using Vertr.Domain.Enums;
 
 namespace Vertr.Adapters.Prediction.Converters;
 internal static class ActionConverter

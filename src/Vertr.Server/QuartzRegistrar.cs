@@ -1,5 +1,6 @@
 using Quartz;
 using Vertr.Domain;
+using Vertr.Domain.Enums;
 using Vertr.Server.QuartzJobs;
 
 namespace Vertr.Server;

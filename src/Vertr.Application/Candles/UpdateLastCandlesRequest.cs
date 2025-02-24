@@ -1,5 +1,5 @@
 using MediatR;
-using Vertr.Domain;
+using Vertr.Domain.Enums;
 
 namespace Vertr.Application.Candles;
 public class UpdateLastCandlesRequest : IRequest

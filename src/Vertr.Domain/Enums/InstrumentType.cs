@@ -1,4 +1,4 @@
-namespace Vertr.Domain;
+namespace Vertr.Domain.Enums;
 
 public enum InstrumentType
 {

@@ -37,7 +37,7 @@ public class TradingSignalsRepositoryTests
         {
             Id = Guid.NewGuid(),
             Symbol = "SBER",
-            CandleInterval = CandleInterval.Min10,
+            CandleInterval = CandleInterval._10Min,
             CandlesSource = "tinvest",
             PredictorType = PredictorType.Sb3,
             Sb3Algo = Sb3Algo.SAC,
@@ -55,7 +55,7 @@ public class TradingSignalsRepositoryTests
         var to = DateTime.UtcNow.AddDays(1);
         var from = to.AddDays(-100);
 
-        var signals = await Repo.Get("SBER", CandleInterval.Min10, from, to);
+        var signals = await Repo.Get("SBER", CandleInterval._10Min, from, to);
 
         Assert.That(signals, Is.Not.Null);
         Assert.That(signals.Count(), Is.GreaterThan(0));
@@ -69,7 +69,7 @@ public class TradingSignalsRepositoryTests
     [Test]
     public async Task CanGetLastSignal()
     {
-        var signals = await Repo.GetLast("SBER", CandleInterval.Min10, 1);
+        var signals = await Repo.GetLast("SBER", CandleInterval._10Min, 1);
 
         Assert.That(signals, Is.Not.Null);
         Assert.That(signals.Count(), Is.EqualTo(1));
@@ -80,7 +80,7 @@ public class TradingSignalsRepositoryTests
     [Test]
     public async Task CanDeleteSignal()
     {
-        var signals = await Repo.GetLast("SBER", CandleInterval.Min10, 1);
+        var signals = await Repo.GetLast("SBER", CandleInterval._10Min, 1);
         var deleted = await Repo.Delete(signals.Single().Id);
         Assert.That(deleted, Is.EqualTo(1));
     }

@@ -36,7 +36,7 @@ public class TinvestCandlesRepositoryTests
         var to = DateTime.UtcNow;
         var from = to.AddDays(-100);
 
-        var candles = await Repo.Get("SBER", CandleInterval.Min10, from, to);
+        var candles = await Repo.Get("SBER", CandleInterval._10Min, from, to);
 
         Assert.That(candles, Is.Not.Null);
         Assert.That(candles.Count(), Is.GreaterThan(1));
@@ -54,7 +54,7 @@ public class TinvestCandlesRepositoryTests
         var to = DateTime.UtcNow;
         var from = to.AddDays(-100);
 
-        var candles = await Repo.GetLast("SBER", CandleInterval.Min10, count, completedOnly);
+        var candles = await Repo.GetLast("SBER", CandleInterval._10Min, count, completedOnly);
         var hasNonCompletedCandles = candles.Any(c => !c.IsCompleted);
 
         Assert.That(candles, Is.Not.Null);
@@ -77,7 +77,7 @@ public class TinvestCandlesRepositoryTests
         var to = new DateTime(2025, 02, 12, 11, 10, 0, DateTimeKind.Utc);
         var from = to.AddDays(-100);
 
-        var deletedCount = await Repo.Delete("TEST", CandleInterval.Min10, from, to);
+        var deletedCount = await Repo.Delete("TEST", CandleInterval._10Min, from, to);
 
         Assert.That(deletedCount, Is.GreaterThan(1));
     }
@@ -88,7 +88,7 @@ public class TinvestCandlesRepositoryTests
         var startDate = new DateTime(2025, 02, 10, 6, 0, 0, DateTimeKind.Utc);
         var candels = GenerateCandles(startDate, 10);
 
-        var inserted = await Repo.Insert("TEST", CandleInterval.Min10, candels);
+        var inserted = await Repo.Insert("TEST", CandleInterval._10Min, candels);
 
         Assert.That(inserted, Is.EqualTo(10));
     }

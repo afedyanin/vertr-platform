@@ -9,7 +9,7 @@ namespace Vertr.Application.Tests.Signals;
 public class GenerateSignalsHandlerTests : ApplicationTestBase
 {
     private const string _symbol = "SBER";
-    private const CandleInterval _interval = CandleInterval.Min10;
+    private const CandleInterval _interval = CandleInterval._10Min;
     private static readonly PredictorType _predictorType = PredictorType.Sb3;
     private static readonly Sb3Algo _algo = Sb3Algo.DQN;
 

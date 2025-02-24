@@ -8,7 +8,7 @@ internal static class QuartzRegistrar
 {
     // TODO: Should move it to config?
     private static readonly string _symbols = "SBER"; // "AFKS, MOEX, OZON, SBER";
-    private static readonly CandleInterval _candleInterval = CandleInterval.Min10;
+    private static readonly CandleInterval _candleInterval = CandleInterval._10Min;
     private static readonly PredictorType _predictorType = PredictorType.Sb3;
     private static readonly Sb3Algo _sb3Algo = Sb3Algo.DQN;
 

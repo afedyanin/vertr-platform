@@ -5,19 +5,24 @@ using Vertr.Domain;
 using Microsoft.Extensions.Options;
 using DateTime = System.DateTime;
 using Google.Protobuf.WellKnownTypes;
+using AutoMapper;
+using Google.Protobuf.Collections;
 
 
 namespace Vertr.Adapters.Tinvest;
 
 internal sealed class TinvestGateway : ITinvestGateway
 {
+    private readonly IMapper _mapper;
     private readonly InvestApiClient _investApiClient;
     private readonly TinvestSettings _investConfiguration;
 
     public TinvestGateway(
+        IMapper mapper,
         InvestApiClient investApiClient,
         IOptions<TinvestSettings> options)
     {
+        _mapper = mapper;
         _investApiClient = investApiClient;
         _investConfiguration = options.Value;
     }
@@ -31,7 +36,7 @@ internal sealed class TinvestGateway : ITinvestGateway
 
         var response = await _investApiClient.Instruments.FindInstrumentAsync(request);
 
-        return response.Instruments.Convert();
+        return ToDomain(response.Instruments);
     }
 
     public async Task<InstrumentDetails> GetInstrument(string ticker, string classCode)
@@ -44,8 +49,9 @@ internal sealed class TinvestGateway : ITinvestGateway
         };
 
         var response = await _investApiClient.Instruments.GetInstrumentByAsync(request);
+        var details = _mapper.Map<InstrumentDetails>(response.Instrument);
 
-        return response.Instrument.Convert();
+        return details;
     }
 
     public async Task<IEnumerable<HistoricCandle>> GetCandles(
@@ -60,7 +66,7 @@ internal sealed class TinvestGateway : ITinvestGateway
             From = Timestamp.FromDateTime(from),
             To = Timestamp.FromDateTime(to),
             InstrumentId = instrumentId,
-            Interval = interval.Convert(),
+            Interval = _mapper.Map<Tinkoff.InvestApi.V1.CandleInterval>(interval),
         };
 
         if (limit.HasValue)
@@ -130,11 +136,11 @@ internal sealed class TinvestGateway : ITinvestGateway
         {
             AccountId = accountId,
             OrderId = requestId.ToString(),
-            Direction = orderDirection.Convert(),
+            Direction = _mapper.Map<Tinkoff.InvestApi.V1.OrderDirection>(orderDirection),
             InstrumentId = instrumentId,
-            OrderType = orderType.Convert(),
-            TimeInForce = timeInForceType.Convert(),
-            PriceType = priceType.Convert(),
+            OrderType = _mapper.Map<Tinkoff.InvestApi.V1.OrderType>(orderType),
+            TimeInForce = _mapper.Map<Tinkoff.InvestApi.V1.TimeInForceType>(timeInForceType),
+            PriceType = _mapper.Map<Tinkoff.InvestApi.V1.PriceType>(priceType),
             Price = price,
             Quantity = quantityLots
         };
@@ -147,7 +153,7 @@ internal sealed class TinvestGateway : ITinvestGateway
             OrderRequestId = response.OrderRequestId,
             TrackingId = response.ResponseMetadata.TrackingId,
             ServerTime = response.ResponseMetadata.ServerTime.ToDateTime(),
-            Status = response.ExecutionReportStatus.Convert(),
+            Status = _mapper.Map<OrderExecutionStatus>(response.ExecutionReportStatus),
             LotsRequested = response.LotsRequested,
             LotsExecuted = response.LotsExecuted,
             InitialOrderPrice = response.InitialOrderPrice,
@@ -155,9 +161,9 @@ internal sealed class TinvestGateway : ITinvestGateway
             TotalOrderAmount = response.TotalOrderAmount,
             InitialCommission = response.InitialCommission,
             ExecutedCommission = response.ExecutedCommission,
-            Direction = response.Direction.Convert(),
+            Direction = _mapper.Map<OrderDirection>(response.Direction),
             InitialSecurityPrice = response.InitialSecurityPrice,
-            OrderType = response.OrderType.Convert(),
+            OrderType = _mapper.Map<OrderType>(response.OrderType),
             Message = response.Message,
             InstrumentId = response.InstrumentUid
         };
@@ -189,7 +195,7 @@ internal sealed class TinvestGateway : ITinvestGateway
         {
             AccountId = accountId,
             OrderId = orderId,
-            PriceType = priceType.Convert(),
+            PriceType = _mapper.Map<Tinkoff.InvestApi.V1.PriceType>(priceType),
         };
 
         var response = await _investApiClient.Orders.GetOrderStateAsync(orderStateRequest);
@@ -199,5 +205,13 @@ internal sealed class TinvestGateway : ITinvestGateway
             OrderId = response.OrderId,
             // TODO: Implement this
         };
+    }
+
+    private IEnumerable<Instrument> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.InstrumentShort> instruments)
+    {
+        foreach (var instrument in instruments)
+        {
+            yield return _mapper.Map<Instrument>(instrument);
+        }
     }
 }

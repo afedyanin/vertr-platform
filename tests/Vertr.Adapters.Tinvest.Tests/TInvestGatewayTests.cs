@@ -49,7 +49,7 @@ public class TinvestGatewayTests : TinvestTestBase
 
         var candles = await Gateway.GetCandles(
             sberUid!,
-            Domain.CandleInterval.Min10,
+            Domain.CandleInterval._10Min,
             from,
             to);
 

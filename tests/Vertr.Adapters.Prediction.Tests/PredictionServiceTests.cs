@@ -19,7 +19,7 @@ public class PredictionServiceTests
         var request = new PredictionRequest
         {
             Symbol = "SBER",
-            Interval = (int)CandleInterval.Min10,
+            Interval = (int)CandleInterval._10Min,
             Predictor = PredictorType.Sb3.Name,
             Algo = Sb3Algo.DQN.Name,
             CandlesCount = 20,
@@ -50,7 +50,7 @@ public class PredictionServiceTests
         var predictionApi = RestService.For<IPredictionApi>("http://127.0.0.1:8081");
         IPredictionService service = new PredictionService(predictionApi);
 
-        var items = await service.Predict("SBER", CandleInterval.Min10, PredictorType.Sb3, Sb3Algo.DQN);
+        var items = await service.Predict("SBER", CandleInterval._10Min, PredictorType.Sb3, Sb3Algo.DQN);
 
         Assert.That(items, Is.Not.Null);
 

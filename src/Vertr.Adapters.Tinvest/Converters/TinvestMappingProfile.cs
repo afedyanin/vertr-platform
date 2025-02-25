@@ -42,7 +42,6 @@ internal class TinvestMappingProfile : Profile
         CreateMap<Tinkoff.InvestApi.V1.Instrument, Domain.InstrumentDetails>();
         CreateMap<Tinkoff.InvestApi.V1.PostOrderResponse, Domain.PostOrderResponse>();
 
-        // https://habr.com/ru/articles/649645/
         CreateMap<Tinkoff.InvestApi.V1.OrderState, Domain.OrderState>()
             .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.OrderDate.ToDateTime()));
 

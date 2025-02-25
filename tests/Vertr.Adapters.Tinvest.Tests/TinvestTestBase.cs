@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -12,6 +13,8 @@ public abstract class TinvestTestBase
 
     protected ITinvestGateway Gateway => _serviceProvider.GetRequiredService<ITinvestGateway>();
 
+    protected IMapper TinvestMapper { get; private set; }
+
     protected TinvestSettings Settings { get; private set; }
 
     protected TinvestTestBase()
@@ -24,6 +27,8 @@ public abstract class TinvestTestBase
 
         var options = _serviceProvider.GetRequiredService<IOptions<TinvestSettings>>();
         Settings = options.Value;
+
+        TinvestMapper = _serviceProvider.GetRequiredService<IMapper>();
     }
 
     [OneTimeTearDown]

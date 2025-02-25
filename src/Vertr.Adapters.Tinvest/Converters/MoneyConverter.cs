@@ -19,7 +19,7 @@ public class MoneyConverter : ITypeConverter<Domain.Money, Tinkoff.InvestApi.V1.
         };
     }
 
-    private static Google.Type.Money ToGoogleType(Domain.Money money)
+    internal static Google.Type.Money ToGoogleType(Domain.Money money)
         => new Google.Type.Money
         {
             CurrencyCode = money.Currency,

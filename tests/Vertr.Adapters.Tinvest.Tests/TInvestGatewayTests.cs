@@ -1,4 +1,3 @@
-using Google.Type;
 using Vertr.Domain.Enums;
 
 namespace Vertr.Adapters.Tinvest.Tests;
@@ -65,7 +64,6 @@ public class TinvestGatewayTests : TinvestTestBase
         }
     }
 
-    // accountId=d5ac27d9-1066-4933-832c-a480ebaa5cf1
     [Test]
     public async Task CanCreateSandboxAccount()
     {
@@ -88,16 +86,14 @@ public class TinvestGatewayTests : TinvestTestBase
         }
     }
 
-    [Test]
-    public async Task CanPayInSandboxAccount()
+    [TestCase("d5ac27d9-1066-4933-832c-a480ebaa5cf1")]
+    public async Task CanPayInSandboxAccount(string accountId)
     {
         var amount = new Domain.Money
         {
             Currency = "rub",
             Value = 45.78m
         };
-
-        var accountId = "d5ac27d9-1066-4933-832c-a480ebaa5cf1";
 
         var result = await Gateway.SandboxPayIn(accountId, amount);
 

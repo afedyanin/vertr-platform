@@ -64,13 +64,14 @@ internal class TinvestMappingProfile : Profile
             .ForMember(dest => dest.IsCompleted, opt => opt.MapFrom(src => src.IsComplete));
 
         CreateMap<Tinkoff.InvestApi.V1.MoneyValue, Domain.Money>()
-            .ForMember(dest => dest.Currency, opt => opt.MapFrom(src => src.Currency))
-            .ForMember(dest => dest.Value, opt => opt.MapFrom(src => src));
+            .ConvertUsing(new MoneyConverter());
 
         CreateMap<Domain.Money, Tinkoff.InvestApi.V1.MoneyValue>()
             .ConvertUsing(new MoneyConverter());
 
         CreateMap<Tinkoff.InvestApi.V1.Operation, Domain.Operation>()
             .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime()));
+
+        CreateMap<Tinkoff.InvestApi.V1.PortfolioPosition, Domain.PortfolioPosition>();
     }
 }

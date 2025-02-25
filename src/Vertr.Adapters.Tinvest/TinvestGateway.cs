@@ -7,6 +7,7 @@ using Google.Protobuf.WellKnownTypes;
 using AutoMapper;
 using Google.Protobuf.Collections;
 using Vertr.Domain.Enums;
+using Vertr.Adapters.Tinvest.Converters;
 
 
 namespace Vertr.Adapters.Tinvest;
@@ -213,6 +214,48 @@ internal sealed class TinvestGateway : ITinvestGateway
         return ToDomain(response.Operations);
     }
 
+    public async Task<IEnumerable<PositionSnapshot>> GetPositions(string accountId)
+    {
+        var request = new Tinkoff.InvestApi.V1.PositionsRequest
+        {
+            AccountId = accountId,
+        };
+
+        var response = await _investApiClient.Operations.GetPositionsAsync(request);
+
+        var result = response.Convert(accountId, _mapper);
+
+        return result;
+    }
+
+    public async Task<PortfolioSnapshot> GetPortfolio(string accountId)
+    {
+        var request = new Tinkoff.InvestApi.V1.PortfolioRequest
+        {
+            AccountId = accountId,
+            Currency = Tinkoff.InvestApi.V1.PortfolioRequest.Types.CurrencyRequest.Rub
+        };
+
+        var response = await _investApiClient.Operations.GetPortfolioAsync(request);
+
+        var result = new PortfolioSnapshot
+        {
+            AccountId = accountId,
+            TimeUtc = DateTime.UtcNow,
+            TotalAmountBonds = response.TotalAmountBonds,
+            TotalAmountCurrencies = response.TotalAmountCurrencies,
+            TotalAmountEtf = response.TotalAmountEtf,
+            TotalAmountFutures = response.TotalAmountFutures,
+            TotalAmountOptions = response.TotalAmountOptions,
+            TotalAmountShares = response.TotalAmountShares,
+            TotalAmountSp = response.TotalAmountSp,
+            TotalAmountPortfolio = response.TotalAmountPortfolio,
+            Positions = ToDomain(response.Positions),
+        };
+
+        return result;
+    }
+
     private IEnumerable<Instrument> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.InstrumentShort> instruments)
     {
         foreach (var instrument in instruments)
@@ -242,6 +285,14 @@ internal sealed class TinvestGateway : ITinvestGateway
         foreach (var operation in operations)
         {
             yield return _mapper.Map<Operation>(operation);
+        }
+    }
+
+    private IEnumerable<PortfolioPosition> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.PortfolioPosition> positions)
+    {
+        foreach (var position in positions)
+        {
+            yield return _mapper.Map<PortfolioPosition>(position);
         }
     }
 }

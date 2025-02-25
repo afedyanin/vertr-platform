@@ -72,6 +72,32 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         }
     }
 
+    [Test]
+    public async Task CanGetPositions()
+    {
+        var positions = await Gateway.GetPositions(_accountId);
+        Assert.That(positions, Is.Not.Null);
+
+        foreach(var pos in positions)
+        {
+            Console.WriteLine(pos);
+        }
+    }
+
+    [Test]
+    public async Task CanGetPortfolio()
+    {
+        var portfolio = await Gateway.GetPortfolio(_accountId);
+        Assert.That(portfolio, Is.Not.Null);
+
+        Console.WriteLine(portfolio);
+
+        foreach (var pos in portfolio.Positions)
+        {
+            Console.WriteLine(pos);
+        }
+    }
+
     private async Task<string> PrepareSandboxAccount()
     {
         var accountId = await Gateway.CreateSandboxAccount("Test account");

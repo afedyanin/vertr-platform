@@ -41,4 +41,8 @@ public interface ITinvestGateway
         string accountId,
         DateTime? from = null,
         DateTime? to = null);
+
+    public Task<IEnumerable<PositionSnapshot>> GetPositions(string accountId);
+
+    public Task<PortfolioSnapshot> GetPortfolio(string accountId);
 }

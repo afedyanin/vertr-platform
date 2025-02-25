@@ -4,7 +4,6 @@ using Vertr.Domain.Enums;
 
 namespace Vertr.Adapters.Tinvest.Converters;
 
-// https://github.com/AutoMapper/AutoMapper.Extensions.EnumMapping
 internal class TinvestMappingProfile : Profile
 {
     public TinvestMappingProfile()
@@ -51,7 +50,8 @@ internal class TinvestMappingProfile : Profile
         CreateMap<Tinkoff.InvestApi.V1.PostOrderResponse, Domain.PostOrderResponse>();
 
         CreateMap<Tinkoff.InvestApi.V1.OrderState, Domain.OrderState>()
-            .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.OrderDate.ToDateTime()));
+            .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.OrderDate.ToDateTime()))
+            .ForMember(dest => dest.OrderStages, opt => opt.MapFrom(src => src.Stages.ToArray()));
 
         CreateMap<Tinkoff.InvestApi.V1.Account, Domain.Account>()
             .ForMember(dest => dest.OpenedDate, opt => opt.MapFrom(src => src.OpenedDate.ToDateTime()))
@@ -70,8 +70,15 @@ internal class TinvestMappingProfile : Profile
             .ConvertUsing(new MoneyConverter());
 
         CreateMap<Tinkoff.InvestApi.V1.Operation, Domain.Operation>()
-            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime()));
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime()))
+            .ForMember(dest => dest.OperationTrades, opt => opt.MapFrom(src => src.Trades.ToArray()));
 
         CreateMap<Tinkoff.InvestApi.V1.PortfolioPosition, Domain.PortfolioPosition>();
+
+        CreateMap<Tinkoff.InvestApi.V1.OperationTrade, Domain.OperationTrade>()
+            .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.DateTime.ToDateTime()));
+
+        CreateMap<Tinkoff.InvestApi.V1.OrderStage, Domain.OrderStage>()
+            .ForMember(dest => dest.ExecutionTime, opt => opt.MapFrom(src => src.ExecutionTime.ToDateTime()));
     }
 }

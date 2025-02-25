@@ -53,11 +53,17 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
             decimal.Zero,
             10);
 
-        var status = await Gateway.GetOrderState(_accountId, response.OrderId, PriceType.Unspecified);
+        var state = await Gateway.GetOrderState(_accountId, response.OrderId, PriceType.Unspecified);
 
-        Assert.That(status, Is.Not.Null);
+        Assert.That(state, Is.Not.Null);
 
-        Console.WriteLine(status);
+        Console.WriteLine(state);
+
+        // Assert.That(state.OrderStages.Count(), Is.GreaterThan(0));
+        foreach (var stage in state.OrderStages)
+        {
+            Console.WriteLine($"--> {stage}");
+        }
     }
 
     [Test]
@@ -66,9 +72,15 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         var ops = await Gateway.GetOperations(_accountId);
         Assert.That(ops, Is.Not.Null);
 
-        foreach(var op in ops)
+        foreach (var op in ops)
         {
+            Console.WriteLine("=============");
             Console.WriteLine(op);
+
+            foreach (var trade in op.OperationTrades)
+            {
+                Console.WriteLine($"--> {trade}");
+            }
         }
     }
 

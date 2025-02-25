@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using DateTime = System.DateTime;
 using Google.Protobuf.WellKnownTypes;
 using AutoMapper;
-using Google.Protobuf.Collections;
 using Vertr.Domain.Enums;
 using Vertr.Adapters.Tinvest.Converters;
 
@@ -37,7 +36,9 @@ internal sealed class TinvestGateway : ITinvestGateway
 
         var response = await _investApiClient.Instruments.FindInstrumentAsync(request);
 
-        return ToDomain(response.Instruments);
+        var instruments = _mapper.Map<Tinkoff.InvestApi.V1.InstrumentShort[], IEnumerable<Instrument>>([.. response.Instruments]);
+
+        return instruments;
     }
 
     public async Task<InstrumentDetails> GetInstrument(string ticker, string classCode)
@@ -76,7 +77,8 @@ internal sealed class TinvestGateway : ITinvestGateway
         }
 
         var response = await _investApiClient.MarketData.GetCandlesAsync(request);
-        var candles = ToDomain(response.Candles);
+
+        var candles = _mapper.Map<Tinkoff.InvestApi.V1.HistoricCandle[], IEnumerable<HistoricCandle>>([.. response.Candles]);
 
         return candles;
     }
@@ -120,7 +122,8 @@ internal sealed class TinvestGateway : ITinvestGateway
     public async Task<IEnumerable<Account>> GetAccounts()
     {
         var response = await _investApiClient.Users.GetAccountsAsync();
-        var accounts = ToDomain(response.Accounts);
+
+        var accounts = _mapper.Map<Tinkoff.InvestApi.V1.Account[], IEnumerable<Account>>([.. response.Accounts]);
 
         return accounts;
     }
@@ -211,7 +214,9 @@ internal sealed class TinvestGateway : ITinvestGateway
 
         var response = await _investApiClient.Operations.GetOperationsAsync(request);
 
-        return ToDomain(response.Operations);
+        var result = _mapper.Map<Tinkoff.InvestApi.V1.Operation[], IEnumerable<Operation>>([.. response.Operations]);
+
+        return result;
     }
 
     public async Task<IEnumerable<PositionSnapshot>> GetPositions(string accountId)
@@ -250,49 +255,9 @@ internal sealed class TinvestGateway : ITinvestGateway
             TotalAmountShares = response.TotalAmountShares,
             TotalAmountSp = response.TotalAmountSp,
             TotalAmountPortfolio = response.TotalAmountPortfolio,
-            Positions = ToDomain(response.Positions),
+            Positions = _mapper.Map<Tinkoff.InvestApi.V1.PortfolioPosition[], IEnumerable<PortfolioPosition>>([.. response.Positions]),
         };
 
         return result;
-    }
-
-    private IEnumerable<Instrument> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.InstrumentShort> instruments)
-    {
-        foreach (var instrument in instruments)
-        {
-            yield return _mapper.Map<Instrument>(instrument);
-        }
-    }
-
-    private IEnumerable<Account> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.Account> accounts)
-    {
-        foreach (var account in accounts)
-        {
-            yield return _mapper.Map<Account>(account);
-        }
-    }
-
-    private IEnumerable<HistoricCandle> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.HistoricCandle> candles)
-    {
-        foreach (var candle in candles)
-        {
-            yield return _mapper.Map<HistoricCandle>(candle);
-        }
-    }
-
-    private IEnumerable<Operation> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.Operation> operations)
-    {
-        foreach (var operation in operations)
-        {
-            yield return _mapper.Map<Operation>(operation);
-        }
-    }
-
-    private IEnumerable<PortfolioPosition> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.PortfolioPosition> positions)
-    {
-        foreach (var position in positions)
-        {
-            yield return _mapper.Map<PortfolioPosition>(position);
-        }
     }
 }

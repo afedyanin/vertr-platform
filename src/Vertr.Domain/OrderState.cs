@@ -38,4 +38,6 @@ public record class OrderState
     public string InstrumentUid { get; set; }
 
     public string OrderRequestId { get; set; }
+
+    public IEnumerable<OrderStage> OrderStages { get; set; } = [];
 }

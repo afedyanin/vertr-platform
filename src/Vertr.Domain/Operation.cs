@@ -33,4 +33,6 @@ public record class Operation
     public string PositionUid { get; set; }
 
     public string InstrumentUid { get; set; }
+
+    public IEnumerable<OperationTrade> OperationTrades { get; set; } = [];
 }

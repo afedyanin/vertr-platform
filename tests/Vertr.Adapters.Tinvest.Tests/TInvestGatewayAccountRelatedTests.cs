@@ -60,6 +60,18 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         Console.WriteLine(status);
     }
 
+    [Test]
+    public async Task CanGetOperations()
+    {
+        var ops = await Gateway.GetOperations(_accountId);
+        Assert.That(ops, Is.Not.Null);
+
+        foreach(var op in ops)
+        {
+            Console.WriteLine(op);
+        }
+    }
+
     private async Task<string> PrepareSandboxAccount()
     {
         var accountId = await Gateway.CreateSandboxAccount("Test account");

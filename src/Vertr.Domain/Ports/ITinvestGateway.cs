@@ -14,8 +14,6 @@ public interface ITinvestGateway
         DateTime to,
         int? limit = null);
 
-    // TODO: Test them all
-
     public Task<string> CreateSandboxAccount(string name);
 
     public Task CloseSandboxAccount(string accountId);
@@ -38,4 +36,9 @@ public interface ITinvestGateway
     public Task<DateTime> CancelOrder(string accountId, string orderId);
 
     public Task<OrderState> GetOrderState(string accountId, string orderId, PriceType priceType);
+
+    public Task<IEnumerable<Operation>> GetOperations(
+        string accountId,
+        DateTime? from = null,
+        DateTime? to = null);
 }

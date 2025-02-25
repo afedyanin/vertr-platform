@@ -188,6 +188,31 @@ internal sealed class TinvestGateway : ITinvestGateway
         return state;
     }
 
+    public async Task<IEnumerable<Operation>> GetOperations(
+        string accountId,
+        DateTime? from = null,
+        DateTime? to = null)
+    {
+        var request = new Tinkoff.InvestApi.V1.OperationsRequest
+        {
+            AccountId = accountId,
+        };
+
+        if (from.HasValue)
+        {
+            request.From = Timestamp.FromDateTime(from.Value);
+        }
+
+        if (to.HasValue)
+        {
+            request.To = Timestamp.FromDateTime(to.Value);
+        }
+
+        var response = await _investApiClient.Operations.GetOperationsAsync(request);
+
+        return ToDomain(response.Operations);
+    }
+
     private IEnumerable<Instrument> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.InstrumentShort> instruments)
     {
         foreach (var instrument in instruments)
@@ -209,6 +234,14 @@ internal sealed class TinvestGateway : ITinvestGateway
         foreach (var candle in candles)
         {
             yield return _mapper.Map<HistoricCandle>(candle);
+        }
+    }
+
+    private IEnumerable<Operation> ToDomain(RepeatedField<Tinkoff.InvestApi.V1.Operation> operations)
+    {
+        foreach (var operation in operations)
+        {
+            yield return _mapper.Map<Operation>(operation);
         }
     }
 }

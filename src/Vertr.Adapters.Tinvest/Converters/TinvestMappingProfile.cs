@@ -37,6 +37,14 @@ internal class TinvestMappingProfile : Profile
             .ConvertUsingEnumMapping()
             .ReverseMap();
 
+        CreateMap<Tinkoff.InvestApi.V1.OperationType, OperationType>()
+            .ConvertUsingEnumMapping()
+            .ReverseMap();
+
+        CreateMap<Tinkoff.InvestApi.V1.OperationState, OperationState>()
+            .ConvertUsingEnumMapping()
+            .ReverseMap();
+
 
         CreateMap<Tinkoff.InvestApi.V1.InstrumentShort, Domain.Instrument>();
         CreateMap<Tinkoff.InvestApi.V1.Instrument, Domain.InstrumentDetails>();
@@ -61,7 +69,8 @@ internal class TinvestMappingProfile : Profile
 
         CreateMap<Domain.Money, Tinkoff.InvestApi.V1.MoneyValue>()
             .ConvertUsing(new MoneyConverter());
+
+        CreateMap<Tinkoff.InvestApi.V1.Operation, Domain.Operation>()
+            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime()));
     }
-
-
 }

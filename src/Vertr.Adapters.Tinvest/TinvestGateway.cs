@@ -99,7 +99,7 @@ internal sealed class TinvestGateway : ITinvestGateway
             AccountId = accountId,
         };
 
-        _ = await _investApiClient.Sandbox.CloseSandboxAccountAsync(request);
+        var resp = await _investApiClient.Sandbox.CloseSandboxAccountAsync(request);
     }
 
     public async Task<Money> SandboxPayIn(string accountId, Money amount)

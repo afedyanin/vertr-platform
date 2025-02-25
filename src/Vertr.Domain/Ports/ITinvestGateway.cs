@@ -3,11 +3,11 @@ using Vertr.Domain.Enums;
 namespace Vertr.Domain.Ports;
 public interface ITinvestGateway
 {
-    Task<IEnumerable<Instrument>> FindInstrument(string query);
+    public Task<IEnumerable<Instrument>> FindInstrument(string query);
 
-    Task<InstrumentDetails> GetInstrument(string ticker, string classCode);
+    public Task<InstrumentDetails> GetInstrument(string ticker, string classCode);
 
-    Task<IEnumerable<HistoricCandle>> GetCandles(
+    public Task<IEnumerable<HistoricCandle>> GetCandles(
         string instrumentId,
         CandleInterval interval,
         DateTime from,
@@ -16,15 +16,15 @@ public interface ITinvestGateway
 
     // TODO: Test them all
 
-    Task<string> CreateSandboxAccount(string name);
+    public Task<string> CreateSandboxAccount(string name);
 
-    Task CloseSandboxAccount(string accountId);
+    public Task CloseSandboxAccount(string accountId);
 
-    Task<Money> SandboxPayIn(string accountId, Money amount);
+    public Task<Money> SandboxPayIn(string accountId, Money amount);
 
-    Task<IEnumerable<Account>> GetAccounts();
+    public Task<IEnumerable<Account>> GetAccounts();
 
-    Task<PostOrderResponse> PostOrder(
+    public Task<PostOrderResponse> PostOrder(
         string accountId,
         string instrumentId,
         Guid requestId,
@@ -35,7 +35,7 @@ public interface ITinvestGateway
         decimal price,
         long quantityLots);
 
-    Task<DateTime> CancelOrder(string accountId, string orderId);
+    public Task<DateTime> CancelOrder(string accountId, string orderId);
 
-    Task<OrderState> GetOrderState(string accountId, string orderId, PriceType priceType);
+    public Task<OrderState> GetOrderState(string accountId, string orderId, PriceType priceType);
 }

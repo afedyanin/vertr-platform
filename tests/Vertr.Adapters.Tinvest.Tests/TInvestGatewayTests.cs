@@ -1,3 +1,4 @@
+using Google.Type;
 using Vertr.Domain.Enums;
 
 namespace Vertr.Adapters.Tinvest.Tests;
@@ -44,7 +45,7 @@ public class TinvestGatewayTests : TinvestTestBase
     [Test]
     public async Task CanGetCandles()
     {
-        var to = DateTime.UtcNow;
+        var to = System.DateTime.UtcNow;
         var from = to.AddDays(-1);
 
         var sberUid = Settings.GetSymbolId("SBER");
@@ -64,8 +65,53 @@ public class TinvestGatewayTests : TinvestTestBase
         }
     }
 
+    // accountId=d5ac27d9-1066-4933-832c-a480ebaa5cf1
+    [Test]
     public async Task CanCreateSandboxAccount()
     {
+        var accountId = await Gateway.CreateSandboxAccount("test account");
 
+        Assert.That(accountId, Is.Not.Empty);
+        Console.WriteLine($"accountId={accountId}");
+    }
+
+    [Test]
+    public async Task CanGetAccounts()
+    {
+        var accounts = await Gateway.GetAccounts();
+
+        Assert.That(accounts, Is.Not.Null);
+
+        foreach (var account in accounts)
+        {
+            Console.WriteLine($"{account}");
+        }
+    }
+
+    [Test]
+    public async Task CanPayInSandboxAccount()
+    {
+        var amount = new Domain.Money
+        {
+            Currency = "rub",
+            Value = 45.78m
+        };
+
+        var accountId = "d5ac27d9-1066-4933-832c-a480ebaa5cf1";
+
+        var result = await Gateway.SandboxPayIn(accountId, amount);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Currency, Is.EqualTo(amount.Currency));
+            Assert.That(result.Value, Is.GreaterThanOrEqualTo(amount.Value));
+        });
+    }
+
+    [Test]
+    public async Task CanCloseSandboxAccount()
+    {
+        var accountId = "d5ac27d9-1066-4933-832c-a480ebaa5cf1";
+        await Gateway.CloseSandboxAccount(accountId);
     }
 }

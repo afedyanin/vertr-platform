@@ -132,7 +132,7 @@ public class MappingTests : TinvestTestBase
         {
             Id = Guid.NewGuid().ToString(),
             OpenedDate = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(openedDate),
-            ClosedDate = null,
+            ClosedDate = Google.Protobuf.WellKnownTypes.Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime()),
             Name = "Test account",
             AccessLevel = Tinkoff.InvestApi.V1.AccessLevel.AccountAccessLevelFullAccess,
             Status = Tinkoff.InvestApi.V1.AccountStatus.Open,

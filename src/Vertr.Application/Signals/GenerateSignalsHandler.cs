@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Domain;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
+using Vertr.Domain.Repositories;
 
 namespace Vertr.Application.Signals;
 

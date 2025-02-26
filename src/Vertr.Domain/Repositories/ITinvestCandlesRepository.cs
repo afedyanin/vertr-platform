@@ -1,6 +1,6 @@
 using Vertr.Domain.Enums;
 
-namespace Vertr.Domain.Ports;
+namespace Vertr.Domain.Repositories;
 
 public interface ITinvestCandlesRepository
 {

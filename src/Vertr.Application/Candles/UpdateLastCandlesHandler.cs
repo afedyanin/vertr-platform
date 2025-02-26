@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Vertr.Adapters.Tinvest;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
+using Vertr.Domain.Repositories;
 
 namespace Vertr.Application.Candles;
 internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesRequest>

@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Vertr.Domain\Vertr.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

@@ -26,5 +26,5 @@ public record class PortfolioSnapshot
 
     public decimal ExpectedYield { get; set; }
 
-    public IEnumerable<PortfolioPosition> Positions { get; set; } = [];
+    public ICollection<PortfolioPosition> Positions { get; set; } = [];
 }

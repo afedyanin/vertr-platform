@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Domain;
 using Vertr.Domain.Enums;
-using Vertr.Domain.Ports;
+using Vertr.Domain.Repositories;
 
 namespace Vertr.Adapters.DataAccess.Tests;
 

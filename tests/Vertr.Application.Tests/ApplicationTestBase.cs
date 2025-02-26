@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Application.Candles;
 using Vertr.Adapters.Prediction;
 using Vertr.Application.Signals;
+using Vertr.Domain.Repositories;
 
 namespace Vertr.Application.Tests;
 

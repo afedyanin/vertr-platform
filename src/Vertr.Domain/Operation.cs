@@ -4,9 +4,9 @@ namespace Vertr.Domain;
 
 public record class Operation
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
-    public string ParentOperationId { get; set; }
+    public Guid ParentOperationId { get; set; }
 
     public string Currency { get; set; }
 
@@ -28,11 +28,11 @@ public record class Operation
 
     public OperationType OperationType { get; set; }
 
-    public string AssetUid { get; set; }
+    public Guid AssetUid { get; set; }
 
-    public string PositionUid { get; set; }
+    public Guid PositionUid { get; set; }
 
-    public string InstrumentUid { get; set; }
+    public Guid InstrumentUid { get; set; }
 
     public IEnumerable<OperationTrade> OperationTrades { get; set; } = [];
 }

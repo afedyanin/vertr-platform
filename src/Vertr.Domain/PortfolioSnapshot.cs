@@ -2,6 +2,8 @@ namespace Vertr.Domain;
 
 public record class PortfolioSnapshot
 {
+    public Guid Id { get; set; }
+
     public DateTime TimeUtc { get; set; }
 
     public string AccountId { get; set; }

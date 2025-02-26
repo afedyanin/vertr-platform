@@ -2,6 +2,10 @@ namespace Vertr.Domain;
 
 public record class PortfolioPosition
 {
+    public Guid Id { get; set; }
+
+    public Guid PortfolioSnapshotId { get; set; }
+
     public string InstrumentType { get; set; }
 
     public decimal Quantity { get; set; }
@@ -20,11 +24,13 @@ public record class PortfolioPosition
 
     public decimal BlockedLots { get; set; }
 
-    public string PositionUid { get; set; }
+    public Guid PositionUid { get; set; }
 
-    public string InstrumentUid { get; set; }
+    public Guid InstrumentUid { get; set; }
 
     public decimal VarMargin { get; set; }
 
     public decimal ExpectedYieldFifo { get; set; }
+
+    public PortfolioSnapshot PortfolioSnapshot { get; set; }
 }

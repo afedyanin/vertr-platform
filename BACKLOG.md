@@ -1,3 +1,22 @@
+# 2025-02-26
+
+## EF Core
+
+- [Getting Started with EF Core](https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli)
+- [NpgSql](https://www.npgsql.org/efcore/)
+- [Введение в Entity Framework Core](https://metanit.com/sharp/efcore/1.1.php)
+
+### Migrations
+
+```shell
+dotnet tool install --global dotnet-ef
+
+dotnet ef migrations add InitialCreate
+
+dotnet ef database update
+```
+
+
 # 2025-02-25 
 
 - продумать трекинг трейдов от ордера до операций и портфеля (сейчас при исполнении ордера трейды не возвращаются)

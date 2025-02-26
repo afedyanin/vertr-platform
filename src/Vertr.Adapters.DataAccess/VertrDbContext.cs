@@ -119,7 +119,9 @@ public class VertrDbContext : DbContext
                 .HasColumnName("expected_yield");
 
             entity.HasMany(e => e.Positions)
-                .WithOne(p => p.PortfolioSnapshot);
+                .WithOne(p => p.PortfolioSnapshot)
+                .HasForeignKey(e => e.PortfolioSnapshotId)
+                .HasConstraintName("tinvest_portfolio_position_snapshot_fk");
         });
 
         modelBuilder.Entity<PortfolioPosition>(entity =>
@@ -135,11 +137,6 @@ public class VertrDbContext : DbContext
 
             entity.Property(e => e.PortfolioSnapshotId)
                 .HasColumnName("portfolio_snapshot_id")
-                .IsRequired();
-
-            entity.HasOne(e => e.PortfolioSnapshot)
-                .WithMany()
-                .HasForeignKey(e => e.PortfolioSnapshotId)
                 .IsRequired();
 
             entity.Property(e => e.InstrumentType)

@@ -255,7 +255,7 @@ internal sealed class TinvestGateway : ITinvestGateway
             TotalAmountShares = response.TotalAmountShares,
             TotalAmountSp = response.TotalAmountSp,
             TotalAmountPortfolio = response.TotalAmountPortfolio,
-            Positions = _mapper.Map<Tinkoff.InvestApi.V1.PortfolioPosition[], IEnumerable<PortfolioPosition>>([.. response.Positions]),
+            Positions = _mapper.Map<Tinkoff.InvestApi.V1.PortfolioPosition[], PortfolioPosition[]>([.. response.Positions]),
         };
 
         return result;

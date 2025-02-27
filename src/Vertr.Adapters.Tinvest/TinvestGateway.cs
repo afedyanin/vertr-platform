@@ -214,9 +214,17 @@ internal sealed class TinvestGateway : ITinvestGateway
 
         var response = await _investApiClient.Operations.GetOperationsAsync(request);
 
-        var result = _mapper.Map<Tinkoff.InvestApi.V1.Operation[], IEnumerable<Operation>>([.. response.Operations]);
+        var operations = new List<Operation>();
 
-        return result;
+        foreach (var operation in response.Operations)
+        {
+            var item = _mapper.Map<Operation>(operation);
+            item.AccountId = accountId;
+            operations.Add(item);
+        }
+
+        //var result = _mapper.Map<Tinkoff.InvestApi.V1.Operation[], IEnumerable<Operation>>([.. response.Operations]);
+        return operations;
     }
 
     public async Task<IEnumerable<PositionSnapshot>> GetPositions(string accountId)

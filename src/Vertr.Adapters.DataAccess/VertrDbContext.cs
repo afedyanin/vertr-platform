@@ -28,6 +28,10 @@ public class VertrDbContext : DbContext
             entity.Property(e => e.ParentOperationId)
                 .HasColumnName("parent_operation_id");
 
+            entity.Property(e => e.AccountId)
+                .HasColumnName("account_id")
+                .IsRequired();
+
             entity.Property(e => e.Currency)
                 .HasColumnName("currency")
                 .IsRequired();

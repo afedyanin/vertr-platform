@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Vertr.Domain;
 using Vertr.Domain.Repositories;
 
-namespace Vertr.Adapters.DataAccess.Tests;
+namespace Vertr.Adapters.DataAccess.Tests.Repositories;
 
 [TestFixture(Category = "database", Explicit = true)]
 public class TinvestPortfolioRepositoryTests

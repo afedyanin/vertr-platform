@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Vertr.Domain;
 using Vertr.Domain.Repositories;
 
-namespace Vertr.Adapters.DataAccess;
+namespace Vertr.Adapters.DataAccess.Repositories;
 internal class TinvestPortfolioRepository : RepositoryBase, ITinvestPortfolioRepository
 {
     public TinvestPortfolioRepository(IDbContextFactory<VertrDbContext> contextFactory) : base(contextFactory)

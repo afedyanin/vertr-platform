@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Vertr.Adapters.DataAccess;
+namespace Vertr.Adapters.DataAccess.Repositories;
 
 internal abstract class RepositoryBase
 {

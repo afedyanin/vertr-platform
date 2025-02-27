@@ -8,6 +8,8 @@ public record class Operation
 
     public Guid ParentOperationId { get; set; }
 
+    public string AccountId { get; set; }
+
     public string Currency { get; set; }
 
     public decimal Payment { get; set; }

@@ -29,6 +29,11 @@ namespace Vertr.Adapters.DataAccess.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("account_id");
+
                     b.Property<Guid>("AssetUid")
                         .HasColumnType("uuid")
                         .HasColumnName("asset_uid");

@@ -4,7 +4,7 @@ using Vertr.Domain;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Repositories;
 
-namespace Vertr.Adapters.DataAccess.Tests;
+namespace Vertr.Adapters.DataAccess.Tests.Repositories;
 
 [TestFixture(Category = "database", Explicit = true)]
 public class TinvestCandlesRepositoryTests
@@ -96,7 +96,7 @@ public class TinvestCandlesRepositoryTests
 
     private static IEnumerable<HistoricCandle> GenerateCandles(DateTime startDate, int count, int incMinutes = 10)
     {
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             yield return new HistoricCandle
             {

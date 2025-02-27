@@ -3,7 +3,7 @@ using Vertr.Domain;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Repositories;
 
-namespace Vertr.Adapters.DataAccess;
+namespace Vertr.Adapters.DataAccess.Repositories;
 internal class TradingSignalsRepository : ITradingSignalsRepository
 {
     private readonly IDbConnectionFactory _connectionFactory;

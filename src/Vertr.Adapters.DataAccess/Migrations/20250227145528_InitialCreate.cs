@@ -16,7 +16,7 @@ namespace Vertr.Adapters.DataAccess.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    parent_operation_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    parent_operation_id = table.Column<Guid>(type: "uuid", nullable: true),
                     account_id = table.Column<string>(type: "text", nullable: false),
                     currency = table.Column<string>(type: "text", nullable: false),
                     payment = table.Column<decimal>(type: "numeric", nullable: false),

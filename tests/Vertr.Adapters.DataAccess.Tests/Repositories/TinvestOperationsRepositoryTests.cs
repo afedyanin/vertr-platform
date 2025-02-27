@@ -37,6 +37,21 @@ public class TinvestOperationsRepositoryTests
         {
             Id = Guid.NewGuid(),
             AccountId = "12345",
+            ParentOperationId = null,
+            Quantity = 1,
+            OperationType = Domain.Enums.OperationType.Buy,
+            InstrumentUid = Guid.NewGuid(),
+            Currency = "RUB",
+            AssetUid = Guid.NewGuid(),
+            Date = DateTime.UtcNow,
+            InstrumentType = "shares",
+            Payment = 123.45m,
+            PositionUid = Guid.NewGuid(),
+            Price = 234.56m,
+            State = Domain.Enums.OperationState.Progress,
+            Type = "sdf",
+            QuantityRest = 23,
+            OperationTrades = []
         };
 
         var rows = await Repo.Insert(operation);
@@ -58,7 +73,7 @@ public class TinvestOperationsRepositoryTests
     [Test]
     public async Task CanGetOperationById()
     {
-        var id = new Guid("4f2936b3-70c1-43e9-be29-431444dc3001");
+        var id = new Guid("cef8d0e0-4b7e-43d5-937e-f70ec2e9ed82");
 
         var operation = await Repo.GetById(id);
 

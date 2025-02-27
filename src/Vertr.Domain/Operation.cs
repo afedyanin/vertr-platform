@@ -6,7 +6,7 @@ public record class Operation
 {
     public Guid Id { get; set; }
 
-    public Guid ParentOperationId { get; set; }
+    public Guid? ParentOperationId { get; set; }
 
     public string AccountId { get; set; }
 

@@ -74,8 +74,6 @@ internal class TinvestMappingProfile : Profile
             .ForMember(dest => dest.OperationTrades, opt => opt.MapFrom(src => src.Trades.ToArray()))
             .ForMember(dest => dest.AccountId, opt => opt.Ignore());
 
-        CreateMap<Tinkoff.InvestApi.V1.PortfolioPosition, Domain.PortfolioPosition>();
-
         CreateMap<Tinkoff.InvestApi.V1.OperationTrade, Domain.OperationTrade>()
             .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.DateTime.ToDateTime()));
 

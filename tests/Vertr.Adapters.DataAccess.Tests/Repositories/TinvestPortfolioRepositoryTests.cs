@@ -111,7 +111,7 @@ public class TinvestPortfolioRepositoryTests
     [Test]
     public async Task CanGetPortfolioSnapshotById()
     {
-        var id = new Guid("4f2936b3-70c1-43e9-be29-431444dc3001");
+        var id = new Guid("cd921bd6-f56b-4694-a7aa-7f692af22d41");
 
         var snapshot = await Repo.GetById(id);
 

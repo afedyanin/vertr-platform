@@ -60,7 +60,7 @@ namespace Vertr.Adapters.DataAccess.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("operation_type");
 
-                    b.Property<Guid>("ParentOperationId")
+                    b.Property<Guid?>("ParentOperationId")
                         .HasColumnType("uuid")
                         .HasColumnName("parent_operation_id");
 

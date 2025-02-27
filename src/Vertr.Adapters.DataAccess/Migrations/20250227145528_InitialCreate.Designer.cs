@@ -12,7 +12,7 @@ using Vertr.Adapters.DataAccess;
 namespace Vertr.Adapters.DataAccess.Migrations
 {
     [DbContext(typeof(VertrDbContext))]
-    [Migration("20250227034959_InitialCreate")]
+    [Migration("20250227145528_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -63,7 +63,7 @@ namespace Vertr.Adapters.DataAccess.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("operation_type");
 
-                    b.Property<Guid>("ParentOperationId")
+                    b.Property<Guid?>("ParentOperationId")
                         .HasColumnType("uuid")
                         .HasColumnName("parent_operation_id");
 

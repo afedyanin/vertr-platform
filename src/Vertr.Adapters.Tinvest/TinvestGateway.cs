@@ -223,7 +223,6 @@ internal sealed class TinvestGateway : ITinvestGateway
             operations.Add(item);
         }
 
-        //var result = _mapper.Map<Tinkoff.InvestApi.V1.Operation[], IEnumerable<Operation>>([.. response.Operations]);
         return operations;
     }
 
@@ -251,10 +250,11 @@ internal sealed class TinvestGateway : ITinvestGateway
 
         var response = await _investApiClient.Operations.GetPortfolioAsync(request);
 
-        var result = new PortfolioSnapshot
+        var snapshot = new PortfolioSnapshot
         {
-            AccountId = accountId,
+            Id = Guid.NewGuid(),
             TimeUtc = DateTime.UtcNow,
+            AccountId = accountId,
             TotalAmountBonds = response.TotalAmountBonds,
             TotalAmountCurrencies = response.TotalAmountCurrencies,
             TotalAmountEtf = response.TotalAmountEtf,
@@ -263,9 +263,37 @@ internal sealed class TinvestGateway : ITinvestGateway
             TotalAmountShares = response.TotalAmountShares,
             TotalAmountSp = response.TotalAmountSp,
             TotalAmountPortfolio = response.TotalAmountPortfolio,
-            Positions = _mapper.Map<Tinkoff.InvestApi.V1.PortfolioPosition[], PortfolioPosition[]>([.. response.Positions]),
+            ExpectedYield = response.ExpectedYield,
         };
 
-        return result;
+        var positions = new List<PortfolioPosition>();
+
+        foreach (var item in response.Positions)
+        {
+            var position = new PortfolioPosition
+            {
+                Id = Guid.NewGuid(),
+                PortfolioSnapshot = snapshot,
+                PortfolioSnapshotId = snapshot.Id,
+                AveragePositionPrice = item.AveragePositionPrice,
+                AveragePositionPriceFifo = item.AveragePositionPriceFifo,
+                Blocked = item.Blocked,
+                BlockedLots = item.BlockedLots,
+                CurrentNkd = item.CurrentNkd,
+                CurrentPrice = item.CurrentPrice,
+                ExpectedYield = item.ExpectedYield,
+                ExpectedYieldFifo = item.ExpectedYieldFifo,
+                InstrumentType = item.InstrumentType,
+                InstrumentUid = new Guid(item.InstrumentUid),
+                PositionUid = new Guid(item.PositionUid),
+                Quantity = item.Quantity,
+                VarMargin = item.VarMargin,
+            };
+            positions.Add(position);
+        }
+
+        snapshot.Positions = positions;
+
+        return snapshot;
     }
 }

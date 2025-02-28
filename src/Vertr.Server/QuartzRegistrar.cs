@@ -12,7 +12,6 @@ internal static class QuartzRegistrar
     private static readonly CandleInterval _candleInterval = CandleInterval._10Min;
     private static readonly PredictorType _predictorType = PredictorType.Sb3;
     private static readonly Sb3Algo _sb3Algo = Sb3Algo.DQN;
-    private static readonly string _accounts = "fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7";
 
     public static IServiceCollection ConfigureQuatrz(this IServiceCollection services, IConfiguration configuration)
     {
@@ -63,7 +62,6 @@ internal static class QuartzRegistrar
 
             options.AddJob<LoadPortfolioSnapshotsJob>(LoadPortfolioSnapshotsJobKeys.Key, j => j
                    .WithDescription("Load portfolio snapshots from Tinvest API")
-                   .UsingJobData(LoadPortfolioSnapshotsJobKeys.Accounts, _accounts)
                );
 
             options.AddTrigger(t => t
@@ -75,7 +73,6 @@ internal static class QuartzRegistrar
 
             options.AddJob<LoadOperationsJob>(LoadOperationsJobKeys.Key, j => j
                    .WithDescription("Load operations from Tinvest API")
-                   .UsingJobData(LoadOperationsJobKeys.Accounts, _accounts)
                );
 
             options.AddTrigger(t => t

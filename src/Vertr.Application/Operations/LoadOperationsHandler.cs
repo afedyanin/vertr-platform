@@ -32,14 +32,15 @@ internal class LoadOperationsHandler : IRequestHandler<LoadOperationsRequest>
     {
         var tasks = new List<Task>();
 
-        foreach (var accountId in _tinvestSettings.Accounts)
+        // TODO: consider using tinvestSettings to get accounts
+        foreach (var accountId in request.Accounts)
         {
             tasks.Add(LoadOperations(accountId, cancellationToken));
         }
 
         await Task.WhenAll(tasks);
 
-        _logger.LogDebug($"Loading T-Invest operations for {_tinvestSettings.Accounts.Length} accounts completed.");
+        _logger.LogDebug($"Loading T-Invest operations for {request.Accounts.Count()} accounts completed.");
     }
 
     internal async Task LoadOperations(string accountId, CancellationToken cancellationToken)

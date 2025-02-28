@@ -8,6 +8,7 @@ internal static class LoadPortfolioSnapshotsJobKeys
 {
     public const string Name = "Load Tinvest portfolio snapshots job";
     public const string Group = "Tinvest";
+    public const string Accounts = "accounts";
 
     public static readonly JobKey Key = new JobKey(Name, Group);
 }
@@ -29,8 +30,15 @@ public class LoadPortfolioSnapshotsJob : IJob
     {
         _logger.LogInformation($"{LoadPortfolioSnapshotsJobKeys.Name} starting.");
 
-        await _mediator.Send(new LoadPortfolioSnapshotsRequest());
+        var dataMap = context.JobDetail.JobDataMap;
+        var accountsString = dataMap.GetString(LoadPortfolioSnapshotsJobKeys.Accounts);
 
+        var request = new LoadPortfolioSnapshotsRequest
+        {
+            Accounts = accountsString!.Split(','),
+        };
+
+        await _mediator.Send(request);
         _logger.LogInformation($"{LoadPortfolioSnapshotsJobKeys.Name} completed.");
     }
 }

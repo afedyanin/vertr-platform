@@ -31,14 +31,15 @@ internal class LoadPortfolioSnapshotsHandler : IRequestHandler<LoadPortfolioSnap
     {
         var tasks = new List<Task>();
 
-        foreach (var accountId in _tinvestSettings.Accounts)
+        // TODO: consider using tinvestSettings to get accounts
+        foreach (var accountId in request.Accounts)
         {
             tasks.Add(LoadPortfolios(accountId, cancellationToken));
         }
 
         await Task.WhenAll(tasks);
 
-        _logger.LogDebug($"Loading T-Invest portfolios for {_tinvestSettings.Accounts.Length} accounts completed.");
+        _logger.LogDebug($"Loading T-Invest portfolios for {request.Accounts.Count()} accounts completed.");
     }
 
     internal async Task LoadPortfolios(string accountId, CancellationToken cancellationToken)

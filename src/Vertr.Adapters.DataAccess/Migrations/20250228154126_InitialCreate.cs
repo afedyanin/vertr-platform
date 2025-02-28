@@ -28,9 +28,9 @@ namespace Vertr.Adapters.DataAccess.Migrations
                     date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     type = table.Column<string>(type: "text", nullable: false),
                     operation_type = table.Column<int>(type: "integer", nullable: false),
-                    asset_uid = table.Column<Guid>(type: "uuid", nullable: false),
+                    asset_uid = table.Column<Guid>(type: "uuid", nullable: true),
                     position_uid = table.Column<Guid>(type: "uuid", nullable: false),
-                    instrument_uid = table.Column<Guid>(type: "uuid", nullable: false)
+                    instrument_uid = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {

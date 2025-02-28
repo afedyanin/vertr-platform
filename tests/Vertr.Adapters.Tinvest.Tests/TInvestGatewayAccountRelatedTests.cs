@@ -65,7 +65,9 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
     {
         var ops = await Gateway.GetOperations(accountId);
         Assert.That(ops, Is.Not.Null);
+        Console.WriteLine($"operations count={ops.Count()}");
 
+        /*
         foreach (var op in ops)
         {
             Console.WriteLine("=============");
@@ -75,6 +77,23 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
             {
                 Console.WriteLine($"--> {trade}");
             }
+        }*/
+    }
+
+    [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7", "2/28/2025 4:23:03 PM")]
+    public async Task CanGetLastOperations(string accountId, string dateFrom)
+    {
+        var from = DateTime.Parse(dateFrom).ToUniversalTime();
+        Console.WriteLine($"DateFrom={from:O}");
+
+        var ops = await Gateway.GetOperations(accountId, from, DateTime.UtcNow);
+
+        Assert.That(ops, Is.Not.Null);
+        Console.WriteLine($"operations count={ops.Count()}");
+
+        foreach (var op in ops)
+        {
+            Console.WriteLine(op);
         }
     }
 

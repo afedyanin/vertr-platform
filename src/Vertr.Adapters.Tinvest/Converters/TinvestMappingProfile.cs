@@ -70,9 +70,7 @@ internal class TinvestMappingProfile : Profile
             .ConvertUsing(new MoneyConverter());
 
         CreateMap<Tinkoff.InvestApi.V1.Operation, Domain.Operation>()
-            .ForMember(dest => dest.Date, opt => opt.MapFrom(src => src.Date.ToDateTime()))
-            .ForMember(dest => dest.OperationTrades, opt => opt.MapFrom(src => src.Trades.ToArray()))
-            .ForMember(dest => dest.AccountId, opt => opt.Ignore());
+            .ConvertUsing(new OperationConverter());
 
         CreateMap<Tinkoff.InvestApi.V1.OperationTrade, Domain.OperationTrade>()
             .ForMember(dest => dest.DateTime, opt => opt.MapFrom(src => src.DateTime.ToDateTime()));

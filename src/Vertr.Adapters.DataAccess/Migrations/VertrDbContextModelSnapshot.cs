@@ -34,7 +34,7 @@ namespace Vertr.Adapters.DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("account_id");
 
-                    b.Property<Guid>("AssetUid")
+                    b.Property<Guid?>("AssetUid")
                         .HasColumnType("uuid")
                         .HasColumnName("asset_uid");
 
@@ -52,7 +52,7 @@ namespace Vertr.Adapters.DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("instrument_type");
 
-                    b.Property<Guid>("InstrumentUid")
+                    b.Property<Guid?>("InstrumentUid")
                         .HasColumnType("uuid")
                         .HasColumnName("instrument_uid");
 

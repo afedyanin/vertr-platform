@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Vertr.Domain;
 using Vertr.Domain.Repositories;
 
@@ -50,6 +51,22 @@ internal class TinvestOperationsRepository : RepositoryBase, ITinvestOperationsR
         return snapshots;
     }
 
+    public async Task<Operation?> GetLast(
+        string accountId,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = await GetDbContext();
+
+        var last = await context
+            .TinvestOperations
+            .AsNoTracking()
+            .Where(x => x.AccountId == accountId)
+            .OrderByDescending(x => x.Date)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        return last;
+    }
+
     public async Task<int> Update(Operation operation, CancellationToken cancellationToken = default)
     {
         using var context = await GetDbContext();
@@ -62,12 +79,29 @@ internal class TinvestOperationsRepository : RepositoryBase, ITinvestOperationsR
 
     public async Task<int> Insert(Operation operation, CancellationToken cancellationToken = default)
     {
-        using var context = await GetDbContext();
+        try
+        {
+            using var context = await GetDbContext();
 
-        var entry = await context.TinvestOperations.AddAsync(operation, cancellationToken);
-        var savedRecords = await context.SaveChangesAsync(cancellationToken);
+            var entry = await context.TinvestOperations.AddAsync(operation, cancellationToken);
+            var savedRecords = await context.SaveChangesAsync(cancellationToken);
 
-        return savedRecords;
+            return savedRecords;
+        }
+        catch (DbUpdateException ex)
+        {
+            if (ex.InnerException is PostgresException pgex)
+            {
+                // duplicate key value violates unique constraint "tinvest_operations_pkey"
+                if (pgex.SqlState == "23505")
+                {
+                    // ignore insert duplicates
+                    return 0;
+                }
+            }
+
+            throw;
+        }
     }
 
     public async Task<int> Delete(Guid operationId, CancellationToken cancellationToken = default)

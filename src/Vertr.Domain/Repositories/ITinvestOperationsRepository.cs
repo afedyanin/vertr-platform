@@ -10,6 +10,10 @@ public interface ITinvestOperationsRepository
         DateTime? to = null,
         CancellationToken cancellationToken = default);
 
+    public Task<Operation?> GetLast(
+        string accountId,
+        CancellationToken cancellationToken = default);
+
     public Task<int> Update(Operation operation, CancellationToken cancellationToken = default);
 
     public Task<int> Insert(Operation operation, CancellationToken cancellationToken = default);

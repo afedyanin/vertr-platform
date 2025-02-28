@@ -50,10 +50,9 @@ internal class LoadOperationsHandler : IRequestHandler<LoadOperationsRequest>
         {
             _logger.LogDebug($"Loading operations for {accountId}");
 
-            // TODO: get last operation from DB
-            // TODO: use time interval to load only latest operations
+            var last = await _repository.GetLast(accountId);
 
-            var operations = await _gateway.GetOperations(accountId);
+            var operations = await _gateway.GetOperations(accountId, last?.Date, DateTime.UtcNow);
 
             if (operations == null || !operations.Any())
             {
@@ -61,8 +60,6 @@ internal class LoadOperationsHandler : IRequestHandler<LoadOperationsRequest>
                 return;
             }
 
-            // TODO: implement InsertMany
-            // TODO: check if already exists
             var count = 0;
             foreach (var operation in operations)
             {

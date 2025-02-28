@@ -28,7 +28,7 @@ public class MoneyConverter :
         Domain.Money destination,
         ResolutionContext context)
     {
-        destination = new Domain.Money()
+        destination = new Domain.Money
         {
             Currency = source.Currency,
             Value = source,

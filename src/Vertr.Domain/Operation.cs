@@ -30,11 +30,11 @@ public record class Operation
 
     public OperationType OperationType { get; set; }
 
-    public Guid AssetUid { get; set; }
+    public Guid? AssetUid { get; set; }
 
     public Guid PositionUid { get; set; }
 
-    public Guid InstrumentUid { get; set; }
+    public Guid? InstrumentUid { get; set; }
 
     public IEnumerable<OperationTrade> OperationTrades { get; set; } = [];
 }

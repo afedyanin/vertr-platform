@@ -12,7 +12,7 @@ using Vertr.Adapters.DataAccess;
 namespace Vertr.Adapters.DataAccess.Migrations
 {
     [DbContext(typeof(VertrDbContext))]
-    [Migration("20250227145528_InitialCreate")]
+    [Migration("20250228154126_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -37,7 +37,7 @@ namespace Vertr.Adapters.DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("account_id");
 
-                    b.Property<Guid>("AssetUid")
+                    b.Property<Guid?>("AssetUid")
                         .HasColumnType("uuid")
                         .HasColumnName("asset_uid");
 
@@ -55,7 +55,7 @@ namespace Vertr.Adapters.DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("instrument_type");
 
-                    b.Property<Guid>("InstrumentUid")
+                    b.Property<Guid?>("InstrumentUid")
                         .HasColumnType("uuid")
                         .HasColumnName("instrument_uid");
 

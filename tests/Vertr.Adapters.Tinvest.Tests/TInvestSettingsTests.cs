@@ -10,7 +10,7 @@ public class TInvestSettingsTests : TinvestTestBase
     {
         var settings = new TinvestSettings()
         {
-            AccountId = "abcd",
+            Accounts = ["abcd", "12345"],
             InvestApiSettings = new Tinkoff.InvestApi.InvestApiSettings()
             {
                 AccessToken = "access token",
@@ -45,9 +45,21 @@ public class TInvestSettingsTests : TinvestTestBase
     }
 
     [Test]
-    public void GetSymbolIdFromInvalidSymbolReturnsNull()
+    public void CanGetSymbolIdFromInvalidSymbolReturnsNull()
     {
         var symbolId = Settings.GetSymbolId("SSEE");
         Assert.That(symbolId, Is.Null);
+    }
+
+    [Test]
+    public void CanGetAccounts()
+    {
+        var accounts = Settings.Accounts;
+        Assert.That(accounts, Is.Not.Empty);
+
+        foreach (var account in accounts)
+        {
+            Console.WriteLine(account);
+        }
     }
 }

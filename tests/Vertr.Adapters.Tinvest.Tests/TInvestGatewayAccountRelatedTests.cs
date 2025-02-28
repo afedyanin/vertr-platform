@@ -8,21 +8,13 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
 {
     private const string _sber_id = "e6123145-9665-43e0-8413-cd61b8aa9b13";
 
-    private const string _accountId = "ad518e56-a2d3-46dc-a72b-2cebfac23561";
-
-    [Test]
-    public async Task CanPrepareSandboxAccount()
-    {
-        var accountId = await PrepareSandboxAccount();
-        Console.WriteLine($"Account created. AccountId={accountId}");
-    }
-
-    [Test]
-    public async Task CanPostMarketOrder()
+    [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7")]
+    [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
+    public async Task CanPostMarketOrder(string accountId)
     {
         var requestId = Guid.NewGuid();
         var response = await Gateway.PostOrder(
-            _accountId,
+            accountId,
             _sber_id,
             requestId,
             OrderDirection.Buy,
@@ -38,12 +30,13 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         Console.WriteLine(response);
     }
 
-    [Test]
-    public async Task CanGetOrderState()
+    [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7")]
+    [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
+    public async Task CanGetOrderState(string accountId)
     {
         var requestId = Guid.NewGuid();
         var response = await Gateway.PostOrder(
-            _accountId,
+            accountId,
             _sber_id,
             requestId,
             OrderDirection.Buy,
@@ -53,7 +46,7 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
             decimal.Zero,
             10);
 
-        var state = await Gateway.GetOrderState(_accountId, response.OrderId, PriceType.Unspecified);
+        var state = await Gateway.GetOrderState(accountId, response.OrderId, PriceType.Unspecified);
 
         Assert.That(state, Is.Not.Null);
 
@@ -66,10 +59,11 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         }
     }
 
-    [Test]
-    public async Task CanGetOperations()
+    [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7")]
+    [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
+    public async Task CanGetOperations(string accountId)
     {
-        var ops = await Gateway.GetOperations(_accountId);
+        var ops = await Gateway.GetOperations(accountId);
         Assert.That(ops, Is.Not.Null);
 
         foreach (var op in ops)
@@ -84,10 +78,11 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         }
     }
 
-    [Test]
-    public async Task CanGetPositions()
+    [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7")]
+    [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
+    public async Task CanGetPositions(string accountId)
     {
-        var positions = await Gateway.GetPositions(_accountId);
+        var positions = await Gateway.GetPositions(accountId);
         Assert.That(positions, Is.Not.Null);
 
         foreach(var pos in positions)
@@ -96,10 +91,11 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         }
     }
 
-    [Test]
-    public async Task CanGetPortfolio()
+    [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7")]
+    [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
+    public async Task CanGetPortfolio(string accountId)
     {
-        var portfolio = await Gateway.GetPortfolio(_accountId);
+        var portfolio = await Gateway.GetPortfolio(accountId);
         Assert.That(portfolio, Is.Not.Null);
 
         Console.WriteLine(portfolio);
@@ -108,19 +104,5 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         {
             Console.WriteLine(pos);
         }
-    }
-
-    private async Task<string> PrepareSandboxAccount()
-    {
-        var accountId = await Gateway.CreateSandboxAccount("Test account");
-        var amount = new Money
-        {
-            Currency = "rub",
-            Value = 100_000m,
-        };
-
-        var balance = await Gateway.SandboxPayIn(accountId, amount);
-
-        return accountId;
     }
 }

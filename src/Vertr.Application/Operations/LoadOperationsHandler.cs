@@ -1,7 +1,5 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Vertr.Adapters.Tinvest;
 using Vertr.Domain.Ports;
 using Vertr.Domain.Repositories;
 
@@ -11,20 +9,17 @@ internal class LoadOperationsHandler : IRequestHandler<LoadOperationsRequest>
 {
     private readonly ITinvestOperationsRepository _repository;
     private readonly ITinvestGateway _gateway;
-    private readonly TinvestSettings _tinvestSettings;
 
     private readonly ILogger<LoadOperationsHandler> _logger;
 
     public LoadOperationsHandler(
         ITinvestOperationsRepository repository,
         ITinvestGateway gateway,
-        IOptions<TinvestSettings> settings,
         ILogger<LoadOperationsHandler> logger)
     {
         _repository = repository;
         _gateway = gateway;
         _logger = logger;
-        _tinvestSettings = settings.Value;
     }
 
 
@@ -32,7 +27,6 @@ internal class LoadOperationsHandler : IRequestHandler<LoadOperationsRequest>
     {
         var tasks = new List<Task>();
 
-        // TODO: consider using tinvestSettings to get accounts
         foreach (var accountId in request.Accounts)
         {
             tasks.Add(LoadOperations(accountId, cancellationToken));

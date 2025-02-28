@@ -1,7 +1,5 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Vertr.Adapters.Tinvest;
 using Vertr.Domain.Ports;
 using Vertr.Domain.Repositories;
 
@@ -11,27 +9,23 @@ internal class LoadPortfolioSnapshotsHandler : IRequestHandler<LoadPortfolioSnap
 {
     private readonly ITinvestPortfolioRepository _repository;
     private readonly ITinvestGateway _gateway;
-    private readonly TinvestSettings _tinvestSettings;
 
     private readonly ILogger<LoadPortfolioSnapshotsHandler> _logger;
 
     public LoadPortfolioSnapshotsHandler(
         ITinvestPortfolioRepository repository,
         ITinvestGateway gateway,
-        IOptions<TinvestSettings> settings,
         ILogger<LoadPortfolioSnapshotsHandler> logger)
     {
         _repository = repository;
         _gateway = gateway;
         _logger = logger;
-        _tinvestSettings = settings.Value;
     }
 
     public async Task Handle(LoadPortfolioSnapshotsRequest request, CancellationToken cancellationToken)
     {
         var tasks = new List<Task>();
 
-        // TODO: consider using tinvestSettings to get accounts
         foreach (var accountId in request.Accounts)
         {
             tasks.Add(LoadPortfolios(accountId, cancellationToken));

@@ -1,3 +1,13 @@
+# 2025-02-28
+
+## MartenDB
+
+- [Understanding Event Sourcing with Marten](https://martendb.io/events/learning.html)
+- [Github](https://github.com/JasperFx/marten)
+- [EventSourcing .NET](https://github.com/oskardudycz/EventSourcing.NetCore)
+
+
+
 # 2025-02-27
 
 - написать тесты для хендлеров портфолио и операций

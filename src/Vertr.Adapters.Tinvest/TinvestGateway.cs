@@ -128,7 +128,7 @@ internal sealed class TinvestGateway : ITinvestGateway
     {
         var request = _mapper.Map<Tinkoff.InvestApi.V1.PostOrderRequest>(orderRequest);
         var response = await _investApiClient.Orders.PostOrderAsync(request);
-        var orderResponse = _mapper.Map<PostOrderResponse>(response);
+        var orderResponse = response.Convert(request.AccountId, _mapper);
 
         return orderResponse;
     }

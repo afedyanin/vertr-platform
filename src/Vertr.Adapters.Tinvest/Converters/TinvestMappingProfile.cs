@@ -81,8 +81,5 @@ internal class TinvestMappingProfile : Profile
             .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.RequestId.ToString()))
             .ForMember(dest => dest.InstrumentId, opt => opt.MapFrom(src => src.InstrumentId.ToString()))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.QuantityLots));
-
-        CreateMap<Tinkoff.InvestApi.V1.PostOrderResponse, Domain.PostOrderResponse>();
-
     }
 }

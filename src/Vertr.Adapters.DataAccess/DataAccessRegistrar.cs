@@ -20,6 +20,7 @@ public static class DataAccessRegistrar
         services.AddDbContextFactory<VertrDbContext>(options => options.UseNpgsql(connectionString));
         services.AddScoped<ITinvestPortfolioRepository, TinvestPortfolioRepository>();
         services.AddScoped<ITinvestOperationsRepository, TinvestOperationsRepository>();
+        services.AddScoped<ITinvestOrdersRepository, TinvestOrdersRepository>();
 
         return services;
     }

@@ -9,6 +9,9 @@ public class VertrDbContext : DbContext
 
     public DbSet<PortfolioSnapshot> TinvestPortfolios { get; set; }
 
+    public DbSet<PostOrderResponse> TinvestOrders { get; set; }
+
+
     public VertrDbContext(DbContextOptions<VertrDbContext> options) : base(options)
     {
     }
@@ -183,5 +186,72 @@ public class VertrDbContext : DbContext
                 .HasColumnName("expected_yield_fifo");
         });
 
+        modelBuilder.Entity<PostOrderResponse>(entity =>
+        {
+            entity.ToTable("tinvest_orders");
+
+            entity.HasKey(e => e.Id)
+                .HasName("tinvest_orders_pkey");
+
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .IsRequired();
+
+            entity.Property(e => e.TimeUtc)
+                .HasColumnName("time_utc")
+                .IsRequired();
+
+            entity.Property(e => e.AccountId)
+                .HasColumnName("account_id")
+                .IsRequired();
+
+            entity.Property(e => e.TradingSignalId)
+                .HasColumnName("trading_signal_id");
+
+            entity.Property(e => e.OrderId)
+                .HasColumnName("order_id");
+
+            entity.Property(e => e.OrderRequestId)
+                .HasColumnName("order_request_id");
+
+            entity.Property(e => e.ExecutionReportStatus)
+                .HasColumnName("execution_report_status");
+
+            entity.Property(e => e.LotsRequested)
+                .HasColumnName("lots_requested");
+
+            entity.Property(e => e.LotsExecuted)
+                .HasColumnName("lots_executed");
+
+            entity.Property(e => e.InitialOrderPrice)
+                .HasColumnName("initial_order_price");
+
+            entity.Property(e => e.ExecutedOrderPrice)
+                .HasColumnName("executed_order_price");
+
+            entity.Property(e => e.TotalOrderAmount)
+                .HasColumnName("total_order_amount");
+
+            entity.Property(e => e.InitialCommission)
+                .HasColumnName("initial_commission");
+
+            entity.Property(e => e.ExecutedCommission)
+                .HasColumnName("executed_commission");
+
+            entity.Property(e => e.Direction)
+                .HasColumnName("direction");
+
+            entity.Property(e => e.InitialSecurityPrice)
+                .HasColumnName("initial_security_price");
+
+            entity.Property(e => e.OrderType)
+                .HasColumnName("order_type");
+
+            entity.Property(e => e.Message)
+                .HasColumnName("message");
+
+            entity.Property(e => e.InstrumentUid)
+                .HasColumnName("instrument_uid");
+        });
     }
 }

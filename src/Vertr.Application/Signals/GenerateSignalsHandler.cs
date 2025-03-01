@@ -65,7 +65,11 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
 
         try
         {
-            var generateSignal = await ShouldGenerateNewSignal(symbol, interval);
+            var generateSignal = await ShouldGenerateNewSignal(
+                symbol,
+                interval,
+                predictorType,
+                sb3Algo);
 
             if (!generateSignal)
             {
@@ -95,7 +99,7 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
                 CandlesSource = _candlesSource,
             };
 
-            var res = await _tradingSignalsRepository.Insert(tradingSignal);
+            var res = await _tradingSignalsRepository.Insert(tradingSignal, cancellationToken);
 
             if (res > 0)
             {
@@ -112,7 +116,11 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
         }
     }
 
-    internal async Task<bool> ShouldGenerateNewSignal(string symbol, CandleInterval interval)
+    internal async Task<bool> ShouldGenerateNewSignal(
+        string symbol,
+        CandleInterval interval,
+        PredictorType predictorType,
+        Sb3Algo sb3Algo)
     {
         var candles = await _tinvestCandlesRepository.GetLast(symbol, interval, 1, false);
 
@@ -122,16 +130,19 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
             return false;
         }
 
-        var signals = await _tradingSignalsRepository.GetLast(symbol, interval, 1);
+        var signal = await _tradingSignalsRepository.GetLast(
+            symbol,
+            interval,
+            predictorType,
+            sb3Algo);
 
-        if (signals == null || !signals.Any())
+        if (signal == null)
         {
-            _logger.LogDebug($"No any signals found for {symbol} {interval}.");
+            _logger.LogDebug($"No any signals found for {symbol} {interval} {predictorType} {sb3Algo}.");
             return true;
         }
 
         var candle = candles.First();
-        var signal = signals.First();
 
         return signal.TimeUtc < candle.TimeUtc;
     }

@@ -11,6 +11,8 @@ public class VertrDbContext : DbContext
 
     public DbSet<PostOrderResponse> TinvestOrders { get; set; }
 
+    public DbSet<TradingSignal> TradingSignals { get; set; }
+
 
     public VertrDbContext(DbContextOptions<VertrDbContext> options) : base(options)
     {
@@ -252,6 +254,44 @@ public class VertrDbContext : DbContext
 
             entity.Property(e => e.InstrumentUid)
                 .HasColumnName("instrument_uid");
+        });
+
+        modelBuilder.Entity<TradingSignal>(entity =>
+        {
+            entity.ToTable("trading_signals");
+
+            entity.HasKey(e => e.Id)
+                .HasName("trading_signals_pkey");
+
+            entity.Property(e => e.Id)
+                .HasColumnName("id")
+                .IsRequired();
+
+            entity.Property(e => e.TimeUtc)
+                .HasColumnName("time_utc")
+                .IsRequired();
+
+            entity.Property(e => e.Symbol)
+                .HasColumnName("symbol")
+                .IsRequired();
+
+            entity.Property(e => e.Action)
+                .HasColumnName("action")
+                .IsRequired();
+
+            entity.Property(e => e.CandleInterval)
+                .HasColumnName("candle_interval")
+                .IsRequired();
+
+            entity.Property(e => e.PredictorType)
+                .HasColumnName("predictor_type")
+                .IsRequired();
+
+            entity.Property(e => e.Sb3Algo)
+                .HasColumnName("sb3_algo");
+
+            entity.Property(e => e.CandlesSource)
+                .HasColumnName("candles_source");
         });
     }
 }

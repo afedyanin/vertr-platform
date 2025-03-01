@@ -4,11 +4,22 @@ namespace Vertr.Domain.Repositories;
 
 public interface ITradingSignalsRepository
 {
-    Task<IEnumerable<TradingSignal>> Get(string symbol, CandleInterval interval, DateTime from, DateTime to);
+    public Task<TradingSignal?> GetById(
+        Guid id,
+        CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<TradingSignal>> GetLast(string symbol, CandleInterval interval, int count = 10);
+    public Task<TradingSignal?> GetLast(
+        string symbol,
+        CandleInterval interval,
+        PredictorType predictorType,
+        Sb3Algo algo,
+        CancellationToken cancellationToken = default);
 
-    Task<int> Insert(TradingSignal signal);
+    public Task<int> Insert(
+        TradingSignal signal,
+        CancellationToken cancellationToken = default);
 
-    Task<int> Delete(Guid signalId);
+    public Task<int> Delete(
+        Guid tradingSignalId,
+        CancellationToken cancellationToken = default);
 }

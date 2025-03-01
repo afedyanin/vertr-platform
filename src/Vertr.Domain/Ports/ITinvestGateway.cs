@@ -18,24 +18,22 @@ public interface ITinvestGateway
 
     public Task CloseSandboxAccount(string accountId);
 
-    public Task<Money> SandboxPayIn(string accountId, Money amount);
+    public Task<Money> SandboxPayIn(
+        string accountId,
+        Money amount);
 
     public Task<IEnumerable<Account>> GetAccounts();
 
-    public Task<PostOrderResponse> PostOrder(
+    public Task<PostOrderResponse> PostOrder(PostOrderRequest orderRequest);
+
+    public Task<DateTime> CancelOrder(
         string accountId,
-        Guid instrumentId,
-        Guid requestId,
-        OrderDirection orderDirection,
-        OrderType orderType,
-        TimeInForceType timeInForceType,
-        PriceType priceType,
-        decimal price,
-        long quantityLots);
+        string orderId);
 
-    public Task<DateTime> CancelOrder(string accountId, string orderId);
-
-    public Task<OrderState> GetOrderState(string accountId, string orderId, PriceType priceType);
+    public Task<OrderState> GetOrderState(
+        string accountId,
+        string orderId,
+        PriceType priceType);
 
     public Task<IEnumerable<Operation>> GetOperations(
         string accountId,

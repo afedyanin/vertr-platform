@@ -1,3 +1,4 @@
+using Vertr.Domain;
 using Vertr.Domain.Enums;
 
 namespace Vertr.Adapters.Tinvest.Tests;
@@ -11,20 +12,23 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
     [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
     public async Task CanPostMarketOrder(string accountId)
     {
-        var requestId = Guid.NewGuid();
-        var response = await Gateway.PostOrder(
-            accountId,
-            _sber_id,
-            requestId,
-            OrderDirection.Buy,
-            OrderType.Market,
-            TimeInForceType.Unspecified,
-            PriceType.Currency,
-            decimal.Zero,
-            10);
+        var request = new PostOrderRequest
+        {
+            AccountId = accountId,
+            InstrumentId = _sber_id,
+            RequestId = Guid.NewGuid(),
+            OrderDirection = OrderDirection.Buy,
+            OrderType = OrderType.Market,
+            TimeInForceType = TimeInForceType.Unspecified,
+            PriceType = PriceType.Currency,
+            Price = decimal.Zero,
+            QuantityLots = 10,
+        };
+
+        var response = await Gateway.PostOrder(request);
 
         Assert.That(response, Is.Not.Null);
-        Assert.That(response.OrderRequestId, Is.EqualTo(requestId.ToString()));
+        Assert.That(response.OrderRequestId, Is.EqualTo(request.RequestId.ToString()));
 
         Console.WriteLine(response);
     }
@@ -33,17 +37,19 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
     [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
     public async Task CanGetOrderState(string accountId)
     {
-        var requestId = Guid.NewGuid();
-        var response = await Gateway.PostOrder(
-            accountId,
-            _sber_id,
-            requestId,
-            OrderDirection.Buy,
-            OrderType.Market,
-            TimeInForceType.Unspecified,
-            PriceType.Currency,
-            decimal.Zero,
-            10);
+        var request = new PostOrderRequest
+        {
+            AccountId = accountId,
+            InstrumentId = _sber_id,
+            RequestId = Guid.NewGuid(),
+            OrderDirection = OrderDirection.Buy,
+            OrderType = OrderType.Market,
+            TimeInForceType = TimeInForceType.Unspecified,
+            PriceType = PriceType.Currency,
+            Price = decimal.Zero,
+            QuantityLots = 10,
+        };
+        var response = await Gateway.PostOrder(request);
 
         var state = await Gateway.GetOrderState(accountId, response.OrderId, PriceType.Unspecified);
 

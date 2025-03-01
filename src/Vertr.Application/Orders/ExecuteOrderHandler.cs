@@ -1,12 +1,20 @@
 using MediatR;
+using Vertr.Domain.Ports;
 
 namespace Vertr.Application.Orders;
 internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest>
 {
-    public Task Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
+    private readonly ITinvestGateway _gateway;
+
+    public ExecuteOrderHandler(ITinvestGateway gateway)
     {
-        // post order to gateway
-        // get resposne
+        _gateway = gateway;
+    }
+
+    public async Task Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _gateway.PostOrder(request.PostOrderRequest);
+
         // save order response into db with
         // - accountId
         // - signalId

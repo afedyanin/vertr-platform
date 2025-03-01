@@ -1,7 +1,6 @@
 using Tinkoff.InvestApi;
 using Vertr.Domain.Ports;
 using Vertr.Domain;
-using Microsoft.Extensions.Options;
 using DateTime = System.DateTime;
 using Google.Protobuf.WellKnownTypes;
 using AutoMapper;
@@ -15,16 +14,13 @@ internal sealed class TinvestGateway : ITinvestGateway
 {
     private readonly IMapper _mapper;
     private readonly InvestApiClient _investApiClient;
-    private readonly TinvestSettings _investConfiguration;
 
     public TinvestGateway(
         IMapper mapper,
-        InvestApiClient investApiClient,
-        IOptions<TinvestSettings> options)
+        InvestApiClient investApiClient)
     {
         _mapper = mapper;
         _investApiClient = investApiClient;
-        _investConfiguration = options.Value;
     }
 
     public async Task<IEnumerable<Instrument>> FindInstrument(string query)
@@ -128,30 +124,9 @@ internal sealed class TinvestGateway : ITinvestGateway
         return accounts;
     }
 
-    public async Task<PostOrderResponse> PostOrder(
-        string accountId,
-        Guid instrumentId,
-        Guid requestId,
-        OrderDirection orderDirection,
-        OrderType orderType,
-        TimeInForceType timeInForceType,
-        PriceType priceType,
-        decimal price,
-        long quantityLots)
+    public async Task<PostOrderResponse> PostOrder(PostOrderRequest orderRequest)
     {
-        var request = new Tinkoff.InvestApi.V1.PostOrderRequest
-        {
-            AccountId = accountId,
-            OrderId = requestId.ToString(),
-            Direction = _mapper.Map<Tinkoff.InvestApi.V1.OrderDirection>(orderDirection),
-            InstrumentId = instrumentId.ToString(),
-            OrderType = _mapper.Map<Tinkoff.InvestApi.V1.OrderType>(orderType),
-            TimeInForce = _mapper.Map<Tinkoff.InvestApi.V1.TimeInForceType>(timeInForceType),
-            PriceType = _mapper.Map<Tinkoff.InvestApi.V1.PriceType>(priceType),
-            Price = price,
-            Quantity = quantityLots
-        };
-
+        var request = _mapper.Map<Tinkoff.InvestApi.V1.PostOrderRequest>(orderRequest);
         var response = await _investApiClient.Orders.PostOrderAsync(request);
         var orderResponse = _mapper.Map<PostOrderResponse>(response);
 

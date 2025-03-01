@@ -24,7 +24,7 @@ public interface ITinvestGateway
 
     public Task<PostOrderResponse> PostOrder(
         string accountId,
-        string instrumentId,
+        Guid instrumentId,
         Guid requestId,
         OrderDirection orderDirection,
         OrderType orderType,

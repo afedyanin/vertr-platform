@@ -1,4 +1,3 @@
-using Vertr.Domain;
 using Vertr.Domain.Enums;
 
 namespace Vertr.Domain;

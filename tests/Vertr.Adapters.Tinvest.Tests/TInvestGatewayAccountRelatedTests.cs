@@ -1,4 +1,3 @@
-using Vertr.Domain;
 using Vertr.Domain.Enums;
 
 namespace Vertr.Adapters.Tinvest.Tests;
@@ -6,7 +5,7 @@ namespace Vertr.Adapters.Tinvest.Tests;
 [TestFixture(Category = "integration", Explicit = true)]
 public class TInvestGatewayAccountRelatedTests : TinvestTestBase
 {
-    private const string _sber_id = "e6123145-9665-43e0-8413-cd61b8aa9b13";
+    private static readonly Guid _sber_id = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
 
     [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7")]
     [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]

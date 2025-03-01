@@ -130,7 +130,7 @@ internal sealed class TinvestGateway : ITinvestGateway
 
     public async Task<PostOrderResponse> PostOrder(
         string accountId,
-        string instrumentId,
+        Guid instrumentId,
         Guid requestId,
         OrderDirection orderDirection,
         OrderType orderType,
@@ -144,7 +144,7 @@ internal sealed class TinvestGateway : ITinvestGateway
             AccountId = accountId,
             OrderId = requestId.ToString(),
             Direction = _mapper.Map<Tinkoff.InvestApi.V1.OrderDirection>(orderDirection),
-            InstrumentId = instrumentId,
+            InstrumentId = instrumentId.ToString(),
             OrderType = _mapper.Map<Tinkoff.InvestApi.V1.OrderType>(orderType),
             TimeInForce = _mapper.Map<Tinkoff.InvestApi.V1.TimeInForceType>(timeInForceType),
             PriceType = _mapper.Map<Tinkoff.InvestApi.V1.PriceType>(priceType),

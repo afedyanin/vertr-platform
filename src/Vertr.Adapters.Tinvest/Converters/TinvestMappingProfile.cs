@@ -16,7 +16,7 @@ internal class TinvestMappingProfile : Profile
             .ConvertUsingEnumMapping()
             .ReverseMap();
 
-        CreateMap<Tinkoff.InvestApi.V1.OrderType, Domain.OrderType>()
+        CreateMap<Tinkoff.InvestApi.V1.OrderType, OrderType>()
             .ConvertUsingEnumMapping()
             .ReverseMap();
 

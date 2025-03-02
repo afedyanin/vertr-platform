@@ -50,8 +50,7 @@ public class UpdateLastCandlesHandlerTests : ApplicationTestBase
 
         var request = new UpdateLastCandlesRequest
         {
-            Symbols = [_symbol],
-            Interval = _interval,
+            Symbols = [(_symbol, _interval)],
         };
 
         await mediator.Send(request);
@@ -66,8 +65,11 @@ public class UpdateLastCandlesHandlerTests : ApplicationTestBase
 
         var request = new UpdateLastCandlesRequest
         {
-            Symbols = ["AFKS", "MOEX", "OZON"],
-            Interval = _interval,
+            Symbols = [
+                ("AFKS", _interval),
+                ("MOEX", _interval),
+                ("OZON", _interval),
+            ],
         };
 
         await mediator.Send(request);

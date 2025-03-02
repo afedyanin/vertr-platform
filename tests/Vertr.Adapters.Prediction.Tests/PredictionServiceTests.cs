@@ -2,15 +2,25 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using Vertr.Adapters.Prediction.Converters;
+using Vertr.Adapters.Prediction.Extensions;
 using Vertr.Adapters.Prediction.Models;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Adapters.Prediction.Tests;
 
 [TestFixture(Category = "integration", Explicit = true)]
 public class PredictionServiceTests
 {
+    private readonly StrategySettings _strategySettings = new StrategySettings
+    {
+        Symbol = "SBER",
+        Interval = CandleInterval._10Min,
+        PredictorType = PredictorType.Sb3,
+        Sb3Algo = Sb3Algo.DQN,
+    };
+
     [Test]
     public async Task CanSendPredictionRequest()
     {
@@ -18,11 +28,11 @@ public class PredictionServiceTests
 
         var request = new PredictionRequest
         {
-            Symbol = "SBER",
-            Interval = (int)CandleInterval._10Min,
-            Predictor = PredictorType.Sb3,
-            Algo = Sb3Algo.DQN,
-            CandlesCount = 20,
+            Symbol = _strategySettings.Symbol,
+            Interval = (int)_strategySettings.Interval,
+            Predictor = _strategySettings.PredictorType.GetName(),
+            Algo = _strategySettings.Sb3Algo.GetName(),
+            CandlesCount = 120,
             CompletedCandelsOnly = true,
             CandlesSource = "tinvest"
         };
@@ -48,9 +58,10 @@ public class PredictionServiceTests
     public async Task CanUsePredictionService()
     {
         var predictionApi = RestService.For<IPredictionApi>("http://127.0.0.1:8081");
+
         IPredictionService service = new PredictionService(predictionApi);
 
-        var items = await service.Predict("SBER", CandleInterval._10Min, PredictorType.Sb3, Sb3Algo.DQN);
+        var items = await service.Predict(_strategySettings);
 
         Assert.That(items, Is.Not.Null);
 

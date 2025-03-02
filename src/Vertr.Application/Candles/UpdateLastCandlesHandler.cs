@@ -33,7 +33,7 @@ internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesReque
 
         foreach (var symbol in request.Symbols)
         {
-            tasks.Add(LoadSymbol(symbol.Trim(), request.Interval, cancellationToken));
+            tasks.Add(LoadSymbol(symbol.Item1, symbol.Item2, cancellationToken));
         }
 
         await Task.WhenAll(tasks);

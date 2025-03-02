@@ -63,7 +63,7 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
 
             if (prediction == null || !prediction.Any())
             {
-                _logger.LogInformation($"No any predictions for {symbol} {interval} predictor={predictorType} algo={sb3Algo}.");
+                _logger.LogInformation($"No any predictions for {strategySettings}.");
                 return;
             }
 
@@ -73,11 +73,11 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
             {
                 Id = Guid.NewGuid(),
                 TimeUtc = signalTime,
-                Symbol = symbol,
+                Symbol = strategySettings.Symbol,
                 Action = signalAction,
-                CandleInterval = interval,
-                PredictorType = predictorType,
-                Sb3Algo = sb3Algo,
+                CandleInterval = strategySettings.Interval,
+                PredictorType = strategySettings.PredictorType,
+                Sb3Algo = strategySettings.Sb3Algo,
                 CandlesSource = _candlesSource,
             };
 

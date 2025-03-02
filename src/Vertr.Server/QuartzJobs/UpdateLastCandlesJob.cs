@@ -2,6 +2,7 @@ using MediatR;
 using Quartz;
 using Vertr.Application.Candles;
 using Vertr.Domain.Enums;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Server.QuartzJobs;
 
@@ -9,8 +10,6 @@ internal static class UpdateTinvestCandlesJobKeys
 {
     public const string Name = "Update latest candles job";
     public const string Group = "Tinvest";
-    public const string Symbols = "symbols";
-    public const string Interval = "interval";
 
     public static readonly JobKey Key = new JobKey(Name, Group);
 }
@@ -18,13 +17,16 @@ internal static class UpdateTinvestCandlesJobKeys
 public class UpdateLastCandlesJob : IJob
 {
     private readonly IMediator _mediator;
+    private readonly AccountStrategySettings _accountStrategySettings;
     private readonly ILogger<UpdateLastCandlesJob> _logger;
 
     public UpdateLastCandlesJob(
         IMediator mediator,
+        AccountStrategySettings accountStrategySettings,
         ILogger<UpdateLastCandlesJob> logger)
     {
         _mediator = mediator;
+        _accountStrategySettings = accountStrategySettings;
         _logger = logger;
     }
 
@@ -32,17 +34,34 @@ public class UpdateLastCandlesJob : IJob
     {
         _logger.LogInformation($"{UpdateTinvestCandlesJobKeys.Name} starting.");
 
-        var dataMap = context.JobDetail.JobDataMap;
-        var symbolsString = dataMap.GetString(UpdateTinvestCandlesJobKeys.Symbols);
-        var intervalValue = dataMap.GetInt(UpdateTinvestCandlesJobKeys.Interval);
+        var symbols = ComposeSymbols();
 
         var request = new UpdateLastCandlesRequest
         {
-            Symbols = symbolsString!.Split(','),
-            Interval = (CandleInterval)intervalValue
+            Symbols = symbols,
         };
 
         await _mediator.Send(request);
         _logger.LogInformation($"{UpdateTinvestCandlesJobKeys.Name} completed.");
+    }
+
+    private IEnumerable<(string, CandleInterval)> ComposeSymbols()
+    {
+        var symbols = new HashSet<(string, CandleInterval)>();
+
+        foreach (var strategySettingsList in _accountStrategySettings.SignalMappings.Values)
+        {
+            if (strategySettingsList == null)
+            {
+                continue;
+            }
+
+            foreach (var item in strategySettingsList)
+            {
+                symbols.Add((item.Symbol, item.Interval));
+            }
+        }
+
+        return symbols;
     }
 }

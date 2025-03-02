@@ -14,17 +14,17 @@ public class AccountStrategySettingsTests
         var s1 = new StrategySettings
         {
             Symbol = "SBER",
-            Interval = Enums.CandleInterval._15Min,
-            PredictorType = PredictorType.RandomWalk.Name,
-            Sb3Algo = Sb3Algo.Undefined.Name,
+            Interval = CandleInterval._15Min,
+            PredictorType = PredictorType.RandomWalk,
+            Sb3Algo = Sb3Algo.Undefined,
         };
 
         var s2 = new StrategySettings
         {
             Symbol = "VTBR",
             Interval = Enums.CandleInterval._10Min,
-            PredictorType = PredictorType.Sb3.Name,
-            Sb3Algo = Sb3Algo.SAC.Name,
+            PredictorType = PredictorType.Sb3,
+            Sb3Algo = Sb3Algo.SAC,
         };
 
         var settings = new AccountStrategySettings

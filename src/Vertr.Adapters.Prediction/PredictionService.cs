@@ -4,6 +4,7 @@ using Vertr.Adapters.Prediction.Models;
 
 using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Adapters.Prediction;
 
@@ -17,20 +18,17 @@ internal class PredictionService : IPredictionService
     }
 
     public async Task<IEnumerable<(DateTime, TradeAction)>> Predict(
-        string symbol,
-        CandleInterval interval,
-        PredictorType predictor,
-        Sb3Algo? algo = null,
+        StrategySettings strategySettings,
         int candlesCount = 20,
         bool completedOnly = false,
         string candleSource = "tinvest")
     {
         var request = new PredictionRequest
         {
-            Symbol = symbol,
-            Interval = (int)interval,
-            Predictor = predictor.GetName(),
-            Algo = algo != null ? algo.Value.GetName() : string.Empty,
+            Symbol = strategySettings.Symbol,
+            Interval = (int)strategySettings.Interval,
+            Predictor = strategySettings.PredictorType.GetName(),
+            Algo = strategySettings.Sb3Algo.GetName(),
             CandlesCount = candlesCount,
             CompletedCandelsOnly = completedOnly,
             CandlesSource = candleSource,

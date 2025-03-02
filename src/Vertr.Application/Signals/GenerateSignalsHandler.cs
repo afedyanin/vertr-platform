@@ -1,9 +1,9 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.Domain;
-using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 using Vertr.Domain.Repositories;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Application.Signals;
 
@@ -33,55 +33,37 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
     {
         var tasks = new List<Task>();
 
-        foreach (var symbol in request.Symbols)
+        foreach (var strategy in request.Strategies)
         {
-            tasks.Add(
-                HandleSymbol(
-                    symbol,
-                    request.Interval,
-                    request.PredictorType,
-                    request.Sb3Algo,
-                    cancellationToken));
+            tasks.Add(HandleStrategy(strategy, cancellationToken));
         }
 
         await Task.WhenAll(tasks);
 
-        _logger.LogDebug($"Generating trading signals for {request.Symbols.Count()} symbols completed.");
+        _logger.LogDebug($"Generating trading signals for {request.Strategies.Count()} strategies completed.");
     }
 
-    internal async Task HandleSymbol(
-        string symbol,
-        CandleInterval interval,
-        PredictorType predictorType,
-        Sb3Algo sb3Algo,
+    internal async Task HandleStrategy(
+        StrategySettings strategySettings,
         CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (string.IsNullOrEmpty(symbol))
-        {
-            throw new ArgumentNullException(nameof(symbol));
-        }
-
         try
         {
-            var generateSignal = await ShouldGenerateNewSignal(
-                symbol,
-                interval,
-                predictorType,
-                sb3Algo);
+            var generateSignal = await ShouldGenerateNewSignal(strategySettings, cancellationToken);
 
             if (!generateSignal)
             {
-                _logger.LogDebug($"Skip generating signal for {symbol} {interval}.");
+                _logger.LogDebug($"Skip generating signal for {strategySettings}.");
                 return;
             }
 
-            var prediction = await _predictionService.Predict(symbol, interval, predictorType, sb3Algo, 100, false, _candlesSource);
+            var prediction = await _predictionService.Predict(strategySettings, 100, false, _candlesSource);
 
             if (prediction == null || !prediction.Any())
             {
-                _logger.LogInformation($"No any predictions for {symbol} {interval} predictor={predictorType.Name} algo={sb3Algo.Name}.");
+                _logger.LogInformation($"No any predictions for {symbol} {interval} predictor={predictorType} algo={sb3Algo}.");
                 return;
             }
 
@@ -116,29 +98,25 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
         }
     }
 
-    internal async Task<bool> ShouldGenerateNewSignal(
-        string symbol,
-        CandleInterval interval,
-        PredictorType predictorType,
-        Sb3Algo sb3Algo)
+    internal async Task<bool> ShouldGenerateNewSignal(StrategySettings strategySettings, CancellationToken cancellationToken)
     {
-        var candles = await _tinvestCandlesRepository.GetLast(symbol, interval, 1, false);
+        var candles = await _tinvestCandlesRepository.GetLast(
+            strategySettings.Symbol,
+            strategySettings.Interval,
+            1,
+            false);
 
         if (candles == null || !candles.Any())
         {
-            _logger.LogInformation($"No candles found for {symbol} {interval}.");
+            _logger.LogInformation($"No candles found for {strategySettings}.");
             return false;
         }
 
-        var signal = await _tradingSignalsRepository.GetLast(
-            symbol,
-            interval,
-            predictorType,
-            sb3Algo);
+        var signal = await _tradingSignalsRepository.GetLast(strategySettings, cancellationToken);
 
         if (signal == null)
         {
-            _logger.LogDebug($"No any signals found for {symbol} {interval} {predictorType} {sb3Algo}.");
+            _logger.LogDebug($"No any signals found for {strategySettings}.");
             return true;
         }
 

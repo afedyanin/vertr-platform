@@ -1,4 +1,4 @@
-using Vertr.Domain.Enums;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Domain.Repositories;
 
@@ -9,10 +9,7 @@ public interface ITradingSignalsRepository
         CancellationToken cancellationToken = default);
 
     public Task<TradingSignal?> GetLast(
-        string symbol,
-        CandleInterval interval,
-        PredictorType predictorType,
-        Sb3Algo algo,
+        StrategySettings strategySettings,
         CancellationToken cancellationToken = default);
 
     public Task<int> Insert(

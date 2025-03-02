@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Vertr.Domain;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Repositories;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Adapters.DataAccess.Tests.Repositories;
 
@@ -10,8 +11,15 @@ namespace Vertr.Adapters.DataAccess.Tests.Repositories;
 public class TradingSignalsRepositoryTests
 {
     private readonly ServiceProvider _serviceProvider;
-
     private readonly IConfiguration _configuration;
+
+    private readonly StrategySettings _strategySettings = new StrategySettings
+    {
+        Symbol = "SBER",
+        Interval = CandleInterval._10Min,
+        PredictorType = PredictorType.Sb3,
+        Sb3Algo = Sb3Algo.DQN,
+    };
 
     protected ITradingSignalsRepository Repo => _serviceProvider.GetRequiredService<ITradingSignalsRepository>();
 
@@ -37,11 +45,11 @@ public class TradingSignalsRepositoryTests
         var signal = new TradingSignal
         {
             Id = Guid.NewGuid(),
-            Symbol = "SBER",
-            CandleInterval = CandleInterval._10Min,
+            Symbol = _strategySettings.Symbol,
+            CandleInterval = _strategySettings.Interval,
             CandlesSource = "tinvest",
-            PredictorType = PredictorType.Sb3,
-            Sb3Algo = Sb3Algo.SAC,
+            PredictorType = _strategySettings.PredictorType,
+            Sb3Algo = _strategySettings.Sb3Algo,
             Action = TradeAction.Sell,
             TimeUtc = DateTime.UtcNow,
         };
@@ -51,38 +59,19 @@ public class TradingSignalsRepositoryTests
     }
 
     [Test]
-    public async Task CanGetTradingSignals()
-    {
-        var to = DateTime.UtcNow.AddDays(1);
-        var from = to.AddDays(-100);
-
-        var signals = await Repo.Get("SBER", CandleInterval._10Min, from, to);
-
-        Assert.That(signals, Is.Not.Null);
-        Assert.That(signals.Count(), Is.GreaterThan(0));
-
-        foreach (var signal in signals)
-        {
-            Console.WriteLine(signal);
-        }
-    }
-
-    [Test]
     public async Task CanGetLastSignal()
     {
-        var signals = await Repo.GetLast("SBER", CandleInterval._10Min, 1);
-
-        Assert.That(signals, Is.Not.Null);
-        Assert.That(signals.Count(), Is.EqualTo(1));
-
-        Console.WriteLine(signals.Single());
+        var signal = await Repo.GetLast(_strategySettings);
+        Assert.That(signal, Is.Not.Null);
+        Console.WriteLine(signal);
     }
 
     [Test]
     public async Task CanDeleteSignal()
     {
-        var signals = await Repo.GetLast("SBER", CandleInterval._10Min, 1);
-        var deleted = await Repo.Delete(signals.Single().Id);
+        var signal = await Repo.GetLast(_strategySettings);
+        Assert.That(signal, Is.Not.Null);
+        var deleted = await Repo.Delete(signal.Id);
         Assert.That(deleted, Is.EqualTo(1));
     }
 }

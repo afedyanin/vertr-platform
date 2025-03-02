@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Vertr.Domain.Settings;
 using Microsoft.Extensions.Configuration;
+using Vertr.Domain.Enums;
 
 namespace Vertr.Domain.Tests.Settings;
 

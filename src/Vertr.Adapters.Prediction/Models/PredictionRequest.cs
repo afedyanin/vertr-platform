@@ -2,13 +2,13 @@ namespace Vertr.Adapters.Prediction.Models;
 
 internal record class PredictionRequest
 {
-    public string Symbol { get; set; } = string.Empty;
+    public required string Symbol { get; set; } = string.Empty;
 
     public int Interval { get; set; }
 
-    public string Predictor { get; set; } = string.Empty;
+    public required string Predictor { get; set; }
 
-    public string Algo { get; set; } = string.Empty;
+    public required string Algo { get; set; }
 
     public int CandlesCount { get; set; }
 

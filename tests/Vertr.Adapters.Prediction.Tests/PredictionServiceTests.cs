@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using Vertr.Adapters.Prediction.Converters;
 using Vertr.Adapters.Prediction.Models;
-using Vertr.Domain;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 
@@ -21,8 +20,8 @@ public class PredictionServiceTests
         {
             Symbol = "SBER",
             Interval = (int)CandleInterval._10Min,
-            Predictor = PredictorType.Sb3.Name,
-            Algo = Sb3Algo.DQN.Name,
+            Predictor = PredictorType.Sb3,
+            Algo = Sb3Algo.DQN,
             CandlesCount = 20,
             CompletedCandelsOnly = true,
             CandlesSource = "tinvest"

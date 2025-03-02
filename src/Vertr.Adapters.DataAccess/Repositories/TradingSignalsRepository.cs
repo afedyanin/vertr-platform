@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Vertr.Domain;
-using Vertr.Domain.Enums;
 using Vertr.Domain.Repositories;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Adapters.DataAccess.Repositories;
 internal class TradingSignalsRepository : RepositoryBase, ITradingSignalsRepository
@@ -26,10 +26,7 @@ internal class TradingSignalsRepository : RepositoryBase, ITradingSignalsReposit
     }
 
     public async Task<TradingSignal?> GetLast(
-        string symbol,
-        CandleInterval interval,
-        PredictorType predictorType,
-        Sb3Algo algo,
+        StrategySettings strategySettings,
         CancellationToken cancellationToken = default)
     {
         using var context = await GetDbContext();
@@ -38,10 +35,10 @@ internal class TradingSignalsRepository : RepositoryBase, ITradingSignalsReposit
             .TradingSignals
             .AsNoTracking()
             .Where(x =>
-                x.Symbol == symbol &&
-                x.CandleInterval == interval &&
-                x.PredictorType == predictorType &&
-                x.Sb3Algo == algo);
+                x.Symbol == strategySettings.Symbol &&
+                x.CandleInterval == strategySettings.Interval &&
+                x.PredictorType == strategySettings.PredictorType &&
+                x.Sb3Algo == strategySettings.Sb3Algo);
 
         var last = await query
             .OrderByDescending(x => x.TimeUtc)

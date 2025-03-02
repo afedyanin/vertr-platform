@@ -1,6 +1,7 @@
 using Vertr.Adapters.Prediction.Converters;
+using Vertr.Adapters.Prediction.Extensions;
 using Vertr.Adapters.Prediction.Models;
-using Vertr.Domain;
+
 using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 
@@ -28,8 +29,8 @@ internal class PredictionService : IPredictionService
         {
             Symbol = symbol,
             Interval = (int)interval,
-            Predictor = predictor.Name,
-            Algo = algo != null ? algo.Name : string.Empty,
+            Predictor = predictor.GetName(),
+            Algo = algo != null ? algo.Value.GetName() : string.Empty,
             CandlesCount = candlesCount,
             CompletedCandelsOnly = completedOnly,
             CandlesSource = candleSource,

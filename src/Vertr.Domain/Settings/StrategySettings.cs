@@ -7,7 +7,7 @@ public record class StrategySettings
 
     public required CandleInterval Interval { get; set; }
 
-    public required string PredictorType { get; set; }
+    public required PredictorType PredictorType { get; set; }
 
-    public required string Sb3Algo { get; set; }
+    public required Sb3Algo Sb3Algo { get; set; }
 }

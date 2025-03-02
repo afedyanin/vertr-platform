@@ -10,7 +10,9 @@ internal class TinvestOrdersRepository : RepositoryBase, ITinvestOrdersRepositor
     {
     }
 
-    public async Task<PostOrderResponse?> GetById(Guid id, CancellationToken cancellationToken = default)
+    public async Task<PostOrderResponse?> GetById(
+        Guid id,
+        CancellationToken cancellationToken = default)
     {
         using var context = await GetDbContext();
 
@@ -50,6 +52,25 @@ internal class TinvestOrdersRepository : RepositoryBase, ITinvestOrdersRepositor
         return orders;
     }
 
+    public async Task<PostOrderResponse?> GetByTradingSignal(
+        string accountId,
+        Guid tradingSignalId,
+        CancellationToken cancellationToken = default)
+    {
+        using var context = await GetDbContext();
+
+        var orderResponse = await context
+            .TinvestOrders
+            .AsNoTracking()
+            .SingleOrDefaultAsync(
+                x => x.AccountId == accountId &&
+                x.TradingSignalId == tradingSignalId,
+                cancellationToken);
+
+        return orderResponse;
+    }
+
+
     public async Task<PostOrderResponse?> GetLast(
         string accountId,
         CancellationToken cancellationToken = default)
@@ -66,7 +87,9 @@ internal class TinvestOrdersRepository : RepositoryBase, ITinvestOrdersRepositor
         return last;
     }
 
-    public async Task<int> Update(PostOrderResponse order, CancellationToken cancellationToken = default)
+    public async Task<int> Update(
+        PostOrderResponse order,
+        CancellationToken cancellationToken = default)
     {
         using var context = await GetDbContext();
 
@@ -76,7 +99,9 @@ internal class TinvestOrdersRepository : RepositoryBase, ITinvestOrdersRepositor
         return savedRecords;
     }
 
-    public async Task<int> Insert(PostOrderResponse order, CancellationToken cancellationToken = default)
+    public async Task<int> Insert(
+        PostOrderResponse order,
+        CancellationToken cancellationToken = default)
     {
         try
         {
@@ -103,7 +128,9 @@ internal class TinvestOrdersRepository : RepositoryBase, ITinvestOrdersRepositor
         }
     }
 
-    public async Task<int> Delete(Guid orderResponseId, CancellationToken cancellationToken = default)
+    public async Task<int> Delete(
+        Guid orderResponseId,
+        CancellationToken cancellationToken = default)
     {
         using var context = await GetDbContext();
         var count = await context.TinvestOrders.Where(s => s.Id == orderResponseId).ExecuteDeleteAsync(cancellationToken);

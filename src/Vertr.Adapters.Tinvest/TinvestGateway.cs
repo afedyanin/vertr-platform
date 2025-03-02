@@ -6,6 +6,7 @@ using Google.Protobuf.WellKnownTypes;
 using AutoMapper;
 using Vertr.Domain.Enums;
 using Vertr.Adapters.Tinvest.Converters;
+using Microsoft.Extensions.Options;
 
 
 namespace Vertr.Adapters.Tinvest;
@@ -14,12 +15,15 @@ internal sealed class TinvestGateway : ITinvestGateway
 {
     private readonly IMapper _mapper;
     private readonly InvestApiClient _investApiClient;
+    private readonly TinvestSettings _settings;
 
     public TinvestGateway(
         IMapper mapper,
+        IOptions<TinvestSettings> options,
         InvestApiClient investApiClient)
     {
         _mapper = mapper;
+        _settings = options.Value;
         _investApiClient = investApiClient;
     }
 
@@ -118,7 +122,6 @@ internal sealed class TinvestGateway : ITinvestGateway
     public async Task<IEnumerable<Account>> GetAccounts()
     {
         var response = await _investApiClient.Users.GetAccountsAsync();
-
         var accounts = _mapper.Map<Tinkoff.InvestApi.V1.Account[], IEnumerable<Account>>([.. response.Accounts]);
 
         return accounts;
@@ -126,7 +129,7 @@ internal sealed class TinvestGateway : ITinvestGateway
 
     public async Task<PostOrderResponse> PostOrder(PostOrderRequest orderRequest)
     {
-        var request = _mapper.Map<Tinkoff.InvestApi.V1.PostOrderRequest>(orderRequest);
+        var request = orderRequest.Convert(_settings, _mapper);
         var response = await _investApiClient.Orders.PostOrderAsync(request);
         var orderResponse = response.Convert(request.AccountId, _mapper);
 

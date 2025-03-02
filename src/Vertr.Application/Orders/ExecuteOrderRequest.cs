@@ -1,7 +1,7 @@
 using MediatR;
 using Vertr.Domain;
 namespace Vertr.Application.Orders;
-public class ExecuteOrderRequest : IRequest
+public class ExecuteOrderRequest : IRequest<ExecuteOrderReponse>
 {
     public Guid? TradingSignalId { get; init; }
 

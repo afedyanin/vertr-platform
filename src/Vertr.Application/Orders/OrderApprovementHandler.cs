@@ -8,6 +8,11 @@ internal class OrderApprovementHandler : IRequestHandler<OrderApprovementRequest
         OrderApprovementRequest request,
         CancellationToken cancellationToken)
     {
+        // забрать последний снапшот портфеля по accountID
+        // выбрать позиции из снапшота
+        // найти позицию по символу
+        // найти количество в позиции
+
         // Get portfolio position for accountId
         // convert to lots
         // if pos == 0 => return signalQty

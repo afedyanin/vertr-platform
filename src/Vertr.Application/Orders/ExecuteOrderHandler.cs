@@ -4,7 +4,7 @@ using Vertr.Domain.Ports;
 using Vertr.Domain.Repositories;
 
 namespace Vertr.Application.Orders;
-internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest>
+internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOrderReponse>
 {
     private readonly ITinvestGateway _gateway;
     private readonly ITinvestOrdersRepository _repository;
@@ -20,7 +20,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest>
         _logger = logger;
     }
 
-    public async Task Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
+    public async Task<ExecuteOrderReponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Posting order to gateway: AccountId={request.PostOrderRequest.AccountId} TradingSignalId={request.TradingSignalId}");
 
@@ -31,5 +31,12 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest>
         var saved = await _repository.Insert(response, cancellationToken);
 
         _logger.LogInformation($"{saved} post order response saved. OrderResponseId={response.Id} AccountId={request.PostOrderRequest.AccountId} TradingSignalId={request.TradingSignalId}");
+
+        var executionResponse = new ExecuteOrderReponse
+        {
+            OrderResponseId = response.Id,
+        };
+
+        return executionResponse;
     }
 }

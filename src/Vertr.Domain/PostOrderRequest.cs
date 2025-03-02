@@ -4,7 +4,7 @@ namespace Vertr.Domain;
 public class PostOrderRequest
 {
     public required string AccountId { get; init; }
-    public required Guid InstrumentId { get; init; }
+    public required string Symbol { get; init; }
     public required Guid RequestId { get; init; }
     public required OrderDirection OrderDirection { get; init; }
     public required OrderType OrderType { get; init; }

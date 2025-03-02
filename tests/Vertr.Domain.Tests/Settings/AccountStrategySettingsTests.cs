@@ -14,7 +14,6 @@ public class AccountStrategySettingsTests
         var s1 = new StrategySettings
         {
             Symbol = "SBER",
-            Interval = CandleInterval._15Min,
             PredictorType = PredictorType.RandomWalk,
             Sb3Algo = Sb3Algo.Undefined,
         };
@@ -22,7 +21,6 @@ public class AccountStrategySettingsTests
         var s2 = new StrategySettings
         {
             Symbol = "VTBR",
-            Interval = Enums.CandleInterval._10Min,
             PredictorType = PredictorType.Sb3,
             Sb3Algo = Sb3Algo.SAC,
         };
@@ -52,7 +50,7 @@ public class AccountStrategySettingsTests
 
         var mapping = settings.SignalMappings;
 
-        Assert.That(mapping.Keys.Count, Is.GreaterThan(0));
+        Assert.That(mapping.Keys, Has.Count.GreaterThan(0));
 
         foreach (var key in mapping.Keys)
         {

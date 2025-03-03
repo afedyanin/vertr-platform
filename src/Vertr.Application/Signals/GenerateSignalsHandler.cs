@@ -79,6 +79,7 @@ internal class GenerateSignalsHandler : IRequestHandler<GenerateSignalsRequest>
                 PredictorType = strategySettings.PredictorType,
                 Sb3Algo = strategySettings.Sb3Algo,
                 CandlesSource = _candlesSource,
+                QuantityLots = strategySettings.QuantityLots,
             };
 
             var res = await _tradingSignalsRepository.Insert(tradingSignal, cancellationToken);

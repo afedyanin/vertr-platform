@@ -10,4 +10,6 @@ public record class StrategySettings
     public required PredictorType PredictorType { get; init; }
 
     public required Sb3Algo Sb3Algo { get; init; }
+
+    public int QuantityLots { get; init; }
 }

@@ -18,4 +18,6 @@ public record class TradingSignal
     public Sb3Algo Sb3Algo { get; set; } = Sb3Algo.Undefined;
 
     public string CandlesSource { get; set; } = string.Empty;
+
+    public int QuantityLots { get; set; }
 }

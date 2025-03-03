@@ -50,6 +50,21 @@ internal class TinvestPortfolioRepository : RepositoryBase, ITinvestPortfolioRep
         return snapshots;
     }
 
+    public async Task<PortfolioSnapshot?> GetLast(string accountId, CancellationToken cancellationToken = default)
+    {
+        using var context = await GetDbContext();
+
+        var lastSnapshot = context
+            .TinvestPortfolios
+            .Include(s => s.Positions)
+            .AsNoTracking()
+            .Where(x => x.AccountId == accountId)
+            .OrderByDescending(x => x.TimeUtc)
+            .FirstOrDefault();
+
+        return lastSnapshot;
+    }
+
     public async Task<int> Update(PortfolioSnapshot snapshot, CancellationToken cancellationToken = default)
     {
         using var context = await GetDbContext();

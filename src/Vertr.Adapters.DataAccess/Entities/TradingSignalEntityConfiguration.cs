@@ -42,5 +42,8 @@ internal class TradingSignalEntityConfiguration : IEntityTypeConfiguration<Tradi
 
         builder.Property(e => e.CandlesSource)
             .HasColumnName("candles_source");
+
+        builder.Property(e => e.QuantityLots)
+            .HasColumnName("quantity_lots");
     }
 }

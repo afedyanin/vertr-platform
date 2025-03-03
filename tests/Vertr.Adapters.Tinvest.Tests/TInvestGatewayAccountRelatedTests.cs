@@ -6,16 +6,13 @@ namespace Vertr.Adapters.Tinvest.Tests;
 [TestFixture(Category = "integration", Explicit = true)]
 public class TInvestGatewayAccountRelatedTests : TinvestTestBase
 {
-    private static readonly Guid _sber_id = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
-
-    [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7")]
     [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
     public async Task CanPostMarketOrder(string accountId)
     {
         var request = new PostOrderRequest
         {
             AccountId = accountId,
-            InstrumentId = _sber_id,
+            Symbol = "SBER",
             RequestId = Guid.NewGuid(),
             OrderDirection = OrderDirection.Buy,
             OrderType = OrderType.Market,
@@ -33,14 +30,13 @@ public class TInvestGatewayAccountRelatedTests : TinvestTestBase
         Console.WriteLine(response);
     }
 
-    [TestCase("fc66cf9b-8fb8-4d9e-ba79-a5e8b87c5aa7")]
     [TestCase("ad518e56-a2d3-46dc-a72b-2cebfac23561")]
     public async Task CanGetOrderState(string accountId)
     {
         var request = new PostOrderRequest
         {
             AccountId = accountId,
-            InstrumentId = _sber_id,
+            Symbol = "SBER",
             RequestId = Guid.NewGuid(),
             OrderDirection = OrderDirection.Buy,
             OrderType = OrderType.Market,

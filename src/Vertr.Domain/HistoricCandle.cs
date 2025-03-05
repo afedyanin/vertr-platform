@@ -1,7 +1,13 @@
+using Vertr.Domain.Enums;
+
 namespace Vertr.Domain;
 public record class HistoricCandle
 {
     public DateTime TimeUtc { get; init; }
+
+    public required string Symbol { get; init; }
+
+    public CandleInterval Interval { get; init; }
 
     public decimal Open { get; init; }
 

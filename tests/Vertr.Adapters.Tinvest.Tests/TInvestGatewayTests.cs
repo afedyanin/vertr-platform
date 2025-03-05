@@ -47,10 +47,8 @@ public class TinvestGatewayTests : TinvestTestBase
         var to = System.DateTime.UtcNow;
         var from = to.AddDays(-1);
 
-        var sberUid = Settings.GetSymbolId("SBER");
-
         var candles = await Gateway.GetCandles(
-            sberUid!,
+            "SBER",
             CandleInterval._10Min,
             from,
             to);

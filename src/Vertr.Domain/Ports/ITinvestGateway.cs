@@ -8,7 +8,7 @@ public interface ITinvestGateway
     public Task<InstrumentDetails> GetInstrument(string ticker, string classCode);
 
     public Task<IEnumerable<HistoricCandle>> GetCandles(
-        string instrumentId,
+        string symbol,
         CandleInterval interval,
         DateTime from,
         DateTime to,

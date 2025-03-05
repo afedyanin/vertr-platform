@@ -14,6 +14,7 @@ public class VertrDbContext : DbContext
 
     public DbSet<TradingSignal> TradingSignals { get; set; }
 
+    public DbSet<HistoricCandle> TinvestCandles { get; set; }
 
     public VertrDbContext(DbContextOptions<VertrDbContext> options) : base(options)
     {
@@ -30,5 +31,7 @@ public class VertrDbContext : DbContext
         new PostOrderResponseConfiguration().Configure(modelBuilder.Entity<PostOrderResponse>());
 
         new TradingSignalEntityConfiguration().Configure(modelBuilder.Entity<TradingSignal>());
+
+        new HistoricCandleEntityConfiguration().Configure(modelBuilder.Entity<HistoricCandle>());
     }
 }

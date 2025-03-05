@@ -1,7 +1,5 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Vertr.Adapters.Tinvest;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Ports;
 using Vertr.Domain.Repositories;
@@ -11,20 +9,17 @@ internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesReque
 {
     private readonly ITinvestCandlesRepository _repository;
     private readonly ITinvestGateway _gateway;
-    private readonly TinvestSettings _tinvestSettings;
 
     private readonly ILogger<UpdateLastCandlesHandler> _logger;
 
     public UpdateLastCandlesHandler(
         ITinvestCandlesRepository repository,
         ITinvestGateway gateway,
-        IOptions<TinvestSettings> settings,
         ILogger<UpdateLastCandlesHandler> logger)
     {
         _repository = repository;
         _gateway = gateway;
         _logger = logger;
-        _tinvestSettings = settings.Value;
     }
 
     public async Task Handle(UpdateLastCandlesRequest request, CancellationToken cancellationToken)
@@ -52,13 +47,10 @@ internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesReque
 
         try
         {
-            var symbolId = _tinvestSettings.GetSymbolId(symbol) ??
-                throw new ArgumentException($"Cannot find instrumentId for {symbol}");
-
             (DateTime from, DateTime to) = await GetLoadingInterval(symbol, interval);
 
             _logger.LogDebug($"Loading candles {symbol} {interval} from={from:O} to={to:O}");
-            var candles = await _gateway.GetCandles(symbolId, interval, from, to);
+            var candles = await _gateway.GetCandles(symbol, interval, from, to);
 
             if (candles == null || !candles.Any())
             {
@@ -66,7 +58,7 @@ internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesReque
                 return;
             }
 
-            var count = await _repository.Insert(symbol, interval, candles);
+            var count = await _repository.Insert(candles);
             _logger.LogDebug($"{count} candles inserted/updated for {symbol} {interval}");
         }
         catch (Exception ex)

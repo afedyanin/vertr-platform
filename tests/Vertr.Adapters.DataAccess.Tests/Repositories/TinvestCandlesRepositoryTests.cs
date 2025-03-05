@@ -89,7 +89,7 @@ public class TinvestCandlesRepositoryTests
         var startDate = new DateTime(2025, 02, 10, 6, 0, 0, DateTimeKind.Utc);
         var candels = GenerateCandles(startDate, 10);
 
-        var inserted = await Repo.Insert("TEST", CandleInterval._10Min, candels);
+        var inserted = await Repo.Insert(candels);
 
         Assert.That(inserted, Is.EqualTo(10));
     }
@@ -100,6 +100,8 @@ public class TinvestCandlesRepositoryTests
         {
             yield return new HistoricCandle
             {
+                Interval = CandleInterval._10Min,
+                Symbol = "TEST",
                 CandleSource = 0,
                 IsCompleted = true,
                 TimeUtc = startDate.AddMinutes(incMinutes * i),

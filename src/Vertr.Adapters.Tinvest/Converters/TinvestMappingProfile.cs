@@ -57,11 +57,6 @@ internal class TinvestMappingProfile : Profile
             .ForMember(dest => dest.ClosedDate, opt => opt.MapFrom(src => src.ClosedDate.ToDateTime()))
             .ForMember(dest => dest.AccountType, opt => opt.MapFrom(src => src.Type.ToString()));
 
-        CreateMap<Tinkoff.InvestApi.V1.HistoricCandle, Domain.HistoricCandle>()
-            .ForMember(dest => dest.TimeUtc, opt => opt.MapFrom(src => src.Time.ToDateTime()))
-            .ForMember(dest => dest.CandleSource, opt => opt.MapFrom(src => (int)src.CandleSource))
-            .ForMember(dest => dest.IsCompleted, opt => opt.MapFrom(src => src.IsComplete));
-
         CreateMap<Tinkoff.InvestApi.V1.MoneyValue, Domain.Money>()
             .ConvertUsing(new MoneyConverter());
 

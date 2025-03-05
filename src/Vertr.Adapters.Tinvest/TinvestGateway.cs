@@ -57,12 +57,14 @@ internal sealed class TinvestGateway : ITinvestGateway
     }
 
     public async Task<IEnumerable<HistoricCandle>> GetCandles(
-        string instrumentId,
+        string symbol,
         CandleInterval interval,
         DateTime from,
         DateTime to,
         int? limit)
     {
+        var instrumentId = _settings.GetSymbolId(symbol);
+
         var request = new Tinkoff.InvestApi.V1.GetCandlesRequest
         {
             From = Timestamp.FromDateTime(from),
@@ -78,7 +80,7 @@ internal sealed class TinvestGateway : ITinvestGateway
 
         var response = await _investApiClient.MarketData.GetCandlesAsync(request);
 
-        var candles = _mapper.Map<Tinkoff.InvestApi.V1.HistoricCandle[], IEnumerable<HistoricCandle>>([.. response.Candles]);
+        var candles = response.Candles.Convert(symbol, interval);
 
         return candles;
     }

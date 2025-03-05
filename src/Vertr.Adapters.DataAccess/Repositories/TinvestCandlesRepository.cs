@@ -1,76 +1,99 @@
 using Dapper;
+using Microsoft.EntityFrameworkCore;
+using Vertr.Adapters.DataAccess.Entities;
 using Vertr.Domain;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Repositories;
 
 namespace Vertr.Adapters.DataAccess.Repositories;
 
-internal class TinvestCandlesRepository : ITinvestCandlesRepository
+internal class TinvestCandlesRepository : RepositoryBase, ITinvestCandlesRepository
 {
     private readonly IDbConnectionFactory _connectionFactory;
 
-    private static readonly string _tinvest_candles_table = "tinvest_candles";
-
-    public TinvestCandlesRepository(IDbConnectionFactory connectionFactory)
+    public TinvestCandlesRepository(
+        IDbContextFactory<VertrDbContext> contextFactory,
+        IDbConnectionFactory connectionFactory) : base(contextFactory)
     {
-        DefaultTypeMap.MatchNamesWithUnderscores = true;
-
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<IEnumerable<HistoricCandle>> Get(string symbol, CandleInterval interval, DateTime from, DateTime to)
+    public async Task<IEnumerable<HistoricCandle>> Get(
+        string symbol,
+        CandleInterval interval,
+        DateTime from,
+        DateTime to,
+        CancellationToken cancellationToken = default)
     {
-        var sql = @$"SELECT * FROM {_tinvest_candles_table}
-        WHERE interval = @interval
-        AND time_utc >= @from
-        AND time_utc <= @to
-        AND symbol = @symbol
-        ORDER BY time_utc DESC";
+        using var context = await GetDbContext();
 
-        var param = new
-        {
-            interval,
-            from,
-            to,
-            symbol
-        };
+        var candles = await context
+            .TinvestCandles
+            .AsNoTracking()
+            .Where(x =>
+            x.Symbol == symbol
+            && x.Interval == interval
+            && x.TimeUtc >= from
+            && x.TimeUtc <= to).ToArrayAsync(cancellationToken);
 
-        using var connection = _connectionFactory.GetConnection();
-        var res = await connection.QueryAsync<HistoricCandle>(sql, param);
-
-        return res;
+        return candles;
     }
 
-    public async Task<IEnumerable<HistoricCandle>> GetLast(string symbol, CandleInterval interval, int count = 10, bool completedOnly = true)
+    public async Task<IEnumerable<HistoricCandle>> GetLast(
+        string symbol,
+        CandleInterval interval,
+        int count = 10,
+        bool completedOnly = true,
+        CancellationToken cancellationToken = default)
     {
-        var whereCompleted = completedOnly ? "AND is_completed = true " : " ";
-        var sql = @$"SELECT * FROM {_tinvest_candles_table}
-        WHERE interval = @interval
-        AND symbol = @symbol 
-        {whereCompleted}
-        ORDER BY time_utc DESC
-        LIMIT @count";
+        using var context = await GetDbContext();
 
-        var param = new
+        var query = context
+            .TinvestCandles
+            .AsNoTracking()
+            .Where(x =>
+            x.Symbol == symbol
+            && x.Interval == interval
+            );
+
+        if (completedOnly)
         {
-            interval,
-            symbol,
-            count
-        };
+            query = query.Where(x => x.IsCompleted == completedOnly);
+        }
 
-        using var connection = _connectionFactory.GetConnection();
-        var res = await connection.QueryAsync<HistoricCandle>(sql, param);
+        var candles = await query
+            .OrderByDescending(x => x.TimeUtc)
+            .Take(count)
+            .ToArrayAsync(cancellationToken);
 
-        return res;
+        return candles;
     }
 
-    public async Task<int> Insert(string symbol, CandleInterval interval, IEnumerable<HistoricCandle> candles)
+    public async Task<int> Insert(IEnumerable<HistoricCandle> candles)
     {
-        var sql = @$"INSERT INTO {_tinvest_candles_table}
-        (time_utc, interval, symbol, open, high, low, close, volume, is_completed, candle_source)
-        VALUES
-        (@TimeUtc, @Interval, @Symbol, @Open, @High, @Low, @Close, @Volume, @IsCompleted, @CandleSource)
-        ON CONFLICT ON CONSTRAINT tinvest_candles_unique DO UPDATE SET
+        var sql = @$"INSERT INTO {HistoricCandleEntityConfiguration.TinvestCandlesTableName} (
+        time_utc,
+        interval,
+        symbol,
+        open,
+        high,
+        low,
+        close,
+        volume,
+        is_completed,
+        candle_source
+        ) VALUES (
+        @TimeUtc,
+        @Interval,
+        @Symbol,
+        @Open,
+        @High,
+        @Low,
+        @Close,
+        @Volume,
+        @IsCompleted,
+        @CandleSource
+        ) ON CONFLICT ON CONSTRAINT tinvest_candles_unique DO UPDATE SET
         open = EXCLUDED.open,
         close = EXCLUDED.close,
         high = EXCLUDED.high,
@@ -90,8 +113,8 @@ internal class TinvestCandlesRepository : ITinvestCandlesRepository
             {
                 var param = new
                 {
-                    Interval = interval,
-                    Symbol = symbol,
+                    candle.Interval,
+                    candle.Symbol,
                     candle.TimeUtc,
                     candle.Open,
                     candle.High,
@@ -117,9 +140,13 @@ internal class TinvestCandlesRepository : ITinvestCandlesRepository
         return rowCount;
     }
 
-    public async Task<int> Delete(string symbol, CandleInterval interval, DateTime from, DateTime to)
+    public async Task<int> Delete(
+        string symbol,
+        CandleInterval interval,
+        DateTime from,
+        DateTime to)
     {
-        var sql = @$"DELETE FROM {_tinvest_candles_table}
+        var sql = @$"DELETE FROM {HistoricCandleEntityConfiguration.TinvestCandlesTableName}
         WHERE interval = @interval
         AND time_utc >= @from
         AND time_utc <= @to

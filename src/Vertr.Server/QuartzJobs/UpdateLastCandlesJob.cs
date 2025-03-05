@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.Extensions.Options;
 using Quartz;
 using Vertr.Application.Candles;
 using Vertr.Domain.Enums;
@@ -22,11 +23,11 @@ public class UpdateLastCandlesJob : IJob
 
     public UpdateLastCandlesJob(
         IMediator mediator,
-        AccountStrategySettings accountStrategySettings,
+        IOptions<AccountStrategySettings> accountStrategyOptions,
         ILogger<UpdateLastCandlesJob> logger)
     {
         _mediator = mediator;
-        _accountStrategySettings = accountStrategySettings;
+        _accountStrategySettings = accountStrategyOptions.Value;
         _logger = logger;
     }
 

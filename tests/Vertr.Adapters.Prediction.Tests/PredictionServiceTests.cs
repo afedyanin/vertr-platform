@@ -13,6 +13,8 @@ namespace Vertr.Adapters.Prediction.Tests;
 [TestFixture(Category = "integration", Explicit = true)]
 public class PredictionServiceTests
 {
+    private readonly string _baseAddress = "http://127.0.0.1:8000";
+
     private readonly StrategySettings _strategySettings = new StrategySettings
     {
         Symbol = "SBER",
@@ -24,7 +26,7 @@ public class PredictionServiceTests
     [Test]
     public async Task CanSendPredictionRequest()
     {
-        var predictionApi = RestService.For<IPredictionApi>("http://127.0.0.1:8081");
+        var predictionApi = RestService.For<IPredictionApi>(_baseAddress);
 
         var request = new PredictionRequest
         {
@@ -57,7 +59,7 @@ public class PredictionServiceTests
     [Test]
     public async Task CanUsePredictionService()
     {
-        var predictionApi = RestService.For<IPredictionApi>("http://127.0.0.1:8081");
+        var predictionApi = RestService.For<IPredictionApi>(_baseAddress);
 
         IPredictionService service = new PredictionService(predictionApi);
 
@@ -78,7 +80,7 @@ public class PredictionServiceTests
         var predictionSettings = new PredictionSettings();
         configuration.GetSection(nameof(PredictionSettings)).Bind(predictionSettings);
 
-        Assert.That(predictionSettings.BaseAddress, Is.EqualTo("http://127.0.0.1:8081"));
+        Assert.That(predictionSettings.BaseAddress, Is.EqualTo(_baseAddress));
 
         var services = new ServiceCollection();
         services.AddPredictions(c => c.BaseAddress = new Uri(predictionSettings.BaseAddress));

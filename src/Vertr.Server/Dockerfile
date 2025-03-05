@@ -4,18 +4,22 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-
+EXPOSE 8008
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+
 ARG BUILD_CONFIGURATION=Release
+
 WORKDIR /src
+
 COPY ["src/Vertr.Server/Vertr.Server.csproj", "src/Vertr.Server/"]
 COPY ["src/Vertr.Adapters.DataAccess/Vertr.Adapters.DataAccess.csproj", "src/Vertr.Adapters.DataAccess/"]
-COPY ["src/Vertr.Domain/Vertr.Domain.csproj", "src/Vertr.Domain/"]
+COPY ["src/Vertr.Adapters.Prediction/Vertr.Adapters.Prediction.csproj", "src/Vertr.Adapters.Prediction/"]
 COPY ["src/Vertr.Adapters.Tinvest/Vertr.Adapters.Tinvest.csproj", "src/Vertr.Adapters.Tinvest/"]
 COPY ["src/Vertr.Application/Vertr.Application.csproj", "src/Vertr.Application/"]
+COPY ["src/Vertr.Domain/Vertr.Domain.csproj", "src/Vertr.Domain/"]
+
 RUN dotnet restore "./src/Vertr.Server/Vertr.Server.csproj"
 COPY . .
 WORKDIR "/src/src/Vertr.Server"

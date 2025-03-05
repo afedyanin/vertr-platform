@@ -2,6 +2,7 @@ using Vertr.Application;
 using Vertr.Adapters.Tinvest;
 using Vertr.Adapters.DataAccess;
 using Vertr.Adapters.Prediction;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Server;
 
@@ -16,27 +17,16 @@ public class Program
         builder.Services.AddTinvestGateway(configuration);
         builder.Services.AddDataAccess(configuration);
 
+        builder.Services.Configure<AccountStrategySettings>(
+            builder.Configuration.GetSection(nameof(AccountStrategySettings)));
+
         var predictionSettings = new PredictionSettings();
         configuration.GetSection(nameof(PredictionSettings)).Bind(predictionSettings);
         builder.Services.AddPredictions(c => c.BaseAddress = new Uri(predictionSettings.BaseAddress));
 
         builder.Services.AddApplication();
 
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
         var app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
-        app.UseAuthorization();
-
-        app.MapControllers();
 
         app.Run();
     }

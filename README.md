@@ -86,11 +86,13 @@ dotnet ef database update
 
 ### Стартовать контейнер с Prediction Service
 
-В репозитории vertr-ml в командной строке перейти в корневой каталог "vertr-ml" и запустить контейнер командой:
+В репозитории vertr-ml в командной строке перейти в корневой каталог и запустить контейнер командой:
 
 ```shell
 
-docker compose up
+docker compose build
+
+docker compose up -d
 
 ```
 
@@ -104,6 +106,16 @@ docker network connect vertr-ml_default infra-pgsql-1
 
 ### Стартовать контейнер с сервисом платформы
 
+В репозитории vertr-platform в командной строке перейти в корневой каталог и запустить контейнер командой:
+
+
+```shell
+
+docker compose build
+
+docker compose up -d
+
+```
 
 
 

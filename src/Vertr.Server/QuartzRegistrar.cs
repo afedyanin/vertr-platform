@@ -32,18 +32,19 @@ internal static class QuartzRegistrar
                   .WithIdentity("Tinvest update candles cron trigger")
                   .ForJob(UpdateTinvestCandlesJobKeys.Key)
                   // https://www.freeformatter.com/cron-expression-generator-quartz.html
-                  //.WithCronSchedule("5 1/10,5/10,9/10 * * * ?"));
-                  .WithCronSchedule("0/15 * * ? * * *"));
+                  .WithCronSchedule("5 1/10,5/10,9/10 * * * ?"));
+                  //.WithCronSchedule("0/15 * * ? * * *")); 
 
-            /*
             options.AddJob<GenerateSignalsJob>(GenerateSignalsJobKeys.Key, j => j
                    .WithDescription("Generate trading signals"));
 
             options.AddTrigger(t => t
                   .WithIdentity("Generate trading signals cron trigger")
                   .ForJob(GenerateSignalsJobKeys.Key)
-                  .WithCronSchedule("10 9/10 * * * ?"));
+                  // .WithCronSchedule("10 9/10 * * * ?"));
+                  .WithCronSchedule("0/15 * * ? * * *"));
 
+            /*
             options.AddJob<ExecuteOrdersJob>(ExecuteOrdersJobKeys.Key, j => j
                    .WithDescription("Execute orders by trading signals"));
 

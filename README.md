@@ -96,12 +96,14 @@ docker compose up -d
 
 ```
 
-Потребуется установить видимость ендпоинта PgSQL из инфраструктуры для поднятого контейнера. Для этого нужно выполнить команду:
+Потребуется установить видимость ендпоинтов
 
 ``` schell
 docker network ls
 
 docker network connect vertr-ml_default infra-pgsql-1
+docker network connect vertr-platform_default vertr-ml
+
 ```
 
 ### Стартовать контейнер с сервисом платформы

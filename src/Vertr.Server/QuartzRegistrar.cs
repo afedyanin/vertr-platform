@@ -35,12 +35,20 @@ internal static class QuartzRegistrar
                   .WithCronSchedule("5 1/10,5/10,9/10 * * * ?"));
 
             options.AddJob<GenerateSignalsJob>(GenerateSignalsJobKeys.Key, j => j
-                   .WithDescription("Generate DQN trading signals"));
+                   .WithDescription("Generate trading signals"));
 
             options.AddTrigger(t => t
-                  .WithIdentity("Generate DQN trading signals cron trigger")
+                  .WithIdentity("Generate trading signals cron trigger")
                   .ForJob(GenerateSignalsJobKeys.Key)
                   .WithCronSchedule("10 9/10 * * * ?"));
+
+            options.AddJob<ExecuteOrdersJob>(ExecuteOrdersJobKeys.Key, j => j
+                   .WithDescription("Execute orders by trading signals"));
+
+            options.AddTrigger(t => t
+                  .WithIdentity("Execute orders cron trigger")
+                  .ForJob(ExecuteOrdersJobKeys.Key)
+                  .WithCronSchedule("30 9/10 * * * ?"));
 
             options.AddJob<LoadPortfolioSnapshotsJob>(LoadPortfolioSnapshotsJobKeys.Key, j => j
                    .WithDescription("Load portfolio snapshots from Tinvest API"));
@@ -48,7 +56,7 @@ internal static class QuartzRegistrar
             options.AddTrigger(t => t
                   .WithIdentity("Tinvest portfolio snapshots loader cron trigger")
                   .ForJob(LoadPortfolioSnapshotsJobKeys.Key)
-                  .WithCronSchedule("0 0/5 0 ? * * *"));
+                  .WithCronSchedule("50 5/10,9/10 * * * ?"));
 
             options.AddJob<LoadOperationsJob>(LoadOperationsJobKeys.Key, j => j
                    .WithDescription("Load operations from Tinvest API"));
@@ -56,7 +64,7 @@ internal static class QuartzRegistrar
             options.AddTrigger(t => t
                   .WithIdentity("Tinvest operations loader cron trigger")
                   .ForJob(LoadOperationsJobKeys.Key)
-                  .WithCronSchedule("0 0/5 0 ? * * *"));
+                  .WithCronSchedule("50 9/10 * * * ?"));
         });
 
         services.AddQuartzHostedService(options =>

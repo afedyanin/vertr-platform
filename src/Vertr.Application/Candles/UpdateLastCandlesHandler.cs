@@ -7,6 +7,8 @@ using Vertr.Domain.Repositories;
 namespace Vertr.Application.Candles;
 internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesRequest>
 {
+    private const int _maxHistoryDays = 5;
+
     private readonly ITinvestCandlesRepository _repository;
     private readonly ITinvestGateway _gateway;
 
@@ -70,7 +72,7 @@ internal class UpdateLastCandlesHandler : IRequestHandler<UpdateLastCandlesReque
     internal async Task<(DateTime from, DateTime to)> GetLoadingInterval(string symbol, CandleInterval interval)
     {
         var dateTo = DateTime.UtcNow;
-        var dateFrom = dateTo.AddDays(-7);
+        var dateFrom = dateTo.AddDays(-_maxHistoryDays);
 
         // adjust dateFrom from last known candle
         var dbCandles = await _repository.GetLast(symbol, interval, count: 1, completedOnly: true);

@@ -93,7 +93,7 @@ internal class TinvestCandlesRepository : RepositoryBase, ITinvestCandlesReposit
         @Volume,
         @IsCompleted,
         @CandleSource
-        ) ON CONFLICT ON CONSTRAINT tinvest_candles_unique DO UPDATE SET
+        ) ON CONFLICT (time_utc, interval, symbol) DO UPDATE SET
         open = EXCLUDED.open,
         close = EXCLUDED.close,
         high = EXCLUDED.high,

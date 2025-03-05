@@ -12,7 +12,7 @@ using Vertr.Adapters.DataAccess;
 namespace Vertr.Adapters.DataAccess.Migrations
 {
     [DbContext(typeof(VertrDbContext))]
-    [Migration("20250228154126_InitialCreate")]
+    [Migration("20250305134216_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,6 +24,56 @@ namespace Vertr.Adapters.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Vertr.Domain.HistoricCandle", b =>
+                {
+                    b.Property<int>("CandleSource")
+                        .HasColumnType("integer")
+                        .HasColumnName("candle_source");
+
+                    b.Property<decimal>("Close")
+                        .HasColumnType("numeric")
+                        .HasColumnName("close");
+
+                    b.Property<decimal>("High")
+                        .HasColumnType("numeric")
+                        .HasColumnName("high");
+
+                    b.Property<int>("Interval")
+                        .HasColumnType("integer")
+                        .HasColumnName("interval");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_completed");
+
+                    b.Property<decimal>("Low")
+                        .HasColumnType("numeric")
+                        .HasColumnName("low");
+
+                    b.Property<decimal>("Open")
+                        .HasColumnType("numeric")
+                        .HasColumnName("open");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("symbol");
+
+                    b.Property<DateTime>("TimeUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("time_utc");
+
+                    b.Property<long>("Volume")
+                        .HasColumnType("bigint")
+                        .HasColumnName("volume");
+
+                    b.HasIndex("TimeUtc", "Interval", "Symbol")
+                        .IsUnique()
+                        .HasDatabaseName("tinvest_candles_unique");
+
+                    b.ToTable("tinvest_candles", (string)null);
+                });
 
             modelBuilder.Entity("Vertr.Domain.Operation", b =>
                 {
@@ -230,6 +280,142 @@ namespace Vertr.Adapters.DataAccess.Migrations
                         .HasName("tinvest_portfolio_snapshots_pkey");
 
                     b.ToTable("tinvest_portfolio_snapshots", (string)null);
+                });
+
+            modelBuilder.Entity("Vertr.Domain.PostOrderResponse", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("account_id");
+
+                    b.Property<int>("Direction")
+                        .HasColumnType("integer")
+                        .HasColumnName("direction");
+
+                    b.Property<decimal>("ExecutedCommission")
+                        .HasColumnType("numeric")
+                        .HasColumnName("executed_commission");
+
+                    b.Property<decimal>("ExecutedOrderPrice")
+                        .HasColumnType("numeric")
+                        .HasColumnName("executed_order_price");
+
+                    b.Property<int>("ExecutionReportStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("execution_report_status");
+
+                    b.Property<decimal>("InitialCommission")
+                        .HasColumnType("numeric")
+                        .HasColumnName("initial_commission");
+
+                    b.Property<decimal>("InitialOrderPrice")
+                        .HasColumnType("numeric")
+                        .HasColumnName("initial_order_price");
+
+                    b.Property<decimal>("InitialSecurityPrice")
+                        .HasColumnType("numeric")
+                        .HasColumnName("initial_security_price");
+
+                    b.Property<Guid>("InstrumentUid")
+                        .HasColumnType("uuid")
+                        .HasColumnName("instrument_uid");
+
+                    b.Property<long>("LotsExecuted")
+                        .HasColumnType("bigint")
+                        .HasColumnName("lots_executed");
+
+                    b.Property<long>("LotsRequested")
+                        .HasColumnType("bigint")
+                        .HasColumnName("lots_requested");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("message");
+
+                    b.Property<string>("OrderId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("order_id");
+
+                    b.Property<string>("OrderRequestId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("order_request_id");
+
+                    b.Property<int>("OrderType")
+                        .HasColumnType("integer")
+                        .HasColumnName("order_type");
+
+                    b.Property<DateTime>("TimeUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("time_utc");
+
+                    b.Property<decimal>("TotalOrderAmount")
+                        .HasColumnType("numeric")
+                        .HasColumnName("total_order_amount");
+
+                    b.Property<Guid?>("TradingSignalId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("trading_signal_id");
+
+                    b.HasKey("Id")
+                        .HasName("tinvest_orders_pkey");
+
+                    b.ToTable("tinvest_orders", (string)null);
+                });
+
+            modelBuilder.Entity("Vertr.Domain.TradingSignal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Action")
+                        .HasColumnType("integer")
+                        .HasColumnName("action");
+
+                    b.Property<int>("CandleInterval")
+                        .HasColumnType("integer")
+                        .HasColumnName("candle_interval");
+
+                    b.Property<string>("CandlesSource")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("candles_source");
+
+                    b.Property<int>("PredictorType")
+                        .HasColumnType("integer")
+                        .HasColumnName("predictor_type");
+
+                    b.Property<int>("QuantityLots")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity_lots");
+
+                    b.Property<int>("Sb3Algo")
+                        .HasColumnType("integer")
+                        .HasColumnName("sb3_algo");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("symbol");
+
+                    b.Property<DateTime>("TimeUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("time_utc");
+
+                    b.HasKey("Id")
+                        .HasName("trading_signals_pkey");
+
+                    b.ToTable("trading_signals", (string)null);
                 });
 
             modelBuilder.Entity("Vertr.Domain.PortfolioPosition", b =>

@@ -1,6 +1,7 @@
 using Vertr.Application;
 using Vertr.Adapters.Tinvest;
 using Vertr.Adapters.DataAccess;
+using Vertr.Adapters.Prediction;
 
 namespace Vertr.Server;
 
@@ -14,6 +15,11 @@ public class Program
         builder.Services.ConfigureQuatrz(builder.Configuration);
         builder.Services.AddTinvestGateway(configuration);
         builder.Services.AddDataAccess(configuration);
+
+        var predictionSettings = new PredictionSettings();
+        configuration.GetSection(nameof(PredictionSettings)).Bind(predictionSettings);
+        builder.Services.AddPredictions(c => c.BaseAddress = new Uri(predictionSettings.BaseAddress));
+
         builder.Services.AddApplication();
 
         builder.Services.AddControllers();

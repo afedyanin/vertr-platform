@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.Extensions.Options;
 using Quartz;
-using Vertr.Adapters.Tinvest;
 using Vertr.Application.Portfolios;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Server.QuartzJobs;
 
@@ -18,15 +18,15 @@ public class LoadPortfolioSnapshotsJob : IJob
 {
     private readonly IMediator _mediator;
     private readonly ILogger<LoadPortfolioSnapshotsJob> _logger;
-    private readonly TinvestSettings _tinvestSettings;
+    private readonly AccountStrategySettings _accountStrategySettings;
 
     public LoadPortfolioSnapshotsJob(
         IMediator mediator,
-        IOptions<TinvestSettings> tinvestOptions,
+        IOptions<AccountStrategySettings> accountStrategyOptions,
         ILogger<LoadPortfolioSnapshotsJob> logger)
     {
         _mediator = mediator;
-        _tinvestSettings = tinvestOptions.Value;
+        _accountStrategySettings = accountStrategyOptions.Value;
         _logger = logger;
     }
 
@@ -36,7 +36,7 @@ public class LoadPortfolioSnapshotsJob : IJob
 
         var request = new LoadPortfolioSnapshotsRequest
         {
-            Accounts = _tinvestSettings.Accounts,
+            Accounts = [.. _accountStrategySettings.SignalMappings.Keys],
         };
 
         await _mediator.Send(request);

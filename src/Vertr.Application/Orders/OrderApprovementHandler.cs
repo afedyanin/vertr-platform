@@ -58,7 +58,7 @@ internal class OrderApprovementHandler : IRequestHandler<OrderApprovementRequest
                 OrderDirection = GetDirectionByAction(request.Signal.Action)
             };
 
-            _logger.LogInformation($"New position approved for accountId={request.AccountId}. Direction={response.OrderDirection}");
+            _logger.LogInformation($"New open position approved for accountId={request.AccountId}. Direction={response.OrderDirection}");
 
             return response;
         }
@@ -73,6 +73,7 @@ internal class OrderApprovementHandler : IRequestHandler<OrderApprovementRequest
             if (request.Signal.Action == TradeAction.Buy)
             {
                 // Skip
+                _logger.LogDebug($"Skipping Buy action for Long position. accountId={request.AccountId}.");
                 return _empty;
             }
             else
@@ -83,6 +84,10 @@ internal class OrderApprovementHandler : IRequestHandler<OrderApprovementRequest
                     ApprovedQuantityLots = request.Signal.QuantityLots * 2,
                     OrderDirection = OrderDirection.Sell,
                 };
+
+                _logger.LogInformation($"Revert position Long to Short for accountId={request.AccountId}. OrderDirection={response.OrderDirection}");
+
+                return response;
             }
         }
         else // Current position - Short
@@ -90,6 +95,7 @@ internal class OrderApprovementHandler : IRequestHandler<OrderApprovementRequest
             if (request.Signal.Action == TradeAction.Sell)
             {
                 // Skip
+                _logger.LogDebug($"Skipping Sell action for Short position. accountId={request.AccountId}.");
                 return _empty;
             }
             else
@@ -100,10 +106,12 @@ internal class OrderApprovementHandler : IRequestHandler<OrderApprovementRequest
                     ApprovedQuantityLots = request.Signal.QuantityLots * 2,
                     OrderDirection = OrderDirection.Buy,
                 };
+
+                _logger.LogInformation($"Revert position Short to Long for accountId={request.AccountId}. OrderDirection={response.OrderDirection}");
+
+                return response;
             }
         }
-
-        return _empty;
     }
 
     private PortfolioPosition? GetPosition(PortfolioSnapshot snapshot, string symbol)

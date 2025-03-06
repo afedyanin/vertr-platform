@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.Extensions.Options;
 using Quartz;
-using Vertr.Adapters.Tinvest;
 using Vertr.Application.Operations;
+using Vertr.Domain.Settings;
 
 namespace Vertr.Server.QuartzJobs;
 
@@ -18,16 +18,16 @@ public class LoadOperationsJob : IJob
 {
     private readonly IMediator _mediator;
     private readonly ILogger<LoadOperationsJob> _logger;
-    private readonly TinvestSettings _tinvestSettings;
+    private readonly AccountStrategySettings _accountStrategySettings;
 
     public LoadOperationsJob(
         IMediator mediator,
-        IOptions<TinvestSettings> tinvestOptions,
+        IOptions<AccountStrategySettings> accountStrategyOptions,
         ILogger<LoadOperationsJob> logger)
     {
         _mediator = mediator;
         _logger = logger;
-        _tinvestSettings = tinvestOptions.Value;
+        _accountStrategySettings = accountStrategyOptions.Value;
     }
 
     public async Task Execute(IJobExecutionContext context)
@@ -36,7 +36,7 @@ public class LoadOperationsJob : IJob
 
         var request = new LoadOperationsRequest
         {
-            Accounts = _tinvestSettings.Accounts,
+            Accounts = [.. _accountStrategySettings.SignalMappings.Keys],
         };
 
         await _mediator.Send(request);

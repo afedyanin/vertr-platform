@@ -13,9 +13,9 @@ namespace Vertr.Adapters.Prediction.Tests;
 [TestFixture(Category = "integration", Explicit = true)]
 public class PredictionServiceTests
 {
-    private readonly string _baseAddress = "http://127.0.0.1:8000";
+    private static readonly string _baseAddress = "http://127.0.0.1:8000";
 
-    private readonly StrategySettings _strategySettings = new StrategySettings
+    private static readonly StrategySettings _strategySettingsSb3 = new StrategySettings
     {
         Symbol = "SBER",
         Interval = CandleInterval._10Min,
@@ -23,17 +23,20 @@ public class PredictionServiceTests
         Sb3Algo = Sb3Algo.DQN,
     };
 
-    [Test]
-    public async Task CanSendPredictionRequest()
+
+    [TestCase(PredictorType.Sb3, Sb3Algo.DQN)]
+    [TestCase(PredictorType.RandomWalk, Sb3Algo.Undefined)]
+    [TestCase(PredictorType.TrendFollowing, Sb3Algo.Undefined)]
+    public async Task CanSendPredictionRequest(PredictorType predictorType, Sb3Algo algo)
     {
         var predictionApi = RestService.For<IPredictionApi>(_baseAddress);
 
         var request = new PredictionRequest
         {
-            Symbol = _strategySettings.Symbol,
-            Interval = (int)_strategySettings.Interval,
-            Predictor = _strategySettings.PredictorType.GetName(),
-            Algo = _strategySettings.Sb3Algo.GetName(),
+            Symbol = _strategySettingsSb3.Symbol,
+            Interval = (int)_strategySettingsSb3.Interval,
+            Predictor = predictorType.GetName(),
+            Algo = algo.GetName(),
             CandlesCount = 120,
             CompletedCandelsOnly = true,
             CandlesSource = "tinvest"
@@ -63,7 +66,7 @@ public class PredictionServiceTests
 
         IPredictionService service = new PredictionService(predictionApi);
 
-        var items = await service.Predict(_strategySettings);
+        var items = await service.Predict(_strategySettingsSb3);
 
         Assert.That(items, Is.Not.Null);
 

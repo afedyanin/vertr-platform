@@ -12,7 +12,9 @@ public class TinvestSandboxRelatedTests : TinvestTestBase
         Console.WriteLine($"Sandbox account created. AccountId={accountId}");
     }
 
-    [TestCase("0fde9e6e-7bb6-4c73-b7ae-629791aa2cf6", 100000.00)]
+    [TestCase("0ae71fa0-d8ef-4043-8c53-0a353072954b", 100000.00)]
+    [TestCase("d43202f0-b9c5-4afb-a50d-22ae20351195", 100000.00)]
+    [TestCase("6ce70491-fb13-491d-be64-71e667af4383", 100000.00)]
     public async Task DepositSandboxAccount(string accountId, decimal deposit)
     {
         var amount = new Domain.Money
@@ -25,7 +27,7 @@ public class TinvestSandboxRelatedTests : TinvestTestBase
         Console.WriteLine($"Sandbox AccountId={accountId} Balance={balance}");
     }
 
-    [TestCase("<account_id>")]
+    [TestCase("0fde9e6e-7bb6-4c73-b7ae-629791aa2cf6")]
     public async Task CloseSandboxAccount(string accountId)
     {
         await Gateway.CloseSandboxAccount(accountId);

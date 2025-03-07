@@ -101,10 +101,9 @@ docker compose up -d
 ``` schell
 docker network ls
 
-docker network connect vertr-ml_default infra-pgsql-1
-docker network connect vertr-platform_default vertr-ml
-docker network connect vertr-platform_default infra-pgsql-1
-
+docker network connect vertr_ml_v1_default infra-pgsql-1
+docker network connect vertr_platform_v1_default vertr-ml
+docker network connect vertr_platform_v1_default infra-pgsql-1
 
 ```
 

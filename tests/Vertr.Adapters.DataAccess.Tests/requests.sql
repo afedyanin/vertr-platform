@@ -6,3 +6,5 @@ SELECT * FROM public.tinvest_orders ORDER BY time_utc DESC
 
 SELECT * FROM public.trading_signals ORDER BY time_utc DESC
 
+SELECT * FROM public.tinvest_candles ORDER BY time_utc DESC
+

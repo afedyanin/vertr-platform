@@ -5,3 +5,4 @@ services:
       - ASPNETCORE_HTTP_PORTS=8008
     ports:
       - "8008"
+    restart: "always"

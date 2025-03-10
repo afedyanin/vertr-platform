@@ -32,7 +32,7 @@ internal static class QuartzRegistrar
                   .WithIdentity("Tinvest update candles cron trigger")
                   .ForJob(UpdateTinvestCandlesJobKeys.Key)
                   // https://www.freeformatter.com/cron-expression-generator-quartz.html
-                  .WithCronSchedule("5 1/10,5/10,9/10 * * * ?"));
+                  .WithCronSchedule("5 1/10,5/10,9/10 3-23 ? * MON-FRI"));
 
             options.AddJob<GenerateSignalsJob>(GenerateSignalsJobKeys.Key, j => j
                    .WithDescription("Generate trading signals"));
@@ -40,7 +40,7 @@ internal static class QuartzRegistrar
             options.AddTrigger(t => t
                   .WithIdentity("Generate trading signals cron trigger")
                   .ForJob(GenerateSignalsJobKeys.Key)
-                  .WithCronSchedule("10 9/10 * * * ?"));
+                  .WithCronSchedule("10 9/10 3-23 ? * MON-FRI"));
 
             options.AddJob<ExecuteOrdersJob>(ExecuteOrdersJobKeys.Key, j => j
                    .WithDescription("Execute orders by trading signals"));
@@ -48,7 +48,7 @@ internal static class QuartzRegistrar
             options.AddTrigger(t => t
                   .WithIdentity("Execute orders cron trigger")
                   .ForJob(ExecuteOrdersJobKeys.Key)
-                  .WithCronSchedule("30 9/10 * * * ?"));
+                  .WithCronSchedule("20 9/10 3-23 ? * MON-FRI"));
 
             options.AddJob<LoadPortfolioSnapshotsJob>(LoadPortfolioSnapshotsJobKeys.Key, j => j
                    .WithDescription("Load portfolio snapshots from Tinvest API"));
@@ -56,7 +56,7 @@ internal static class QuartzRegistrar
             options.AddTrigger(t => t
                   .WithIdentity("Tinvest portfolio snapshots loader cron trigger")
                   .ForJob(LoadPortfolioSnapshotsJobKeys.Key)
-                  .WithCronSchedule("20,40 5/10,9/10 * * * ?"));
+                  .WithCronSchedule("10,30 9/10 3-23 ? * MON-FRI"));
 
             options.AddJob<LoadOperationsJob>(LoadOperationsJobKeys.Key, j => j
                    .WithDescription("Load operations from Tinvest API"));
@@ -64,7 +64,7 @@ internal static class QuartzRegistrar
             options.AddTrigger(t => t
                   .WithIdentity("Tinvest operations loader cron trigger")
                   .ForJob(LoadOperationsJobKeys.Key)
-                  .WithCronSchedule("40 9/10 * * * ?"));
+                  .WithCronSchedule("40 9/10 3-23 ? * MON-FRI"));
         });
 
         services.AddQuartzHostedService(options =>

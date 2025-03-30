@@ -11,14 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Pages\StockTicker.razor.js" />
-    <Content Include="Pages\StockTicker.razor.css">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 

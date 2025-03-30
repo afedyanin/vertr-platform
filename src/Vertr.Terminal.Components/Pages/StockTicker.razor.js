@@ -1,4 +1,4 @@
-﻿// Crockford's supplant method (poor man's templating)
+// Crockford's supplant method (poor man's templating)
 if (!String.prototype.supplant) {
     String.prototype.supplant = function (o) {
         return this.replace(/{([^{}]*)}/g,
@@ -10,6 +10,8 @@ if (!String.prototype.supplant) {
     };
 }
 
+alert("starting stockTable");
+
 var stockTable = document.getElementById('stockTable');
 var stockTableBody = stockTable.getElementsByTagName('tbody')[0];
 var rowTemplate = '<td>{symbol}</td><td>{price}</td><td>{dayOpen}</td><td>{dayHigh}</td><td>{dayLow}</td><td class="changeValue"><span class="dir {directionClass}">{direction}</span> {change}</td><td>{percentChange}</td>';
@@ -19,9 +21,11 @@ var stockTickerBody = stockTicker.getElementsByTagName('ul')[0];
 var up = '▲';
 var down = '▼';
 
+console.log("Connecting to the SignalR hub...");
+
 let connection = new signalR.HubConnectionBuilder()
-    .withUrl("/stocks")
-    .build();
+  .withUrl("/stocks")
+  .build();
 
 connection.start().then(function () {
     connection.invoke("GetAllStocks").then(function (stocks) {
@@ -39,11 +43,13 @@ connection.start().then(function () {
         }
     });
 
-    document.getElementById('open').onclick = function () {
+  document.getElementById('open').onclick = function () {
+        console.log("OpenMarket");
         connection.invoke("OpenMarket");
     }
 
     document.getElementById('close').onclick = function () {
+        console.log("CloseMarket");
         connection.invoke("CloseMarket");
     }
 

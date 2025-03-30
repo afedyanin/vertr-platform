@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Vertr.Terminal.Host.Models;
+using Vertr.Terminal.Shared.Models;
 
 internal class Program
 {

@@ -2,6 +2,8 @@ using Vertr.Terminal.Components.Infrastructure;
 using Vertr.Terminal.Shared.SampleData;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Vertr.Terminal.Shared.Models;
+using Vertr.Terminal.Shared.Hubs;
 
 namespace Vertr.Terminal.Server;
 
@@ -25,6 +27,11 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddSignalR()
+                .AddMessagePackProtocol();
+
+        builder.Services.AddSingleton<StockTicker>();
 
         builder.Services.AddCors(opts => opts.AddDefaultPolicy(bld =>
         {
@@ -59,7 +66,9 @@ public class Program
 
         app.MapControllers();
 
+        app.MapHub<StockTickerHub>("/stocks");
         app.MapBlazorHub();
+
         app.MapFallbackToPage("/_Host");
 
         app.Run();

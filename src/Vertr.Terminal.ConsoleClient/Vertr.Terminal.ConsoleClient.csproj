@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Terminal.Host\Vertr.Terminal.Host.csproj" />
+    <ProjectReference Include="..\Vertr.Terminal.Shared\Vertr.Terminal.Shared.csproj" />
   </ItemGroup>
 
 </Project>

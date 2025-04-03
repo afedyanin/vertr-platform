@@ -1,0 +1,11 @@
+{
+  "symbol": "string",
+  "price": "float",
+  "base_price": "float",
+  "recent_price": "float",
+  "percent": "float",
+  "price_rise": "boolean",
+  "volume": "float",
+  "time": "datetime"
+}
+

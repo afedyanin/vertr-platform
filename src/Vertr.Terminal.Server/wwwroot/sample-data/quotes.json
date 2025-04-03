@@ -1,0 +1,352 @@
+[
+  {
+    "symbol": "MSFT",
+    "price": 80,
+    "base_price": 80,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 2000,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "AAPL",
+    "price": 100,
+    "base_price": 100,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 3000,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "TSLA",
+    "price": 350,
+    "base_price": 350,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 120,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "NVDA",
+    "price": 420,
+    "base_price": 420,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 400,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "GOOG",
+    "price": 1640,
+    "base_price": 1640,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 110,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "AMZN",
+    "price": 3200,
+    "base_price": 3200,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 99,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "710000",
+    "price": 34.845,
+    "base_price": 34.845,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 3990203,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "703712",
+    "price": 28.73,
+    "base_price": 28.73,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 4972549,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "823212",
+    "price": 6.892,
+    "base_price": 6.892,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 9374495,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "604700",
+    "price": 44.54,
+    "base_price": 44.54,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 1052172,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "ENAG99",
+    "price": 8.816,
+    "base_price": 8.816,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 8198277,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "A0WMPJ",
+    "price": 8.87,
+    "base_price": 8.87,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 1715021,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "555750",
+    "price": 12.655,
+    "base_price": 12.655,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 16028358,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "716460",
+    "price": 90.18,
+    "base_price": 90.18,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 6439388,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "581005",
+    "price": 125.3,
+    "base_price": 125.3,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 753801,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "BASF11",
+    "price": 46.31,
+    "base_price": 46.31,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 3644131,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "BAY001",
+    "price": 40.005,
+    "base_price": 40.005,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 6964005,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "843002",
+    "price": 196.75,
+    "base_price": 196.75,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 808543,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "555200",
+    "price": 29.07,
+    "base_price": 29.07,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 4172211,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "578560",
+    "price": 31.24,
+    "base_price": 31.24,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 12094230,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "520000",
+    "price": 88.94,
+    "base_price": 88.94,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 408959,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "606214",
+    "price": 31.98,
+    "base_price": 31.98,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 1767693,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "A0D9PT",
+    "price": 130,
+    "base_price": 130,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 254502,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "604843",
+    "price": 78.84,
+    "base_price": 78.84,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 800386,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "A2DSYC",
+    "price": 173.65,
+    "base_price": 173.65,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 1248213,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "578580",
+    "price": 64.86,
+    "base_price": 64.86,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 1189784,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "A1EWWW",
+    "price": 224.1,
+    "base_price": 224.1,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 747668,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "A1ML7J",
+    "price": 52.4,
+    "base_price": 52.4,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 14648193,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "766403",
+    "price": 123.42,
+    "base_price": 123.42,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 1124661,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "846900",
+    "price": 11463.9,
+    "base_price": 11463.9,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 100607290,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "623100",
+    "price": 18.936,
+    "base_price": 18.936,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 4419546,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "519000",
+    "price": 54.39,
+    "base_price": 54.39,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 1694979,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "840400",
+    "price": 149.32,
+    "base_price": 149.32,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 1288010,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "703000",
+    "price": 61.58,
+    "base_price": 61.58,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 178345,
+    "time": "2025-04-03T20:20:30.344"
+  },
+  {
+    "symbol": "543900",
+    "price": 81.72,
+    "base_price": 81.72,
+    "recent_price": 0,
+    "percent": 0,
+    "price_rise": false,
+    "volume": 450792,
+    "time": "2025-04-03T20:20:30.344"
+  }
+]

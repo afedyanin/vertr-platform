@@ -35,4 +35,10 @@
     <ProjectReference Include="..\Vertr.Terminal.Shared\Vertr.Terminal.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\sample-data\quotes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

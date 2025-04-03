@@ -1,3 +1,11 @@
+# 2025-04-03
+
+## Blazor
+
+https://learn.microsoft.com/en-us/aspnet/core/blazor/components/lifecycle?view=aspnetcore-9.0
+https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-9.0
+
+
 # 2025-03-24
 
 ## V3

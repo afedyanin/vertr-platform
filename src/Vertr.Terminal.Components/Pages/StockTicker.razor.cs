@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Vertr.Terminal.Shared.Models;
 
 namespace Vertr.Terminal.Components.Pages;
@@ -19,20 +20,11 @@ public partial class StockTicker : IAsyncDisposable
     protected override async Task OnInitializedAsync()
     {
         _hubConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/stocks"))
+            .WithUrl(Navigation.ToAbsoluteUri("/hubs/stocks"))
+            .AddMessagePackProtocol()
             .Build();
 
-
-        _hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
-        {
-            var encodedMsg = $"{user}: {message}";
-            messages.Add(encodedMsg);
-            InvokeAsync(StateHasChanged);
-        });
-
         await _hubConnection.StartAsync();
-
-
     }
 
     private async Task StartStreaming(CancellationToken cancellationToken)
@@ -63,7 +55,7 @@ public partial class StockTicker : IAsyncDisposable
             }
             else
             {
-                quotes[i].UpdateQuoteData(stock);
+                // quotes[i].UpdateQuoteData(stock);
 
                 //StateHasChanged();
             }

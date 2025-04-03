@@ -1,8 +1,9 @@
 using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
+using Vertr.Terminal.Server.Services;
 using Vertr.Terminal.Shared.Models;
 
-namespace Vertr.Terminal.Shared.Hubs;
+namespace Vertr.Terminal.Server.Hubs;
 
 public class StockTickerHub : Hub
 {

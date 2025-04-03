@@ -1,0 +1,93 @@
+@page "/stock-quotes"
+@rendermode InteractiveServer
+
+@using Vertr.Terminal.Shared
+@using Microsoft.AspNetCore.SignalR.Client
+@using Vertr.Terminal.Shared.Models
+
+@inject HttpClient Http
+@inject NavigationManager navigationManager
+
+@implements IDisposable
+
+<h1>Stock quotes</h1>
+
+<div class="content px-4" style="background-color: gainsboro;">
+    @_infotext
+</div>
+
+@if (quotes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th style="text-align: right;">Price</th>
+                <th style="text-align: center;">Change</th>
+                <th style="text-align: right;">Volume</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var q in quotes)
+            {
+                <StockQuoteDisplay Quote="q" @rendermode="InteractiveServer"></StockQuoteDisplay>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<StockQuote> quotes = new List<StockQuote>();
+    private string? _infotext;
+    private HubConnection? _hubConn;
+
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConn = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri("/hubs/quotes"))
+            .Build();
+
+        _hubConn.On<string>("QuoteHubMessage", (msg) =>
+        {
+            _infotext = $"{msg}";
+            InvokeAsync(StateHasChanged).Wait();
+
+        });
+
+        _hubConn.On<StockQuote>("SendQuoteInfo", (quote) =>
+        {
+            int i = this.quotes.FindIndex(q => q.Symbol == quote.Symbol);
+
+            if (i < 0)
+            {
+                this.quotes.Add(quote);
+                InvokeAsync(StateHasChanged).Wait();
+            }
+            else
+            {
+                this.quotes[i].UpdateQuoteData(quote);
+                InvokeAsync(StateHasChanged).Wait();
+            }
+        });
+
+        await _hubConn.StartAsync();
+    }
+
+    public void Dispose()
+    {
+        _hubConn?.StopAsync();
+    }
+}

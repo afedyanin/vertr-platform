@@ -2,9 +2,10 @@ using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Microsoft.AspNetCore.SignalR;
-using Vertr.Terminal.Shared.Hubs;
+using Vertr.Terminal.Server.Hubs;
+using Vertr.Terminal.Shared.Models;
 
-namespace Vertr.Terminal.Shared.Models;
+namespace Vertr.Terminal.Server.Services;
 
 public class StockTicker
 {

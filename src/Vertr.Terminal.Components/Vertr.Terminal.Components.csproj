@@ -16,9 +16,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.*-*" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.*-*" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="8.*-*" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="3.0.0" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
+
   </ItemGroup>
 
   <ItemGroup>

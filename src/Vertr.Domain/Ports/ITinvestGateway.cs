@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Vertr.Domain.Enums;
 
 namespace Vertr.Domain.Ports;
@@ -43,4 +44,14 @@ public interface ITinvestGateway
     public Task<IEnumerable<PositionSnapshot>> GetPositions(string accountId);
 
     public Task<PortfolioSnapshot> GetPortfolio(string accountId);
+
+    public Task SubscribeToOrderTradesStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default);
+
+    public Task SubscribeToOrderStateStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default);
 }

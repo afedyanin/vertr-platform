@@ -3,6 +3,7 @@ using Vertr.Adapters.Tinvest;
 using Vertr.Adapters.DataAccess;
 using Vertr.Adapters.Prediction;
 using Vertr.Domain.Settings;
+using Vertr.Server.BackgroundServices;
 
 namespace Vertr.Server;
 
@@ -13,9 +14,13 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         var configuration = builder.Configuration;
 
-        builder.Services.ConfigureQuatrz(builder.Configuration);
+
+        // builder.Services.ConfigureQuatrz(builder.Configuration);
         builder.Services.AddTinvestGateway(configuration);
         builder.Services.AddDataAccess(configuration);
+
+        builder.Services.AddHostedService<OrderTradesStreamService>();
+        builder.Services.AddHostedService<OrderStateStreamService>();
 
         builder.Services.Configure<AccountStrategySettings>(
             builder.Configuration.GetSection(nameof(AccountStrategySettings)));

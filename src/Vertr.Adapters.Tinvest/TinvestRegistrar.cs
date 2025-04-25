@@ -13,7 +13,7 @@ public static class TinvestRegistrar
         services.AddSingleton(configuration);
         services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
         services.AddInvestApiClient((_, settings) => configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
-        services.AddScoped<ITinvestGateway, TinvestGateway>();
+        services.AddSingleton<ITinvestGateway, TinvestGateway>();
         services.AddAutoMapper(typeof(TinvestMappingProfile));
         return services;
     }

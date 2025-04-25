@@ -7,6 +7,8 @@ using AutoMapper;
 using Vertr.Domain.Enums;
 using Vertr.Adapters.Tinvest.Converters;
 using Microsoft.Extensions.Options;
+using Grpc.Core;
+using Microsoft.Extensions.Logging;
 
 
 namespace Vertr.Adapters.Tinvest;
@@ -276,4 +278,67 @@ internal sealed class TinvestGateway : ITinvestGateway
 
         return snapshot;
     }
+
+    public async Task SubscribeToOrderTradesStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
+        request.Accounts.Add(_settings.Accounts);
+
+        using (var stream = _investApiClient.OrdersStream.TradesStream(request, headers: null, deadline, cancellationToken))
+        {
+            await foreach (var response in stream.ResponseStream.ReadAllAsync(cancellationToken))
+            {
+                if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.OrderTrades)
+                {
+                    foreach (var trade in response.OrderTrades.Trades)
+                    {
+                        logger.LogWarning($"Trade received: {trade}");
+                    }
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Ping)
+                {
+                    logger.LogInformation($"Ping received: {response.Ping}");
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Subscription)
+                {
+                    logger.LogInformation($"Subscription received: {response.Subscription}");
+                }
+            }
+        }
+    }
+
+    public async Task SubscribeToOrderStateStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new Tinkoff.InvestApi.V1.OrderStateStreamRequest();
+        request.Accounts.Add(_settings.Accounts);
+
+        using (var stream = _investApiClient.OrdersStream.OrderStateStream(request, headers: null, deadline, cancellationToken))
+        {
+            await foreach (var response in stream.ResponseStream.ReadAllAsync(cancellationToken))
+            {
+                if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
+                {
+                    foreach (var trade in response.OrderState.Trades)
+                    {
+                        logger.LogWarning($"Order state Trade received: {trade}");
+                    }
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Ping)
+                {
+                    logger.LogInformation($"Ping received: {response.Ping}");
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Subscription)
+                {
+                    logger.LogInformation($"Subscription received: {response.Subscription}");
+                }
+            }
+        }
+    }
+
 }

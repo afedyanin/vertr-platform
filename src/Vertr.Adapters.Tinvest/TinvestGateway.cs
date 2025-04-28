@@ -300,11 +300,11 @@ internal sealed class TinvestGateway : ITinvestGateway
                 }
                 else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Ping)
                 {
-                    logger.LogInformation($"Ping received: {response.Ping}");
+                    logger.LogDebug($"Trades ping received: {response.Ping}");
                 }
                 else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Subscription)
                 {
-                    logger.LogInformation($"Subscription received: {response.Subscription}");
+                    logger.LogInformation($"Trades subscription received: {response.Subscription}");
                 }
             }
         }
@@ -331,14 +331,126 @@ internal sealed class TinvestGateway : ITinvestGateway
                 }
                 else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Ping)
                 {
-                    logger.LogInformation($"Ping received: {response.Ping}");
+                    logger.LogDebug($"Order state ping received: {response.Ping}");
                 }
                 else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Subscription)
                 {
-                    logger.LogInformation($"Subscription received: {response.Subscription}");
+                    logger.LogInformation($"Order state subscriptions received: {response.Subscription}");
                 }
             }
         }
     }
 
+    public async Task SubscribeToMarketDataStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default)
+    {
+        var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
+        {
+            SubscriptionAction = Tinkoff.InvestApi.V1.SubscriptionAction.Subscribe,
+            WaitingClose = true,
+        };
+
+        candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
+        {
+            InstrumentId = _settings.GetSymbolId("SBER"),
+            Interval = Tinkoff.InvestApi.V1.SubscriptionInterval.OneMinute
+        });
+
+        var request = new Tinkoff.InvestApi.V1.MarketDataServerSideStreamRequest()
+        {
+            SubscribeCandlesRequest = candleRequest,
+        };
+
+        using (var stream = _investApiClient.MarketDataStream.MarketDataServerSideStream(request, headers: null, deadline, cancellationToken))
+        {
+            await foreach (var response in stream.ResponseStream.ReadAllAsync(cancellationToken))
+            {
+                if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Candle)
+                {
+                    var candle = response.Candle;
+                    logger.LogInformation($"Candle received: Time={candle.Time:O} Open={candle.Open} Close={candle.Close} Vol={candle.Volume} LastTradeTime={candle.LastTradeTs:O} Interval={candle.Interval} Id={candle.InstrumentUid}");
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
+                {
+                    var subs = response.SubscribeCandlesResponse;
+                    var all = subs.CandlesSubscriptions.ToArray()
+                        .Select(s => $"Id={s.SubscriptionId} Status={s.SubscriptionStatus} Instrument={s.InstrumentUid} Inverval={s.Interval}").ToArray();
+
+                    logger.LogInformation($"Candle subscriptions received: TrackingId={subs.TrackingId} Statuses={string.Join(',', all)}");
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Ping)
+                {
+                    logger.LogDebug($"Candle ping received: {response.Ping}");
+                }
+            }
+        }
+    }
+
+    public async Task SubscribeToPortfolioStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new Tinkoff.InvestApi.V1.PortfolioStreamRequest();
+        request.Accounts.Add(_settings.Accounts);
+
+        using (var stream = _investApiClient.OperationsStream.PortfolioStream(request, headers: null, deadline, cancellationToken))
+        {
+            await foreach (var response in stream.ResponseStream.ReadAllAsync(cancellationToken))
+            {
+                if (response.PayloadCase == Tinkoff.InvestApi.V1.PortfolioStreamResponse.PayloadOneofCase.Portfolio)
+                {
+                    var portfolio = response.Portfolio;
+                    logger.LogWarning($"Portfolio received: {portfolio}");
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.PortfolioStreamResponse.PayloadOneofCase.Ping)
+                {
+                    logger.LogDebug($"Portfolio ping received: {response.Ping}");
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.PortfolioStreamResponse.PayloadOneofCase.Subscriptions)
+                {
+                    var subs = response.Subscriptions;
+                    var all = subs.Accounts.ToArray()
+                        .Select(s => $"AccountId={s.AccountId} Status={s.SubscriptionStatus}").ToArray();
+
+                    logger.LogInformation($"Portfolio subscriptions received: {string.Join(',', all)}");
+                }
+            }
+        }
+    }
+
+    public async Task SubscribeToPositionsStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default)
+    {
+        var request = new Tinkoff.InvestApi.V1.PositionsStreamRequest();
+        request.Accounts.Add(_settings.Accounts);
+
+        using (var stream = _investApiClient.OperationsStream.PositionsStream(request, headers: null, deadline, cancellationToken))
+        {
+            await foreach (var response in stream.ResponseStream.ReadAllAsync(cancellationToken))
+            {
+                if (response.PayloadCase == Tinkoff.InvestApi.V1.PositionsStreamResponse.PayloadOneofCase.Position)
+                {
+                    var position = response.Position;
+                    logger.LogWarning($"Position received: {position}");
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.PositionsStreamResponse.PayloadOneofCase.Ping)
+                {
+                    logger.LogDebug($"Position ping received: {response.Ping}");
+                }
+                else if (response.PayloadCase == Tinkoff.InvestApi.V1.PositionsStreamResponse.PayloadOneofCase.Subscriptions)
+                {
+                    var subs = response.Subscriptions;
+                    var all = subs.Accounts.ToArray()
+                        .Select(s => $"AccountId={s.AccountId} Status={s.SubscriptionStatus}").ToArray();
+
+                    logger.LogInformation($"Positions subscriptions received: {string.Join(',', all)}");
+                }
+            }
+        }
+    }
 }

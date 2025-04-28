@@ -21,6 +21,9 @@ public class Program
 
         builder.Services.AddHostedService<OrderTradesStreamService>();
         builder.Services.AddHostedService<OrderStateStreamService>();
+        builder.Services.AddHostedService<MarketDataStreamService>();
+        builder.Services.AddHostedService<PortfolioStreamService>();
+        builder.Services.AddHostedService<PositionsStreamService>();
 
         builder.Services.Configure<AccountStrategySettings>(
             builder.Configuration.GetSection(nameof(AccountStrategySettings)));

@@ -54,4 +54,19 @@ public interface ITinvestGateway
         ILogger logger,
         DateTime? deadline = null,
         CancellationToken cancellationToken = default);
+
+    public Task SubscribeToMarketDataStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default);
+
+    public Task SubscribeToPortfolioStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default);
+
+    public Task SubscribeToPositionsStream(
+        ILogger logger,
+        DateTime? deadline = null,
+        CancellationToken cancellationToken = default);
 }

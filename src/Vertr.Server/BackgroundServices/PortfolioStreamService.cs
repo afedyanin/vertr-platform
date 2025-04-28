@@ -2,11 +2,11 @@ using Vertr.Domain.Ports;
 
 namespace Vertr.Server.BackgroundServices;
 
-public class OrderStateStreamService : StreamServiceBase
+public class PortfolioStreamService : StreamServiceBase
 {
-    public OrderStateStreamService(
+    public PortfolioStreamService(
         ITinvestGateway tinvestGateway,
-        ILogger<OrderStateStreamService> logger) : base(tinvestGateway, logger)
+        ILogger<PortfolioStreamService> logger) : base(tinvestGateway, logger)
     {
     }
 
@@ -14,5 +14,5 @@ public class OrderStateStreamService : StreamServiceBase
         ILogger logger,
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
-            => TinvestGateway.SubscribeToOrderStateStream(logger, deadline: null, stoppingToken);
+            => TinvestGateway.SubscribeToPortfolioStream(logger, deadline: null, stoppingToken);
 }

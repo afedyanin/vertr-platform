@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Title>Vertr Kafka Client Library</Title>
+    <VersionPrefix>0.0.2</VersionPrefix>
+    <AssemblyName>Vertr.Infrastructure.Kafka</AssemblyName>
+    <PackageId>Vertr.Infrastructure.Kafka</PackageId>
+    <OutputType>library</OutputType>
+    <PackageTags>vertr kafka</PackageTags>
+    <Description>Client library for Kafka</Description>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="2.10.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.4" />
+  </ItemGroup>
+
+</Project>

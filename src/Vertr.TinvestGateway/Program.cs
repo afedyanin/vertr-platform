@@ -1,3 +1,4 @@
+using Tinkoff.InvestApi;
 
 namespace Vertr.TinvestGateway;
 
@@ -7,16 +8,15 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        builder.Services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
+        builder.Services.AddInvestApiClient((_, settings) => builder.Configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -26,7 +26,6 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 

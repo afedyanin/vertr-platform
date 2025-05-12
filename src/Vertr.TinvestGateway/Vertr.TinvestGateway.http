@@ -1,6 +1,6 @@
-@Vertr.TinvestGateway_HostAddress = http://localhost:5278
+@Vertr.TinvestGateway_HostAddress = http://localhost:5125
 
-GET {{Vertr.TinvestGateway_HostAddress}}/weatherforecast/
+GET {{Vertr.TinvestGateway_HostAddress}}/api/accounts/sandbox
 Accept: application/json
 
 ###

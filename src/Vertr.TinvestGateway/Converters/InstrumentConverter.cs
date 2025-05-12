@@ -1,0 +1,31 @@
+using Vertr.TinvestGateway.Contracts;
+
+namespace Vertr.TinvestGateway.Converters;
+
+internal static class InstrumentConverter
+{
+    public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.InstrumentShort instrument)
+        => new Instrument(
+            instrument.Isin,
+            instrument.Ticker,
+            instrument.ClassCode,
+            instrument.InstrumentType,
+            instrument.Name,
+            instrument.Uid,
+            instrument.InstrumentKind.ToString()
+            );
+
+    public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.Instrument instrument)
+        => new Instrument(
+            instrument.Isin,
+            instrument.Ticker,
+            instrument.ClassCode,
+            instrument.InstrumentType,
+            instrument.Name,
+            instrument.Uid,
+            instrument.InstrumentKind.ToString()
+            );
+
+    public static Instrument[] ToInstruments(this Tinkoff.InvestApi.V1.InstrumentShort[] instruments)
+        => instruments.Select(ToInstrument).ToArray();
+}

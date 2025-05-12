@@ -1,6 +1,10 @@
 @Vertr.TinvestGateway_HostAddress = http://localhost:5125
 
-GET {{Vertr.TinvestGateway_HostAddress}}/api/accounts/sandbox
+GET {{Vertr.TinvestGateway_HostAddress}}/accounts/sandbox
+Accept: application/json
+
+###
+GET {{Vertr.TinvestGateway_HostAddress}}/instruments/find?query=SBER
 Accept: application/json
 
 ###

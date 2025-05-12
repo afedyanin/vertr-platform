@@ -3,15 +3,13 @@ using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Tinkoff.InvestApi.V1;
 using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.Requests;
 using Vertr.TinvestGateway.Converters;
 
 namespace Vertr.TinvestGateway.Controllers;
-[Route("api/accounts")]
+[Route("accounts")]
 [ApiController]
 public class AccountsController : TinvestControllerBase
 {
-
     public AccountsController(
         IOptions<TinvestSettings> options,
         InvestApiClient investApiClient) : base(options, investApiClient)
@@ -37,11 +35,11 @@ public class AccountsController : TinvestControllerBase
     }
 
     [HttpPost("sandbox")]
-    public async Task<IActionResult> CreateAccount(CreateSandboxAccountRequest request)
+    public async Task<IActionResult> CreateAccount(string accountName)
     {
         var tRequest = new OpenSandboxAccountRequest
         {
-            Name = request.AccountName,
+            Name = accountName,
         };
 
         var response = await InvestApiClient.Sandbox.OpenSandboxAccountAsync(tRequest);

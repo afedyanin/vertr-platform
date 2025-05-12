@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Tinkoff.InvestApi;
 
 namespace Vertr.TinvestGateway;
@@ -11,7 +12,9 @@ public class Program
         builder.Services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
         builder.Services.AddInvestApiClient((_, settings) => builder.Configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddJsonOptions(options
+            => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 

@@ -8,3 +8,5 @@ GET {{Vertr.TinvestGateway_HostAddress}}/instruments/find?query=SBER
 Accept: application/json
 
 ###
+GET {{Vertr.TinvestGateway_HostAddress}}/marketdata/candles?symbol=SBER&interval=8&from=2025-05-11T00%3A00%3A00Z&to=2025-05-12T00%3A00%3A00Z
+Accept: application/json

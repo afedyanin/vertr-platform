@@ -1,5 +1,5 @@
 
-namespace Vertr.Connectors.Tinvest.Server;
+namespace Vertr.TinvestGateway;
 
 public class Program
 {

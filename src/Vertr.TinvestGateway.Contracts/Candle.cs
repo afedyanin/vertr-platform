@@ -8,5 +8,5 @@ public record class Candle(
     decimal High,
     decimal Low,
     long Volume,
-    bool IsCompleted
+    bool? IsCompleted
 );

@@ -1,16 +1,22 @@
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.TinvestGateway.Contracts.Settings;
+using Vertr.TinvestGateway.Converters;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
+    private readonly MarketDataStreamSettings _streamSettings;
+
     public MarketDataStreamService(
-        IOptions<TinvestSettings> options,
+        IOptions<TinvestSettings> tinvestOptions,
+        IOptions<MarketDataStreamSettings> marketDataOptions,
         InvestApiClient investApiClient,
-        ILogger<MarketDataStreamService> logger) : base(options, investApiClient, logger)
+        ILogger<MarketDataStreamService> logger) : base(tinvestOptions, investApiClient, logger)
     {
+        _streamSettings = marketDataOptions.Value;
     }
 
     protected override async Task Subscribe(
@@ -21,14 +27,17 @@ public class MarketDataStreamService : StreamServiceBase
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {
             SubscriptionAction = Tinkoff.InvestApi.V1.SubscriptionAction.Subscribe,
-            WaitingClose = true,
+            WaitingClose = _streamSettings.WaitCandleClose,
         };
 
-        candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
+        foreach (var kvp in _streamSettings.Candles)
         {
-            InstrumentId = Settings.GetSymbolId("SBER"),
-            Interval = Tinkoff.InvestApi.V1.SubscriptionInterval.OneMinute
-        });
+            candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
+            {
+                InstrumentId = Settings.GetSymbolId(kvp.Key),
+                Interval = kvp.Value.ConvertToSubscriptionInterval()
+            });
+        }
 
         var request = new Tinkoff.InvestApi.V1.MarketDataServerSideStreamRequest()
         {
@@ -41,8 +50,27 @@ public class MarketDataStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Candle)
             {
-                var candle = response.Candle;
-                logger.LogInformation($"Candle received: Time={candle.Time:O} Open={candle.Open} Close={candle.Close} Vol={candle.Volume} LastTradeTime={candle.LastTradeTs:O} Interval={candle.Interval} Id={candle.InstrumentUid}");
+                var reponseCandle = response.Candle;
+
+                var symbol = Settings.GetSymbolById(reponseCandle.InstrumentUid);
+
+                if (string.IsNullOrEmpty(symbol))
+                {
+                    logger.LogWarning($"Unregistered candle received: InstrumentUid={reponseCandle.InstrumentUid}");
+                    continue;
+                }
+
+                var interval = _streamSettings.GetInterval(symbol);
+
+                if (interval == Contracts.CandleInterval.Unspecified)
+                {
+                    logger.LogWarning($"Cannot define candle interval for Symbol={symbol} InstrumentUid={reponseCandle.InstrumentUid}");
+                    continue;
+                }
+
+                var candle = response.Candle.Convert(symbol, interval, _streamSettings.WaitCandleClose ? true : null);
+
+                logger.LogInformation($"Candle received {candle.Symbol}: Time={candle.TimeUtc:O} Open={candle.Open} Close={candle.Close} Vol={candle.Volume} Interval={candle.Interval} Completed={candle.IsCompleted}");
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {

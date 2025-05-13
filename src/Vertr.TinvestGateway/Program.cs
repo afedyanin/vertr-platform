@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Tinkoff.InvestApi;
 using Vertr.TinvestGateway.BackgroundServices;
+using Vertr.TinvestGateway.Contracts.Settings;
 
 namespace Vertr.TinvestGateway;
 
@@ -13,6 +14,8 @@ public class Program
         builder.Services.AddExceptionHandler<RpcExceptionHandler>();
 
         builder.Services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
+        builder.Services.AddOptions<MarketDataStreamSettings>().BindConfiguration(nameof(MarketDataStreamSettings));
+
         builder.Services.AddInvestApiClient((_, settings) => builder.Configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
 
         builder.Services.AddControllers().AddJsonOptions(options

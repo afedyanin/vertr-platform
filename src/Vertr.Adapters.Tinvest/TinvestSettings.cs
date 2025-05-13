@@ -11,4 +11,7 @@ public class TinvestSettings
 
     public string? GetSymbolId(string symbol)
         => SymbolMappings.TryGetValue(symbol, out var symbolId) ? symbolId : null;
+
+    public string GetSymbolById(string symbolId)
+        => SymbolMappings.FirstOrDefault(kvp => kvp.Value.Equals(symbolId, StringComparison.OrdinalIgnoreCase)).Key;
 }

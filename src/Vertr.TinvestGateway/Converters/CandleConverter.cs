@@ -25,4 +25,20 @@ internal static class CandleConverter
             source.Volume,
             source.IsComplete
             );
+
+    public static Candle Convert(
+        this Tinkoff.InvestApi.V1.Candle source,
+        string symbol,
+        CandleInterval candleInterval,
+        bool? isCompleted)
+        => new Candle(
+            source.Time.ToDateTime(),
+            symbol,
+            candleInterval,
+            source.Open,
+            source.Close,
+            source.High,
+            source.Low,
+            source.Volume,
+            isCompleted);
 }

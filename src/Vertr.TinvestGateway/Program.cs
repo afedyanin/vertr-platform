@@ -8,6 +8,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddProblemDetails();
+        builder.Services.AddExceptionHandler<RpcExceptionHandler>();
 
         builder.Services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
         builder.Services.AddInvestApiClient((_, settings) => builder.Configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
@@ -19,6 +21,8 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
+
+        app.UseExceptionHandler();
 
         if (app.Environment.IsDevelopment())
         {

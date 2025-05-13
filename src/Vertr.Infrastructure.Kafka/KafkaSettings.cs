@@ -11,4 +11,7 @@ public class KafkaSettings
     public IDictionary<string, string> Topics { get; set; } = new Dictionary<string, string>();
 
     public JsonSerializerOptions JsonSerializerOptions { get; set; } = new JsonSerializerOptions();
+
+    public string? GetTopicByKey(string key)
+        => Topics.TryGetValue(key, out var topic) ? topic : null;
 }

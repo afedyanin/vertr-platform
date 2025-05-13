@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using Tinkoff.InvestApi;
+using Vertr.Infrastructure.Kafka;
 using Vertr.TinvestGateway.BackgroundServices;
+using Vertr.TinvestGateway.Contracts;
 using Vertr.TinvestGateway.Contracts.Settings;
 
 namespace Vertr.TinvestGateway;
@@ -15,6 +17,10 @@ public class Program
 
         builder.Services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
         builder.Services.AddOptions<MarketDataStreamSettings>().BindConfiguration(nameof(MarketDataStreamSettings));
+        builder.Services.AddOptions<KafkaSettings>().BindConfiguration(nameof(KafkaSettings));
+
+        builder.Services.AddKafkaSettings(settings => builder.Configuration.Bind(nameof(KafkaSettings), settings));
+        builder.Services.AddKafkaProducer<string, Candle>();
 
         builder.Services.AddInvestApiClient((_, settings) => builder.Configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
 

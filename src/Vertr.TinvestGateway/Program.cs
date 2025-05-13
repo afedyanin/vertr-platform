@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Tinkoff.InvestApi;
+using Vertr.TinvestGateway.BackgroundServices;
 
 namespace Vertr.TinvestGateway;
 
@@ -16,6 +17,12 @@ public class Program
 
         builder.Services.AddControllers().AddJsonOptions(options
             => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+        builder.Services.AddHostedService<OrderTradesStreamService>();
+        builder.Services.AddHostedService<OrderStateStreamService>();
+        builder.Services.AddHostedService<MarketDataStreamService>();
+        builder.Services.AddHostedService<PortfolioStreamService>();
+        builder.Services.AddHostedService<PositionsStreamService>();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

@@ -1,21 +1,25 @@
 using Grpc.Core;
-using Vertr.Domain.Ports;
+using Microsoft.Extensions.Options;
+using Tinkoff.InvestApi;
 
-namespace Vertr.Server.BackgroundServices;
+namespace Vertr.TinvestGateway.BackgroundServices;
 
 public abstract class StreamServiceBase : BackgroundService
 {
-    protected ITinvestGateway TinvestGateway { get; private set; }
+    protected InvestApiClient InvestApiClient { get; private set; }
+    protected TinvestSettings Settings { get; private set; }
 
     protected ILogger Logger { get; private set; }
 
     private readonly string _serviceName;
 
     protected StreamServiceBase(
-        ITinvestGateway tinvestGateway,
+        IOptions<TinvestSettings> options,
+        InvestApiClient investApiClient,
         ILogger logger)
     {
-        TinvestGateway = tinvestGateway;
+        Settings = options.Value;
+        InvestApiClient = investApiClient;
         Logger = logger;
 
         _serviceName = GetType().Name;

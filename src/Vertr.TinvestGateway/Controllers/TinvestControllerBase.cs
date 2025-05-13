@@ -11,7 +11,8 @@ public class TinvestControllerBase : ControllerBase
 
     protected TinvestControllerBase(
         IOptions<TinvestSettings> options,
-        InvestApiClient investApiClient)
+        InvestApiClient investApiClient
+        )
     {
         Settings = options.Value;
         InvestApiClient = investApiClient;

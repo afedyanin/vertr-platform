@@ -42,7 +42,7 @@ public class OrdersController : TinvestControllerBase
         return Ok(response.Time.ToDateTime());
     }
 
-    [HttpGet("status")]
+    [HttpGet("state")]
     public async Task<IActionResult> GetOrderState(
         string accountId,
         string orderId,

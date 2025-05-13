@@ -54,6 +54,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Infrastructure.Kafka.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.TinvestGateway.Contracts", "src\Vertr.TinvestGateway.Contracts\Vertr.TinvestGateway.Contracts.csproj", "{F4B5941B-E74E-4AA3-B56C-D86C9B7A3798}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.TinvestGateway.Tests", "tests\Vertr.TinvestGateway.Tests\Vertr.TinvestGateway.Tests.csproj", "{1AF1BA38-D7F7-4DAC-95D2-97E0D25B3A3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,6 +134,10 @@ Global
 		{F4B5941B-E74E-4AA3-B56C-D86C9B7A3798}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4B5941B-E74E-4AA3-B56C-D86C9B7A3798}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4B5941B-E74E-4AA3-B56C-D86C9B7A3798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AF1BA38-D7F7-4DAC-95D2-97E0D25B3A3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AF1BA38-D7F7-4DAC-95D2-97E0D25B3A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AF1BA38-D7F7-4DAC-95D2-97E0D25B3A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AF1BA38-D7F7-4DAC-95D2-97E0D25B3A3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,5 +162,6 @@ Global
 		{B3C2B9DA-FE58-478E-BEA9-2B1269BCDBE1} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{A2112746-A061-4606-94D6-65E25DFFDA45} = {169A0D2E-EEB1-4C84-B11D-BB3CAF23E758}
 		{F4B5941B-E74E-4AA3-B56C-D86C9B7A3798} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
+		{1AF1BA38-D7F7-4DAC-95D2-97E0D25B3A3C} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 	EndGlobalSection
 EndGlobal

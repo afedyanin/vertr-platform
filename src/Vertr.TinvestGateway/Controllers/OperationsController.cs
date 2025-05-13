@@ -2,7 +2,7 @@ using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
-using Vertr.TinvestGateway.Contracts;
+using Vertr.TinvestGateway.Converters;
 
 namespace Vertr.TinvestGateway.Controllers;
 
@@ -38,15 +38,7 @@ public class OperationsController : TinvestControllerBase
         }
 
         var response = await InvestApiClient.Operations.GetOperationsAsync(request);
-
-        var operations = new List<Operation>();
-
-        foreach (var operation in response.Operations)
-        {
-            var item = _mapper.Map<Operation>(operation);
-            item.AccountId = accountId;
-            operations.Add(item);
-        }
+        var operations = response.Operations.ToArray().Convert();
 
         return Ok(operations);
     }
@@ -61,7 +53,7 @@ public class OperationsController : TinvestControllerBase
 
         var response = await InvestApiClient.Operations.GetPositionsAsync(request);
 
-        var result = response.Convert(accountId, _mapper);
+        var result = response.Convert();
 
         return result;
     }

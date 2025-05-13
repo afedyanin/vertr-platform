@@ -2,11 +2,7 @@ namespace Vertr.TinvestGateway.Contracts;
 
 public record class Operation
 {
-    public Guid Id { get; init; }
-
-    public Guid? ParentOperationId { get; init; }
-
-    public string AccountId { get; init; } = string.Empty;
+    public string? ParentOperationId { get; init; }
 
     public string Currency { get; init; } = string.Empty;
 
@@ -28,11 +24,11 @@ public record class Operation
 
     public OperationType OperationType { get; init; }
 
-    public Guid? AssetUid { get; init; }
+    public string? AssetUid { get; init; }
 
-    public Guid PositionUid { get; init; }
+    public string? PositionUid { get; init; }
 
-    public Guid? InstrumentUid { get; init; }
+    public string? InstrumentUid { get; init; }
 
     public Trade[] OperationTrades { get; init; } = [];
 }

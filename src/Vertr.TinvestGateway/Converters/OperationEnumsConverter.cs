@@ -1,0 +1,85 @@
+using Vertr.TinvestGateway.Contracts;
+
+namespace Vertr.TinvestGateway.Converters;
+
+internal static class OperationEnumsConverter
+{
+    public static OperationState Convert(this Tinkoff.InvestApi.V1.OperationState source)
+        => source switch
+        {
+            Tinkoff.InvestApi.V1.OperationState.Unspecified => OperationState.Unspecified,
+            Tinkoff.InvestApi.V1.OperationState.Executed => OperationState.Executed,
+            Tinkoff.InvestApi.V1.OperationState.Canceled => OperationState.Canceled,
+            Tinkoff.InvestApi.V1.OperationState.Progress => OperationState.Progress,
+            _ => throw new NotImplementedException(),
+        };
+
+    public static OperationType Convert(this Tinkoff.InvestApi.V1.OperationType source)
+        => source switch
+        {
+            Tinkoff.InvestApi.V1.OperationType.Unspecified => OperationType.Unspecified,
+            Tinkoff.InvestApi.V1.OperationType.Input => OperationType.Input,
+            Tinkoff.InvestApi.V1.OperationType.BondTax => OperationType.BondTax,
+            Tinkoff.InvestApi.V1.OperationType.OutputSecurities => OperationType.OutputSecurities,
+            Tinkoff.InvestApi.V1.OperationType.Overnight => OperationType.Overnight,
+            Tinkoff.InvestApi.V1.OperationType.Tax => OperationType.Tax,
+            Tinkoff.InvestApi.V1.OperationType.BondRepaymentFull => OperationType.BondRepaymentFull,
+            Tinkoff.InvestApi.V1.OperationType.SellCard => OperationType.SellCard,
+            Tinkoff.InvestApi.V1.OperationType.DividendTax => OperationType.DividendTax,
+            Tinkoff.InvestApi.V1.OperationType.Output => OperationType.Output,
+            Tinkoff.InvestApi.V1.OperationType.BondRepayment => OperationType.BondRepayment,
+            Tinkoff.InvestApi.V1.OperationType.TaxCorrection => OperationType.TaxCorrection,
+            Tinkoff.InvestApi.V1.OperationType.ServiceFee => OperationType.ServiceFee,
+            Tinkoff.InvestApi.V1.OperationType.BenefitTax => OperationType.BenefitTax,
+            Tinkoff.InvestApi.V1.OperationType.MarginFee => OperationType.MarginFee,
+            Tinkoff.InvestApi.V1.OperationType.Buy => OperationType.Buy,
+            Tinkoff.InvestApi.V1.OperationType.BuyCard => OperationType.BuyCard,
+            Tinkoff.InvestApi.V1.OperationType.InputSecurities => OperationType.InputSecurities,
+            Tinkoff.InvestApi.V1.OperationType.SellMargin => OperationType.SellMargin,
+            Tinkoff.InvestApi.V1.OperationType.BrokerFee => OperationType.BrokerFee,
+            Tinkoff.InvestApi.V1.OperationType.BuyMargin => OperationType.BuyMargin,
+            Tinkoff.InvestApi.V1.OperationType.Dividend => OperationType.Dividend,
+            Tinkoff.InvestApi.V1.OperationType.Sell => OperationType.Sell,
+            Tinkoff.InvestApi.V1.OperationType.Coupon => OperationType.Coupon,
+            Tinkoff.InvestApi.V1.OperationType.SuccessFee => OperationType.SuccessFee,
+            Tinkoff.InvestApi.V1.OperationType.DividendTransfer => OperationType.DividendTransfer,
+            Tinkoff.InvestApi.V1.OperationType.AccruingVarmargin => OperationType.AccruingVarmargin,
+            Tinkoff.InvestApi.V1.OperationType.WritingOffVarmargin => OperationType.WritingOffVarmargin,
+            Tinkoff.InvestApi.V1.OperationType.DeliveryBuy => OperationType.DeliveryBuy,
+            Tinkoff.InvestApi.V1.OperationType.DeliverySell => OperationType.DeliverySell,
+            Tinkoff.InvestApi.V1.OperationType.TrackMfee => OperationType.TrackMfee,
+            Tinkoff.InvestApi.V1.OperationType.TrackPfee => OperationType.TrackPfee,
+            Tinkoff.InvestApi.V1.OperationType.TaxProgressive => OperationType.TaxProgressive,
+            Tinkoff.InvestApi.V1.OperationType.BondTaxProgressive => OperationType.BondTaxProgressive,
+            Tinkoff.InvestApi.V1.OperationType.DividendTaxProgressive => OperationType.DividendTaxProgressive,
+            Tinkoff.InvestApi.V1.OperationType.BenefitTaxProgressive => OperationType.BenefitTaxProgressive,
+            Tinkoff.InvestApi.V1.OperationType.TaxCorrectionProgressive => OperationType.TaxCorrectionProgressive,
+            Tinkoff.InvestApi.V1.OperationType.TaxRepoProgressive => OperationType.TaxRepoProgressive,
+            Tinkoff.InvestApi.V1.OperationType.TaxRepo => OperationType.TaxRepo,
+            Tinkoff.InvestApi.V1.OperationType.TaxRepoHold => OperationType.TaxRepoHold,
+            Tinkoff.InvestApi.V1.OperationType.TaxRepoRefund => OperationType.TaxRepoRefund,
+            Tinkoff.InvestApi.V1.OperationType.TaxRepoHoldProgressive => OperationType.TaxRepoHoldProgressive,
+            Tinkoff.InvestApi.V1.OperationType.TaxRepoRefundProgressive => OperationType.TaxRepoRefundProgressive,
+            Tinkoff.InvestApi.V1.OperationType.DivExt => OperationType.DivExt,
+            Tinkoff.InvestApi.V1.OperationType.TaxCorrectionCoupon => OperationType.TaxCorrectionCoupon,
+            Tinkoff.InvestApi.V1.OperationType.CashFee => OperationType.CashFee,
+            Tinkoff.InvestApi.V1.OperationType.OutFee => OperationType.OutFee,
+            Tinkoff.InvestApi.V1.OperationType.OutStampDuty => OperationType.OutStampDuty,
+            Tinkoff.InvestApi.V1.OperationType.OutputSwift => OperationType.OutputSwift,
+            Tinkoff.InvestApi.V1.OperationType.InputSwift => OperationType.InputSwift,
+            Tinkoff.InvestApi.V1.OperationType.OutputAcquiring => OperationType.OutputAcquiring,
+            Tinkoff.InvestApi.V1.OperationType.InputAcquiring => OperationType.InputAcquiring,
+            Tinkoff.InvestApi.V1.OperationType.OutputPenalty => OperationType.OutputPenalty,
+            Tinkoff.InvestApi.V1.OperationType.AdviceFee => OperationType.AdviceFee,
+            Tinkoff.InvestApi.V1.OperationType.TransIisBs => OperationType.TransIisBs,
+            Tinkoff.InvestApi.V1.OperationType.TransBsBs => OperationType.TransBsBs,
+            Tinkoff.InvestApi.V1.OperationType.OutMulti => OperationType.OutMulti,
+            Tinkoff.InvestApi.V1.OperationType.InpMulti => OperationType.InpMulti,
+            Tinkoff.InvestApi.V1.OperationType.OverPlacement => OperationType.OverPlacement,
+            Tinkoff.InvestApi.V1.OperationType.OverCom => OperationType.OverCom,
+            Tinkoff.InvestApi.V1.OperationType.OverIncome => OperationType.OverIncome,
+            Tinkoff.InvestApi.V1.OperationType.OptionExpiration => OperationType.OptionExpiration,
+            Tinkoff.InvestApi.V1.OperationType.FutureExpiration => OperationType.FutureExpiration,
+            _ => throw new NotImplementedException(),
+        };
+}

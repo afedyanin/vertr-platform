@@ -4,30 +4,29 @@ using Tinkoff.InvestApi;
 using Vertr.Infrastructure.Kafka;
 using Vertr.Infrastructure.Kafka.Abstractions;
 using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.Settings;
 using Vertr.TinvestGateway.Converters;
+using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
     private readonly MarketDataStreamSettings _streamSettings;
-    private readonly KafkaSettings _kafkaSettings;
     private readonly IProducerWrapper<string, Candle> _producerWrapper;
-    private readonly string? _candlesTopicName;
+    private readonly string? _topicName;
 
     public MarketDataStreamService(
-        IOptions<TinvestSettings> tinvestOptions,
-        IOptions<MarketDataStreamSettings> marketDataOptions,
-        IOptions<KafkaSettings> kafkaSettings,
-        InvestApiClient investApiClient,
+        IOptions<MarketDataStreamSettings> streamSettings,
         IProducerWrapper<string, Candle> producerWrapper,
-        ILogger<MarketDataStreamService> logger) : base(tinvestOptions, investApiClient, logger)
+        IOptions<KafkaSettings> kafkaSettings,
+        IOptions<TinvestSettings> tinvestOptions,
+        InvestApiClient investApiClient,
+        ILogger<MarketDataStreamService> logger) :
+            base(kafkaSettings, tinvestOptions, investApiClient, logger)
     {
-        _kafkaSettings = kafkaSettings.Value;
-        _streamSettings = marketDataOptions.Value;
+        _streamSettings = streamSettings.Value;
         _producerWrapper = producerWrapper;
-        _candlesTopicName = _kafkaSettings.GetTopicByKey(_streamSettings.TopicKey);
+        _topicName = KafkaSettings.GetTopicByKey(_streamSettings.TopicKey);
     }
 
     protected override async Task Subscribe(
@@ -37,7 +36,7 @@ public class MarketDataStreamService : StreamServiceBase
     {
         if (!_streamSettings.IsEnabled)
         {
-            logger.LogWarning($"MarketDataStreamService is disabled.");
+            logger.LogWarning($"{nameof(MarketDataStreamService)} is disabled.");
             return;
         }
 
@@ -51,7 +50,7 @@ public class MarketDataStreamService : StreamServiceBase
         {
             candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
             {
-                InstrumentId = Settings.GetSymbolId(kvp.Key),
+                InstrumentId = TinvestSettings.GetSymbolId(kvp.Key),
                 Interval = kvp.Value.ConvertToSubscriptionInterval()
             });
         }
@@ -69,7 +68,7 @@ public class MarketDataStreamService : StreamServiceBase
             {
                 var instrumentId = response.Candle.InstrumentUid;
 
-                var symbol = Settings.GetSymbolById(instrumentId);
+                var symbol = TinvestSettings.GetSymbolById(instrumentId);
 
                 if (string.IsNullOrEmpty(symbol))
                 {
@@ -87,15 +86,15 @@ public class MarketDataStreamService : StreamServiceBase
 
                 var candle = response.Candle.Convert(symbol, interval, _streamSettings.WaitCandleClose ? true : null);
 
-                logger.LogInformation($"Candle received {candle.Symbol}: Time={candle.TimeUtc:O} Open={candle.Open} Close={candle.Close} Vol={candle.Volume} Interval={candle.Interval} Completed={candle.IsCompleted}");
+                logger.LogDebug($"Candle received {candle.Symbol}: Time={candle.TimeUtc:O} Open={candle.Open} Close={candle.Close} Vol={candle.Volume} Interval={candle.Interval} Completed={candle.IsCompleted}");
 
-                if (string.IsNullOrEmpty(_candlesTopicName))
+                if (string.IsNullOrEmpty(_topicName))
                 {
                     logger.LogWarning($"Skipping producing to Kafka. Unknown topic name.");
                     continue;
                 }
 
-                await _producerWrapper.Produce(_candlesTopicName, symbol, candle, DateTime.UtcNow, stoppingToken);
+                await _producerWrapper.Produce(_topicName, symbol, candle, DateTime.UtcNow, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {

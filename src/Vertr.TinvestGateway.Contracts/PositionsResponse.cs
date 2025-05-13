@@ -1,6 +1,8 @@
 namespace Vertr.TinvestGateway.Contracts;
 public record class PositionsResponse
 {
+    public string AccountId { get; init; } = string.Empty;
+
     public Money[] Money { get; init; } = [];
 
     public Money[] Blocked { get; init; } = [];

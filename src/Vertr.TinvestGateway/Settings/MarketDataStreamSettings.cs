@@ -1,4 +1,6 @@
-namespace Vertr.TinvestGateway.Contracts.Settings;
+using Vertr.TinvestGateway.Contracts;
+
+namespace Vertr.TinvestGateway.Settings;
 
 public class MarketDataStreamSettings
 {

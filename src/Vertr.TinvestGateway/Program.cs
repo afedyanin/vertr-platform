@@ -3,7 +3,7 @@ using Tinkoff.InvestApi;
 using Vertr.Infrastructure.Kafka;
 using Vertr.TinvestGateway.BackgroundServices;
 using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.Settings;
+using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway;
 
@@ -16,11 +16,20 @@ public class Program
         builder.Services.AddExceptionHandler<RpcExceptionHandler>();
 
         builder.Services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
-        builder.Services.AddOptions<MarketDataStreamSettings>().BindConfiguration(nameof(MarketDataStreamSettings));
         builder.Services.AddOptions<KafkaSettings>().BindConfiguration(nameof(KafkaSettings));
+        builder.Services.AddOptions<MarketDataStreamSettings>().BindConfiguration(nameof(MarketDataStreamSettings));
+        builder.Services.AddOptions<OrderStateStreamSettings>().BindConfiguration(nameof(OrderStateStreamSettings));
+        builder.Services.AddOptions<OrderTradesStreamSettings>().BindConfiguration(nameof(OrderTradesStreamSettings));
+        builder.Services.AddOptions<PortfolioStreamSettings>().BindConfiguration(nameof(PortfolioStreamSettings));
+        builder.Services.AddOptions<PositionsStreamSettings>().BindConfiguration(nameof(PositionsStreamSettings));
 
         builder.Services.AddKafkaSettings(settings => builder.Configuration.Bind(nameof(KafkaSettings), settings));
+
         builder.Services.AddKafkaProducer<string, Candle>();
+        builder.Services.AddKafkaProducer<string, OrderState>();
+        builder.Services.AddKafkaProducer<string, OrderTrades>();
+        builder.Services.AddKafkaProducer<string, PortfolioResponse>();
+        builder.Services.AddKafkaProducer<string, PositionsResponse>();
 
         builder.Services.AddInvestApiClient((_, settings) => builder.Configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
 

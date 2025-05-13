@@ -1,25 +1,29 @@
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.Infrastructure.Kafka;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 
 public abstract class StreamServiceBase : BackgroundService
 {
     protected InvestApiClient InvestApiClient { get; private set; }
-    protected TinvestSettings Settings { get; private set; }
+    protected TinvestSettings TinvestSettings { get; private set; }
+    protected KafkaSettings KafkaSettings { get; private set; }
 
     protected ILogger Logger { get; private set; }
 
     private readonly string _serviceName;
 
     protected StreamServiceBase(
-        IOptions<TinvestSettings> options,
+        IOptions<KafkaSettings> kafkaOptions,
+        IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
         ILogger logger)
     {
-        Settings = options.Value;
+        TinvestSettings = tinvestOptions.Value;
         InvestApiClient = investApiClient;
+        KafkaSettings = kafkaOptions.Value;
         Logger = logger;
 
         _serviceName = GetType().Name;

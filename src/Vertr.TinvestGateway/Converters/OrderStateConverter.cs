@@ -39,4 +39,33 @@ internal static class OrderStateConverter
 
     public static Trade[] Convert(this Tinkoff.InvestApi.V1.OrderStage[] source)
         => [.. source.Select(t => t.Convert())];
+
+    public static Trade Convert(this Tinkoff.InvestApi.V1.OrderTrade source)
+        => new Trade
+        {
+            ExecutionTime = source.DateTime.ToDateTime(),
+            Price = source.Price,
+            Quantity = source.Quantity,
+            TradeId = source.TradeId,
+        };
+    public static Trade[] Convert(this Tinkoff.InvestApi.V1.OrderTrade[] source)
+        => [.. source.Select(t => t.Convert())];
+
+    public static OrderState Convert(this Tinkoff.InvestApi.V1.OrderStateStreamResponse.Types.OrderState source)
+        => new OrderState
+        {
+            OrderId = source.OrderId,
+            OrderRequestId = source.OrderRequestId,
+            OrderDate = source.CreatedAt.ToDateTime(),
+            ExecutionReportStatus = source.ExecutionReportStatus.Convert(),
+            InstrumentUid = source.InstrumentUid,
+            Direction = source.Direction.Convert(),
+            OrderType = source.OrderType.Convert(),
+            InitialOrderPrice = source.InitialOrderPrice,
+            ExecutedOrderPrice = source.ExecutedOrderPrice,
+            Currency = source.Currency,
+            LotsRequested = source.LotsRequested,
+            LotsExecuted = source.LotsExecuted,
+            OrderStages = source.Trades.ToArray().Convert(),
+        };
 }

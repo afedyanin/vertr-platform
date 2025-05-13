@@ -52,7 +52,7 @@ public class OperationsController : TinvestControllerBase
         };
 
         var response = await InvestApiClient.Operations.GetPositionsAsync(request);
-        var result = response.Convert();
+        var result = response.Convert(accountId);
 
         return Ok(result);
     }

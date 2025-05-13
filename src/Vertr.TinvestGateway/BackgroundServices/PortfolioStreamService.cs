@@ -1,16 +1,32 @@
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.Infrastructure.Kafka;
+using Vertr.Infrastructure.Kafka.Abstractions;
+using Vertr.TinvestGateway.Contracts;
+using Vertr.TinvestGateway.Converters;
+using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 
 public class PortfolioStreamService : StreamServiceBase
 {
+    private readonly PortfolioStreamSettings _streamSettings;
+    private readonly IProducerWrapper<string, PortfolioResponse> _producerWrapper;
+    private readonly string? _topicName;
+
     public PortfolioStreamService(
-        IOptions<TinvestSettings> options,
+        IOptions<PortfolioStreamSettings> streamSettings,
+        IProducerWrapper<string, PortfolioResponse> producerWrapper,
+        IOptions<KafkaSettings> kafkaSettings,
+        IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
-        ILogger<PortfolioStreamService> logger) : base(options, investApiClient, logger)
+        ILogger<PortfolioStreamService> logger) :
+            base(kafkaSettings, tinvestOptions, investApiClient, logger)
     {
+        _streamSettings = streamSettings.Value;
+        _producerWrapper = producerWrapper;
+        _topicName = KafkaSettings.GetTopicByKey(_streamSettings.TopicKey);
     }
 
     protected override async Task Subscribe(
@@ -18,8 +34,14 @@ public class PortfolioStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
+        if (!_streamSettings.IsEnabled)
+        {
+            logger.LogWarning($"{nameof(PortfolioStreamService)} is disabled.");
+            return;
+        }
+
         var request = new Tinkoff.InvestApi.V1.PortfolioStreamRequest();
-        request.Accounts.Add(Settings.Accounts);
+        request.Accounts.Add(TinvestSettings.Accounts);
 
         using var stream = InvestApiClient.OperationsStream.PortfolioStream(request, headers: null, deadline, stoppingToken);
 
@@ -27,8 +49,17 @@ public class PortfolioStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.PortfolioStreamResponse.PayloadOneofCase.Portfolio)
             {
-                var portfolio = response.Portfolio;
-                logger.LogWarning($"Portfolio received: {portfolio}");
+                var portfolio = response.Portfolio.Convert();
+
+                logger.LogDebug($"Portfolio received: {portfolio}");
+
+                if (string.IsNullOrEmpty(_topicName))
+                {
+                    logger.LogWarning($"Skipping producing to Kafka. Unknown topic name.");
+                    continue;
+                }
+
+                await _producerWrapper.Produce(_topicName, portfolio.AccountId, portfolio, DateTime.UtcNow, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.PortfolioStreamResponse.PayloadOneofCase.Ping)
             {

@@ -1,16 +1,32 @@
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.Infrastructure.Kafka;
+using Vertr.Infrastructure.Kafka.Abstractions;
+using Vertr.TinvestGateway.Contracts;
+using Vertr.TinvestGateway.Converters;
+using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 
 public class OrderStateStreamService : StreamServiceBase
 {
+    private readonly OrderStateStreamSettings _streamSettings;
+    private readonly IProducerWrapper<string, OrderState> _producerWrapper;
+    private readonly string? _topicName;
+
     public OrderStateStreamService(
-        IOptions<TinvestSettings> options,
+        IOptions<OrderStateStreamSettings> streamSettings,
+        IProducerWrapper<string, OrderState> producerWrapper,
+        IOptions<KafkaSettings> kafkaSettings,
+        IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
-        ILogger<OrderStateStreamService> logger) : base(options, investApiClient, logger)
+        ILogger<OrderStateStreamService> logger) :
+            base(kafkaSettings, tinvestOptions, investApiClient, logger)
     {
+        _streamSettings = streamSettings.Value;
+        _producerWrapper = producerWrapper;
+        _topicName = KafkaSettings.GetTopicByKey(_streamSettings.TopicKey);
     }
 
     protected override async Task Subscribe(
@@ -18,8 +34,14 @@ public class OrderStateStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
+        if (!_streamSettings.IsEnabled)
+        {
+            logger.LogWarning($"{nameof(OrderStateStreamService)} is disabled.");
+            return;
+        }
+
         var request = new Tinkoff.InvestApi.V1.OrderStateStreamRequest();
-        request.Accounts.Add(Settings.Accounts);
+        request.Accounts.Add(TinvestSettings.Accounts);
 
         using var stream = InvestApiClient.OrdersStream.OrderStateStream(request, headers: null, deadline, stoppingToken);
 
@@ -27,10 +49,18 @@ public class OrderStateStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
             {
-                foreach (var trade in response.OrderState.Trades)
+                var orderState = response.OrderState.Convert();
+                var accountId = response.OrderState.AccountId;
+
+                logger.LogDebug($"Order state received: {orderState}");
+
+                if (string.IsNullOrEmpty(_topicName))
                 {
-                    logger.LogWarning($"Order state Trade received: {trade}");
+                    logger.LogWarning($"Skipping producing to Kafka. Unknown topic name.");
+                    continue;
                 }
+
+                await _producerWrapper.Produce(_topicName, accountId, orderState, DateTime.UtcNow, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Ping)
             {

@@ -66,11 +66,11 @@ public class AccountsController : TinvestControllerBase
         var tRequest = new SandboxPayInRequest
         {
             AccountId = accountId,
-            Amount = money.ToMoneyValue()
+            Amount = money.Convert()
         };
 
         var response = await InvestApiClient.Sandbox.SandboxPayInAsync(tRequest);
-        var balance = response.Balance.FromMoneyValue();
+        var balance = response.Balance.Convert();
 
         return Ok(balance);
     }

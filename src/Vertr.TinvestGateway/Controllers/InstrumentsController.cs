@@ -30,13 +30,28 @@ public class InstrumentsController :  TinvestControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> GetInstrument(string ticker, string classCode)
+    public async Task<IActionResult> GetInstrumentByTicker(string ticker, string classCode)
     {
         var request = new Tinkoff.InvestApi.V1.InstrumentRequest
         {
             ClassCode = classCode,
             Id = ticker,
             IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Ticker,
+        };
+
+        var response = await InvestApiClient.Instruments.GetInstrumentByAsync(request);
+        var instrument = response.Instrument.ToInstrument();
+
+        return Ok(instrument);
+    }
+
+    [HttpGet("id/{instumentId}")]
+    public async Task<IActionResult> GetInstrumentById(string instumentId)
+    {
+        var request = new Tinkoff.InvestApi.V1.InstrumentRequest
+        {
+            Id = instumentId,
+            IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Uid,
         };
 
         var response = await InvestApiClient.Instruments.GetInstrumentByAsync(request);

@@ -52,10 +52,9 @@ public class OperationsController : TinvestControllerBase
         };
 
         var response = await InvestApiClient.Operations.GetPositionsAsync(request);
-
         var result = response.Convert();
 
-        return result;
+        return Ok(result);
     }
 
     [HttpGet("portfolio")]
@@ -68,51 +67,8 @@ public class OperationsController : TinvestControllerBase
         };
 
         var response = await InvestApiClient.Operations.GetPortfolioAsync(request);
+        var portfolio = response.Convert();
 
-        var snapshot = new PortfolioSnapshot
-        {
-            Id = Guid.NewGuid(),
-            TimeUtc = DateTime.UtcNow,
-            AccountId = accountId,
-            TotalAmountBonds = response.TotalAmountBonds,
-            TotalAmountCurrencies = response.TotalAmountCurrencies,
-            TotalAmountEtf = response.TotalAmountEtf,
-            TotalAmountFutures = response.TotalAmountFutures,
-            TotalAmountOptions = response.TotalAmountOptions,
-            TotalAmountShares = response.TotalAmountShares,
-            TotalAmountSp = response.TotalAmountSp,
-            TotalAmountPortfolio = response.TotalAmountPortfolio,
-            ExpectedYield = response.ExpectedYield,
-        };
-
-        var positions = new List<PortfolioPosition>();
-
-        foreach (var item in response.Positions)
-        {
-            var position = new PortfolioPosition
-            {
-                Id = Guid.NewGuid(),
-                PortfolioSnapshot = snapshot,
-                PortfolioSnapshotId = snapshot.Id,
-                AveragePositionPrice = item.AveragePositionPrice ?? 0m,
-                AveragePositionPriceFifo = item.AveragePositionPriceFifo ?? 0m,
-                Blocked = item.Blocked,
-                BlockedLots = item.BlockedLots ?? 0m,
-                CurrentNkd = item.CurrentNkd ?? 0m,
-                CurrentPrice = item.CurrentPrice ?? 0m,
-                ExpectedYield = item.ExpectedYield ?? 0m,
-                ExpectedYieldFifo = item.ExpectedYieldFifo ?? 0m,
-                InstrumentType = item.InstrumentType,
-                InstrumentUid = new Guid(item.InstrumentUid),
-                PositionUid = new Guid(item.PositionUid),
-                Quantity = item.Quantity ?? 0m,
-                VarMargin = item.VarMargin ?? 0m,
-            };
-            positions.Add(position);
-        }
-
-        snapshot.Positions = positions;
-
-        return snapshot;
+        return Ok(portfolio);
     }
 }

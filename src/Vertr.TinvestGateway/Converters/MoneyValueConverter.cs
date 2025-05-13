@@ -5,7 +5,7 @@ namespace Vertr.TinvestGateway.Converters;
 
 internal static class MoneyValueConverter
 {
-    public static MoneyValue ToMoneyValue(this Money money)
+    public static MoneyValue Convert(this Money money)
     {
         var tmp = ToGoogleType(money);
 
@@ -19,8 +19,11 @@ internal static class MoneyValueConverter
         return destination;
     }
 
-    public static Money FromMoneyValue(this MoneyValue moneyValue)
-        => new Money(moneyValue, moneyValue.Currency);
+    public static Money Convert(this MoneyValue source)
+        => new Money(source, source.Currency);
+
+    public static Money[] Convert(this MoneyValue[] source)
+        => source.Select(Convert).ToArray();
 
     internal static Google.Type.Money ToGoogleType(Money money)
         => new Google.Type.Money

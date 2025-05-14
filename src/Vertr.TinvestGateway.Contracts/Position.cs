@@ -1,7 +1,7 @@
 namespace Vertr.TinvestGateway.Contracts;
 
 public record class Position(
-    string PositionUid,
-    string InstrumentUid,
+    string PositionId,
+    string InstrumentId,
     decimal Blocked,
     decimal Balance);

@@ -1,0 +1,6 @@
+@Vertr.PortfolioManager_HostAddress = http://localhost:5200
+
+GET {{Vertr.PortfolioManager_HostAddress}}/snapshots/f7c33024-67bc-428e-a149-e916e87e79ad
+Accept: application/json
+
+###

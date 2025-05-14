@@ -43,10 +43,10 @@ public interface ITinvestGateway
         DateTime? to = null);
 
     [Get("/operations/positions")]
-    Task<PositionsResponse?> GetPositions();
+    Task<PositionsResponse?> GetPositions(string accountId);
 
     [Get("/operations/portfolio")]
-    Task<PortfolioResponse?> GetPortfolio();
+    Task<PortfolioResponse?> GetPortfolio(string accountId);
 
     [Post("/orders")]
     Task<PostOrderResponse?> PostOrder([Body] PostOrderRequest request);

@@ -32,9 +32,9 @@ public record class OrderState
 
     public OrderType OrderType { get; init; }
 
-    public DateTime OrderDate { get; init; }
+    public DateTime? OrderDate { get; init; }
 
-    public string InstrumentUid { get; init; } = string.Empty;
+    public string InstrumentId { get; init; } = string.Empty;
 
     public string OrderRequestId { get; init; } = string.Empty;
 

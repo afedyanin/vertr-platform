@@ -1,4 +1,8 @@
 
+using Vertr.PortfolioManager.Application;
+using Vertr.PortfolioManager.DataAccess;
+using Vertr.TinvestGateway.Contracts;
+
 namespace Vertr.PortfolioManager;
 
 public class Program
@@ -6,17 +10,21 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var configuration = builder.Configuration;
 
-        // Add services to the container.
+        var appSettings = new PortfolioManagerSettings();
+        configuration.GetSection(nameof(PortfolioManagerSettings)).Bind(appSettings);
+
+        builder.Services.AddTinvestGateway(c => c.BaseAddress = new Uri(appSettings.TinvestGatewayUrl));
+        builder.Services.AddDataAccess(configuration);
+        builder.Services.AddApplication();
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -24,7 +32,6 @@ public class Program
         }
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 

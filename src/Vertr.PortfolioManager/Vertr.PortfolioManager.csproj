@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj" />
+    <ProjectReference Include="..\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

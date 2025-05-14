@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace Vertr.Adapters.DataAccess;
+namespace Vertr.PortfolioManager.DataAccess;
 
 internal interface IDbConnectionFactory
 {

@@ -9,7 +9,7 @@ public interface IPortfolioSnapshotRepository
 
     public Task<bool> Save(PortfolioSnapshot portfolio);
 
-    public Task<bool> Delete(Guid snapshotPortfolioId);
+    public Task<bool> Delete(Guid id);
 
     public Task<bool> DeleteAll(string accountId);
 }

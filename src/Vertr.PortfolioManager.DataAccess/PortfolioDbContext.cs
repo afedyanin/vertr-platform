@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Vertr.PortfolioManager.Application.Entities;
 using Vertr.PortfolioManager.DataAccess.Entities;
 
-namespace Vertr.Adapters.DataAccess;
+namespace Vertr.PortfolioManager.DataAccess;
 
 public class PortfolioDbContext : DbContext
 {

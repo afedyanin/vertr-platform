@@ -80,9 +80,7 @@ public class MarketDataStreamService : StreamServiceBase
                     continue;
                 }
 
-                var candle = response.Candle.Convert(symbol, interval, _streamSettings.WaitCandleClose ? true : null);
-
-                logger.LogDebug($"Candle received {candle.Symbol}: Time={candle.TimeUtc:O} Open={candle.Open} Close={candle.Close} Vol={candle.Volume} Interval={candle.Interval} Completed={candle.IsCompleted}");
+                LogJsonObject(response.Candle);
 
                 if (string.IsNullOrEmpty(_topicName))
                 {
@@ -90,6 +88,7 @@ public class MarketDataStreamService : StreamServiceBase
                     continue;
                 }
 
+                var candle = response.Candle.Convert(symbol, interval, _streamSettings.WaitCandleClose ? true : null);
                 await _producerWrapper.Produce(_topicName, symbol, candle, DateTime.UtcNow, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)

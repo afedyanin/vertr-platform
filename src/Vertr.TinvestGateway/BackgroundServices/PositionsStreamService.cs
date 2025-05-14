@@ -45,9 +45,7 @@ public class PositionsStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.PositionsStreamResponse.PayloadOneofCase.Position)
             {
-                var position = response.Position.Convert();
-
-                logger.LogDebug($"Position received: {position}");
+                LogJsonObject(response.Position);
 
                 if (string.IsNullOrEmpty(_topicName))
                 {
@@ -55,6 +53,7 @@ public class PositionsStreamService : StreamServiceBase
                     continue;
                 }
 
+                var position = response.Position.Convert();
                 await _producerWrapper.Produce(_topicName, position.AccountId, position, DateTime.UtcNow, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.PositionsStreamResponse.PayloadOneofCase.Ping)

@@ -45,9 +45,7 @@ public class PortfolioStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.PortfolioStreamResponse.PayloadOneofCase.Portfolio)
             {
-                var portfolio = response.Portfolio.Convert();
-
-                logger.LogDebug($"Portfolio received: {portfolio}");
+                LogJsonObject(response.Portfolio);
 
                 if (string.IsNullOrEmpty(_topicName))
                 {
@@ -55,6 +53,7 @@ public class PortfolioStreamService : StreamServiceBase
                     continue;
                 }
 
+                var portfolio = response.Portfolio.Convert();
                 await _producerWrapper.Produce(_topicName, portfolio.AccountId, portfolio, DateTime.UtcNow, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.PortfolioStreamResponse.PayloadOneofCase.Ping)

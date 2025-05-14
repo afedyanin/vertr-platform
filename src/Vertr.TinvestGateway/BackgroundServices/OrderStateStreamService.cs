@@ -45,10 +45,7 @@ public class OrderStateStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
             {
-                var orderState = response.OrderState.Convert();
-                var accountId = response.OrderState.AccountId;
-
-                logger.LogDebug($"Order state received: {orderState}");
+                LogJsonObject(response.OrderState);
 
                 if (string.IsNullOrEmpty(_topicName))
                 {
@@ -56,6 +53,8 @@ public class OrderStateStreamService : StreamServiceBase
                     continue;
                 }
 
+                var orderState = response.OrderState.Convert();
+                var accountId = response.OrderState.AccountId;
                 await _producerWrapper.Produce(_topicName, accountId, orderState, DateTime.UtcNow, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Ping)

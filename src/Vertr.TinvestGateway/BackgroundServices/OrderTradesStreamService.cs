@@ -45,9 +45,7 @@ public class OrderTradesStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.OrderTrades)
             {
-                var orderTrades = response.OrderTrades.Convert();
-
-                logger.LogDebug($"Order trades received: {orderTrades}");
+                LogJsonObject(response.OrderTrades);
 
                 if (string.IsNullOrEmpty(_topicName))
                 {
@@ -55,6 +53,7 @@ public class OrderTradesStreamService : StreamServiceBase
                     continue;
                 }
 
+                var orderTrades = response.OrderTrades.Convert();
                 await _producerWrapper.Produce(_topicName, orderTrades.AccountId, orderTrades, DateTime.UtcNow, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Ping)

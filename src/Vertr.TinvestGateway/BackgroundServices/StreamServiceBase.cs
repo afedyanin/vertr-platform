@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
@@ -10,6 +11,11 @@ public abstract class StreamServiceBase : BackgroundService
     protected InvestApiClient InvestApiClient { get; private set; }
     protected TinvestSettings TinvestSettings { get; private set; }
     protected KafkaSettings KafkaSettings { get; private set; }
+
+    private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
+    {
+        WriteIndented = true,
+    };
 
     protected abstract bool IsEnabled { get; }
 
@@ -77,4 +83,7 @@ public abstract class StreamServiceBase : BackgroundService
         ILogger logger,
         DateTime? deadline = null,
         CancellationToken stoppingToken = default);
+
+    protected virtual void LogJsonObject(object obj)
+        => Logger.LogDebug("Message received: {jsonObj}", JsonSerializer.Serialize(obj, _jsonSerializerOptions));
 }

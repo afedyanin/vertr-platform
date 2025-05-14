@@ -15,6 +15,8 @@ public class PortfolioStreamService : StreamServiceBase
     private readonly IProducerWrapper<string, PortfolioResponse> _producerWrapper;
     private readonly string? _topicName;
 
+    protected override bool IsEnabled => _streamSettings.IsEnabled;
+
     public PortfolioStreamService(
         IOptions<PortfolioStreamSettings> streamSettings,
         IProducerWrapper<string, PortfolioResponse> producerWrapper,
@@ -34,12 +36,6 @@ public class PortfolioStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        if (!_streamSettings.IsEnabled)
-        {
-            logger.LogWarning($"{nameof(PortfolioStreamService)} is disabled.");
-            return;
-        }
-
         var request = new Tinkoff.InvestApi.V1.PortfolioStreamRequest();
         request.Accounts.Add(TinvestSettings.Accounts);
 

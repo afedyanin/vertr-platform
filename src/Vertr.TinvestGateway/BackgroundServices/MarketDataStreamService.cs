@@ -15,6 +15,8 @@ public class MarketDataStreamService : StreamServiceBase
     private readonly IProducerWrapper<string, Candle> _producerWrapper;
     private readonly string? _topicName;
 
+    protected override bool IsEnabled => _streamSettings.IsEnabled;
+
     public MarketDataStreamService(
         IOptions<MarketDataStreamSettings> streamSettings,
         IProducerWrapper<string, Candle> producerWrapper,
@@ -34,12 +36,6 @@ public class MarketDataStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        if (!_streamSettings.IsEnabled)
-        {
-            logger.LogWarning($"{nameof(MarketDataStreamService)} is disabled.");
-            return;
-        }
-
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {
             SubscriptionAction = Tinkoff.InvestApi.V1.SubscriptionAction.Subscribe,

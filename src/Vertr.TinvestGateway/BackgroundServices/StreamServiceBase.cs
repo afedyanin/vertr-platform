@@ -11,6 +11,8 @@ public abstract class StreamServiceBase : BackgroundService
     protected TinvestSettings TinvestSettings { get; private set; }
     protected KafkaSettings KafkaSettings { get; private set; }
 
+    protected abstract bool IsEnabled { get; }
+
     protected ILogger Logger { get; private set; }
 
     private readonly string _serviceName;
@@ -33,6 +35,12 @@ public abstract class StreamServiceBase : BackgroundService
     {
         try
         {
+            if (!IsEnabled)
+            {
+                Logger.LogWarning($"{_serviceName} is disabled.");
+                return;
+            }
+
             await StartConsumingLoop(stoppingToken);
             Logger.LogInformation($"{_serviceName} execution completed at {DateTime.UtcNow:O}");
         }

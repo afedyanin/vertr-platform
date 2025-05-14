@@ -15,6 +15,8 @@ public class PositionsStreamService : StreamServiceBase
     private readonly IProducerWrapper<string, PositionsResponse> _producerWrapper;
     private readonly string? _topicName;
 
+    protected override bool IsEnabled => _streamSettings.IsEnabled;
+
     public PositionsStreamService(
         IOptions<PositionsStreamSettings> streamSettings,
         IProducerWrapper<string, PositionsResponse> producerWrapper,
@@ -34,12 +36,6 @@ public class PositionsStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        if (!_streamSettings.IsEnabled)
-        {
-            logger.LogWarning($"{nameof(PositionsStreamService)} is disabled.");
-            return;
-        }
-
         var request = new Tinkoff.InvestApi.V1.PositionsStreamRequest();
         request.Accounts.Add(TinvestSettings.Accounts);
 

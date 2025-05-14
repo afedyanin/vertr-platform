@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
@@ -14,6 +15,14 @@ public class OrderStateStreamService : StreamServiceBase
     private readonly OrderStateStreamSettings _streamSettings;
     private readonly IProducerWrapper<string, OrderState> _producerWrapper;
     private readonly string? _topicName;
+
+    protected override bool IsEnabled => _streamSettings.IsEnabled;
+
+    private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+    {
+        WriteIndented = true,
+    };
+
 
     public OrderStateStreamService(
         IOptions<OrderStateStreamSettings> streamSettings,
@@ -34,12 +43,6 @@ public class OrderStateStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        if (!_streamSettings.IsEnabled)
-        {
-            logger.LogWarning($"{nameof(OrderStateStreamService)} is disabled.");
-            return;
-        }
-
         var request = new Tinkoff.InvestApi.V1.OrderStateStreamRequest();
         request.Accounts.Add(TinvestSettings.Accounts);
 
@@ -49,6 +52,9 @@ public class OrderStateStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
             {
+                var json = JsonSerializer.Serialize(response.OrderState, options: _jsonOptions);
+                logger.LogWarning($"Order state raw data: {json}");
+
                 var orderState = response.OrderState.Convert();
                 var accountId = response.OrderState.AccountId;
 

@@ -15,6 +15,8 @@ public class OrderTradesStreamService : StreamServiceBase
     private readonly IProducerWrapper<string, OrderTrades> _producerWrapper;
     private readonly string? _topicName;
 
+    protected override bool IsEnabled => _streamSettings.IsEnabled;
+
     public OrderTradesStreamService(
         IOptions<OrderTradesStreamSettings> streamSettings,
         IProducerWrapper<string, OrderTrades> producerWrapper,
@@ -34,12 +36,6 @@ public class OrderTradesStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        if (!_streamSettings.IsEnabled)
-        {
-            logger.LogWarning($"{nameof(OrderTradesStreamService)} is disabled.");
-            return;
-        }
-
         var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
         request.Accounts.Add(TinvestSettings.Accounts);
 

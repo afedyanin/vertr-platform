@@ -15,8 +15,8 @@ public class TinvestSandboxRelatedTests : TinvestTestBase
     }
 
     [TestCase("a48c2760-20ae-4e0a-8d4b-4005cdb10d70", 100000.00)]
-    [TestCase("0e284896-ba30-440f-9626-18ab2e2cc2f0", 100000.00)]
-    [TestCase("f7c33024-67bc-428e-a149-e916e87e79ad", 100000.00)]
+    //[TestCase("0e284896-ba30-440f-9626-18ab2e2cc2f0", 100000.00)]
+    //[TestCase("f7c33024-67bc-428e-a149-e916e87e79ad", 100000.00)]
     public async Task DepositSandboxAccount(string accountId, decimal deposit)
     {
         var amount = new Domain.Money

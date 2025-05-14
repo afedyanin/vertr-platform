@@ -22,10 +22,10 @@ public class SnapshotsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("account/{accountId}")]
-    public async Task<IActionResult> GetLastByAccountId(string accountId)
+    [HttpGet("{accountId}")]
+    public async Task<IActionResult> GetLast(string accountId)
     {
-        var snapshot = await _snapshotRepository.GetLast(accountId, Guid.Empty);
+        var snapshot = await _snapshotRepository.GetLast(accountId);
 
         if (snapshot == null)
         {
@@ -37,27 +37,12 @@ public class SnapshotsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("account/{accountId}/id/{portfolioId}")]
-    public async Task<IActionResult> GetLast(string accountId, Guid portfolioId)
+    [HttpPost("{accountId}")]
+    public async Task<IActionResult> MakeSnapshot(string accountId)
     {
-        var snapshot = await _snapshotRepository.GetLast(accountId, portfolioId);
-
-        if (snapshot == null)
+        var request = new CreatePortfolioSnapshotRequest()
         {
-            return NotFound();
-        }
-
-        var result = snapshot.Convert();
-
-        return Ok(result);
-    }
-
-    [HttpPost("tinvest/{portfolioId}")]
-    public async Task<IActionResult> MakeTinvestSnapshot(Guid portfolioId)
-    {
-        var request = new CreateTinvestPortfolioRequest()
-        {
-            PortfolioId = portfolioId
+            AccountId = accountId
         };
 
         var response = await _mediator.Send(request);

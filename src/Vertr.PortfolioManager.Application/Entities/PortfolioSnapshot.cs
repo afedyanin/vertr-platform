@@ -3,8 +3,6 @@ public class PortfolioSnapshot
 {
     public Guid Id { get; set; }
 
-    public Guid? PortfolioId { get; set; }
-
     public required string AccountId { get; set; }
 
     public DateTime UpdatedAt { get; set; }

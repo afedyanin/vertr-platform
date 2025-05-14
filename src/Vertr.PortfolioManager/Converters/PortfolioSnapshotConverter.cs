@@ -7,7 +7,6 @@ internal static class PortfolioSnapshotConverter
     public static PortfolioSnapshot Convert(
         this Application.Entities.PortfolioSnapshot source)
         => new PortfolioSnapshot(
-            source.PortfolioId,
             source.AccountId,
             source.UpdatedAt,
             source.Positions.Convert());

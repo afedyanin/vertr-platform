@@ -24,7 +24,6 @@ internal static class TinvestPortfolioResponseConverter
             Id = snapshotId,
             UpdatedAt = DateTime.UtcNow,
             AccountId = source.AccountId,
-            PortfolioId = Guid.Empty,
             JsonData = JsonSerializer.Serialize(source, _jsonSerializerOptions),
             JsonDataType = source.GetType().FullName,
             Positions = source.Positions.Convert(snapshotId)

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
@@ -17,12 +16,6 @@ public class OrderStateStreamService : StreamServiceBase
     private readonly string? _topicName;
 
     protected override bool IsEnabled => _streamSettings.IsEnabled;
-
-    private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
-    {
-        WriteIndented = true,
-    };
-
 
     public OrderStateStreamService(
         IOptions<OrderStateStreamSettings> streamSettings,
@@ -52,9 +45,6 @@ public class OrderStateStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
             {
-                var json = JsonSerializer.Serialize(response.OrderState, options: _jsonOptions);
-                logger.LogWarning($"Order state raw data: {json}");
-
                 var orderState = response.OrderState.Convert();
                 var accountId = response.OrderState.AccountId;
 

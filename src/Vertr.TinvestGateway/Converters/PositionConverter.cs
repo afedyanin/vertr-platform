@@ -71,8 +71,8 @@ internal static class PositionConverter
         => new Position(
             source.PositionUid,
             source.InstrumentUid,
-            source.BlockedLots == null ? 0L : source.BlockedLots.Units,
-            source.Quantity == null ? 0L : source.Quantity.Units);
+            source.BlockedLots,
+            source.Quantity);
 
     public static Position[] Convert(this Tinkoff.InvestApi.V1.PortfolioPosition[] source)
         => [.. source.Select(Convert)];

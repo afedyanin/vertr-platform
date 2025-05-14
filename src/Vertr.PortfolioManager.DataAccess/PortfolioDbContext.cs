@@ -1,0 +1,24 @@
+using Microsoft.EntityFrameworkCore;
+using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.DataAccess.Entities;
+
+namespace Vertr.Adapters.DataAccess;
+
+public class PortfolioDbContext : DbContext
+{
+    public DbSet<PortfolioPosition> Positions { get; set; }
+
+    public DbSet<PortfolioSnapshot> Portfolios { get; set; }
+
+
+    public PortfolioDbContext(DbContextOptions<PortfolioDbContext> options) : base(options)
+    {
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        new PortfolioSnapshotEntityConfiguration().Configure(modelBuilder.Entity<PortfolioSnapshot>());
+
+        new PortfolioPositionEntityConfiguration().Configure(modelBuilder.Entity<PortfolioPosition>());
+    }
+}

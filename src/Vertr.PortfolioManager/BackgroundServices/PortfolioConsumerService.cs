@@ -47,28 +47,21 @@ public class PortfolioConsumerService : BackgroundService
     {
         var response = result.Message.Value;
 
-        try
+        _logger.LogDebug($"Portfolio snapshot received: {response}");
+
+        var snapshot = response.Convert();
+
+        if (snapshot == null)
         {
-            _logger.LogDebug($"Portfolio snapshot received: {response}");
-
-            var snapshot = response.Convert();
-
-            if (snapshot == null)
-            {
-                _logger.LogError($"Cannot convert portfolio snapshot: {response}");
-                return;
-            }
-
-            var saved = await _snapshotRepository.Save(snapshot);
-
-            if (!saved)
-            {
-                _logger.LogError($"Cannot save portfolio snapshot: {response}");
-            }
+            _logger.LogWarning($"Cannot convert portfolio snapshot: {response}");
+            return;
         }
-        catch (Exception ex)
+
+        var saved = await _snapshotRepository.Save(snapshot);
+
+        if (!saved)
         {
-            _logger.LogError(ex, $"Error processing portfolio snapshot: {response}\n Message: {ex.Message}");
+            _logger.LogWarning($"Cannot save portfolio snapshot: {response}");
         }
     }
 }

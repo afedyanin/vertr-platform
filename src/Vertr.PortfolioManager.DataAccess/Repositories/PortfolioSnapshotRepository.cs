@@ -20,7 +20,7 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
             .AsNoTracking()
             .Where(x => x.AccountId == accountId)
             .OrderByDescending(x => x.UpdatedAt)
-            .SingleOrDefaultAsync();
+            .FirstOrDefaultAsync();
 
         return snapshot;
     }

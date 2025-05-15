@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using Vertr.Infrastructure.Kafka.Abstractions;
 
 namespace Vertr.Infrastructure.Kafka;
+
+// https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/Consumer/Program.cs
 internal sealed class ConsumerWrapper<TKey, TValue> : IConsumerWrapper<TKey, TValue>
 {
     private static readonly TimeSpan _consumerRestartDelay = TimeSpan.FromMilliseconds(100);
@@ -91,6 +93,9 @@ internal sealed class ConsumerWrapper<TKey, TValue> : IConsumerWrapper<TKey, TVa
 
             try
             {
+                // TODO: Fix it
+                await Task.Delay(_consumerRestartDelay);
+
                 _logger.LogDebug($"Consuming result...");
                 result = consumer.Consume(stoppingToken);
 
@@ -150,7 +155,7 @@ internal sealed class ConsumerWrapper<TKey, TValue> : IConsumerWrapper<TKey, TVa
         }
         catch (Exception ex)
         {
-            _logger.LogCritical(ex, $"Result handler error. Message={ex.Message}");
+            _logger.LogError(ex, $"Result handler error. Message={ex.Message}");
         }
     }
 }

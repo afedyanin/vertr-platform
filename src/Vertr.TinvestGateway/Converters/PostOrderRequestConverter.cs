@@ -16,6 +16,6 @@ internal static class PostOrderRequestConverter
                 Quantity = request.QuantityLots,
                 OrderId = request.RequestId.ToString(),
                 TimeInForce = request.TimeInForceType.Convert(),
-                InstrumentId = tinvestSettings.GetSymbolId(request.Symbol),
+                InstrumentId = request.InstrumentId.ToString(),
             };
 }

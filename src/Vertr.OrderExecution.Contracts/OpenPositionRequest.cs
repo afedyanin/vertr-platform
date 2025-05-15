@@ -1,0 +1,8 @@
+namespace Vertr.OrderExecution.Contracts;
+public record class OpenPositionRequest
+    (
+    Guid RequestId,
+    Guid InstrumentId,
+    string AccountId,
+    decimal QtyLots
+    );

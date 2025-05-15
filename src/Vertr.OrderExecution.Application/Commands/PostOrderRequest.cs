@@ -1,0 +1,13 @@
+using MediatR;
+
+namespace Vertr.OrderExecution.Application.Commands;
+public class PostOrderRequest : IRequest<PostOrderResponse>
+{
+    public Guid RequestId { get; init; }
+
+    public Guid InstrumentId { get; init; }
+
+    public required string AccountId { get; init; }
+
+    public long QtyLots { get; init; }
+}

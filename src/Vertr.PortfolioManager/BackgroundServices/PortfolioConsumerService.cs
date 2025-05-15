@@ -37,6 +37,7 @@ public class PortfolioConsumerService : BackgroundService
     {
         if (!_settings.IsPortfolioConsumerEnabled || string.IsNullOrEmpty(_topicName))
         {
+            _logger.LogWarning($"Skip starting {nameof(PortfolioConsumerService)}");
             return Task.CompletedTask;
         }
 

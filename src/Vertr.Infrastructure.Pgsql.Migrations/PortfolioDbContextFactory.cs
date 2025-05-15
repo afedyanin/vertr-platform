@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
+using Vertr.Infrastructure.Pgsql.Migrations;
+using System.Reflection;
 
 namespace Vertr.PortfolioManager.DataAccess;
 
@@ -9,7 +11,8 @@ public class PortfolioDbContextFactory : IDesignTimeDbContextFactory<PortfolioDb
     {
         var optionsBuilder = new DbContextOptionsBuilder<PortfolioDbContext>();
 
-        optionsBuilder.UseNpgsql("Server=localhost;Port=5432;User Id=postgres;Password=admin;Database=vertr;");
+        optionsBuilder.UseNpgsql(
+            ConnectionStrings.LocalConnection, b => b.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));
 
         return new PortfolioDbContext(optionsBuilder.Options);
     }

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using Vertr.Infrastructure.Pgsql.Migrations;
 
 namespace Vertr.Adapters.DataAccess;
 
@@ -9,7 +11,8 @@ public class VertrDbContextFactory : IDesignTimeDbContextFactory<VertrDbContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<VertrDbContext>();
 
-        optionsBuilder.UseNpgsql<VertrDbContext>("Server=localhost;Port=5432;User Id=postgres;Password=admin;Database=vertr;");
+        optionsBuilder.UseNpgsql(
+            ConnectionStrings.LocalConnection, b => b.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName));
 
         return new VertrDbContext(optionsBuilder.Options);
     }

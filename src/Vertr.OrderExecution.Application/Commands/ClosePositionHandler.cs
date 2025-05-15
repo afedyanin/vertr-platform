@@ -3,7 +3,7 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
-internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePositionRequest, ClosePositionResponse>
+internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<ClosePositionRequest, ClosePositionResponse>
 {
     public ClosePositionHandler(
         IMediator mediator,

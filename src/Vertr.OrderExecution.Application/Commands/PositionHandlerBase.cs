@@ -3,7 +3,7 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
-internal abstract class OrderHandlerBase
+internal abstract class PositionHandlerBase
 {
     protected IMediator Mediator { get; private set; }
 
@@ -11,7 +11,7 @@ internal abstract class OrderHandlerBase
 
     protected IStaticMarketDataProvider StaticMarketDataProvider { get; private set; }
 
-    protected OrderHandlerBase(
+    protected PositionHandlerBase(
         IMediator mediator,
         IPortfolioClient portfolioClient,
         IStaticMarketDataProvider staticMarketDataProvider

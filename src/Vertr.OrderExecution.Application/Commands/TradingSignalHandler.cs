@@ -4,7 +4,7 @@ using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
 
-internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingSignalRequest, TradingSignalResponse>
+internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<TradingSignalRequest, TradingSignalResponse>
 {
     public TradingSignalHandler(
         IMediator mediator,
@@ -22,7 +22,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
         {
             return new TradingSignalResponse
             {
-                Message = "Trading Signal Qty is empty."
+                Message = "Trading signal quantity is empty."
             };
         }
 
@@ -48,7 +48,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
         }
 
         // Здесь пока игнорим количество лотов в сигнале и используем только знак для реверса позиции.
-        // Более продвинутый вариант - аджасить поцизию под количество, запрошенное в сигнале.
+        // Более продвинутый вариант - аджастить поцизию под количество, запрошенное в сигнале.
 
         if (Math.Sign(currentLots) == Math.Sign(request.QtyLots))
         {

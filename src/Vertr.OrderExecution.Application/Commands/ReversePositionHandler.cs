@@ -3,7 +3,7 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
-internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<ReversePositionRequest, ReversePositionResponse>
+internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<ReversePositionRequest, ReversePositionResponse>
 {
     public ReversePositionHandler(
         IMediator mediator,

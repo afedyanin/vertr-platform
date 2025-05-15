@@ -1,7 +1,7 @@
 using Vertr.OrderExecution.Application.Entities;
 
 namespace Vertr.OrderExecution.Application.Commands;
-public class ClosePositionResponse
+public class ReversePositionResponse
 {
     public PostOrderResult? PostOrderResult { get; init; }
 

@@ -37,6 +37,14 @@ public class SnapshotsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("history/{accountId}")]
+    public async Task<IActionResult> GetHistory(string accountId, int maxRecords = 100)
+    {
+        var snapshot = await _snapshotRepository.GetHistory(accountId, maxRecords);
+        var result = snapshot.Convert();
+        return Ok(result);
+    }
+
     [HttpPost("{accountId}")]
     public async Task<IActionResult> MakeSnapshot(string accountId)
     {

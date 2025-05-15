@@ -11,6 +11,10 @@ internal static class PortfolioSnapshotConverter
             source.UpdatedAt,
             source.Positions.ToArray().Convert());
 
+    public static PortfolioSnapshot[] Convert(
+        this Application.Entities.PortfolioSnapshot[] source)
+        => [.. source.Select(Convert)];
+
     public static PortfolioPosition Convert(
         this Application.Entities.PortfolioPosition source)
         => new PortfolioPosition(
@@ -19,6 +23,6 @@ internal static class PortfolioSnapshotConverter
 
     public static PortfolioPosition[] Convert(
         this Application.Entities.PortfolioPosition[] source)
-        => source.Select(Convert).ToArray();
+        => [.. source.Select(Convert)];
 }
 

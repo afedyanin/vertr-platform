@@ -15,10 +15,19 @@ public class TradingSignalsController : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<IActionResult> Porocess(TradingSignalRequest signalRequest)
+    public async Task<IActionResult> Porocess(TradingSignalRequest request)
     {
-        var request = new Application.Commands.TradingSignalRequest();
-        var response = await _mediator.Send(request);
+        var signalRequest = new Application.Commands.TradingSignalRequest
+        {
+            RequestId = request.RequestId,
+            AccountId = request.AccountId,
+            InstrumentId = request.InstrumentId,
+            QtyLots = request.QtyLots,
+        };
+
+        var response = await _mediator.Send(signalRequest);
+
+        // TODO Convert response to contract
         return Ok(response);
     }
 }

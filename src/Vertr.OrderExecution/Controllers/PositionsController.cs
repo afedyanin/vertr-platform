@@ -16,26 +16,50 @@ public class PositionsController : ControllerBase
     }
 
     [HttpPost("open")]
-    public async Task<IActionResult> OpenPosition(OpenPositionRequest positionRequest)
+    public async Task<IActionResult> OpenPosition(OpenPositionRequest request)
     {
-        var request = new Application.Commands.OpenPositionRequest();
-        var response = await _mediator.Send(request);
+        var openRequest = new Application.Commands.OpenPositionRequest
+        {
+            AccountId = request.AccountId,
+            RequestId = request.RequestId,
+            InstrumentId = request.InstrumentId,
+            QtyLots = request.QtyLots,
+        };
+
+        var response = await _mediator.Send(openRequest);
+
+        // TODO Convert response to contract
         return Ok(response);
     }
 
     [HttpPost("close")]
-    public async Task<IActionResult> ClosePosition(ClosePositionRequest positionRequest)
+    public async Task<IActionResult> ClosePosition(ClosePositionRequest request)
     {
-        var request = new Application.Commands.ClosePositionRequest();
-        var response = await _mediator.Send(request);
+        var closeRequest = new Application.Commands.ClosePositionRequest
+        {
+            AccountId = request.AccountId,
+            RequestId = request.RequestId,
+            InstrumentId = request.InstrumentId,
+        };
+
+        var response = await _mediator.Send(closeRequest);
+
+        // TODO Convert response to contract
         return Ok(response);
     }
 
     [HttpPost("revert")]
-    public async Task<IActionResult> RevertPosition(RevertPositionRequest positionRequest)
+    public async Task<IActionResult> RevertPosition(RevertPositionRequest request)
     {
-        var request = new Application.Commands.RevertPositionRequest();
-        var response = await _mediator.Send(request);
+        var revertRequest = new Application.Commands.ReversePositionRequest
+        {
+            AccountId = request.AccountId,
+            RequestId = request.RequestId,
+            InstrumentId = request.InstrumentId,
+        };
+        var response = await _mediator.Send(revertRequest);
+
+        // TODO Convert response to contract
         return Ok(response);
     }
 }

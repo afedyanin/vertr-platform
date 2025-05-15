@@ -5,31 +5,31 @@ namespace Vertr.TinvestGateway.Contracts;
 public interface ITinvestGateway
 {
     [Get("/accounts")]
-    Task<Account[]?> GetAccounts();
+    public Task<Account[]?> GetAccounts();
 
     [Get("/accounts/sandbox")]
-    Task<Account[]?> GetSandboxAccounts();
+    public Task<Account[]?> GetSandboxAccounts();
 
     [Post("/accounts/sandbox")]
-    Task<string> CreateAccount(string accountName);
+    public Task<string> CreateAccount(string accountName);
 
     [Delete("/accounts/sandbox/{accountId}")]
-    Task CloseAccount(string accountId);
+    public Task CloseAccount(string accountId);
 
     [Put("/accounts/sandbox/{accountId}")]
-    Task<Money?> PayIn(string accountId, [Body] Money money);
+    public Task<Money?> PayIn(string accountId, [Body] Money money);
 
     [Get("/instruments/find")]
-    Task<Instrument[]?> FindInstrument(string query);
+    public Task<Instrument[]?> FindInstrument(string query);
 
     [Get("/instruments")]
-    Task<Instrument?> GetInstrumentByTicker(string ticker, string classCode);
+    public Task<Instrument?> GetInstrumentByTicker(string ticker, string classCode);
 
     [Get("/instruments/id/{instumentId}")]
-    Task<Instrument?> GetInstrumentById(string instumentId);
+    public Task<Instrument?> GetInstrumentById(string instumentId);
 
     [Get("/marketdata/candles")]
-    Task<Candle[]?> GetCandles(
+    public Task<Candle[]?> GetCandles(
         string symbol,
         CandleInterval interval,
         DateTime from,
@@ -37,25 +37,25 @@ public interface ITinvestGateway
         int? limit);
 
     [Get("/operations")]
-    Task<Operation[]?> GetOperations(
+    public Task<Operation[]?> GetOperations(
         string accountId,
         DateTime? from = null,
         DateTime? to = null);
 
     [Get("/operations/positions")]
-    Task<PositionsResponse?> GetPositions(string accountId);
+    public Task<PositionsResponse?> GetPositions(string accountId);
 
     [Get("/operations/portfolio")]
-    Task<PortfolioResponse?> GetPortfolio(string accountId);
+    public Task<PortfolioResponse?> GetPortfolio(string accountId);
 
     [Post("/orders")]
-    Task<PostOrderResponse?> PostOrder([Body] PostOrderRequest request);
+    public Task<PostOrderResponse?> PostOrder([Body] PostOrderRequest request);
 
     [Put("/orders/cancel")]
-    Task<DateTime> CancelOrder(string accountId, string orderId);
+    public Task<DateTime> CancelOrder(string accountId, string orderId);
 
     [Get("/orders/state")]
-    Task<OrderState?> GetOrderState(
+    public Task<OrderState?> GetOrderState(
         string accountId,
         string orderId,
         PriceType priceType = PriceType.Unspecified);

@@ -3,9 +3,9 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
-internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPositionRequest, OpenPositionResponse>
+internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<ReversePositionRequest, ReversePositionResponse>
 {
-    public OpenPositionHandler(
+    public ReversePositionHandler(
         IMediator mediator,
         IPortfolioClient portfolioClient,
         IStaticMarketDataProvider staticMarketDataProvider
@@ -13,29 +13,33 @@ internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPosit
     {
     }
 
-    public async Task<OpenPositionResponse> Handle(OpenPositionRequest request, CancellationToken cancellationToken)
+    public async Task<ReversePositionResponse> Handle(
+        ReversePositionRequest request,
+        CancellationToken cancellationToken)
     {
         var currentLots = await GetCurrentPositionInLots(request.AccountId, request.InstrumentId);
 
-        if (currentLots != 0L)
+        if (currentLots == 0L)
         {
-            return new OpenPositionResponse()
+            return new ReversePositionResponse()
             {
-                Message = "Position already opened."
+                Message = "Position closed."
             };
         }
+
+        var lotsToRevert = currentLots * (-2L);
 
         var orderRequest = new PostOrderRequest
         {
             AccountId = request.AccountId,
             InstrumentId = request.InstrumentId,
             RequestId = request.RequestId,
-            QtyLots = request.QtyLots,
+            QtyLots = lotsToRevert,
         };
 
         var response = await Mediator.Send(orderRequest, cancellationToken);
 
-        var result = new OpenPositionResponse
+        var result = new ReversePositionResponse
         {
             PostOrderResult = response.PostOrderResult,
         };

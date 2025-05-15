@@ -17,7 +17,7 @@ public static class DataAccessRegistrar
         services.AddSingleton<IDbConnectionFactory>(sp => new DbConnectionFactory(connectionString!));
         services.AddDbContextFactory<PortfolioDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<IPortfolioSnapshotRepository, PortfolioSnapshotRepository>();
+        services.AddSingleton<IPortfolioSnapshotRepository, PortfolioSnapshotRepository>();
 
         return services;
     }

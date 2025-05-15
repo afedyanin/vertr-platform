@@ -2,7 +2,7 @@ using System.Text.Json;
 using Vertr.PortfolioManager.Application.Entities;
 
 namespace Vertr.PortfolioManager.Application.Converters;
-internal static class TinvestPortfolioResponseConverter
+public static class TinvestPortfolioResponseConverter
 {
     private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
     {
@@ -33,7 +33,7 @@ internal static class TinvestPortfolioResponseConverter
         return res;
     }
 
-    public static PortfolioPosition Convert(
+    internal static PortfolioPosition Convert(
         this TinvestGateway.Contracts.Position source,
         PortfolioSnapshot parent)
         => new PortfolioPosition
@@ -45,7 +45,7 @@ internal static class TinvestPortfolioResponseConverter
             PortfolioSnapshot = parent
         };
 
-    public static PortfolioPosition[] Convert(
+    internal static PortfolioPosition[] Convert(
         this TinvestGateway.Contracts.Position[] source,
         PortfolioSnapshot parent)
         => source.Select(t => t.Convert(parent)).ToArray();

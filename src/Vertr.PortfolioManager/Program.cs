@@ -1,5 +1,8 @@
 
+using System.Text.Json;
+using Vertr.Infrastructure.Kafka;
 using Vertr.PortfolioManager.Application;
+using Vertr.PortfolioManager.BackgroundServices;
 using Vertr.PortfolioManager.DataAccess;
 using Vertr.TinvestGateway.Contracts;
 
@@ -14,8 +17,24 @@ public class Program
 
         var appSettings = new PortfolioManagerSettings();
         configuration.GetSection(nameof(PortfolioManagerSettings)).Bind(appSettings);
+        builder.Services.AddOptions<PortfolioManagerSettings>().BindConfiguration(nameof(PortfolioManagerSettings));
 
         builder.Services.AddTinvestGateway(c => c.BaseAddress = new Uri(appSettings.TinvestGatewayUrl));
+
+        builder.Services.AddKafkaSettings(
+            settings =>
+            {
+                builder.Configuration.Bind(nameof(KafkaSettings), settings);
+                settings.JsonSerializerOptions = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+            });
+
+        builder.Services.AddKafkaConsumer<string, PortfolioResponse>();
+
+        builder.Services.AddHostedService<PortfolioConsumerService>();
+
         builder.Services.AddDataAccess(configuration);
         builder.Services.AddApplication();
 

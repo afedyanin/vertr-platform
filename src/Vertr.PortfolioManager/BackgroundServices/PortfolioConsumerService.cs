@@ -1,22 +1,74 @@
 
+using Confluent.Kafka;
+using Microsoft.Extensions.Options;
+using Vertr.Infrastructure.Kafka;
+using Vertr.Infrastructure.Kafka.Abstractions;
+using Vertr.PortfolioManager.Application.Abstractions;
+using Vertr.PortfolioManager.Application.Converters;
+using Vertr.TinvestGateway.Contracts;
+
 namespace Vertr.PortfolioManager.BackgroundServices;
 
 public class PortfolioConsumerService : BackgroundService
 {
+    private readonly PortfolioManagerSettings _settings;
+    private readonly KafkaSettings _kafkaSettings;
+    private readonly IPortfolioSnapshotRepository _snapshotRepository;
+    private readonly ILogger<PortfolioConsumerService> _logger;
+    private readonly IConsumerWrapper<string, PortfolioResponse> _consumer;
+    private readonly string? _topicName;
+
+    public PortfolioConsumerService(
+        IOptions<PortfolioManagerSettings> settings,
+        IOptions<KafkaSettings> kafkaSettings,
+        IPortfolioSnapshotRepository snapshotRepository,
+        IConsumerWrapper<string, PortfolioResponse> consumer,
+        ILogger<PortfolioConsumerService> logger)
+    {
+        _settings = settings.Value;
+        _kafkaSettings = kafkaSettings.Value;
+        _snapshotRepository = snapshotRepository;
+        _consumer = consumer;
+        _logger = logger;
+        _topicName = _kafkaSettings.GetTopicByKey(_settings.PortfolioConsumerTopicKey);
+    }
+
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // 1. Satrt Kafka consumer for portfolio topic
-        // 2. On receive Portfolio message - save snapshot to DB
-
-        /*
-        var snapshot = portfolioResponse.Convert();
-
-        if (snapshot != null)
+        if (!_settings.IsPortfolioConsumerEnabled || string.IsNullOrEmpty(_topicName))
         {
-            var saved = await _snapshotRepository.Save(snapshot);
+            return Task.CompletedTask;
         }
-        */
 
-        throw new NotImplementedException();
+        return _consumer.Consume([_topicName], HandlePortfolioMessage, readFromBegining: false, stoppingToken);
+    }
+
+    private async Task HandlePortfolioMessage(ConsumeResult<string, PortfolioResponse> result, CancellationToken token)
+    {
+        var response = result.Message.Value;
+
+        try
+        {
+            _logger.LogDebug($"Portfolio snapshot received: {response}");
+
+            var snapshot = response.Convert();
+
+            if (snapshot == null)
+            {
+                _logger.LogError($"Cannot convert portfolio snapshot: {response}");
+                return;
+            }
+
+            var saved = await _snapshotRepository.Save(snapshot);
+
+            if (!saved)
+            {
+                _logger.LogError($"Cannot save portfolio snapshot: {response}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error processing portfolio snapshot: {response}\n Message: {ex.Message}");
+        }
     }
 }

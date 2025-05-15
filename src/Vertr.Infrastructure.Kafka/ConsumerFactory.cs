@@ -14,7 +14,11 @@ internal sealed class ConsumerFactory : IConsumerFactory
     public ConsumerFactory(IOptions<KafkaSettings> kafkaOptions)
     {
         ConsumerConfig = kafkaOptions.Value.ConsumerSettings;
-        _jsonSerializerOptions = kafkaOptions.Value.JsonSerializerOptions ?? new JsonSerializerOptions();
+        _jsonSerializerOptions = kafkaOptions.Value.JsonSerializerOptions ??
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true,
+            };
 
         Debug.Assert(_jsonSerializerOptions.PropertyNameCaseInsensitive, "Should use case insensistive deserialization.");
         Debug.Assert(!string.IsNullOrWhiteSpace(ConsumerConfig.GroupId), "Consumer GroupId must be specified.");

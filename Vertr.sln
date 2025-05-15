@@ -64,6 +64,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.PortfolioManager.Data
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Portfolio", "Portfolio", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Infrastructure.Pgsql", "src\Vertr.Infrastructure.Pgsql\Vertr.Infrastructure.Pgsql.csproj", "{A0284C92-2161-402E-9AAB-2F73F78751B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Infrastructure.Pgsql.Migrations", "src\Vertr.Infrastructure.Pgsql.Migrations\Vertr.Infrastructure.Pgsql.Migrations.csproj", "{07A45660-2DCE-42E5-82C6-6DA7221082E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +158,14 @@ Global
 		{6DE04CA5-D711-4A77-A1DC-CD1784CEA8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DE04CA5-D711-4A77-A1DC-CD1784CEA8F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DE04CA5-D711-4A77-A1DC-CD1784CEA8F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0284C92-2161-402E-9AAB-2F73F78751B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0284C92-2161-402E-9AAB-2F73F78751B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0284C92-2161-402E-9AAB-2F73F78751B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0284C92-2161-402E-9AAB-2F73F78751B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07A45660-2DCE-42E5-82C6-6DA7221082E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07A45660-2DCE-42E5-82C6-6DA7221082E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07A45660-2DCE-42E5-82C6-6DA7221082E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07A45660-2DCE-42E5-82C6-6DA7221082E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -183,5 +195,7 @@ Global
 		{E7D05C46-0C91-48D8-9884-3AC5014FBCD7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{6DE04CA5-D711-4A77-A1DC-CD1784CEA8F2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
+		{A0284C92-2161-402E-9AAB-2F73F78751B0} = {7AA0956D-5929-4B12-9D07-970EB5BEA207}
+		{07A45660-2DCE-42E5-82C6-6DA7221082E6} = {7AA0956D-5929-4B12-9D07-970EB5BEA207}
 	EndGlobalSection
 EndGlobal

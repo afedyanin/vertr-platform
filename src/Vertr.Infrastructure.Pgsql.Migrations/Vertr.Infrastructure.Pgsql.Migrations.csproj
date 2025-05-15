@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Infrastructure.Pgsql\Vertr.Infrastructure.Pgsql.csproj" />
-    <ProjectReference Include="..\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj" />
+    <ProjectReference Include="..\Vertr.Adapters.DataAccess\Vertr.Adapters.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

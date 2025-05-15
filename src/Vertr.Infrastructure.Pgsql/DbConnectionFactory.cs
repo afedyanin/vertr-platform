@@ -1,8 +1,8 @@
 using System.Data;
 using Npgsql;
 
-namespace Vertr.PortfolioManager.DataAccess;
-internal sealed class DbConnectionFactory : IDbConnectionFactory
+namespace Vertr.Infrastructure.Pgsql;
+public sealed class DbConnectionFactory : IDbConnectionFactory
 {
     private readonly string _connectionString;
 

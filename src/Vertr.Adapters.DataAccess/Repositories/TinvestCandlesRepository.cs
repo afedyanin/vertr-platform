@@ -4,6 +4,7 @@ using Vertr.Adapters.DataAccess.Entities;
 using Vertr.Domain;
 using Vertr.Domain.Enums;
 using Vertr.Domain.Repositories;
+using Vertr.Infrastructure.Pgsql;
 
 namespace Vertr.Adapters.DataAccess.Repositories;
 

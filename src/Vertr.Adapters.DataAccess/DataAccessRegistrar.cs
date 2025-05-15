@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Adapters.DataAccess.Repositories;
 using Vertr.Domain.Repositories;
+using Vertr.Infrastructure.Pgsql;
 
 namespace Vertr.Adapters.DataAccess;
 public static class DataAccessRegistrar

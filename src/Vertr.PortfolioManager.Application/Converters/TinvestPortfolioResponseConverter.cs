@@ -26,25 +26,27 @@ internal static class TinvestPortfolioResponseConverter
             AccountId = source.AccountId,
             JsonData = JsonSerializer.Serialize(source, _jsonSerializerOptions),
             JsonDataType = source.GetType().FullName,
-            Positions = source.Positions.Convert(snapshotId)
         };
+
+        res.Positions = source.Positions.Convert(res);
 
         return res;
     }
 
     public static PortfolioPosition Convert(
         this TinvestGateway.Contracts.Position source,
-        Guid portfolioSnapshotId)
+        PortfolioSnapshot parent)
         => new PortfolioPosition
         {
             Id = Guid.NewGuid(),
-            PortfolioSnapshotId = portfolioSnapshotId,
+            PortfolioSnapshotId = parent.Id,
             Balance = source.Balance,
             InstrumentId = new Guid(source.InstrumentId),
+            PortfolioSnapshot = parent
         };
 
     public static PortfolioPosition[] Convert(
         this TinvestGateway.Contracts.Position[] source,
-        Guid portfolioSnapshotId)
-        => source.Select(t => t.Convert(portfolioSnapshotId)).ToArray();
+        PortfolioSnapshot parent)
+        => source.Select(t => t.Convert(parent)).ToArray();
 }

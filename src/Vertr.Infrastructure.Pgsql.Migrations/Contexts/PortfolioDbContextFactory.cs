@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
-using Vertr.Infrastructure.Pgsql.Migrations;
 using System.Reflection;
+using Vertr.PortfolioManager.DataAccess;
 
-namespace Vertr.PortfolioManager.DataAccess;
+namespace Vertr.Infrastructure.Pgsql.Migrations.Contexts;
 
 public class PortfolioDbContextFactory : IDesignTimeDbContextFactory<PortfolioDbContext>
 {

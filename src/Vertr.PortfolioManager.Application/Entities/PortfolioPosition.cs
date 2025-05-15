@@ -10,5 +10,5 @@ public class PortfolioPosition
 
     public decimal Balance { get; set; }
 
-    public PortfolioSnapshot PortfolioSnapshot { get; set; }
+    public required PortfolioSnapshot PortfolioSnapshot { get; set; }
 }

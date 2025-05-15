@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using Vertr.Infrastructure.Pgsql.Migrations;
+using Vertr.Adapters.DataAccess;
 
-namespace Vertr.Adapters.DataAccess;
+namespace Vertr.Infrastructure.Pgsql.Migrations.Contexts;
 
 public class VertrDbContextFactory : IDesignTimeDbContextFactory<VertrDbContext>
 {

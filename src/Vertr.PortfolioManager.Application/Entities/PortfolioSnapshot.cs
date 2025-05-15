@@ -7,7 +7,7 @@ public class PortfolioSnapshot
 
     public DateTime UpdatedAt { get; set; }
 
-    public PortfolioPosition[] Positions { get; set; } = [];
+    public IList<PortfolioPosition> Positions { get; set; } = [];
 
     public string? JsonData { get; set; }
 

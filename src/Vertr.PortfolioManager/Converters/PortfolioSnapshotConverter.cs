@@ -9,7 +9,7 @@ internal static class PortfolioSnapshotConverter
         => new PortfolioSnapshot(
             source.AccountId,
             source.UpdatedAt,
-            source.Positions.Convert());
+            source.Positions.ToArray().Convert());
 
     public static PortfolioPosition Convert(
         this Application.Entities.PortfolioPosition source)

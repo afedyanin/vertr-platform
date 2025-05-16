@@ -31,7 +31,7 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, PostOrderRes
 
         var response = new PostOrderResponse
         {
-            PostOrderResult = result,
+            OrderId = result.OrderId,
         };
 
         var saved = await _orderEventRepository.Save(result);

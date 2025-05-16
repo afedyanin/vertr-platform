@@ -1,5 +1,6 @@
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Entities;
+using Vertr.OrderExecution.Application.Factories;
 using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution.Application.Services;
@@ -38,9 +39,9 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
 
         return new PostOrderResult
         {
-            OrderId = response.OrderId,
-            Request = request,
-            Response = response,
+            Request = request.CreateEvent(),
+            Response = response?.CreateEvent(),
+            OrderId = response?.OrderId,
         };
     }
 }

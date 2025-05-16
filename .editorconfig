@@ -53,21 +53,15 @@ csharp_style_pattern_matching_over_is_with_cast_check = true:warning
 csharp_style_pattern_matching_over_as_with_null_check = true:warning
 csharp_style_prefer_not_pattern = true:warning
 csharp_style_prefer_extended_property_pattern = true:suggestion
-csharp_style_var_for_built_in_types = true:suggestion
-csharp_style_var_when_type_is_apparent = true:suggestion
-csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_for_built_in_types = true:warning
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_elsewhere = true:warning
 dotnet_diagnostic.CA1309.severity = suggestion
 dotnet_diagnostic.CA1825.severity = suggestion
 dotnet_diagnostic.CA1507.severity = suggestion
 dotnet_diagnostic.CA2016.severity = suggestion
 dotnet_diagnostic.CA1841.severity = suggestion
 dotnet_diagnostic.CA1805.severity = suggestion
-dotnet_diagnostic.IDE0007.severity = none
-dotnet_diagnostic.IDE0008.severity = none
-dotnet_diagnostic.IDE0090.severity = none
-dotnet_diagnostic.IDE0022.severity = none
-dotnet_diagnostic.IDE0061.severity = none
-dotnet_diagnostic.IDE0025.severity = none
 csharp_style_prefer_readonly_struct_member = true:suggestion
 csharp_style_prefer_primary_constructors = true:suggestion
 csharp_style_expression_bodied_methods = false:silent
@@ -78,6 +72,8 @@ csharp_style_expression_bodied_indexers = false:silent
 csharp_style_expression_bodied_accessors = false:silent
 csharp_style_expression_bodied_lambdas = false:silent
 csharp_style_expression_bodied_local_functions = false:silent
+csharp_prefer_system_threading_lock = true:suggestion
+csharp_prefer_static_anonymous_function = true:suggestion
 
 ##########################################
 # File Extension Settings
@@ -569,3 +565,5 @@ dotnet_diagnostic.CA1416.severity = suggestion
 
 # IDE1006: Naming Styles
 dotnet_diagnostic.IDE1006.severity = none
+dotnet_style_prefer_collection_expression = when_types_loosely_match:suggestion
+dotnet_diagnostic.CA2000.severity = error

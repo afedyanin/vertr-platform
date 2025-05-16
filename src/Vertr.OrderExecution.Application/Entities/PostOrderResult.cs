@@ -3,7 +3,5 @@ public class PostOrderResult
 {
     public string? OrderId { get; init; } = string.Empty;
 
-    public OrderEvent? Request { get; init; }
-
-    public OrderEvent? Response { get; init; }
+    public OrderEvent[] Events { get; init; } = [];
 }

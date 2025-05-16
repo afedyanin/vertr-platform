@@ -22,6 +22,8 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
         string accountId,
         long qtyLots)
     {
+        var events = new List<OrderEvent>();
+
         var request = new PostOrderRequest
         {
             AccountId = accountId,
@@ -35,13 +37,19 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
             QuantityLots = Math.Abs(qtyLots),
         };
 
+        events.Add(request.CreateEvent());
+
         var response = await _tinvestGateway.PostOrder(request);
+
+        if (response != null)
+        {
+            events.Add(response.CreateEvent());
+        }
 
         return new PostOrderResult
         {
-            Request = request.CreateEvent(),
-            Response = response?.CreateEvent(),
             OrderId = response?.OrderId,
+            Events = [.. events],
         };
     }
 }

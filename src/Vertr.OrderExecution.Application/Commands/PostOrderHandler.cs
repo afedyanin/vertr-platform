@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Abstractions;
+using Vertr.OrderExecution.Application.Entities;
 
 namespace Vertr.OrderExecution.Application.Commands;
 internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecutionResponse>
@@ -34,7 +35,7 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecuti
             OrderId = result.OrderId,
         };
 
-        var saved = await _orderEventRepository.Save(result);
+        var saved = await _orderEventRepository.Save(result.Events);
 
         if (!saved)
         {

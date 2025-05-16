@@ -4,5 +4,5 @@ namespace Vertr.OrderExecution.Application.Abstractions;
 
 public interface IOrderEventRepository
 {
-    public Task<bool> Save(PostOrderResult orderResult);
+    public Task<bool> Save(OrderEvent[] events);
 }

@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Vertr.Infrastructure.Pgsql\Vertr.Infrastructure.Pgsql.csproj" />
+    <ProjectReference Include="..\Vertr.OrderExecution.Application\Vertr.OrderExecution.Application.csproj" />
+  </ItemGroup>
+
 </Project>

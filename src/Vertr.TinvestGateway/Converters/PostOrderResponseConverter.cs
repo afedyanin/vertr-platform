@@ -19,7 +19,7 @@ internal static class PostOrderResponseConverter
             ExecutedCommission = response.ExecutedCommission,
             InitialSecurityPrice = response.InitialSecurityPrice,
             Message = response.Message,
-            InstrumentUid = response.InstrumentUid,
+            InstrumentId = response.InstrumentUid,
             OrderType = response.OrderType.Convert(),
             OrderDirection = response.Direction.Convert(),
         };

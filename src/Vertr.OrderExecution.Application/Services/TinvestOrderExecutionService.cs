@@ -36,6 +36,11 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
 
         var response = await _tinvestGateway.PostOrder(request);
 
-        return new PostOrderResult();
+        return new PostOrderResult
+        {
+            OrderId = response.OrderId,
+            Request = request,
+            Response = response,
+        };
     }
 }

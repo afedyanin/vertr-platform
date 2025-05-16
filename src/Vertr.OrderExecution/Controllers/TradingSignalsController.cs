@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vertr.OrderExecution.Contracts;
+using Vertr.OrderExecution.Converters;
 
 namespace Vertr.OrderExecution.Controllers;
 [Route("signals")]
@@ -26,8 +27,6 @@ public class TradingSignalsController : ControllerBase
         };
 
         var response = await _mediator.Send(signalRequest);
-
-        // TODO Convert response to contract
-        return Ok(response);
+        return Ok(response.Convert());
     }
 }

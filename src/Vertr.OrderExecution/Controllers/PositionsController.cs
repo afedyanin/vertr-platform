@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vertr.OrderExecution.Contracts;
+using Vertr.OrderExecution.Converters;
 
 namespace Vertr.OrderExecution.Controllers;
 [Route("positions")]
@@ -27,9 +28,7 @@ public class PositionsController : ControllerBase
         };
 
         var response = await _mediator.Send(openRequest);
-
-        // TODO Convert response to contract
-        return Ok(response);
+        return Ok(response.Convert());
     }
 
     [HttpPost("close")]
@@ -43,9 +42,7 @@ public class PositionsController : ControllerBase
         };
 
         var response = await _mediator.Send(closeRequest);
-
-        // TODO Convert response to contract
-        return Ok(response);
+        return Ok(response.Convert());
     }
 
     [HttpPost("revert")]
@@ -57,9 +54,8 @@ public class PositionsController : ControllerBase
             RequestId = request.RequestId,
             InstrumentId = request.InstrumentId,
         };
-        var response = await _mediator.Send(revertRequest);
 
-        // TODO Convert response to contract
-        return Ok(response);
+        var response = await _mediator.Send(revertRequest);
+        return Ok(response.Convert());
     }
 }

@@ -29,5 +29,5 @@ public record class PostOrderResponse
 
     public string Message { get; init; } = string.Empty;
 
-    public string InstrumentUid { get; init; } = string.Empty;
+    public string InstrumentId { get; init; } = string.Empty;
 }

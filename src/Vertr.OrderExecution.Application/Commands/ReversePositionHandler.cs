@@ -3,7 +3,7 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
-internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<ReversePositionRequest, ReversePositionResponse>
+internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<ReversePositionRequest, OrderExecutionResponse>
 {
     public ReversePositionHandler(
         IMediator mediator,
@@ -13,7 +13,7 @@ internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<Rev
     {
     }
 
-    public async Task<ReversePositionResponse> Handle(
+    public async Task<OrderExecutionResponse> Handle(
         ReversePositionRequest request,
         CancellationToken cancellationToken)
     {
@@ -21,9 +21,9 @@ internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<Rev
 
         if (currentLots == 0L)
         {
-            return new ReversePositionResponse()
+            return new OrderExecutionResponse()
             {
-                Message = "Position closed."
+                ErrorMessage = "Position closed."
             };
         }
 
@@ -39,9 +39,9 @@ internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<Rev
 
         var response = await Mediator.Send(orderRequest, cancellationToken);
 
-        var result = new ReversePositionResponse
+        var result = new OrderExecutionResponse
         {
-            PostOrderResult = response.PostOrderResult,
+            OrderId = response.OrderId,
         };
 
         return result;

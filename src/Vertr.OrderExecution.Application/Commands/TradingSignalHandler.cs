@@ -4,7 +4,7 @@ using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
 
-internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<TradingSignalRequest, TradingSignalResponse>
+internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<TradingSignalRequest, OrderExecutionResponse>
 {
     public TradingSignalHandler(
         IMediator mediator,
@@ -14,15 +14,15 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
     {
     }
 
-    public async Task<TradingSignalResponse> Handle(
+    public async Task<OrderExecutionResponse> Handle(
         TradingSignalRequest request,
         CancellationToken cancellationToken)
     {
         if (request.QtyLots == 0L)
         {
-            return new TradingSignalResponse
+            return new OrderExecutionResponse
             {
-                Message = "Trading signal quantity is empty."
+                ErrorMessage = "Trading signal quantity is empty."
             };
         }
 
@@ -40,10 +40,10 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
 
             var openResponse = await Mediator.Send(openRequest, cancellationToken);
 
-            return new TradingSignalResponse()
+            return new OrderExecutionResponse()
             {
-                PostOrderResult = openResponse?.PostOrderResult,
-                Message = openResponse?.Message,
+                OrderId = openResponse?.OrderId,
+                ErrorMessage = openResponse?.ErrorMessage,
             };
         }
 
@@ -52,9 +52,9 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
 
         if (Math.Sign(currentLots) == Math.Sign(request.QtyLots))
         {
-            return new TradingSignalResponse
+            return new OrderExecutionResponse
             {
-                Message = "Trading signal and position have the same direction."
+                ErrorMessage = "Trading signal and position have the same direction."
             };
         }
 
@@ -67,10 +67,10 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
 
         var reverseResponse = await Mediator.Send(reverseRequest, cancellationToken);
 
-        return new TradingSignalResponse()
+        return new OrderExecutionResponse()
         {
-            PostOrderResult = reverseResponse?.PostOrderResult,
-            Message = reverseResponse?.Message,
+            OrderId = reverseResponse?.OrderId,
+            ErrorMessage = reverseResponse?.ErrorMessage,
         };
     }
 }

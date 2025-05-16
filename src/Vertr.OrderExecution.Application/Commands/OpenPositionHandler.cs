@@ -3,7 +3,7 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
-internal class OpenPositionHandler : PositionHandlerBase, IRequestHandler<OpenPositionRequest, OpenPositionResponse>
+internal class OpenPositionHandler : PositionHandlerBase, IRequestHandler<OpenPositionRequest, OrderExecutionResponse>
 {
     public OpenPositionHandler(
         IMediator mediator,
@@ -13,15 +13,15 @@ internal class OpenPositionHandler : PositionHandlerBase, IRequestHandler<OpenPo
     {
     }
 
-    public async Task<OpenPositionResponse> Handle(OpenPositionRequest request, CancellationToken cancellationToken)
+    public async Task<OrderExecutionResponse> Handle(OpenPositionRequest request, CancellationToken cancellationToken)
     {
         var currentLots = await GetCurrentPositionInLots(request.AccountId, request.InstrumentId);
 
         if (currentLots != 0L)
         {
-            return new OpenPositionResponse()
+            return new OrderExecutionResponse()
             {
-                Message = "Position already opened."
+                ErrorMessage = "Position already opened."
             };
         }
 
@@ -35,9 +35,9 @@ internal class OpenPositionHandler : PositionHandlerBase, IRequestHandler<OpenPo
 
         var response = await Mediator.Send(orderRequest, cancellationToken);
 
-        var result = new OpenPositionResponse
+        var result = new OrderExecutionResponse
         {
-            PostOrderResult = response.PostOrderResult,
+            OrderId = response.OrderId,
         };
 
         return result;

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Abstractions;
 
 namespace Vertr.OrderExecution.Application.Commands;
-internal class PostOrderHandler : IRequestHandler<PostOrderRequest, PostOrderResponse>
+internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecutionResponse>
 {
     private readonly IOrderExecutionService _orderExecutionService;
     private readonly IOrderEventRepository _orderEventRepository;
@@ -19,7 +19,7 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, PostOrderRes
         _logger = logger;
     }
 
-    public async Task<PostOrderResponse> Handle(PostOrderRequest request, CancellationToken cancellationToken)
+    public async Task<OrderExecutionResponse> Handle(PostOrderRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Posting new market order for AccountId={request.AccountId}");
 
@@ -29,7 +29,7 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, PostOrderRes
             request.AccountId,
             request.QtyLots);
 
-        var response = new PostOrderResponse
+        var response = new OrderExecutionResponse
         {
             OrderId = result.OrderId,
         };

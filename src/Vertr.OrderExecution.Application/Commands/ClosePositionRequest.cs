@@ -1,7 +1,7 @@
 using MediatR;
 
 namespace Vertr.OrderExecution.Application.Commands;
-public class ClosePositionRequest : IRequest<ClosePositionResponse>
+public class ClosePositionRequest : IRequest<OrderExecutionResponse>
 {
     public Guid RequestId { get; init; }
 

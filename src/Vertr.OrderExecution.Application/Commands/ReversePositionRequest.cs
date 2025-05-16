@@ -1,7 +1,7 @@
 using MediatR;
 
 namespace Vertr.OrderExecution.Application.Commands;
-public class ReversePositionRequest : IRequest<ReversePositionResponse>
+public class ReversePositionRequest : IRequest<OrderExecutionResponse>
 {
     public Guid RequestId { get; init; }
 

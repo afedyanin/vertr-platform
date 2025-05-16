@@ -1,0 +1,3 @@
+[submodule "editorconfig"]
+  path = etitorconfig
+  url = https://gitlab.com/vertr/editorconfig.git

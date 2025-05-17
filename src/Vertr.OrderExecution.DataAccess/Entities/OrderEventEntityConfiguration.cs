@@ -30,6 +30,9 @@ internal class OrderEventEntityConfiguration : IEntityTypeConfiguration<OrderEve
             .HasColumnName("account_id")
             .IsRequired();
 
+        builder.Property(e => e.BookId)
+            .HasColumnName("book_id");
+
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at")
             .IsRequired();
@@ -40,8 +43,5 @@ internal class OrderEventEntityConfiguration : IEntityTypeConfiguration<OrderEve
         builder.Property(e => e.JsonData)
             .HasColumnName("json_data")
             .HasColumnType("json");
-
-        builder.Property(e => e.BookId)
-            .HasColumnName("book_id");
     }
 }

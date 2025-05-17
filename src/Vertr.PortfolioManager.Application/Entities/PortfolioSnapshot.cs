@@ -5,6 +5,8 @@ public class PortfolioSnapshot
 
     public required string AccountId { get; set; }
 
+    public Guid? BookdId { get; set; }
+
     public DateTime UpdatedAt { get; set; }
 
     public IList<PortfolioPosition> Positions { get; set; } = [];

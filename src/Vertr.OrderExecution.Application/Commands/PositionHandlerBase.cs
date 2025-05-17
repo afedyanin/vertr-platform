@@ -1,5 +1,6 @@
 using MediatR;
 using Vertr.OrderExecution.Application.Abstractions;
+using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
@@ -23,10 +24,10 @@ internal abstract class PositionHandlerBase
     }
 
     protected async Task<long> GetCurrentPositionInLots(
-        string accountId,
+        PortfolioIdentity portfolioId,
         Guid instrumentId)
     {
-        var portfolio = await PortfolioClient.GetLast(accountId);
+        var portfolio = await PortfolioClient.MakeSnapshot(portfolioId.AccountId, portfolioId.BookId);
 
         if (portfolio == null)
         {

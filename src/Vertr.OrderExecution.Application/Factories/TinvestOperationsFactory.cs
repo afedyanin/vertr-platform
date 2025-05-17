@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Vertr.OrderExecution.Contracts;
 using Vertr.TinvestGateway.Contracts;
 
@@ -7,16 +8,15 @@ public static class TinvestOperationsFactory
 {
     public static OrderOperation[] CreateOperations(
         this PostOrderResponse response,
-        string accountId,
-        Guid bookId)
+        PortfolioIdentity portfolioId)
     {
         var opCommission = new OrderOperation
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             OperationType = Contracts.OperationType.BrokerFee,
-            BookId = bookId,
-            AccountId = accountId,
+            BookId = portfolioId.BookId,
+            AccountId = portfolioId.AccountId,
             OrderId = response.OrderId,
             Amount = response.ExecutedCommission,
             InstrumentId = Guid.Parse(response.InstrumentId),
@@ -27,16 +27,15 @@ public static class TinvestOperationsFactory
 
     public static OrderOperation[] CreateOperations(
         this OrderState state,
-        string? accountId,
-        Guid? bookId)
+        PortfolioIdentity portfolioId)
     {
         var opTrades = new OrderOperation
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             OperationType = state.Direction.ToOperationType(),
-            BookId = bookId,
-            AccountId = accountId,
+            BookId = portfolioId.BookId,
+            AccountId = portfolioId.AccountId,
             OrderId = state.OrderId,
             InstrumentId = Guid.Parse(state.InstrumentId),
             Trades = state.OrderStages.Convert()
@@ -47,8 +46,8 @@ public static class TinvestOperationsFactory
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             OperationType = Contracts.OperationType.BrokerFee,
-            BookId = bookId,
-            AccountId = accountId,
+            BookId = portfolioId.BookId,
+            AccountId = portfolioId.AccountId,
             OrderId = state.OrderId,
             Amount = state.ExecutedCommission,
             InstrumentId = Guid.Parse(state.InstrumentId),
@@ -59,15 +58,17 @@ public static class TinvestOperationsFactory
 
     public static OrderOperation[] CreateOperations(
         this OrderTrades trades,
-        Guid? bookId)
+        PortfolioIdentity portfolioId)
     {
+        Debug.Assert(trades.AccountId == portfolioId.AccountId);
+
         var opTrades = new OrderOperation
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             OperationType = trades.Direction.ToOperationType(),
-            BookId = bookId,
-            AccountId = trades.AccountId,
+            BookId = portfolioId.BookId,
+            AccountId = portfolioId.AccountId,
             OrderId = trades.OrderId,
             InstrumentId = Guid.Parse(trades.InstrumentId),
             Trades = trades.Trades.Convert()

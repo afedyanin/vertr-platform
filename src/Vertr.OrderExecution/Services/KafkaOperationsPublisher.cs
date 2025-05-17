@@ -25,11 +25,12 @@ public class KafkaOperationsPublisher : IOperationsPublisher
         _kafkaSettings = kafkaSettings.Value;
         _orderExecutionSettings = orderExecutionSettings.Value;
         _topicName = _kafkaSettings.GetTopicByKey(_orderExecutionSettings.OperationsTopicKey);
+        _logger = logger;
     }
 
     public async Task Publish(
         OrderOperation[] operations,
-        CancellationToken stoppingToken = default)
+        CancellationToken cancellationToken = default)
     {
         if (!_orderExecutionSettings.IsOperationsProducerEnabled)
         {
@@ -50,7 +51,9 @@ public class KafkaOperationsPublisher : IOperationsPublisher
             _ = await _producerWrapper.Produce(
                 _topicName,
                 operation.OperationType.ToString(),
-                operation, DateTime.UtcNow, stoppingToken);
+                operation,
+                DateTime.UtcNow,
+                cancellationToken);
         }
     }
 }

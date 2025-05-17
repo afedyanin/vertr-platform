@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Entities;
+using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.DataAccess.Repositories;
 internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
@@ -11,7 +13,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
     {
     }
 
-    public async Task<(string?, Guid?)> GetAccountIdBookIdByOrderId(string orderId)
+    public async Task<PortfolioIdentity> GetPortfolioIdByOrderId(string orderId)
     {
         using var context = await GetDbContext();
 
@@ -20,24 +22,10 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
                 e => e.OrderId != null &&
                 e.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
 
-        var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null);
-        var bookId = orderEvents.FirstOrDefault(e => e.BookId != null);
+        var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null)?.AccountId;
+        var bookId = orderEvents.FirstOrDefault(e => e.BookId != null)?.BookId;
 
-        return (accountId, bookId);
-    }
-
-    public async Task<Guid?> GetBookIdByOrderId(string orderId)
-    {
-        using var context = await GetDbContext();
-
-        var orderEvent = context.OrderEvents
-            .Where(
-                e => e.OrderId != null &&
-                e.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase) &&
-                e.BookId != null)
-            .FirstOrDefault();
-
-        return orderEvent?.BookId;
+        return new PortfolioIdentity(accountId, bookId);
     }
 
     public async Task<bool> Save(OrderEvent orderEvent)

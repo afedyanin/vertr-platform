@@ -50,7 +50,7 @@ public class PortfolioConsumerService : BackgroundService
 
         _logger.LogDebug($"Portfolio snapshot received: {response}");
 
-        var snapshot = response.Convert();
+        var snapshot = response.Convert(bookId: null);
 
         if (snapshot == null)
         {

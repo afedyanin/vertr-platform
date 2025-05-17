@@ -26,7 +26,7 @@ internal class CreatePortfolioSnapshotRequestHandler : IRequestHandler<CreatePor
     public async Task<CreatePortfolioSnapshotResponse> Handle(CreatePortfolioSnapshotRequest request, CancellationToken cancellationToken)
     {
         var portfolioResponse = await _tinvestGateway.GetPortfolio(request.AccountId);
-        var snapshot = portfolioResponse.Convert();
+        var snapshot = portfolioResponse.Convert(request.BookId);
 
         if (snapshot != null)
         {

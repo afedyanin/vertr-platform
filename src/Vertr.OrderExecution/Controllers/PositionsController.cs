@@ -21,10 +21,10 @@ public class PositionsController : ControllerBase
     {
         var openRequest = new Application.Commands.OpenPositionRequest
         {
-            AccountId = request.AccountId,
             RequestId = request.RequestId,
             InstrumentId = request.InstrumentId,
             QtyLots = request.QtyLots,
+            PortfolioId = request.PortfolioId,
         };
 
         var response = await _mediator.Send(openRequest);
@@ -36,9 +36,9 @@ public class PositionsController : ControllerBase
     {
         var closeRequest = new Application.Commands.ClosePositionRequest
         {
-            AccountId = request.AccountId,
             RequestId = request.RequestId,
             InstrumentId = request.InstrumentId,
+            PortfolioId = request.PortfolioId,
         };
 
         var response = await _mediator.Send(closeRequest);
@@ -50,9 +50,9 @@ public class PositionsController : ControllerBase
     {
         var revertRequest = new Application.Commands.ReversePositionRequest
         {
-            AccountId = request.AccountId,
             RequestId = request.RequestId,
             InstrumentId = request.InstrumentId,
+            PortfolioId = request.PortfolioId,
         };
 
         var response = await _mediator.Send(revertRequest);

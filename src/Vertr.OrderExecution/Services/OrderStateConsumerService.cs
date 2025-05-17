@@ -46,7 +46,8 @@ public class OrderStateConsumerService : ConsumerServiceBase
 
         Logger.LogDebug($"OrderState received: {response}");
 
-        var orderEvent = response.CreateEvent();
+        var portfolioId = await OrderEventRepository.GetPortfolioIdByOrderId(response.OrderId);
+        var orderEvent = response.CreateEvent(portfolioId);
         var saved = await OrderEventRepository.Save(orderEvent);
 
         if (!saved)
@@ -54,11 +55,7 @@ public class OrderStateConsumerService : ConsumerServiceBase
             Logger.LogWarning($"Cannot save OrderState event for OrderId = {orderEvent.OrderId}");
         }
 
-        // TODO: Optimize it
-        var bookId = await OrderEventRepository.GetBookIdByOrderId(response.OrderId);
-        var accountId = await OrderEventRepository.GetAccountIdByOrderId(response.OrderId);
-
-        var operations = response.CreateOperations(accountId, bookId);
+        var operations = response.CreateOperations(portfolioId);
 
         Logger.LogDebug($"Publish OrderState operations for OrderId: {response.OrderId}");
         await OperationsPublisher.Publish(operations);

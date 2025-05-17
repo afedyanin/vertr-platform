@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
+using Vertr.OrderExecution.Contracts;
 using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution.Application.Services;
@@ -28,13 +29,12 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
     public async Task<string?> PostMarketOrder(
         Guid requestId,
         Guid instrumentId,
-        string accountId,
         long qtyLots,
-        Guid bookId)
+        PortfolioIdentity portfolioId)
     {
         var request = new PostOrderRequest
         {
-            AccountId = accountId,
+            AccountId = portfolioId.AccountId,
             RequestId = requestId,
             InstrumentId = instrumentId,
             OrderDirection = qtyLots > 0 ? OrderDirection.Buy : OrderDirection.Sell,
@@ -45,7 +45,7 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
             QuantityLots = Math.Abs(qtyLots),
         };
 
-        var savedRequest = await _orderEventRepository.Save(request.CreateEvent(bookId));
+        var savedRequest = await _orderEventRepository.Save(request.CreateEvent(portfolioId));
 
         if (!savedRequest)
         {
@@ -62,14 +62,14 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
             return null;
         }
 
-        var savedResponse = await _orderEventRepository.Save(response.CreateEvent(bookId));
+        var savedResponse = await _orderEventRepository.Save(response.CreateEvent(portfolioId));
 
         if (!savedResponse)
         {
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
 
-        var orderOperations = response.CreateOperations(accountId, bookId);
+        var orderOperations = response.CreateOperations(portfolioId);
         await _operationsPublisher.Publish(orderOperations);
 
         return response.OrderId;

@@ -23,9 +23,9 @@ public class SnapshotsController : ControllerBase
     }
 
     [HttpGet("{accountId}")]
-    public async Task<IActionResult> GetLast(string accountId)
+    public async Task<IActionResult> GetLast(string accountId, Guid? bookId = null)
     {
-        var snapshot = await _snapshotRepository.GetLast(accountId);
+        var snapshot = await _snapshotRepository.GetLast(accountId, bookId);
 
         if (snapshot == null)
         {
@@ -38,19 +38,20 @@ public class SnapshotsController : ControllerBase
     }
 
     [HttpGet("history/{accountId}")]
-    public async Task<IActionResult> GetHistory(string accountId, int maxRecords = 100)
+    public async Task<IActionResult> GetHistory(string accountId, Guid? bookId = null, int maxRecords = 100)
     {
-        var snapshot = await _snapshotRepository.GetHistory(accountId, maxRecords);
+        var snapshot = await _snapshotRepository.GetHistory(accountId, bookId, maxRecords);
         var result = snapshot.Convert();
         return Ok(result);
     }
 
     [HttpPost("{accountId}")]
-    public async Task<IActionResult> MakeSnapshot(string accountId)
+    public async Task<IActionResult> MakeSnapshot(string accountId, Guid? bookId = null)
     {
         var request = new CreatePortfolioSnapshotRequest()
         {
-            AccountId = accountId
+            AccountId = accountId,
+            BookId = bookId
         };
 
         var response = await _mediator.Send(request);

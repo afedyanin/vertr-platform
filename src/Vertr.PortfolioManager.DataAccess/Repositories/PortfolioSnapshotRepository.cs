@@ -10,7 +10,7 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
     {
     }
 
-    public async Task<PortfolioSnapshot?> GetLast(string accountId)
+    public async Task<PortfolioSnapshot?> GetLast(string accountId, Guid? bookId = null)
     {
         using var context = await GetDbContext();
 
@@ -18,14 +18,16 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
             .Portfolios
             .Include(s => s.Positions)
             .AsNoTracking()
-            .Where(x => x.AccountId == accountId)
+            .Where(x =>
+                x.AccountId == accountId &&
+                ((bookId.HasValue && x.BookdId == bookId.Value) || x.BookdId == null))
             .OrderByDescending(x => x.UpdatedAt)
             .FirstOrDefaultAsync();
 
         return snapshot;
     }
 
-    public async Task<PortfolioSnapshot[]> GetHistory(string accountId, int maxRecords = 100)
+    public async Task<PortfolioSnapshot[]> GetHistory(string accountId, Guid? bookId = null, int maxRecords = 100)
     {
         using var context = await GetDbContext();
 
@@ -33,7 +35,9 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
             .Portfolios
             .Include(s => s.Positions)
             .AsNoTracking()
-            .Where(x => x.AccountId == accountId)
+            .Where(x =>
+                x.AccountId == accountId &&
+                ((bookId.HasValue && x.BookdId == bookId.Value) || x.BookdId == null))
             .OrderByDescending(x => x.UpdatedAt)
             .Take(maxRecords)
             .ToArrayAsync();
@@ -61,7 +65,7 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
         return count > 0;
     }
 
-    public async Task<bool> DeleteAll(string accountId)
+    public async Task<int> DeleteByAccountId(string accountId)
     {
         using var context = await GetDbContext();
 
@@ -69,6 +73,17 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
             .Where(s => s.AccountId == accountId)
             .ExecuteDeleteAsync();
 
-        return count > 0;
+        return count;
+    }
+
+    public async Task<int> DeleteByBookId(Guid bookId)
+    {
+        using var context = await GetDbContext();
+
+        var count = await context.Portfolios
+            .Where(s => s.BookdId == bookId)
+            .ExecuteDeleteAsync();
+
+        return count;
     }
 }

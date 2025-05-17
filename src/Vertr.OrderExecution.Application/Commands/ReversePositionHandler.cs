@@ -17,7 +17,7 @@ internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<Rev
         ReversePositionRequest request,
         CancellationToken cancellationToken)
     {
-        var currentLots = await GetCurrentPositionInLots(request.AccountId, request.InstrumentId);
+        var currentLots = await GetCurrentPositionInLots(request.PortfolioId, request.InstrumentId);
 
         if (currentLots == 0L)
         {
@@ -31,11 +31,10 @@ internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<Rev
 
         var orderRequest = new PostOrderRequest
         {
-            AccountId = request.AccountId,
+            PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
             RequestId = request.RequestId,
             QtyLots = lotsToRevert,
-            BookId = request.BookId,
         };
 
         var response = await Mediator.Send(orderRequest, cancellationToken);

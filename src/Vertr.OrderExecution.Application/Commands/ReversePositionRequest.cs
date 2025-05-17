@@ -1,4 +1,6 @@
 using MediatR;
+using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Commands;
 public class ReversePositionRequest : IRequest<OrderExecutionResponse>
@@ -7,7 +9,7 @@ public class ReversePositionRequest : IRequest<OrderExecutionResponse>
 
     public Guid InstrumentId { get; init; }
 
-    public required string AccountId { get; init; }
+    public long QtyLots { get; init; }
 
-    public Guid BookId { get; init; }
+    public required PortfolioIdentity PortfolioId { get; init; }
 }

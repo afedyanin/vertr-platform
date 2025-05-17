@@ -18,14 +18,13 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecuti
 
     public async Task<OrderExecutionResponse> Handle(PostOrderRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Posting new market order for AccountId={request.AccountId}");
+        _logger.LogInformation($"Posting new market order for PortfolioId={request.PortfolioId}");
 
         var orderId = await _orderExecutionService.PostMarketOrder(
             request.RequestId,
             request.InstrumentId,
-            request.AccountId,
             request.QtyLots,
-            request.BookId);
+            request.PortfolioId);
 
         var response = new OrderExecutionResponse
         {

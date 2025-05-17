@@ -10,7 +10,8 @@ public static class TinvestPortfolioResponseConverter
     };
 
     public static PortfolioSnapshot? Convert(
-        this TinvestGateway.Contracts.PortfolioResponse? source)
+        this TinvestGateway.Contracts.PortfolioResponse? source,
+        Guid? bookId)
     {
         if (source == null)
         {
@@ -24,6 +25,7 @@ public static class TinvestPortfolioResponseConverter
             Id = snapshotId,
             UpdatedAt = DateTime.UtcNow,
             AccountId = source.AccountId,
+            BookdId = bookId,
             JsonData = JsonSerializer.Serialize(source, _jsonSerializerOptions),
             JsonDataType = source.GetType().FullName,
         };

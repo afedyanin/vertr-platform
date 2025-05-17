@@ -21,7 +21,7 @@ public class TradingSignalsController : ControllerBase
         var signalRequest = new Application.Commands.TradingSignalRequest
         {
             RequestId = request.RequestId,
-            AccountId = request.AccountId,
+            PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
             QtyLots = request.QtyLots,
         };

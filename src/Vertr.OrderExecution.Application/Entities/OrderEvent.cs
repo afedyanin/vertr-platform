@@ -10,7 +10,7 @@ public class OrderEvent
 
     public Guid? InstrumentId { get; set; }
 
-    public string? AccountId { get; set; }
+    public required string AccountId { get; set; }
 
     public Guid? BookId { get; set; }
 

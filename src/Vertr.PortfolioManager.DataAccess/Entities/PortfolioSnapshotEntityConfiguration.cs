@@ -24,6 +24,9 @@ internal class PortfolioSnapshotEntityConfiguration : IEntityTypeConfiguration<P
             .HasColumnName("account_id")
             .IsRequired();
 
+        builder.Property(e => e.BookdId)
+            .HasColumnName("book_id");
+
         builder.Property(e => e.JsonDataType)
             .HasColumnName("json_data_type");
 

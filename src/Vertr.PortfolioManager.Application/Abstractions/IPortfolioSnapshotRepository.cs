@@ -3,13 +3,15 @@ using Vertr.PortfolioManager.Application.Entities;
 namespace Vertr.PortfolioManager.Application.Abstractions;
 public interface IPortfolioSnapshotRepository
 {
-    public Task<PortfolioSnapshot?> GetLast(string accountId);
+    public Task<PortfolioSnapshot?> GetLast(string accountId, Guid? bookId = null);
 
-    public Task<PortfolioSnapshot[]> GetHistory(string accountId, int maxRecords = 100);
+    public Task<PortfolioSnapshot[]> GetHistory(string accountId, Guid? bookId = null, int maxRecords = 100);
 
     public Task<bool> Save(PortfolioSnapshot portfolio);
 
     public Task<bool> Delete(Guid id);
 
-    public Task<bool> DeleteAll(string accountId);
+    public Task<int> DeleteByAccountId(string accountId);
+
+    public Task<int> DeleteByBookId(Guid bookId);
 }

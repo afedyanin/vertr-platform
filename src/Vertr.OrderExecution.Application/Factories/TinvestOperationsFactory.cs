@@ -3,7 +3,7 @@ using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
-internal static class TinvestOperationsFactory
+public static class TinvestOperationsFactory
 {
     public static OrderOperation[] CreateOperations(
         this PostOrderResponse response,
@@ -27,8 +27,8 @@ internal static class TinvestOperationsFactory
 
     public static OrderOperation[] CreateOperations(
         this OrderState state,
-        string accountId,
-        Guid bookId)
+        string? accountId,
+        Guid? bookId)
     {
         var opTrades = new OrderOperation
         {
@@ -59,7 +59,7 @@ internal static class TinvestOperationsFactory
 
     public static OrderOperation[] CreateOperations(
         this OrderTrades trades,
-        Guid bookId)
+        Guid? bookId)
     {
         var opTrades = new OrderOperation
         {

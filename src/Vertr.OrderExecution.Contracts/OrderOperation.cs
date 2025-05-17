@@ -1,23 +1,23 @@
 namespace Vertr.OrderExecution.Contracts;
-public class OrderOperation
+public record class OrderOperation
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; init; }
 
-    public OperationType OperationType { get; set; }
+    public OperationType OperationType { get; init; }
 
-    public string? OrderId { get; set; }
+    public string? OrderId { get; init; }
 
-    public string? AccountId { get; set; }
+    public string? AccountId { get; init; }
 
-    public Guid? BookId { get; set; }
+    public Guid? BookId { get; init; }
 
-    public Guid? InstrumentId { get; set; }
+    public Guid? InstrumentId { get; init; }
 
-    public Trade[] Trades { get; set; } = [];
+    public Trade[] Trades { get; init; } = [];
 
-    public decimal? Amount { get; set; }
+    public decimal? Amount { get; init; }
 
-    public string? Message { get; set; }
+    public string? Message { get; init; }
 }

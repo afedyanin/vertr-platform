@@ -6,5 +6,9 @@ public class PortfolioManagerSettings
 
     public bool IsPortfolioConsumerEnabled { get; set; }
 
-    public string PortfolioConsumerTopicKey { get; set; } = string.Empty;
+    public bool IsOrderOperationConsumerEnabled { get; set; }
+
+    public string PortfoliosTopicKey { get; set; } = string.Empty;
+
+    public string OperationsTopicKey { get; set; } = string.Empty;
 }

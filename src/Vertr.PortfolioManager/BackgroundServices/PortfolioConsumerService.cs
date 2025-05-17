@@ -30,7 +30,7 @@ public class PortfolioConsumerService : BackgroundService
         _snapshotRepository = snapshotRepository;
         _consumer = consumer;
         _logger = logger;
-        _topicName = _kafkaSettings.GetTopicByKey(_settings.PortfolioConsumerTopicKey);
+        _topicName = _kafkaSettings.GetTopicByKey(_settings.PortfoliosTopicKey);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)

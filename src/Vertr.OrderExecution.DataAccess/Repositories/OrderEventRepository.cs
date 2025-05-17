@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Entities;
 using Vertr.OrderExecution.Contracts;
-using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.DataAccess.Repositories;
 internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
@@ -13,7 +12,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
     {
     }
 
-    public async Task<PortfolioIdentity> GetPortfolioIdByOrderId(string orderId)
+    public async Task<PortfolioIdentity?> GetPortfolioIdByOrderId(string orderId)
     {
         using var context = await GetDbContext();
 
@@ -24,6 +23,11 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
 
         var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null)?.AccountId;
         var bookId = orderEvents.FirstOrDefault(e => e.BookId != null)?.BookId;
+
+        if (string.IsNullOrEmpty(accountId))
+        {
+            return null;
+        }
 
         return new PortfolioIdentity(accountId, bookId);
     }

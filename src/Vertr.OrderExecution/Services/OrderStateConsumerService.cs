@@ -47,17 +47,26 @@ public class OrderStateConsumerService : ConsumerServiceBase
         Logger.LogDebug($"OrderState received: {response}");
 
         var portfolioId = await OrderEventRepository.GetPortfolioIdByOrderId(response.OrderId);
+
+        if (portfolioId == null)
+        {
+            // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
+            // TODO: Использовать OrderState.AccountId, когда он появится в SDK. См. обработку OrderTrades
+            Logger.LogWarning($"Cannot get portfolio identity for OrderId={response.OrderId}. Skipping message.");
+            return;
+        }
+
         var orderEvent = response.CreateEvent(portfolioId);
         var saved = await OrderEventRepository.Save(orderEvent);
 
         if (!saved)
         {
-            Logger.LogWarning($"Cannot save OrderState event for OrderId = {orderEvent.OrderId}");
+            Logger.LogWarning($"Cannot save OrderState event for OrderId={orderEvent.OrderId}");
         }
 
         var operations = response.CreateOperations(portfolioId);
 
-        Logger.LogDebug($"Publish OrderState operations for OrderId: {response.OrderId}");
+        Logger.LogDebug($"Publish OrderState operations for OrderId={response.OrderId}");
         await OperationsPublisher.Publish(operations);
     }
 }

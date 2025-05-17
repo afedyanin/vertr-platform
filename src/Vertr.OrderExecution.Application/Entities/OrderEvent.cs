@@ -12,11 +12,11 @@ public class OrderEvent
 
     public string? AccountId { get; set; }
 
+    public Guid? BookId { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
     public string? JsonData { get; set; }
 
     public string? JsonDataType { get; set; }
-
-    public Guid? BookId { get; set; }
 }

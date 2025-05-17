@@ -20,7 +20,8 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
         Guid requestId,
         Guid instrumentId,
         string accountId,
-        long qtyLots)
+        long qtyLots,
+        Guid bookId)
     {
         var events = new List<OrderEvent>();
 

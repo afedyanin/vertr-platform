@@ -5,5 +5,6 @@ public record class TradingSignalRequest
     Guid RequestId,
     Guid InstrumentId,
     string AccountId,
-    long QtyLots
+    long QtyLots,
+    Guid BookId
     );

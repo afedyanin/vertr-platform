@@ -1,4 +1,4 @@
-﻿namespace Vertr.OrderExecution.Application.Entities;
+namespace Vertr.OrderExecution.Application.Entities;
 
 public class OrderEvent
 {
@@ -17,4 +17,6 @@ public class OrderEvent
     public string? JsonData { get; set; }
 
     public string? JsonDataType { get; set; }
+
+    public Guid? BookId { get; set; }
 }

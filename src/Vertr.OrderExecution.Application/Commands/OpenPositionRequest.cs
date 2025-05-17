@@ -10,4 +10,6 @@ public class OpenPositionRequest : IRequest<OrderExecutionResponse>
     public required string AccountId { get; init; }
 
     public long QtyLots { get; init; }
+
+    public Guid BookId { get; init; }
 }

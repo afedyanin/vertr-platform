@@ -36,6 +36,7 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
                 InstrumentId = request.InstrumentId,
                 RequestId = request.RequestId,
                 QtyLots = request.QtyLots,
+                BookId = request.BookId,
             };
 
             var openResponse = await Mediator.Send(openRequest, cancellationToken);
@@ -63,6 +64,7 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
             AccountId = request.AccountId,
             InstrumentId = request.InstrumentId,
             RequestId = request.RequestId,
+            BookId = request.BookId,
         };
 
         var reverseResponse = await Mediator.Send(reverseRequest, cancellationToken);

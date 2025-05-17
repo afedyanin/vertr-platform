@@ -3,5 +3,6 @@ public record class RevertPositionRequest
     (
     Guid RequestId,
     Guid InstrumentId,
-    string AccountId
+    string AccountId,
+    Guid BookId
     );

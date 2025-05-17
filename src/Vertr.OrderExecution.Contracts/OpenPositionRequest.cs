@@ -4,5 +4,6 @@ public record class OpenPositionRequest
     Guid RequestId,
     Guid InstrumentId,
     string AccountId,
-    long QtyLots
+    long QtyLots,
+    Guid BookId
     );

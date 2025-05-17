@@ -11,7 +11,7 @@ internal static class TinvestOrderEventFactory
         WriteIndented = true,
     };
 
-    public static OrderEvent CreateEvent(this PostOrderRequest request)
+    public static OrderEvent CreateEvent(this PostOrderRequest request, Guid bookId)
         => new OrderEvent
         {
             Id = Guid.NewGuid(),
@@ -20,10 +20,11 @@ internal static class TinvestOrderEventFactory
             InstrumentId = request.InstrumentId,
             RequestId = request.RequestId,
             JsonDataType = request.GetType().FullName,
-            JsonData = JsonSerializer.Serialize(request, _jsonOptions)
+            JsonData = JsonSerializer.Serialize(request, _jsonOptions),
+            BookId = bookId,
         };
 
-    public static OrderEvent CreateEvent(this PostOrderResponse response)
+    public static OrderEvent CreateEvent(this PostOrderResponse response, Guid bookId)
         => new OrderEvent
         {
             Id = Guid.NewGuid(),
@@ -31,7 +32,9 @@ internal static class TinvestOrderEventFactory
             RequestId = Guid.Parse(response.OrderRequestId),
             OrderId = response.OrderId,
             JsonDataType = response.GetType().FullName,
-            JsonData = JsonSerializer.Serialize(response, _jsonOptions)
+            JsonData = JsonSerializer.Serialize(response, _jsonOptions),
+            InstrumentId = Guid.Parse(response.InstrumentId),
+            BookId = bookId,
         };
 
     public static OrderEvent CreateEvent(this OrderState state)

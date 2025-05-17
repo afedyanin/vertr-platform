@@ -28,7 +28,8 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecuti
             request.RequestId,
             request.InstrumentId,
             request.AccountId,
-            request.QtyLots);
+            request.QtyLots,
+            request.BookId);
 
         var response = new OrderExecutionResponse
         {

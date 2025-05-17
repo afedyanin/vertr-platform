@@ -4,5 +4,6 @@ public record class ClosePositionRequest
     (
     Guid RequestId,
     Guid InstrumentId,
-    string AccountId
+    string AccountId,
+    Guid BookId
     );

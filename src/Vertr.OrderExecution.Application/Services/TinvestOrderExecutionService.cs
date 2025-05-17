@@ -9,16 +9,19 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
 {
     private readonly ITinvestGateway _tinvestGateway;
     private readonly IOrderEventRepository _orderEventRepository;
+    private readonly IOperationsPublisher _operationsPublisher;
     private readonly ILogger<TinvestOrderExecutionService> _logger;
 
     public TinvestOrderExecutionService(
         ITinvestGateway tinvestGateway,
         IOrderEventRepository orderEventRepository,
+        IOperationsPublisher operationsPublisher,
         ILogger<TinvestOrderExecutionService> logger
         )
     {
         _tinvestGateway = tinvestGateway;
         _orderEventRepository = orderEventRepository;
+        _operationsPublisher = operationsPublisher;
         _logger = logger;
     }
 
@@ -65,6 +68,9 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
         {
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
+
+        var orderOperations = response.CreateOperations(accountId, bookId);
+        await _operationsPublisher.Publish(orderOperations);
 
         return response.OrderId;
     }

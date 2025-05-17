@@ -5,7 +5,7 @@ namespace Vertr.OrderExecution.Application.Factories;
 
 internal static class TinvestOperationsFactory
 {
-    public static OrderOperation[] Create(
+    public static OrderOperation[] CreateOperations(
         this PostOrderResponse response,
         string accountId,
         Guid bookId)
@@ -25,7 +25,7 @@ internal static class TinvestOperationsFactory
         return [opCommission];
     }
 
-    public static OrderOperation[] Create(
+    public static OrderOperation[] CreateOperations(
         this OrderState state,
         string accountId,
         Guid bookId)
@@ -57,7 +57,7 @@ internal static class TinvestOperationsFactory
         return [opTrades, opCommission];
     }
 
-    public static OrderOperation[] Create(
+    public static OrderOperation[] CreateOperations(
         this OrderTrades trades,
         Guid bookId)
     {

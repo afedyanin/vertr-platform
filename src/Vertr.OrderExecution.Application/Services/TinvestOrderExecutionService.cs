@@ -1,5 +1,5 @@
+using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Abstractions;
-using Vertr.OrderExecution.Application.Entities;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.TinvestGateway.Contracts;
 
@@ -8,23 +8,27 @@ namespace Vertr.OrderExecution.Application.Services;
 internal class TinvestOrderExecutionService : IOrderExecutionService
 {
     private readonly ITinvestGateway _tinvestGateway;
+    private readonly IOrderEventRepository _orderEventRepository;
+    private readonly ILogger<TinvestOrderExecutionService> _logger;
 
     public TinvestOrderExecutionService(
-        ITinvestGateway tinvestGateway
+        ITinvestGateway tinvestGateway,
+        IOrderEventRepository orderEventRepository,
+        ILogger<TinvestOrderExecutionService> logger
         )
     {
         _tinvestGateway = tinvestGateway;
+        _orderEventRepository = orderEventRepository;
+        _logger = logger;
     }
 
-    public async Task<PostOrderResult> PostMarketOrder(
+    public async Task<string?> PostMarketOrder(
         Guid requestId,
         Guid instrumentId,
         string accountId,
         long qtyLots,
         Guid bookId)
     {
-        var events = new List<OrderEvent>();
-
         var request = new PostOrderRequest
         {
             AccountId = accountId,
@@ -38,19 +42,30 @@ internal class TinvestOrderExecutionService : IOrderExecutionService
             QuantityLots = Math.Abs(qtyLots),
         };
 
-        events.Add(request.CreateEvent());
+        var savedRequest = await _orderEventRepository.Save(request.CreateEvent(bookId));
 
-        var response = await _tinvestGateway.PostOrder(request);
-
-        if (response != null)
+        if (!savedRequest)
         {
-            events.Add(response.CreateEvent());
+            _logger.LogError($"Cannot save order request. RequestId={requestId}");
+            return null;
         }
 
-        return new PostOrderResult
+        _logger.LogInformation($"Posting new market order. RequestId={requestId}");
+        var response = await _tinvestGateway.PostOrder(request);
+
+        if (response == null)
         {
-            OrderId = response?.OrderId,
-            Events = [.. events],
-        };
+            _logger.LogError($"Could not receive order response. RequestId={requestId}");
+            return null;
+        }
+
+        var savedResponse = await _orderEventRepository.Save(response.CreateEvent(bookId));
+
+        if (!savedResponse)
+        {
+            _logger.LogError($"Cannot save order response. RequestId={requestId}");
+        }
+
+        return response.OrderId;
     }
 }

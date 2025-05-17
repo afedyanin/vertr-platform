@@ -1,9 +1,7 @@
-using Vertr.OrderExecution.Application.Entities;
-
 namespace Vertr.OrderExecution.Application.Abstractions;
 public interface IOrderExecutionService
 {
-    public Task<PostOrderResult> PostMarketOrder(
+    public Task<string?> PostMarketOrder(
         Guid requestId,
         Guid instrumentId,
         string accountId,

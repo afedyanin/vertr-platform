@@ -28,7 +28,7 @@ public record class Operation
 
     public string? PositionUid { get; init; }
 
-    public string? InstrumentUid { get; init; }
+    public string? InstrumentId { get; init; }
 
     public Trade[] OperationTrades { get; init; } = [];
 }

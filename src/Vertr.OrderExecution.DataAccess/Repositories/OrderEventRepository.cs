@@ -11,10 +11,20 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
     {
     }
 
-    public async Task<bool> Save(OrderEvent[] events)
+    public Task<string?> GetAccountIdByOrderId(string orderId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Guid?> GetBookIdByOrderId(string orderId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<bool> Save(OrderEvent orderEvent)
     {
         using var context = await GetDbContext();
-        await context.Portfolios.AddRangeAsync(events);
+        await context.Portfolios.AddAsync(orderEvent);
         var savedRecords = await context.SaveChangesAsync();
         return savedRecords > 0;
     }

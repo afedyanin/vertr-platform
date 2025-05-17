@@ -20,7 +20,7 @@ internal static class OperationConverter
             OperationType = source.OperationType.Convert(),
             AssetUid = source.AssetUid,
             PositionUid = source.PositionUid,
-            InstrumentUid = source.InstrumentUid,
+            InstrumentId = source.InstrumentUid,
             OperationTrades = source.Trades.ToArray().Convert()
         };
 

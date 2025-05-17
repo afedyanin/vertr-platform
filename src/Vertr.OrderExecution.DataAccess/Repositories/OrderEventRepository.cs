@@ -11,20 +11,39 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
     {
     }
 
-    public Task<string?> GetAccountIdByOrderId(string orderId)
+    public async Task<(string?, Guid?)> GetAccountIdBookIdByOrderId(string orderId)
     {
-        throw new NotImplementedException();
+        using var context = await GetDbContext();
+
+        var orderEvents = context.OrderEvents
+            .Where(
+                e => e.OrderId != null &&
+                e.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
+
+        var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null);
+        var bookId = orderEvents.FirstOrDefault(e => e.BookId != null);
+
+        return (accountId, bookId);
     }
 
-    public Task<Guid?> GetBookIdByOrderId(string orderId)
+    public async Task<Guid?> GetBookIdByOrderId(string orderId)
     {
-        throw new NotImplementedException();
+        using var context = await GetDbContext();
+
+        var orderEvent = context.OrderEvents
+            .Where(
+                e => e.OrderId != null &&
+                e.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase) &&
+                e.BookId != null)
+            .FirstOrDefault();
+
+        return orderEvent?.BookId;
     }
 
     public async Task<bool> Save(OrderEvent orderEvent)
     {
         using var context = await GetDbContext();
-        await context.Portfolios.AddAsync(orderEvent);
+        await context.OrderEvents.AddAsync(orderEvent);
         var savedRecords = await context.SaveChangesAsync();
         return savedRecords > 0;
     }

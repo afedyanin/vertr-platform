@@ -6,9 +6,7 @@ namespace Vertr.OrderExecution.DataAccess;
 
 public class OrderExecutionDbContext : DbContext
 {
-    public DbSet<OrderEvent> Positions { get; set; }
-
-    public DbSet<OrderEvent> Portfolios { get; set; }
+    public DbSet<OrderEvent> OrderEvents { get; set; }
 
 
     public OrderExecutionDbContext(DbContextOptions<OrderExecutionDbContext> options) : base(options)

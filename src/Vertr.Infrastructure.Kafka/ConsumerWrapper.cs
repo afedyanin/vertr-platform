@@ -93,8 +93,7 @@ internal sealed class ConsumerWrapper<TKey, TValue> : IConsumerWrapper<TKey, TVa
 
             try
             {
-                // TODO: Fix it. Used to unblock background service start.
-                await Task.Delay(_consumerRestartDelay);
+                await Task.Yield();
 
                 _logger.LogDebug($"Consuming result...");
                 result = consumer.Consume(stoppingToken);

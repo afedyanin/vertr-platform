@@ -5,7 +5,7 @@ public class PortfolioSnapshot
 
     public required string AccountId { get; set; }
 
-    public Guid? BookdId { get; set; }
+    public Guid? BookId { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 

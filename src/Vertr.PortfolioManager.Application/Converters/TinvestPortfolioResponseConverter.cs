@@ -25,7 +25,7 @@ public static class TinvestPortfolioResponseConverter
             Id = snapshotId,
             UpdatedAt = DateTime.UtcNow,
             AccountId = source.AccountId,
-            BookdId = bookId,
+            BookId = bookId,
             JsonData = JsonSerializer.Serialize(source, _jsonSerializerOptions),
             JsonDataType = source.GetType().FullName,
         };

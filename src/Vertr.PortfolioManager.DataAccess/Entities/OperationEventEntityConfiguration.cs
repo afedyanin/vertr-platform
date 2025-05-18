@@ -1,23 +1,24 @@
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Vertr.PortfolioManager.Application.Entities;
 
 namespace Vertr.PortfolioManager.DataAccess.Entities;
-internal class PortfolioSnapshotEntityConfiguration : IEntityTypeConfiguration<PortfolioSnapshot>
+
+internal class OperationEventEntityConfiguration : IEntityTypeConfiguration<OperationEvent>
 {
-    public void Configure(EntityTypeBuilder<PortfolioSnapshot> builder)
+    public void Configure(EntityTypeBuilder<OperationEvent> builder)
     {
-        builder.ToTable("portfolio_snapshots");
+        builder.ToTable("operation_events");
 
         builder.HasKey(e => e.Id)
-            .HasName("portfolio_snapshots_pkey");
+            .HasName("operation_events_pkey");
 
         builder.Property(e => e.Id)
             .HasColumnName("id")
             .IsRequired();
 
-        builder.Property(e => e.UpdatedAt)
-            .HasColumnName("updated_at")
+        builder.Property(e => e.CreatedAt)
+            .HasColumnName("created_at")
             .IsRequired();
 
         builder.Property(e => e.AccountId)
@@ -33,10 +34,6 @@ internal class PortfolioSnapshotEntityConfiguration : IEntityTypeConfiguration<P
         builder.Property(e => e.JsonData)
             .HasColumnName("json_data")
             .HasColumnType("json");
-
-        builder.HasMany(e => e.Positions)
-            .WithOne(p => p.PortfolioSnapshot)
-            .HasForeignKey(e => e.PortfolioSnapshotId)
-            .HasConstraintName("portfolio_position_snapshot_fk");
     }
 }
+

@@ -10,6 +10,7 @@ public class PortfolioDbContext : DbContext
 
     public DbSet<PortfolioSnapshot> Portfolios { get; set; }
 
+    public DbSet<OperationEvent> Operations { get; set; }
 
     public PortfolioDbContext(DbContextOptions<PortfolioDbContext> options) : base(options)
     {
@@ -20,5 +21,7 @@ public class PortfolioDbContext : DbContext
         new PortfolioSnapshotEntityConfiguration().Configure(modelBuilder.Entity<PortfolioSnapshot>());
 
         new PortfolioPositionEntityConfiguration().Configure(modelBuilder.Entity<PortfolioPosition>());
+
+        new OperationEventEntityConfiguration().Configure(modelBuilder.Entity<OperationEvent>());
     }
 }

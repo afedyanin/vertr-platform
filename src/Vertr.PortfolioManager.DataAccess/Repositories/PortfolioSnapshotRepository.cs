@@ -20,7 +20,7 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
             .AsNoTracking()
             .Where(x =>
                 x.AccountId == accountId &&
-                ((bookId.HasValue && x.BookdId == bookId.Value) || x.BookdId == null))
+                ((bookId.HasValue && x.BookId == bookId.Value) || x.BookId == null))
             .OrderByDescending(x => x.UpdatedAt)
             .FirstOrDefaultAsync();
 
@@ -37,7 +37,7 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
             .AsNoTracking()
             .Where(x =>
                 x.AccountId == accountId &&
-                ((bookId.HasValue && x.BookdId == bookId.Value) || x.BookdId == null))
+                ((bookId.HasValue && x.BookId == bookId.Value) || x.BookId == null))
             .OrderByDescending(x => x.UpdatedAt)
             .Take(maxRecords)
             .ToArrayAsync();
@@ -81,7 +81,7 @@ internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotR
         using var context = await GetDbContext();
 
         var count = await context.Portfolios
-            .Where(s => s.BookdId == bookId)
+            .Where(s => s.BookId == bookId)
             .ExecuteDeleteAsync();
 
         return count;

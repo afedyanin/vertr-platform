@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Infrastructure.Kafka\Vertr.Infrastructure.Kafka.csproj" />
+    <ProjectReference Include="..\Vertr.OrderExecution.Application\Vertr.OrderExecution.Application.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.Contracts\Vertr.OrderExecution.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />

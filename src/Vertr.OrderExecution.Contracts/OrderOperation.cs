@@ -9,7 +9,7 @@ public record class OrderOperation
 
     public string? OrderId { get; init; }
 
-    public string? AccountId { get; init; }
+    public required string AccountId { get; init; }
 
     public Guid? BookId { get; init; }
 

@@ -1,4 +1,4 @@
-namespace Vertr.MarketData.Application;
+namespace Vertr.MarketData.Contracts;
 
 public enum CandleInterval
 {

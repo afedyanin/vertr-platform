@@ -1,5 +1,4 @@
-namespace Vertr.MarketData.Application;
-
+namespace Vertr.MarketData.Contracts;
 public record class Candle(
     DateTime TimeUtc,
     string Symbol,
@@ -10,4 +9,4 @@ public record class Candle(
     decimal High,
     decimal Low,
     long Volume
-);
+    );

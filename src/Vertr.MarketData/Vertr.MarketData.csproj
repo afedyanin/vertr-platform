@@ -10,4 +10,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Vertr.Infrastructure.Kafka\Vertr.Infrastructure.Kafka.csproj" />
+    <ProjectReference Include="..\Vertr.MarketData.Application\Vertr.MarketData.Application.csproj" />
+    <ProjectReference Include="..\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.TinvestGateway.Contracts\Vertr.TinvestGateway.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -5,6 +5,10 @@ namespace Vertr.Adapters.Tinvest.Tests;
 [TestFixture(Category = "integration", Explicit = true)]
 public class TinvestGatewayTests : TinvestTestBase
 {
+    private static readonly string[] tqbr_symbols =
+    {
+    };
+
     [Test]
     public async Task CanFindInstrument()
     {
@@ -33,6 +37,16 @@ public class TinvestGatewayTests : TinvestTestBase
     [TestCase("NLMK", "TQBR")]
     [TestCase("OZON", "TQBR")]
     public async Task CanGetInstrument(string ticker, string classCode)
+    {
+        var instrument = await Gateway.GetInstrument(ticker, classCode);
+
+        Assert.That(instrument, Is.Not.Null);
+
+        Console.WriteLine($"{instrument}");
+    }
+
+    [Test]
+    public async Task GenerateStaticDataInstrumentJson(string ticker, string classCode)
     {
         var instrument = await Gateway.GetInstrument(ticker, classCode);
 

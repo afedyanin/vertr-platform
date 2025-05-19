@@ -15,12 +15,22 @@ internal class CandlesRepository : RepositoryBase, ICandlesRepository
     {
         throw new NotImplementedException();
     }
+    public Task<Candle?> GetById(Guid id)
+    {
+        throw new NotImplementedException();
+    }
 
     public Task<bool> Save(Candle candle)
     {
         throw new NotImplementedException();
     }
-    public Task<bool> Delete(string symbol, CandleInterval interval, CandleSource source)
+
+    public Task<bool> Delete(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<bool> DeleteMany(string symbol, CandleInterval interval, CandleSource source)
     {
         throw new NotImplementedException();
     }

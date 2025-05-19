@@ -6,6 +6,7 @@ internal static class CandleConverter
 {
     public static Candle Convert(this TinvestGateway.Contracts.Candle source)
         => new Candle(
+            Guid.NewGuid(),
             source.TimeUtc,
             source.Symbol,
             source.Interval.Convert(),

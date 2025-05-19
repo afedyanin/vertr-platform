@@ -1,5 +1,6 @@
 namespace Vertr.MarketData.Contracts;
 public record class Candle(
+    Guid Id,
     DateTime TimeUtc,
     string Symbol,
     CandleInterval Interval,

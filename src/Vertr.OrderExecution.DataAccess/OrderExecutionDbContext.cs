@@ -8,7 +8,6 @@ public class OrderExecutionDbContext : DbContext
 {
     public DbSet<OrderEvent> OrderEvents { get; set; }
 
-
     public OrderExecutionDbContext(DbContextOptions<OrderExecutionDbContext> options) : base(options)
     {
     }

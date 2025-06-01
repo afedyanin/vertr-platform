@@ -6,58 +6,54 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.TinvestGateway.Contracts;
 
-namespace Vertr.OrderExecution.Services;
+namespace Vertr.OrderExecution.BackgroundServices;
 
-public class OrderTradesConsumerService : ConsumerServiceBase
+public class OrderStateConsumerService : ConsumerServiceBase
 {
     private readonly string? _topicName;
 
-    private readonly IConsumerWrapper<string, OrderTrades> _consumer;
+    private readonly IConsumerWrapper<string, OrderState> _consumer;
 
-    protected override bool IsEnabled => OrderExecutionSettings.IsOrderTradesConsumerEnabled;
+    protected override bool IsEnabled => OrderExecutionSettings.IsOrderStateConsumerEnabled;
 
-    public OrderTradesConsumerService(
+    public OrderStateConsumerService(
         IOptions<KafkaSettings> kafkaSettings,
         IOptions<OrderExecutionSettings> orderExecutionSettings,
         IOrderEventRepository orderEventRepository,
         IOperationsPublisher operationsPublisher,
-        IConsumerWrapper<string, OrderTrades> consumer,
+        IConsumerWrapper<string, OrderState> consumer,
         ILogger logger)
         : base(kafkaSettings, orderExecutionSettings, orderEventRepository, operationsPublisher, logger)
     {
         _consumer = consumer;
-        _topicName = KafkaSettings.GetTopicByKey(OrderExecutionSettings.OrderTradesTopicKey);
+        _topicName = KafkaSettings.GetTopicByKey(OrderExecutionSettings.OrderStateTopicKey);
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         if (!IsEnabled || string.IsNullOrEmpty(_topicName))
         {
-            Logger.LogWarning($"Skip starting {nameof(OrderTradesConsumerService)}");
+            Logger.LogWarning($"Skip starting {nameof(OrderStateConsumerService)}");
             return Task.CompletedTask;
         }
 
-        return _consumer.Consume([_topicName], HandleOrderTradesMessage, readFromBegining: false, stoppingToken);
+        return _consumer.Consume([_topicName], HandleOrderStateMessage, readFromBegining: false, stoppingToken);
     }
-    private async Task HandleOrderTradesMessage(ConsumeResult<string, OrderTrades> result, CancellationToken token)
+
+    private async Task HandleOrderStateMessage(ConsumeResult<string, OrderState> result, CancellationToken token)
     {
         var response = result.Message.Value;
-        Logger.LogDebug($"OrderTrades received: {response}");
+
+        Logger.LogDebug($"OrderState received: {response}");
 
         var portfolioId = await OrderEventRepository.GetPortfolioIdByOrderId(response.OrderId);
 
         if (portfolioId == null)
         {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
-            Logger.LogWarning($"Cannot get portfolio identity for OrderId={response.OrderId}. Using OrderTrades.AccountId");
-
-            if (string.IsNullOrEmpty(response.AccountId))
-            {
-                Logger.LogWarning($"Cannot get AccountId for OrderId={response.OrderId}. OrderTrades.AccountId is empty. Skipping message.");
-                return;
-            }
-
-            portfolioId = new Contracts.PortfolioIdentity(response.AccountId);
+            // TODO: Использовать OrderState.AccountId, когда он появится в SDK. См. обработку OrderTrades
+            Logger.LogWarning($"Cannot get portfolio identity for OrderId={response.OrderId}. Skipping message.");
+            return;
         }
 
         var orderEvent = response.CreateEvent(portfolioId);
@@ -65,12 +61,12 @@ public class OrderTradesConsumerService : ConsumerServiceBase
 
         if (!saved)
         {
-            Logger.LogWarning($"Cannot save OrderTrades event for OrderId={orderEvent.OrderId}");
+            Logger.LogWarning($"Cannot save OrderState event for OrderId={orderEvent.OrderId}");
         }
 
         var operations = response.CreateOperations(portfolioId);
 
-        Logger.LogDebug($"Publish OrderTrades operations for OrderId={response.OrderId}");
+        Logger.LogDebug($"Publish OrderState operations for OrderId={response.OrderId}");
         await OperationsPublisher.Publish(operations);
     }
 }

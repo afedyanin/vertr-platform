@@ -56,4 +56,9 @@ Vertr.TinvestGateway.exe --environment Development --urls "http://localhost:5125
 - No DB access
 
 
+## BACKLOG
+
+### 2025-06-01
+
+- Для загрузки свечей, вместо конфига запрашивать MDS static о нужных символах и интервалах
 

@@ -4,7 +4,7 @@ using Vertr.Infrastructure.Kafka.Abstractions;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Contracts;
 
-namespace Vertr.OrderExecution.Services;
+namespace Vertr.OrderExecution.BackgroundServices;
 
 public class KafkaOperationsPublisher : IOperationsPublisher
 {

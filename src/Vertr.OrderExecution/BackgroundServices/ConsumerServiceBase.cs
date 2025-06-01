@@ -2,7 +2,7 @@ using Vertr.Infrastructure.Kafka;
 using Microsoft.Extensions.Options;
 using Vertr.OrderExecution.Application.Abstractions;
 
-namespace Vertr.OrderExecution.Services;
+namespace Vertr.OrderExecution.BackgroundServices;
 
 public abstract class ConsumerServiceBase : BackgroundService
 {

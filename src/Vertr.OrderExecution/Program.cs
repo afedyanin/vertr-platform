@@ -2,9 +2,9 @@ using System.Text.Json;
 using Vertr.Infrastructure.Kafka;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.Application.Abstractions;
+using Vertr.OrderExecution.BackgroundServices;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.DataAccess;
-using Vertr.OrderExecution.Services;
 using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution;

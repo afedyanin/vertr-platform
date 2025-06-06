@@ -25,6 +25,28 @@
 - Поддерживать целостность набора маркет данных в Redis
 - Optional - отображение в Grafana маркет данных из Redis
 
+#### TODO
+
+- C# клиент для Redis - тесты
+- схема нейминга ключей для хранения маркет данных
+- консьюмер свечей из TInvestGateway:
+    - формирование и публикация сигнала для стратегий
+    - публикация свечи в Redis 
+- восстановление данных при старте системы
+- очистка данных и экспирация ключей
+
+#### Redis
+
+- [NRedisStack guide (C#/.NET)](https://redis.io/docs/latest/develop/clients/dotnet/)
+- [How to connect to Redis in a C# .NET project using the NRedisStack client library](https://redis.io/kb/doc/1z6deydshs/how-to-connect-to-redis-in-a-c-net-project-using-the-nredisstack-client-library)
+- [NRedisStack](https://github.com/redis/NRedisStack)
+- [StackExchange.Redis](https://github.com/StackExchange/StackExchange.Redis)
+- [C#/.NET guide](https://redis.github.net.cn/docs/latest/develop/connect/clients/dotnet/)
+
+#### Habr
+
+- [REDIS: такой простой и такой сложный](https://habr.com/ru/companies/stm_labs/articles/841792/)
+
 
 ### 2025-06-01
 

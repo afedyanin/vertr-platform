@@ -20,6 +20,8 @@
 #### Redis TimeSeries
 
 - [GitHub](https://github.com/RedisTimeSeries/RedisTimeSeries)
+- [Using Redis Timeseries to store and analyze timeseries data](https://medium.com/datadenys/using-redis-timeseries-to-store-and-analyze-timeseries-data-c22c9e74ff46)
+
 
 ### 2025-06-06
 

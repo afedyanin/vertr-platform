@@ -1,3 +1,12 @@
+# 2025-06-11
+
+```shell
+docker-compose pull
+docker-compose up --force-recreate --build -d
+docker image prune -f
+```
+
+
 # 2025-06-01
 
 ## Задачи релиза 3.0

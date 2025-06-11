@@ -1,15 +1,18 @@
+using StackExchange.Redis;
+
 namespace Vertr.Infrastructure.Redis.Tests;
 
-public class Tests
+public class RedisConnectionTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [Test]
-    public void Test1()
+    public void CanConnectToRedis()
     {
+        var redis = ConnectionMultiplexer.Connect("localhost");
+        var db = redis.GetDatabase();
+
+        db.StringSet("foo", "bar");
+        Console.WriteLine(db.StringGet("foo"));
+
         Assert.Pass();
     }
 }

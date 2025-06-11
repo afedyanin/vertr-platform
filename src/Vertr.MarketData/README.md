@@ -15,6 +15,12 @@
 
 ## BACKLOG
 
+### 2025-06-11
+
+#### Redis TimeSeries
+
+- [GitHub](https://github.com/RedisTimeSeries/RedisTimeSeries)
+
 ### 2025-06-06
 
 #### Интрадей

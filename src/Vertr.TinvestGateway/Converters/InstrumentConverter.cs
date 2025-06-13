@@ -12,7 +12,9 @@ internal static class InstrumentConverter
             instrument.InstrumentType,
             instrument.Name,
             instrument.Uid,
-            instrument.InstrumentKind.ToString()
+            instrument.InstrumentKind.ToString(),
+            null,
+            null
             );
 
     public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.Instrument instrument)
@@ -23,7 +25,9 @@ internal static class InstrumentConverter
             instrument.InstrumentType,
             instrument.Name,
             instrument.Uid,
-            instrument.InstrumentKind.ToString()
+            instrument.InstrumentKind.ToString(),
+            instrument.Currency,
+            instrument.Lot
             );
 
     public static Instrument[] ToInstruments(this Tinkoff.InvestApi.V1.InstrumentShort[] instruments)

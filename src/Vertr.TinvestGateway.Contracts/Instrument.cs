@@ -6,5 +6,7 @@ public record class Instrument(
     string? InstrumentType,
     string? Name,
     string? Uid,
-    string? InstrumentKind
+    string? InstrumentKind,
+    string? Currency,
+    decimal? LotSize
     );

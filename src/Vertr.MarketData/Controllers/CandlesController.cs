@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Vertr.MarketData.Application.Abstractions;
 using Vertr.MarketData.Contracts;
+
 namespace Vertr.MarketData.Controllers;
+
 [Route("candles")]
 [ApiController]
 public class CandlesController : ControllerBase
@@ -32,7 +34,7 @@ public class CandlesController : ControllerBase
         CandleInterval interval,
         CandleSource source)
     {
-        var deleted = await _repository.Delete(symbol, interval, source);
+        //var deleted = await _repository.Delete(symbol, interval, source);
 
         return Ok();
     }

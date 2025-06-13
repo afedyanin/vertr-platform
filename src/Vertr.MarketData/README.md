@@ -21,7 +21,8 @@
 
 - [GitHub](https://github.com/RedisTimeSeries/RedisTimeSeries)
 - [Using Redis Timeseries to store and analyze timeseries data](https://medium.com/datadenys/using-redis-timeseries-to-store-and-analyze-timeseries-data-c22c9e74ff46)
-
+- [quick start](https://redis.io/docs/latest/develop/data-types/timeseries/quickstart/)
+- [Real time analytics using .Net & Redis](https://dev.to/c_arnab/real-time-analytics-using-net-redis-4c5d)
 
 ### 2025-06-06
 

@@ -9,12 +9,12 @@ namespace Vertr.PortfolioManager.Controllers;
 [Route("snapshots")]
 
 [ApiController]
-public class SnapshotsController : ControllerBase
+public class PortfolioController : ControllerBase
 {
     private readonly IPortfolioSnapshotRepository _snapshotRepository;
     private readonly IMediator _mediator;
 
-    public SnapshotsController(
+    public PortfolioController(
         IPortfolioSnapshotRepository snapshotRepository,
         IMediator mediator)
     {

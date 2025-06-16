@@ -7,11 +7,11 @@ namespace Vertr.OrderExecution.Controllers;
 [Route("positions")]
 [ApiController]
 
-public class PositionsController : ControllerBase
+public class OrdersController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public PositionsController(IMediator mediator)
+    public OrdersController(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -58,4 +58,20 @@ public class PositionsController : ControllerBase
         var response = await _mediator.Send(revertRequest);
         return Ok(response.Convert());
     }
+
+    [HttpPost()]
+    public async Task<IActionResult> Porocess(TradingSignalRequest request)
+    {
+        var signalRequest = new Application.Commands.TradingSignalRequest
+        {
+            RequestId = request.RequestId,
+            PortfolioId = request.PortfolioId,
+            InstrumentId = request.InstrumentId,
+            QtyLots = request.QtyLots,
+        };
+
+        var response = await _mediator.Send(signalRequest);
+        return Ok(response.Convert());
+    }
+
 }

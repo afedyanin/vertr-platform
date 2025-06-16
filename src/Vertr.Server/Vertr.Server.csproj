@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Adapters.DataAccess\Vertr.Adapters.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.Adapters.Prediction\Vertr.Adapters.Prediction.csproj" />
-    <ProjectReference Include="..\Vertr.Adapters.Tinvest\Vertr.Adapters.Tinvest.csproj" />
     <ProjectReference Include="..\Vertr.Application\Vertr.Application.csproj" />
   </ItemGroup>
 

@@ -1,13 +1,13 @@
 using MediatR;
 using Vertr.OrderExecution.Application.Abstractions;
-using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.Commands;
 internal class OpenPositionHandler : PositionHandlerBase, IRequestHandler<OpenPositionRequest, OrderExecutionResponse>
 {
     public OpenPositionHandler(
         IMediator mediator,
-        IPortfolioClient portfolioClient,
+        IPortfolioManager portfolioClient,
         IStaticMarketDataProvider staticMarketDataProvider
         ) : base(mediator, portfolioClient, staticMarketDataProvider)
     {

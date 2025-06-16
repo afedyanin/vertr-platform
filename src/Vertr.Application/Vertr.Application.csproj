@@ -12,11 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Adapters.Tinvest\Vertr.Adapters.Tinvest.csproj" />
-    <ProjectReference Include="..\Vertr.Domain\Vertr.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="Vertr.Application.Tests" />
   </ItemGroup>
 

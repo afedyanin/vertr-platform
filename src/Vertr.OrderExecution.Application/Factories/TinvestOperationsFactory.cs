@@ -15,7 +15,7 @@ public static class TinvestOperationsFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = Contracts.OperationType.BrokerFee,
+            OperationType = Contracts.Enums.OperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = response.OrderId,
@@ -46,7 +46,7 @@ public static class TinvestOperationsFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = Contracts.OperationType.BrokerFee,
+            OperationType = Contracts.Enums.OperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = state.OrderId,
@@ -90,12 +90,12 @@ public static class TinvestOperationsFactory
             Quantity = source.Quantity,
         };
 
-    private static Contracts.OperationType ToOperationType(this OrderDirection direction)
+    private static Contracts.Enums.OperationType ToOperationType(this OrderDirection direction)
         => direction switch
         {
-            OrderDirection.Unspecified => Contracts.OperationType.Unspecified,
-            OrderDirection.Buy => Contracts.OperationType.Buy,
-            OrderDirection.Sell => Contracts.OperationType.Sell,
+            OrderDirection.Unspecified => Contracts.Enums.OperationType.Unspecified,
+            OrderDirection.Buy => Contracts.Enums.OperationType.Buy,
+            OrderDirection.Sell => Contracts.Enums.OperationType.Sell,
             _ => throw new NotImplementedException(),
         };
 }

@@ -33,10 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.Domain\Vertr.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 

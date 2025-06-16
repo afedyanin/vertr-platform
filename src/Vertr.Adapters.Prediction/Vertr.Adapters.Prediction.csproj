@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Domain\Vertr.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <InternalsVisibleTo Include="Vertr.Adapters.Prediction.Tests" />
   </ItemGroup>
 

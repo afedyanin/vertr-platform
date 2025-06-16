@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Domain\Vertr.Domain.csproj" />
     <ProjectReference Include="..\Vertr.Infrastructure.Pgsql\Vertr.Infrastructure.Pgsql.csproj" />
   </ItemGroup>
 

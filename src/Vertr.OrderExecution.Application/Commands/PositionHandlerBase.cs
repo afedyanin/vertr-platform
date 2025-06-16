@@ -1,20 +1,20 @@
 using MediatR;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Contracts;
-using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.Commands;
 internal abstract class PositionHandlerBase
 {
     protected IMediator Mediator { get; private set; }
 
-    protected IPortfolioClient PortfolioClient { get; private set; }
+    protected IPortfolioManager PortfolioClient { get; private set; }
 
     protected IStaticMarketDataProvider StaticMarketDataProvider { get; private set; }
 
     protected PositionHandlerBase(
         IMediator mediator,
-        IPortfolioClient portfolioClient,
+        IPortfolioManager portfolioClient,
         IStaticMarketDataProvider staticMarketDataProvider
         )
     {

@@ -1,13 +1,13 @@
 using MediatR;
 using Vertr.OrderExecution.Application.Abstractions;
-using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.Commands;
 internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<ClosePositionRequest, OrderExecutionResponse>
 {
     public ClosePositionHandler(
         IMediator mediator,
-        IPortfolioClient portfolioClient,
+        IPortfolioManager portfolioClient,
         IStaticMarketDataProvider staticMarketDataProvider
         ) : base(mediator, portfolioClient, staticMarketDataProvider)
     {

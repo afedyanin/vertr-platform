@@ -1,4 +1,4 @@
-﻿using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Contracts;
@@ -50,7 +50,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
 
         var response = await InvestApiClient.Instruments.GetInstrumentByAsync(request);
         var instrument = response.Instrument.ToInstrument();
-        
+
         return instrument;
     }
 
@@ -88,7 +88,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
         }
 
         var response = await InvestApiClient.MarketData.GetCandlesAsync(request);
-        var candles = response.Candles.ToArray().Convert();
+        var candles = response.Candles.ToArray().Convert(instrumentId);
 
         return candles;
     }

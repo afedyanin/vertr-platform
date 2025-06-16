@@ -3,24 +3,27 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
-using Vertr.TinvestGateway.Contracts.Enums;
 using Vertr.TinvestGateway.Contracts.Requests;
 
 namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
+    private readonly IMarketDataManager _marketDataManager;
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 
     public MarketDataStreamService(
+        IMarketDataManager marketDataManager,
         IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
         IMediator mediator,
         ILogger<MarketDataStreamService> logger) :
             base(tinvestOptions, investApiClient, mediator, logger)
     {
+        _marketDataManager = marketDataManager;
     }
 
     protected override async Task Subscribe(
@@ -34,12 +37,14 @@ public class MarketDataStreamService : StreamServiceBase
             WaitingClose = TinvestSettings.WaitCandleClose,
         };
 
-        foreach (var kvp in TinvestSettings.Candles)
+        var subscriptions = await _marketDataManager.GetCandleSubscriptions();
+
+        foreach (var subscription in subscriptions)
         {
             candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
             {
-                InstrumentId = TinvestSettings.GetSymbolId(kvp.Key),
-                Interval = kvp.Value.ConvertToSubscriptionInterval()
+                InstrumentId = subscription.InstrumentId,
+                Interval = subscription.Interval.ConvertToSubscriptionInterval()
             });
         }
 
@@ -54,28 +59,9 @@ public class MarketDataStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Candle)
             {
-                var instrumentId = response.Candle.InstrumentUid;
-
-                var symbol = TinvestSettings.GetSymbolById(instrumentId);
-
-                if (string.IsNullOrEmpty(symbol))
-                {
-                    logger.LogWarning($"Unknown candle received: InstrumentUid={instrumentId}");
-                    continue;
-                }
-
-                var interval = TinvestSettings.GetInterval(symbol);
-
-                if (interval == CandleInterval.Unspecified)
-                {
-                    logger.LogWarning($"Cannot define candle interval for Symbol={symbol} InstrumentUid={instrumentId}");
-                    continue;
-                }
-
                 var marketDataCandleRequest = new HandleMarketDataCandleRequest
                 {
                     Candle = response.Candle.Convert(),
-                    CandleInterval = interval,
                 };
 
                 await Mediator.Send(marketDataCandleRequest, stoppingToken);

@@ -2,7 +2,7 @@ namespace Vertr.MarketData.Contracts;
 
 public class CandleSubscription
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; }
 
     public required string Symbol { get; set; }
 

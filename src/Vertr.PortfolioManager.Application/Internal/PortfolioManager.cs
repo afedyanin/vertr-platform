@@ -5,6 +5,7 @@ namespace Vertr.PortfolioManager.Application.Internal;
 
 internal class PortfolioManager : IPortfolioManager
 {
+    // TODO: Move it into DB
     public Task<string[]> GetActiveAccounts()
         => Task.FromResult(new string[]
         {

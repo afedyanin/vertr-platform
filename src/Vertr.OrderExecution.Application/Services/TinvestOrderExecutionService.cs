@@ -3,6 +3,8 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
 using Vertr.TinvestGateway.Contracts;
+using Vertr.TinvestGateway.Contracts.Enums;
+using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.Services;
 

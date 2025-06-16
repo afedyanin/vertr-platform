@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.TinvestGateway.Contracts.Enums;
 
 public enum OperationType
 {

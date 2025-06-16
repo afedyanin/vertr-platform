@@ -1,4 +1,5 @@
 using Vertr.MarketData.Contracts;
+using Vertr.TinvestGateway.Contracts.Enums;
 
 namespace Vertr.MarketData.Converters;
 
@@ -17,15 +18,15 @@ internal static class CandleConverter
             source.Low,
             source.Volume);
 
-    private static CandleInterval Convert(this TinvestGateway.Contracts.CandleInterval source)
+    private static CandleInterval Convert(this TinvestGateway.Contracts.Enums.CandleInterval source)
         => source switch
         {
-            TinvestGateway.Contracts.CandleInterval.Min_1 => CandleInterval.Min_1,
-            TinvestGateway.Contracts.CandleInterval.Min_5 => CandleInterval.Min_5,
-            TinvestGateway.Contracts.CandleInterval.Min_10 => CandleInterval.Min_10,
-            TinvestGateway.Contracts.CandleInterval.Hour => CandleInterval.Hour,
-            TinvestGateway.Contracts.CandleInterval.Day => CandleInterval.Day,
-            TinvestGateway.Contracts.CandleInterval.Unspecified => CandleInterval.Unspecified,
+            TinvestGateway.Contracts.Enums.CandleInterval.Min_1 => CandleInterval.Min_1,
+            TinvestGateway.Contracts.Enums.CandleInterval.Min_5 => CandleInterval.Min_5,
+            TinvestGateway.Contracts.Enums.CandleInterval.Min_10 => CandleInterval.Min_10,
+            TinvestGateway.Contracts.Enums.CandleInterval.Hour => CandleInterval.Hour,
+            TinvestGateway.Contracts.Enums.CandleInterval.Day => CandleInterval.Day,
+            TinvestGateway.Contracts.Enums.CandleInterval.Unspecified => CandleInterval.Unspecified,
             _ => throw new NotImplementedException(),
         };
 }

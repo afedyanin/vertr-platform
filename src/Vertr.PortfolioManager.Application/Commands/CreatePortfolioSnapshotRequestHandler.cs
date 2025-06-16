@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.PortfolioManager.Application.Abstractions;
 using Vertr.PortfolioManager.Application.Converters;
-using Vertr.TinvestGateway.Contracts;
+using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.Application.Commands;
 

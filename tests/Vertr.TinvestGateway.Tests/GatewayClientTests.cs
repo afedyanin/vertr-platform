@@ -1,5 +1,5 @@
 using Refit;
-using Vertr.TinvestGateway.Contracts;
+using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Tests;
 

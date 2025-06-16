@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Vertr.MarketData.Application.Abstractions;
 using Vertr.MarketData.Contracts;
-using Vertr.TinvestGateway.Contracts;
+using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.MarketData.Controllers;
 [Route("instruments")]

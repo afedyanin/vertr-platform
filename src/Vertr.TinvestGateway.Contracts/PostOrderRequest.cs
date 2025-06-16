@@ -1,3 +1,5 @@
+using Vertr.TinvestGateway.Contracts.Enums;
+
 namespace Vertr.TinvestGateway.Contracts;
 public record class PostOrderRequest
 {

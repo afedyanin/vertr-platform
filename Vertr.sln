@@ -92,6 +92,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Infrastructure.Redis"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Infrastructure.Redis.Tests", "tests\Vertr.Infrastructure.Redis.Tests\Vertr.Infrastructure.Redis.Tests.csproj", "{498AAC79-8764-4061-9F0E-1A9E6DBD0030}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.TinvestGateway.Application", "..\Vertr.TinvestGateway.Application\Vertr.TinvestGateway.Application.csproj", "{B224EA84-2E18-4D59-A369-23D5169367EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -230,6 +232,10 @@ Global
 		{498AAC79-8764-4061-9F0E-1A9E6DBD0030}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{498AAC79-8764-4061-9F0E-1A9E6DBD0030}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{498AAC79-8764-4061-9F0E-1A9E6DBD0030}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B224EA84-2E18-4D59-A369-23D5169367EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B224EA84-2E18-4D59-A369-23D5169367EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B224EA84-2E18-4D59-A369-23D5169367EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B224EA84-2E18-4D59-A369-23D5169367EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -274,6 +280,7 @@ Global
 		{C534570F-C1F9-4BCE-97F9-2F817BCC6394} = {00C85C0F-89D2-4D0B-B93D-C172A3CEE3C2}
 		{FA7A2B7F-F6FA-4E66-805D-2B93A4235A10} = {7AA0956D-5929-4B12-9D07-970EB5BEA207}
 		{498AAC79-8764-4061-9F0E-1A9E6DBD0030} = {169A0D2E-EEB1-4C84-B11D-BB3CAF23E758}
+		{B224EA84-2E18-4D59-A369-23D5169367EE} = {687DD54E-6D20-49E7-A9A6-6B8B62DE5F15}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

@@ -6,5 +6,5 @@ public record class CandleSubscription
 
     public required string Symbol { get; init; }
 
-    public CandleInterval CandleInterval { get; init; }
+    public CandleInterval Interval { get; init; }
 }

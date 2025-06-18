@@ -1,6 +1,6 @@
 using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
-using Tinkoff.InvestApi.V1;
+using Vertr.MarketData.Contracts;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Contracts.Interfaces;
 
@@ -12,28 +12,30 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
     {
     }
 
-    public async Task<InstrumentShort[]?> FindInstrument(string query)
+    public async Task<Instrument[]?> FindInstrument(string query)
     {
-        var request = new FindInstrumentRequest
+        var request = new Tinkoff.InvestApi.V1.FindInstrumentRequest
         {
             Query = query
         };
 
         var response = await InvestApiClient.Instruments.FindInstrumentAsync(request);
-        return [.. response.Instruments];
+        var instruments = response.Instruments.ToArray().ToInstruments();
+
+        return instruments;
     }
 
     public async Task<Instrument?> GetInstrumentByTicker(string ticker, string classCode)
     {
-        var request = new InstrumentRequest
+        var request = new Tinkoff.InvestApi.V1.InstrumentRequest
         {
             ClassCode = classCode,
             Id = ticker,
-            IdType = InstrumentIdType.Ticker,
+            IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Ticker,
         };
 
         var response = await InvestApiClient.Instruments.GetInstrumentByAsync(request);
-        var instrument = response.Instrument;
+        var instrument = response.Instrument.ToInstrument();
 
         return instrument;
     }

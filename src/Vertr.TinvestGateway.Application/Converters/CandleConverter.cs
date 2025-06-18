@@ -4,12 +4,11 @@ namespace Vertr.TinvestGateway.Application.Converters;
 
 internal static class CandleConverter
 {
-    public static Candle[] Convert(this Tinkoff.InvestApi.V1.HistoricCandle[] source, string instrumentId)
-        => [.. source.Select(s => s.Convert(instrumentId))];
+    public static Candle[] Convert(this Tinkoff.InvestApi.V1.HistoricCandle[] source)
+        => [.. source.Select(s => s.Convert())];
 
-    public static Candle Convert(this Tinkoff.InvestApi.V1.HistoricCandle source, string instrumentId)
+    public static Candle Convert(this Tinkoff.InvestApi.V1.HistoricCandle source)
         => new Candle(
-            instrumentId,
             source.Time.ToDateTime(),
             source.Open,
             source.Close,
@@ -19,7 +18,6 @@ internal static class CandleConverter
 
     public static Candle Convert(this Tinkoff.InvestApi.V1.Candle source)
         => new Candle(
-            source.InstrumentUid,
             source.Time.ToDateTime(),
             source.Open,
             source.Close,

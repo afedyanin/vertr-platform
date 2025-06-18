@@ -16,7 +16,7 @@ internal static class CandleIntervalConverter
             _ => throw new NotImplementedException(),
         };
 
-    public static Tinkoff.InvestApi.V1.SubscriptionInterval ConvertToSubscriptionInterval(this MarketData.Contracts.CandleInterval source)
+    public static Tinkoff.InvestApi.V1.SubscriptionInterval ConvertToSubscriptionInterval(this CandleInterval source)
         => source switch
         {
             MarketData.Contracts.CandleInterval.Unspecified => Tinkoff.InvestApi.V1.SubscriptionInterval.Unspecified,

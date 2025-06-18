@@ -31,5 +31,5 @@ internal static class InstrumentConverter
             );
 
     public static Instrument[] ToInstruments(this Tinkoff.InvestApi.V1.InstrumentShort[] instruments)
-        => instruments.Select(ToInstrument).ToArray();
+        => [.. instruments.Select(ToInstrument)];
 }

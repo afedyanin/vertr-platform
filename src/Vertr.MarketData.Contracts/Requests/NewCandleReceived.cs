@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Vertr.MarketData.Contracts.Requests;
 
-public class NewCandleReceivedRequest : IRequest
+public class NewCandleReceived : IRequest
 {
     public Candle? Candle { get; init; }
 

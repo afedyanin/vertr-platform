@@ -12,11 +12,11 @@ namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
-    private readonly IMarketDataManager _marketDataManager;
+    private readonly IMarketDataService _marketDataManager;
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 
     public MarketDataStreamService(
-        IMarketDataManager marketDataManager,
+        IMarketDataService marketDataManager,
         IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
         IMediator mediator,

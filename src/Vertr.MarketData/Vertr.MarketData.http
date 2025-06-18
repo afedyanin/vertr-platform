@@ -1,6 +1,0 @@
-@Vertr.MarketData_HostAddress = http://localhost:5147
-
-GET {{Vertr.MarketData_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

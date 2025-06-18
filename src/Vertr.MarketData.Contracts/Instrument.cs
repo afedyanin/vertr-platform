@@ -1,4 +1,5 @@
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.MarketData.Contracts;
+
 public record class Instrument(
     string? Isin,
     string? Ticker,

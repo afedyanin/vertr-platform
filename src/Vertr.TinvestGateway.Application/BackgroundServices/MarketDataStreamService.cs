@@ -7,7 +7,6 @@ using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.MarketData.Contracts.Requests;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
-using Vertr.TinvestGateway.Contracts.Requests;
 
 namespace Vertr.TinvestGateway.Application.BackgroundServices;
 

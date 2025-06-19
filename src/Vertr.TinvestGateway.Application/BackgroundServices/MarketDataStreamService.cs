@@ -3,19 +3,27 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.MarketData.Contracts.Requests;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
+using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
     private readonly IMarketDataService _marketDataService;
+    private readonly ITinvestGatewayMarketData _tinvestGatewayMarketData;
+
+    private readonly Dictionary<string, Instrument> _instruments = new Dictionary<string, Instrument>();
+    private readonly Dictionary<string, CandleInterval> _intervals = new Dictionary<string, CandleInterval>();
+
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 
     public MarketDataStreamService(
+        ITinvestGatewayMarketData tinvestGatewayMarketData,
         IMarketDataService marketDataService,
         IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
@@ -23,7 +31,37 @@ public class MarketDataStreamService : StreamServiceBase
         ILogger<MarketDataStreamService> logger) :
             base(tinvestOptions, investApiClient, mediator, logger)
     {
+        _tinvestGatewayMarketData = tinvestGatewayMarketData;
         _marketDataService = marketDataService;
+    }
+
+    protected override async Task OnBeforeStart(CancellationToken stoppingToken)
+    {
+        var subscriptions = await _marketDataService.GetSubscriptions();
+        _instruments.Clear();
+
+        foreach (var subscription in subscriptions)
+        {
+            var instrument = await _tinvestGatewayMarketData.GetInstrumentByTicker(subscription.Symbol, subscription.ClassCode);
+
+            if (instrument != null)
+            {
+                _instruments[instrument.Uid!] = instrument;
+                _intervals[instrument.Uid!] = subscription.Interval;
+            }
+        }
+
+        if (_instruments.Count != 0)
+        {
+            var request = new InstrumentSnapshotReceived
+            {
+                Instruments = [.. _instruments.Values]
+            };
+
+            await Mediator.Send(request, stoppingToken);
+        }
+
+        await base.OnBeforeStart(stoppingToken);
     }
 
     protected override async Task Subscribe(
@@ -37,14 +75,12 @@ public class MarketDataStreamService : StreamServiceBase
             WaitingClose = TinvestSettings.WaitCandleClose,
         };
 
-        var subscriptions = await _marketDataService.GetSubscriptions();
-
-        foreach (var subscription in subscriptions)
+        foreach (var kvp in _intervals)
         {
             candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
             {
-                InstrumentId = subscription.??,
-                Interval = subscription.Interval.ConvertToSubscriptionInterval()
+                InstrumentId = kvp.Key,
+                Interval = kvp.Value.ConvertToSubscriptionInterval()
             });
         }
 
@@ -59,14 +95,21 @@ public class MarketDataStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Candle)
             {
-                var marketDataCandleRequest = new NewCandleReceived
+                if (_instruments.TryGetValue(response.Candle.InstrumentUid, out var instrument))
                 {
-                    Candle = response.Candle.Convert(),
-                    InstrumentId = ??,
-                    Interval = ??
-                };
+                    var marketDataCandleRequest = new NewCandleReceived
+                    {
+                        Candle = response.Candle.Convert(),
+                        Interval = _intervals[response.Candle.InstrumentUid],
+                        Ticker = $"{instrument.ClassCode}.{instrument.Ticker}"
+                    };
 
-                await Mediator.Send(marketDataCandleRequest, stoppingToken);
+                    await Mediator.Send(marketDataCandleRequest, stoppingToken);
+                }
+                else
+                {
+                    logger.LogDebug($"Unknown candle received: {response.Candle}");
+                }
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {

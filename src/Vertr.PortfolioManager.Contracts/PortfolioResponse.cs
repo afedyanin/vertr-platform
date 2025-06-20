@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.OrderExecution.Contracts;
 public record class PortfolioResponse
 {
     public string AccountId { get; init; } = string.Empty;

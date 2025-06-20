@@ -10,7 +10,7 @@ public static class TinvestPortfolioResponseConverter
     };
 
     public static PortfolioSnapshot? Convert(
-        this TinvestGateway.Contracts.PortfolioResponse? source,
+        this OrderExecution.Contracts.PortfolioResponse? source,
         Guid? bookId)
     {
         if (source == null)
@@ -36,7 +36,7 @@ public static class TinvestPortfolioResponseConverter
     }
 
     internal static PortfolioPosition Convert(
-        this TinvestGateway.Contracts.Position source,
+        this OrderExecution.Contracts.Position source,
         PortfolioSnapshot parent)
         => new PortfolioPosition
         {
@@ -48,7 +48,7 @@ public static class TinvestPortfolioResponseConverter
         };
 
     internal static PortfolioPosition[] Convert(
-        this TinvestGateway.Contracts.Position[] source,
+        this OrderExecution.Contracts.Position[] source,
         PortfolioSnapshot parent)
         => source.Select(t => t.Convert(parent)).ToArray();
 }

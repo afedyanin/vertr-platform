@@ -4,8 +4,8 @@ using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.TinvestGateway.Contracts.Enums;
-using Vertr.TinvestGateway.Contracts.Interfaces;
+using Vertr.OrderExecution.Contracts.Enums;
+using Vertr.OrderExecution.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
 
@@ -49,7 +49,7 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecuti
         long qtyLots,
         PortfolioIdentity portfolioId)
     {
-        var request = new TinvestGateway.Contracts.PostOrderRequest
+        var request = new OrderExecution.Contracts.PostOrderRequest
         {
             AccountId = portfolioId.AccountId,
             RequestId = requestId,

@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Vertr.OrderExecution.Contracts.Requests;
 
-public class PostOrderRequest : IRequest<OrderExecutionResponse>
+public class ExecuteOrderRequest : IRequest<ExecuteOrderResponse>
 {
     public Guid RequestId { get; init; }
 

@@ -1,3 +1,5 @@
+using Vertr.PortfolioManager.Contracts;
+
 namespace Vertr.TinvestGateway.Contracts.Interfaces;
 public interface ITinvestGatewayAccounts
 {

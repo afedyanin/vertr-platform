@@ -1,5 +1,5 @@
 namespace Vertr.OrderExecution.Contracts.Requests;
-public class OrderExecutionResponse
+public class ExecuteOrderResponse
 {
     public string? OrderId { get; init; }
 

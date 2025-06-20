@@ -4,7 +4,7 @@ using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
-internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<ClosePositionRequest, OrderExecutionResponse>
+internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<ClosePositionRequest, ExecuteOrderResponse>
 {
     public ClosePositionHandler(
         IMediator mediator,
@@ -14,7 +14,7 @@ internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<Close
     {
     }
 
-    public async Task<OrderExecutionResponse> Handle(
+    public async Task<ExecuteOrderResponse> Handle(
         ClosePositionRequest request,
         CancellationToken cancellationToken)
     {
@@ -22,7 +22,7 @@ internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<Close
 
         if (currentLots == 0L)
         {
-            return new OrderExecutionResponse()
+            return new ExecuteOrderResponse()
             {
                 ErrorMessage = "Position already closed."
             };
@@ -30,7 +30,7 @@ internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<Close
 
         var lotsToClose = currentLots * -1L;
 
-        var orderRequest = new PostOrderRequest
+        var orderRequest = new ExecuteOrderRequest
         {
             PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
@@ -40,7 +40,7 @@ internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<Close
 
         var response = await Mediator.Send(orderRequest, cancellationToken);
 
-        var result = new OrderExecutionResponse
+        var result = new ExecuteOrderResponse
         {
             OrderId = response.OrderId,
         };

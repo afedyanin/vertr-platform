@@ -5,7 +5,7 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
 
-internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<TradingSignalRequest, OrderExecutionResponse>
+internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<TradingSignalRequest, ExecuteOrderResponse>
 {
     public TradingSignalHandler(
         IMediator mediator,
@@ -15,13 +15,13 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
     {
     }
 
-    public async Task<OrderExecutionResponse> Handle(
+    public async Task<ExecuteOrderResponse> Handle(
         TradingSignalRequest request,
         CancellationToken cancellationToken)
     {
         if (request.QtyLots == 0L)
         {
-            return new OrderExecutionResponse
+            return new ExecuteOrderResponse
             {
                 ErrorMessage = "Trading signal quantity is empty."
             };
@@ -41,7 +41,7 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
 
             var openResponse = await Mediator.Send(openRequest, cancellationToken);
 
-            return new OrderExecutionResponse()
+            return new ExecuteOrderResponse()
             {
                 OrderId = openResponse?.OrderId,
                 ErrorMessage = openResponse?.ErrorMessage,
@@ -53,7 +53,7 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
 
         if (Math.Sign(currentLots) == Math.Sign(request.QtyLots))
         {
-            return new OrderExecutionResponse
+            return new ExecuteOrderResponse
             {
                 ErrorMessage = "Trading signal and position have the same direction."
             };
@@ -68,7 +68,7 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
 
         var reverseResponse = await Mediator.Send(reverseRequest, cancellationToken);
 
-        return new OrderExecutionResponse()
+        return new ExecuteOrderResponse()
         {
             OrderId = reverseResponse?.OrderId,
             ErrorMessage = reverseResponse?.ErrorMessage,

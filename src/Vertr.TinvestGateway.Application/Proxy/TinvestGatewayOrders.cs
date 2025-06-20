@@ -1,8 +1,9 @@
-﻿using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
+using Vertr.OrderExecution.Contracts;
+using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.Enums;
 using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Application.Proxy;

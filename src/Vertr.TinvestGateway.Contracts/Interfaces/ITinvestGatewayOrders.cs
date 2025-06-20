@@ -1,3 +1,4 @@
+using Vertr.OrderExecution.Contracts;
 using Vertr.TinvestGateway.Contracts.Enums;
 
 namespace Vertr.TinvestGateway.Contracts.Interfaces;

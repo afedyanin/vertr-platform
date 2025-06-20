@@ -1,4 +1,4 @@
-namespace Vertr.OrderExecution.Contracts;
+namespace Vertr.OrderExecution.Contracts.Enums;
 
 public enum OrderType
 {

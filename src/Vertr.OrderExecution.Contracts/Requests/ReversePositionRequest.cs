@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Vertr.OrderExecution.Contracts.Requests;
 
-public class ReversePositionRequest : IRequest<OrderExecutionResponse>
+public class ReversePositionRequest : IRequest<ExecuteOrderResponse>
 {
     public Guid RequestId { get; init; }
 

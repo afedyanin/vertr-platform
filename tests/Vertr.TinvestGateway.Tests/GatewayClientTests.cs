@@ -1,7 +1,7 @@
 using Refit;
-using Vertr.TinvestGateway.Contracts.Interfaces;
+using Vertr.OrderExecution.Contracts.Interfaces;
 
-namespace Vertr.TinvestGateway.Tests;
+namespace Vertr.OrderExecution.Tests;
 
 public class GatewayClientTests
 {

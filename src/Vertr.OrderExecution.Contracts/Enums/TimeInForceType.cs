@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts.Enums;
+namespace Vertr.OrderExecution.Contracts.Enums;
 public enum TimeInForceType
 {
     // Значение не определено 

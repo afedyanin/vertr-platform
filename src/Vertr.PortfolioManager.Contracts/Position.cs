@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.OrderExecution.Contracts;
 
 public record class Position(
     string PositionId,

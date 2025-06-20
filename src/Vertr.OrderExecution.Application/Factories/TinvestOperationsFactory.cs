@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Vertr.OrderExecution.Contracts;
-using Vertr.TinvestGateway.Contracts;
+using Vertr.OrderExecution.Contracts.Enums;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
@@ -14,7 +14,7 @@ internal static class TinvestOperationsFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = Contracts.OperationType.BrokerFee,
+            OperationType = OperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = response.OrderId,
@@ -45,7 +45,7 @@ internal static class TinvestOperationsFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = Contracts.OperationType.BrokerFee,
+            OperationType = OperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = state.OrderId,
@@ -89,12 +89,12 @@ internal static class TinvestOperationsFactory
             Quantity = source.Quantity,
         };
 
-    private static Contracts.OperationType ToOperationType(this OrderDirection direction)
+    private static OperationType ToOperationType(this OrderDirection direction)
         => direction switch
         {
-            OrderDirection.Unspecified => Contracts.OperationType.Unspecified,
-            OrderDirection.Buy => Contracts.OperationType.Buy,
-            OrderDirection.Sell => Contracts.OperationType.Sell,
+            OrderDirection.Unspecified => OperationType.Unspecified,
+            OrderDirection.Buy => OperationType.Buy,
+            OrderDirection.Sell => OperationType.Sell,
             _ => throw new NotImplementedException(),
         };
 }

@@ -3,19 +3,23 @@ using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.PortfolioManager.Contracts.Requests;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
 
 internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
 {
     private readonly IOrderEventRepository _orderEventRepository;
+    private readonly IMediator _mediator;
     private readonly ILogger<OrderStateHandler> _logger;
 
     public OrderTradesHandler(
         IOrderEventRepository orderEventRepository,
+        IMediator mediator,
         ILogger<OrderStateHandler> logger)
     {
         _orderEventRepository = orderEventRepository;
+        _mediator = mediator;
         _logger = logger;
     }
 
@@ -57,7 +61,12 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
 
         var operations = orderTrades.CreateOperations(portfolioId);
 
+        var orderOperationsRequest = new OrderOperationsRequest
+        {
+            Operations = operations,
+        };
+
         _logger.LogDebug($"Publish OrderTrades operations for OrderId={orderTrades.OrderId}");
-        await OperationsPublisher.Publish(operations);
+        await _mediator.Send(orderOperationsRequest, cancellationToken);
     }
 }

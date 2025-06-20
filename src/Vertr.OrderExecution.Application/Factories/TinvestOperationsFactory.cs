@@ -15,7 +15,7 @@ internal static class TinvestOperationsFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = OperationType.BrokerFee,
+            OperationType = OrderOperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = response.OrderId,
@@ -39,14 +39,14 @@ internal static class TinvestOperationsFactory
             AccountId = portfolioId.AccountId,
             OrderId = state.OrderId,
             InstrumentId = Guid.Parse(state.InstrumentId),
-            Trades = state.OrderStages.Convert()
+            Trades = state.OrderStages
         };
 
         var opCommission = new OrderOperation
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = OperationType.BrokerFee,
+            OperationType = OrderOperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = state.OrderId,
@@ -72,30 +72,18 @@ internal static class TinvestOperationsFactory
             AccountId = portfolioId.AccountId,
             OrderId = trades.OrderId,
             InstrumentId = Guid.Parse(trades.InstrumentId),
-            Trades = trades.Trades.Convert()
+            Trades = trades.Trades
         };
 
         return [opTrades];
     }
 
-    private static Contracts.Trade[] Convert(this Trade[] source)
-        => [.. source.Select(Convert)];
-
-    private static Contracts.Trade Convert(this Trade source)
-        => new Contracts.Trade
-        {
-            Id = source.TradeId,
-            ExecutionTime = source.ExecutionTime,
-            Price = source.Price,
-            Quantity = source.Quantity,
-        };
-
-    private static OperationType ToOperationType(this OrderDirection direction)
+    private static OrderOperationType ToOperationType(this OrderDirection direction)
         => direction switch
         {
-            OrderDirection.Unspecified => OperationType.Unspecified,
-            OrderDirection.Buy => OperationType.Buy,
-            OrderDirection.Sell => OperationType.Sell,
+            OrderDirection.Unspecified => OrderOperationType.Unspecified,
+            OrderDirection.Buy => OrderOperationType.Buy,
+            OrderDirection.Sell => OrderOperationType.Sell,
             _ => throw new NotImplementedException(),
         };
 }

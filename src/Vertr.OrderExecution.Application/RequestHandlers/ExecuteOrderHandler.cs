@@ -1,31 +1,37 @@
+using System.Threading;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
-using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.OrderExecution.Contracts.Enums;
-using Vertr.OrderExecution.Contracts.Interfaces;
+using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.PortfolioManager.Contracts.Requests;
+using Vertr.TinvestGateway.Contracts;
+using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
 
-internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecutionResponse>
+internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOrderResponse>
 {
     private readonly ITinvestGatewayOrders _tinvestGateway;
     private readonly IOrderEventRepository _orderEventRepository;
+    private readonly IMediator _mediator;
     private readonly ILogger<PostOrderHandler> _logger;
 
     public PostOrderHandler(
         ITinvestGatewayOrders tinvestGateway,
         IOrderEventRepository orderEventRepository,
+        IMediator mediator,
         ILogger<PostOrderHandler> logger)
     {
         _tinvestGateway = tinvestGateway;
         _orderEventRepository = orderEventRepository;
+        _mediator = mediator;
         _logger = logger;
     }
 
-    public async Task<OrderExecutionResponse> Handle(PostOrderRequest request, CancellationToken cancellationToken)
+    public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Posting new market order for PortfolioId={request.PortfolioId}");
 
@@ -33,9 +39,10 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecuti
             request.RequestId,
             request.InstrumentId,
             request.QtyLots,
-            request.PortfolioId);
+            request.PortfolioId,
+            cancellationToken);
 
-        var response = new OrderExecutionResponse
+        var response = new ExecuteOrderResponse
         {
             OrderId = orderId,
         };
@@ -43,13 +50,14 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecuti
         return response;
     }
 
-    public async Task<string?> PostMarketOrder(
+    private async Task<string?> PostMarketOrder(
         Guid requestId,
         Guid instrumentId,
         long qtyLots,
-        PortfolioIdentity portfolioId)
+        PortfolioIdentity portfolioId,
+        CancellationToken cancellationToken)
     {
-        var request = new OrderExecution.Contracts.PostOrderRequest
+        var request = new PostOrderRequest
         {
             AccountId = portfolioId.AccountId,
             RequestId = requestId,
@@ -87,7 +95,14 @@ internal class PostOrderHandler : IRequestHandler<PostOrderRequest, OrderExecuti
         }
 
         var orderOperations = response.CreateOperations(portfolioId);
-        await _operationsPublisher.Publish(orderOperations);
+
+        var orderOperationsRequest = new OrderOperationsRequest
+        {
+            Operations = orderOperations,
+        };
+
+        _logger.LogDebug($"Publish ExecuteOrder operations for OrderId={response.OrderId}");
+        await _mediator.Send(orderOperationsRequest, cancellationToken);
 
         return response.OrderId;
     }

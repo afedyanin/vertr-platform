@@ -54,9 +54,12 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
     }
 
     public async Task<Candle[]?> GetCandles(
-        string ticker, 
-        string classCode, 
-        CandleInterval interval, DateTime from, DateTime to, int? limit)
+        string ticker,
+        string classCode,
+        CandleInterval interval,
+        DateTime from,
+        DateTime to,
+        int? limit)
     {
         var instrumentRequest = new Tinkoff.InvestApi.V1.InstrumentRequest
         {
@@ -87,7 +90,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
         }
 
         var response = await InvestApiClient.MarketData.GetCandlesAsync(request);
-        var candles = response.Candles.ToArray().Convert(instrumentId);
+        var candles = response.Candles.ToArray().Convert();
 
         return candles;
     }

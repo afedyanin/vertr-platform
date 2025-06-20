@@ -1,6 +1,6 @@
 namespace Vertr.OrderExecution.Contracts.Enums;
 
-public enum OperationType
+public enum OrderOperationType
 {
     // Тип операции не определён.
     Unspecified = 0,

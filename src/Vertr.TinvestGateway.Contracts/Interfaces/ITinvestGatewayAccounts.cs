@@ -12,4 +12,13 @@ public interface ITinvestGatewayAccounts
     public Task CloseSandboxAccount(string accountId);
 
     public Task<Money?> PayIn(string accountId, Money money);
+
+    public Task<Operation[]?> GetOperations(
+        string accountId,
+        DateTime? from = null,
+        DateTime? to = null);
+
+    public Task<PositionsResponse?> GetPositions(string accountId);
+
+    public Task<PortfolioResponse?> GetPortfolio(string accountId);
 }

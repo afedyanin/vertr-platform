@@ -3,7 +3,7 @@ using Vertr.PortfolioManager.Application.Entities;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.Application.Converters;
-public static class TinvestPortfolioResponseConverter
+public static class PortfolioResponseConverter
 {
     private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
     {
@@ -37,7 +37,7 @@ public static class TinvestPortfolioResponseConverter
     }
 
     internal static PortfolioPosition Convert(
-        this OrderExecution.Contracts.Position source,
+        this Position source,
         PortfolioSnapshot parent)
         => new PortfolioPosition
         {
@@ -49,7 +49,7 @@ public static class TinvestPortfolioResponseConverter
         };
 
     internal static PortfolioPosition[] Convert(
-        this OrderExecution.Contracts.Position[] source,
+        this Position[] source,
         PortfolioSnapshot parent)
-        => source.Select(t => t.Convert(parent)).ToArray();
+        => [.. source.Select(t => t.Convert(parent))];
 }

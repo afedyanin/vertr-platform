@@ -1,6 +1,6 @@
-using Vertr.OrderExecution.Contracts.Enums;
+using Vertr.OrderExecution.Contracts;
 
-namespace Vertr.OrderExecution.Contracts;
+namespace Vertr.TinvestGateway.Contracts;
 
 public record class Operation
 {

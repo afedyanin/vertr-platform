@@ -7,7 +7,7 @@ public record class OrderOperation
 
     public DateTime CreatedAt { get; init; }
 
-    public OperationType OperationType { get; init; }
+    public OrderOperationType OperationType { get; init; }
 
     public string? OrderId { get; init; }
 

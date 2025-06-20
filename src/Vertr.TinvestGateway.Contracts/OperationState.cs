@@ -1,4 +1,4 @@
-namespace Vertr.OrderExecution.Contracts.Enums;
+namespace Vertr.TinvestGateway.Contracts;
 
 public enum OperationState
 {

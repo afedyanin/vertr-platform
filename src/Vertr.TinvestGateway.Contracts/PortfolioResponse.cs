@@ -1,4 +1,6 @@
-namespace Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts;
+
+namespace Vertr.TinvestGateway.Contracts;
 
 public record class PortfolioResponse
 {

@@ -44,7 +44,8 @@ public class PortfolioStreamService : StreamServiceBase
             {
                 var portfolioRequest = new PortfolioChangedRequest
                 {
-                    Portfolio = response.Portfolio.Convert()
+                    // Guid.Empty - признак, что портфель пришел из Tinvest, а не расчитан вручную
+                    Portfolio = response.Portfolio.Convert().Convert(Guid.Empty)
                 };
 
                 await Mediator.Send(portfolioRequest, stoppingToken);

@@ -3,8 +3,8 @@ using System.Text.Json;
 using Vertr.Infrastructure.Kafka;
 using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.BackgroundServices;
-using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.DataAccess;
+using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.PortfolioManager;
 

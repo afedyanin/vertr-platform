@@ -10,7 +10,7 @@ public record class PositionsResponse
 
     public Money[] Blocked { get; init; } = [];
 
-    public Position[] Securities {  get; init; } = [];
+    public Position[] Securities { get; init; } = [];
 
     public Position[] Futures { get; init; } = [];
 

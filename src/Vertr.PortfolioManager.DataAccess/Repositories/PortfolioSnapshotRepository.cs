@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Vertr.PortfolioManager.Application.Abstractions;
-using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.DataAccess.Repositories;
 internal class PortfolioSnapshotRepository : RepositoryBase, IPortfolioSnapshotRepository

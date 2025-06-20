@@ -4,9 +4,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.PortfolioManager.Contracts.Interfaces;
+using Vertr.PortfolioManager.Contracts.Requests;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
-using Vertr.TinvestGateway.Contracts.Requests;
 
 namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
@@ -42,7 +42,7 @@ public class PositionStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.PositionsStreamResponse.PayloadOneofCase.Position)
             {
-                var positionRequest = new HandlePositionRequest
+                var positionRequest = new PositionChangedRequest
                 {
                     Positions = response.Position.Convert()
                 };

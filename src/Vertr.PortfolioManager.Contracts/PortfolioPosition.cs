@@ -1,4 +1,4 @@
-namespace Vertr.PortfolioManager.Application.Entities;
+namespace Vertr.PortfolioManager.Contracts;
 
 public class PortfolioPosition
 {

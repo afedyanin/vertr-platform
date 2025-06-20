@@ -4,9 +4,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.PortfolioManager.Contracts.Interfaces;
+using Vertr.PortfolioManager.Contracts.Requests;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
-using Vertr.TinvestGateway.Contracts.Requests;
 
 namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
@@ -42,7 +42,7 @@ public class PortfolioStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.PortfolioStreamResponse.PayloadOneofCase.Portfolio)
             {
-                var portfolioRequest = new HandlePortrolioRequest
+                var portfolioRequest = new PortfolioChangedRequest
                 {
                     Portfolio = response.Portfolio.Convert()
                 };

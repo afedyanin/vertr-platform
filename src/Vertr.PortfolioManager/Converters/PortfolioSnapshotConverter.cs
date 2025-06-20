@@ -5,7 +5,7 @@ namespace Vertr.PortfolioManager.Converters;
 internal static class PortfolioSnapshotConverter
 {
     public static PortfolioSnapshot Convert(
-        this Application.Entities.PortfolioSnapshot source)
+        this PortfolioSnapshot source)
         => new PortfolioSnapshot(
             source.AccountId,
             source.BookId,
@@ -13,17 +13,17 @@ internal static class PortfolioSnapshotConverter
             source.Positions.ToArray().Convert());
 
     public static PortfolioSnapshot[] Convert(
-        this Application.Entities.PortfolioSnapshot[] source)
+        this PortfolioSnapshot[] source)
         => [.. source.Select(Convert)];
 
     public static PortfolioPosition Convert(
-        this Application.Entities.PortfolioPosition source)
+        this PortfolioPosition source)
         => new PortfolioPosition(
             source.InstrumentId,
             source.Balance);
 
     public static PortfolioPosition[] Convert(
-        this Application.Entities.PortfolioPosition[] source)
+        this PortfolioPosition[] source)
         => [.. source.Select(Convert)];
 }
 

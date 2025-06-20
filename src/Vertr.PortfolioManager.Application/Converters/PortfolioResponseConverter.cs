@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Vertr.PortfolioManager.Application.Entities;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.Application.Converters;

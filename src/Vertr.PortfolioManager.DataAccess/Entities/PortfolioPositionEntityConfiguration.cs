@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.DataAccess.Entities;
 internal class PortfolioPositionEntityConfiguration : IEntityTypeConfiguration<PortfolioPosition>

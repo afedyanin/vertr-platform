@@ -1,4 +1,4 @@
-using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.Application.Abstractions;
 public interface IPortfolioSnapshotRepository

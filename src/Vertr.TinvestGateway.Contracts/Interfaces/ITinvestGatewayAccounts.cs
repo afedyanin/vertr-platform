@@ -18,7 +18,7 @@ public interface ITinvestGatewayAccounts
         DateTime? from = null,
         DateTime? to = null);
 
-    public Task<PositionsResponse?> GetPositions(string accountId);
+    //public Task<PositionsResponse?> GetPositions(string accountId);
 
-    public Task<PortfolioResponse?> GetPortfolio(string accountId);
+    public Task<PortfolioSnapshot?> GetPortfolio(string accountId, Guid? bookId = null);
 }

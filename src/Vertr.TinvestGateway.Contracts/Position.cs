@@ -1,4 +1,4 @@
-namespace Vertr.PortfolioManager.Contracts;
+namespace Vertr.TinvestGateway.Contracts;
 
 public record class Position(
     string PositionId,

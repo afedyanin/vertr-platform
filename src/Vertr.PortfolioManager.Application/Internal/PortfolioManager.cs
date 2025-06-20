@@ -1,31 +1,49 @@
+using Vertr.PortfolioManager.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
+using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.Application.Internal;
 
 internal class PortfolioManager : IPortfolioManager
 {
     // TODO: Move it into DB
-    public Task<string[]> GetActiveAccounts()
-        => Task.FromResult(new string[]
-        {
+    private static readonly string[] _accounts =
+        [
           "a48c2760-20ae-4e0a-8d4b-4005cdb10d70",
           "f7c33024-67bc-428e-a149-e916e87e79ad",
           "0e284896-ba30-440f-9626-18ab2e2cc2f0"
-        });
+        ];
+
+    private readonly IPortfolioSnapshotRepository _portfolioSnapshotRepository;
+    private readonly ITinvestGatewayAccounts _tinvestGateway;
+
+    public PortfolioManager(
+        IPortfolioSnapshotRepository portfolioSnapshotRepository,
+        ITinvestGatewayAccounts tinvestGateway)
+    {
+        _portfolioSnapshotRepository = portfolioSnapshotRepository;
+        _tinvestGateway = tinvestGateway;
+    }
+
+    public Task<string[]> GetActiveAccounts()
+        => Task.FromResult(_accounts);
  
     public Task<PortfolioSnapshot?> GetLastPortfolio(string accountId, Guid? bookId = null)
-    {
-        throw new NotImplementedException();
-    }
+        => _portfolioSnapshotRepository.GetLast(accountId, bookId);
 
-    public Task<PortfolioSnapshot?> GetPortfolioHistory(string accountId, Guid? bookId = null, int maxRecords = 100)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<PortfolioSnapshot[]> GetPortfolioHistory(string accountId, Guid? bookId = null, int maxRecords = 100)
+        => _portfolioSnapshotRepository.GetHistory(accountId, bookId, maxRecords);
 
-    public Task<PortfolioSnapshot?> MakeSnapshot(string accountId, Guid? bookId = null)
+    public async Task<PortfolioSnapshot?> MakeSnapshot(string accountId, Guid? bookId = null)
     {
-        throw new NotImplementedException();
+        var snapshot = await _tinvestGateway.GetPortfolio(accountId, bookId);
+
+        if (snapshot != null)
+        {
+            var saved = await _portfolioSnapshotRepository.Save(snapshot);
+        }
+
+        return snapshot;
     }
 }

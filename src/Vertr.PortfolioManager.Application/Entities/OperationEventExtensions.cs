@@ -1,9 +1,8 @@
 using System.Text.Json;
-using Vertr.PortfolioManager.Application.Entities;
 
-namespace Vertr.PortfolioManager.Converters;
+namespace Vertr.PortfolioManager.Application.Entities;
 
-internal static class OperationEventConverter
+internal static class OperationEventExtensions
 {
     private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
     {
@@ -20,4 +19,7 @@ internal static class OperationEventConverter
             JsonData = JsonSerializer.Serialize(source, _jsonSerializerOptions),
             JsonDataType = source.GetType().FullName,
         };
+
+    public static OperationEvent[] Convert(this OrderExecution.Contracts.OrderOperation[] source)
+        => [.. source.Select(Convert)];
 }

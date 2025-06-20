@@ -18,7 +18,6 @@ public static class TinvestGatewayRegistrar
         services.AddHostedService<OrderStateStreamService>();
         services.AddHostedService<MarketDataStreamService>();
         services.AddHostedService<PortfolioStreamService>();
-        services.AddHostedService<PositionStreamService>();
 
         services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
 

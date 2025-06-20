@@ -27,11 +27,10 @@ internal class OperationEventRepository : RepositoryBase, IOperationEventReposit
         return snapshot;
     }
 
-    public async Task<bool> Save(OperationEvent operationEvent)
+    public async Task<bool> Save(OperationEvent[] operationEvents)
     {
         using var context = await GetDbContext();
-
-        var entry = await context.Operations.AddAsync(operationEvent);
+        await context.Operations.AddRangeAsync(operationEvents);
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;

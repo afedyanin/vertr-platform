@@ -1,8 +1,4 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Vertr.PortfolioManager.Application.Abstractions;
-using Vertr.PortfolioManager.Application.Commands;
-using Vertr.PortfolioManager.Converters;
 
 namespace Vertr.PortfolioManager.Controllers;
 
@@ -11,17 +7,6 @@ namespace Vertr.PortfolioManager.Controllers;
 [ApiController]
 public class PortfolioController : ControllerBase
 {
-    private readonly IPortfolioSnapshotRepository _snapshotRepository;
-    private readonly IMediator _mediator;
-
-    public PortfolioController(
-        IPortfolioSnapshotRepository snapshotRepository,
-        IMediator mediator)
-    {
-        _snapshotRepository = snapshotRepository;
-        _mediator = mediator;
-    }
-
     [HttpGet("{accountId}")]
     public async Task<IActionResult> GetLast(string accountId, Guid? bookId = null)
     {

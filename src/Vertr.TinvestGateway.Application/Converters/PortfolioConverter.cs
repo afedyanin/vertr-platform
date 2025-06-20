@@ -11,7 +11,33 @@ internal static class PortfolioConverter
         WriteIndented = true,
     };
 
-    public static PortfolioResponse Convert(this Tinkoff.InvestApi.V1.PortfolioResponse source)
+    public static PortfolioSnapshot? Convert(
+        this Tinkoff.InvestApi.V1.PortfolioResponse source,
+        Guid? bookId)
+    {
+        if (source == null)
+        {
+            return null;
+        }
+
+        var response = source.Convert();
+
+        var res = new PortfolioSnapshot
+        {
+            Id = Guid.NewGuid(),
+            UpdatedAt = DateTime.UtcNow,
+            AccountId = response.AccountId,
+            BookId = bookId,
+            JsonData = JsonSerializer.Serialize(response, _jsonSerializerOptions),
+            JsonDataType = response.GetType().FullName,
+        };
+
+        res.Positions = response.Positions.Convert(res);
+
+        return res;
+    }
+
+    private static PortfolioResponse Convert(this Tinkoff.InvestApi.V1.PortfolioResponse source)
         => new PortfolioResponse
         {
             AccountId = source.AccountId,
@@ -27,31 +53,7 @@ internal static class PortfolioConverter
             Positions = source.Positions.ToArray().Convert(),
         };
 
-    public static PortfolioSnapshot? Convert(
-        this PortfolioResponse? source,
-        Guid? bookId)
-    {
-        if (source == null)
-        {
-            return null;
-        }
-
-        var res = new PortfolioSnapshot
-        {
-            Id = Guid.NewGuid(),
-            UpdatedAt = DateTime.UtcNow,
-            AccountId = source.AccountId,
-            BookId = bookId,
-            JsonData = JsonSerializer.Serialize(source, _jsonSerializerOptions),
-            JsonDataType = source.GetType().FullName,
-        };
-
-        res.Positions = source.Positions.Convert(res);
-
-        return res;
-    }
-
-    internal static PortfolioPosition Convert(
+    private static PortfolioPosition Convert(
         this Position source,
         PortfolioSnapshot parent)
         => new PortfolioPosition
@@ -63,7 +65,7 @@ internal static class PortfolioConverter
             PortfolioSnapshot = parent
         };
 
-    internal static PortfolioPosition[] Convert(
+    private static PortfolioPosition[] Convert(
         this Position[] source,
         PortfolioSnapshot parent)
         => [.. source.Select(t => t.Convert(parent))];

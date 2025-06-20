@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Vertr.OrderExecution.Application.Entities;
 using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;

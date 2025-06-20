@@ -87,7 +87,7 @@ internal class TinvestGatewayAccounts : TinvestGatewayBase, ITinvestGatewayAccou
     }
 
 
-    public async Task<PortfolioResponse?> GetPortfolio(string accountId)
+    public async Task<PortfolioSnapshot?> GetPortfolio(string accountId, Guid? bookId)
     {
         var request = new Tinkoff.InvestApi.V1.PortfolioRequest
         {
@@ -96,7 +96,7 @@ internal class TinvestGatewayAccounts : TinvestGatewayBase, ITinvestGatewayAccou
         };
 
         var response = await InvestApiClient.Operations.GetPortfolioAsync(request);
-        var portfolio = response.Convert();
+        var portfolio = response.Convert(bookId);
 
         return portfolio;
     }

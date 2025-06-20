@@ -1,5 +1,0 @@
-###
-POST http://127.0.0.1:8081/prediction/predict
-Accept: application/json
-Content-Type: application/json
-{"Symbol":"SBER","Interval":8,"Predictor":"Sb3","Algo":"dqn","CandlesCount":20,"CompletedCandelsOnly":true,"CandlesSource":"tinvest"}

@@ -1,11 +1,10 @@
-using System.Threading;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
+using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Requests;
 using Vertr.TinvestGateway.Contracts;
 using Vertr.TinvestGateway.Contracts.Interfaces;

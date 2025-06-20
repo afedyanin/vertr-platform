@@ -1,6 +1,0 @@
-@Vertr.OrderExecution_HostAddress = http://localhost:5210
-
-GET {{Vertr.OrderExecution_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

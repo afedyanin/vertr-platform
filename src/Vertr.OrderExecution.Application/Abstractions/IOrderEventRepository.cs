@@ -1,5 +1,5 @@
 using Vertr.OrderExecution.Application.Entities;
-using Vertr.PortfolioManager.Contracts;
+using Vertr.OrderExecution.Contracts;
 
 namespace Vertr.OrderExecution.Application.Abstractions;
 

@@ -1,5 +1,5 @@
 using Vertr.OrderExecution.Contracts;
-using Vertr.TinvestGateway.Contracts.Enums;
+using Vertr.OrderExecution.Contracts.Enums;
 
 namespace Vertr.TinvestGateway.Contracts.Interfaces;
 public interface ITinvestGatewayOrders

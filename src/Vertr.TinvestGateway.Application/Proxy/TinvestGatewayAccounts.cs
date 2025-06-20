@@ -14,14 +14,14 @@ internal class TinvestGatewayAccounts : TinvestGatewayBase, ITinvestGatewayAccou
     {
     }
 
-    public async Task<Contracts.Account[]?> GetAccounts()
+    public async Task<PortfolioManager.Contracts.Account[]?> GetAccounts()
     {
         var response = await InvestApiClient.Users.GetAccountsAsync();
         var accounts = response.Accounts.ToArray().ToAccounts();
 
         return accounts;
     }
-    public async Task<Contracts.Account[]?> GetSandboxAccounts()
+    public async Task<PortfolioManager.Contracts.Account[]?> GetSandboxAccounts()
     {
         var response = await InvestApiClient.Sandbox.GetSandboxAccountsAsync(new GetAccountsRequest());
         var accounts = response.Accounts.ToArray().ToAccounts();

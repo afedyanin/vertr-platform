@@ -1,4 +1,4 @@
-using Vertr.TinvestGateway.Contracts.Enums;
+using Vertr.OrderExecution.Contracts.Enums;
 
 namespace Vertr.TinvestGateway.Contracts;
 public record class PostOrderResponse

@@ -1,9 +1,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Vertr.OrderExecution.Contracts;
-using Vertr.OrderExecution.Converters;
+using Vertr.OrderExecution.Contracts.Requests;
 
-namespace Vertr.OrderExecution.Controllers;
+namespace Vertr.Server.Controllers;
+
 [Route("positions")]
 [ApiController]
 
@@ -19,59 +19,28 @@ public class OrdersController : ControllerBase
     [HttpPost("open")]
     public async Task<IActionResult> OpenPosition(OpenPositionRequest request)
     {
-        var openRequest = new Application.Commands.OpenPositionRequest
-        {
-            RequestId = request.RequestId,
-            InstrumentId = request.InstrumentId,
-            QtyLots = request.QtyLots,
-            PortfolioId = request.PortfolioId,
-        };
-
-        var response = await _mediator.Send(openRequest);
-        return Ok(response.Convert());
+        var response = await _mediator.Send(request);
+        return Ok(response);
     }
 
     [HttpPost("close")]
     public async Task<IActionResult> ClosePosition(ClosePositionRequest request)
     {
-        var closeRequest = new Application.Commands.ClosePositionRequest
-        {
-            RequestId = request.RequestId,
-            InstrumentId = request.InstrumentId,
-            PortfolioId = request.PortfolioId,
-        };
-
-        var response = await _mediator.Send(closeRequest);
-        return Ok(response.Convert());
+        var response = await _mediator.Send(request);
+        return Ok(response);
     }
 
-    [HttpPost("revert")]
-    public async Task<IActionResult> RevertPosition(RevertPositionRequest request)
+    [HttpPost("reverse")]
+    public async Task<IActionResult> RevertPosition(ReversePositionRequest request)
     {
-        var revertRequest = new Application.Commands.ReversePositionRequest
-        {
-            RequestId = request.RequestId,
-            InstrumentId = request.InstrumentId,
-            PortfolioId = request.PortfolioId,
-        };
-
-        var response = await _mediator.Send(revertRequest);
-        return Ok(response.Convert());
+        var response = await _mediator.Send(request);
+        return Ok(response);
     }
 
     [HttpPost()]
     public async Task<IActionResult> Porocess(TradingSignalRequest request)
     {
-        var signalRequest = new Application.Commands.TradingSignalRequest
-        {
-            RequestId = request.RequestId,
-            PortfolioId = request.PortfolioId,
-            InstrumentId = request.InstrumentId,
-            QtyLots = request.QtyLots,
-        };
-
-        var response = await _mediator.Send(signalRequest);
-        return Ok(response.Convert());
+        var response = await _mediator.Send(request);
+        return Ok(response);
     }
-
 }

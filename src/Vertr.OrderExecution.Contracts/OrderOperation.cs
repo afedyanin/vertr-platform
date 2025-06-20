@@ -1,5 +1,3 @@
-using Vertr.OrderExecution.Contracts.Enums;
-
 namespace Vertr.OrderExecution.Contracts;
 public record class OrderOperation
 {

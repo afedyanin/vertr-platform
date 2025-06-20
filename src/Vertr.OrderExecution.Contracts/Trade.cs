@@ -1,11 +1,12 @@
 namespace Vertr.OrderExecution.Contracts;
+
 public record class Trade
 {
-    public required string Id { get; init; }
+    public string TradeId { get; init; } = string.Empty;
 
-    public decimal Quantity { get; init; }
+    public DateTime ExecutionTime { get; init; }
 
     public decimal Price { get; init; }
 
-    public DateTime ExecutionTime { get; init; }
+    public long Quantity { get; init; }
 }

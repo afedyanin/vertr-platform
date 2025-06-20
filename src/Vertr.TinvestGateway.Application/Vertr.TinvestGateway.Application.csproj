@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.OrderExecution.Contracts\Vertr.OrderExecution.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.Contracts\Vertr.PortfolioManager.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.TinvestGateway.Contracts\Vertr.TinvestGateway.Contracts.csproj" />
   </ItemGroup>

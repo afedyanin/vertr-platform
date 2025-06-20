@@ -19,7 +19,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Adapters.DataAccess\Vertr.Adapters.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />
   </ItemGroup>

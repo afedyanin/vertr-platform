@@ -27,12 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.Adapters.DataAccess\Vertr.Adapters.DataAccess.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.Adapters.Prediction\Vertr.Adapters.Prediction.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.Application\Vertr.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 

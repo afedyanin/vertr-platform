@@ -17,4 +17,11 @@ internal class MarketDataService : IMarketDataService
 
     public Task<CandleSubscription[]> GetSubscriptions()
         => Task.FromResult(_settings.GetCandleSubscriptions());
+
+    public Task<Instrument?> GetInstrument(string instrumentId)
+    {
+        // TODO: Use Redis Cache or call TInvestGateway
+        throw new NotImplementedException();
+    }
+
 }

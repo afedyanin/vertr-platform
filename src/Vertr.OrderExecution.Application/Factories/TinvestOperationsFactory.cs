@@ -1,11 +1,10 @@
 using System.Diagnostics;
 using Vertr.OrderExecution.Contracts;
 using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.Enums;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
-public static class TinvestOperationsFactory
+internal static class TinvestOperationsFactory
 {
     public static OrderOperation[] CreateOperations(
         this PostOrderResponse response,
@@ -15,7 +14,7 @@ public static class TinvestOperationsFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = Contracts.Enums.OperationType.BrokerFee,
+            OperationType = Contracts.OperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = response.OrderId,
@@ -46,7 +45,7 @@ public static class TinvestOperationsFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = Contracts.Enums.OperationType.BrokerFee,
+            OperationType = Contracts.OperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = state.OrderId,
@@ -78,10 +77,10 @@ public static class TinvestOperationsFactory
         return [opTrades];
     }
 
-    private static Contracts.Trade[] Convert(this TinvestGateway.Contracts.Trade[] source)
+    private static Contracts.Trade[] Convert(this Trade[] source)
         => [.. source.Select(Convert)];
 
-    private static Contracts.Trade Convert(this TinvestGateway.Contracts.Trade source)
+    private static Contracts.Trade Convert(this Trade source)
         => new Contracts.Trade
         {
             Id = source.TradeId,
@@ -90,12 +89,12 @@ public static class TinvestOperationsFactory
             Quantity = source.Quantity,
         };
 
-    private static Contracts.Enums.OperationType ToOperationType(this OrderDirection direction)
+    private static Contracts.OperationType ToOperationType(this OrderDirection direction)
         => direction switch
         {
-            OrderDirection.Unspecified => Contracts.Enums.OperationType.Unspecified,
-            OrderDirection.Buy => Contracts.Enums.OperationType.Buy,
-            OrderDirection.Sell => Contracts.Enums.OperationType.Sell,
+            OrderDirection.Unspecified => Contracts.OperationType.Unspecified,
+            OrderDirection.Buy => Contracts.OperationType.Buy,
+            OrderDirection.Sell => Contracts.OperationType.Sell,
             _ => throw new NotImplementedException(),
         };
 }

@@ -3,10 +3,10 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
-using Vertr.TinvestGateway.Contracts.Requests;
 
 namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
@@ -42,7 +42,7 @@ public class OrderStateStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
             {
-                var orderStateRequest = new HandleOrderStateRequest
+                var orderStateRequest = new OrderStateRequest
                 {
                     OrderState = response.OrderState.Convert(),
                     AccountId = response.OrderState.AccountId,

@@ -6,7 +6,7 @@ using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
-public static class TinvestOrderEventFactory
+internal static class TinvestOrderEventFactory
 {
     private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
     {

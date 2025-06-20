@@ -41,36 +41,5 @@ public class OrderTradesConsumerService : ConsumerServiceBase
     }
     private async Task HandleOrderTradesMessage(ConsumeResult<string, OrderTrades> result, CancellationToken token)
     {
-        var response = result.Message.Value;
-        Logger.LogDebug($"OrderTrades received: {response}");
-
-        var portfolioId = await OrderEventRepository.GetPortfolioIdByOrderId(response.OrderId);
-
-        if (portfolioId == null)
-        {
-            // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
-            Logger.LogWarning($"Cannot get portfolio identity for OrderId={response.OrderId}. Using OrderTrades.AccountId");
-
-            if (string.IsNullOrEmpty(response.AccountId))
-            {
-                Logger.LogWarning($"Cannot get AccountId for OrderId={response.OrderId}. OrderTrades.AccountId is empty. Skipping message.");
-                return;
-            }
-
-            portfolioId = new Contracts.PortfolioIdentity(response.AccountId);
-        }
-
-        var orderEvent = response.CreateEvent(portfolioId);
-        var saved = await OrderEventRepository.Save(orderEvent);
-
-        if (!saved)
-        {
-            Logger.LogWarning($"Cannot save OrderTrades event for OrderId={orderEvent.OrderId}");
-        }
-
-        var operations = response.CreateOperations(portfolioId);
-
-        Logger.LogDebug($"Publish OrderTrades operations for OrderId={response.OrderId}");
-        await OperationsPublisher.Publish(operations);
     }
 }

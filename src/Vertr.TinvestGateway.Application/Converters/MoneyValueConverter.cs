@@ -23,7 +23,7 @@ internal static class MoneyValueConverter
         => new Money(source, source.Currency);
 
     public static Money[] Convert(this MoneyValue[] source)
-        => source.Select(Convert).ToArray();
+        => [.. source.Select(Convert)];
 
     internal static Google.Type.Money ToGoogleType(Money money)
         => new Google.Type.Money

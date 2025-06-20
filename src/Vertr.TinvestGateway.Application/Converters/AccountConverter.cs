@@ -15,5 +15,5 @@ internal static class AccountConverter
             tAccount.ClosedDate?.ToDateTime());
 
     public static Account[] ToAccounts(this Tinkoff.InvestApi.V1.Account[] tAccounts)
-        => tAccounts.Select(ToAccount).ToArray();
+        => [.. tAccounts.Select(ToAccount)];
 }

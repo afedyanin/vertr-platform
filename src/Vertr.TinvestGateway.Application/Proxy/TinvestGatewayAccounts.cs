@@ -1,9 +1,7 @@
-using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Tinkoff.InvestApi.V1;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.TinvestGateway.Application.Converters;
-using Vertr.TinvestGateway.Application.Settings;
 using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Application.Proxy;

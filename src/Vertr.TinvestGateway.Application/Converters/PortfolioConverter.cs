@@ -1,4 +1,4 @@
-using Vertr.TinvestGateway.Contracts;
+using Vertr.OrderExecution.Contracts;
 
 namespace Vertr.TinvestGateway.Application.Converters;
 

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Grpc.Core;
 using MediatR;
 using Microsoft.Extensions.Hosting;

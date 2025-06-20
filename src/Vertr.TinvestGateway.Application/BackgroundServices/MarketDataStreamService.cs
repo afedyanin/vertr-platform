@@ -17,8 +17,8 @@ public class MarketDataStreamService : StreamServiceBase
     private readonly IMarketDataService _marketDataService;
     private readonly ITinvestGatewayMarketData _tinvestGatewayMarketData;
 
-    private readonly Dictionary<string, Instrument> _instruments = new Dictionary<string, Instrument>();
-    private readonly Dictionary<string, CandleInterval> _intervals = new Dictionary<string, CandleInterval>();
+    private readonly Dictionary<string, Instrument> _instruments = [];
+    private readonly Dictionary<string, CandleInterval> _intervals = [];
 
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 

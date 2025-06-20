@@ -1,4 +1,4 @@
-namespace Vertr.OrderExecution.Contracts;
+namespace Vertr.PortfolioManager.Contracts;
 
 public record class Position(
     string PositionId,

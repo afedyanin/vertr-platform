@@ -5,7 +5,7 @@ using Vertr.Infrastructure.Kafka;
 using Vertr.Infrastructure.Kafka.Abstractions;
 using Vertr.PortfolioManager.Application.Abstractions;
 using Vertr.PortfolioManager.Application.Converters;
-using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.BackgroundServices;
 

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.Application.Converters;
 public static class TinvestPortfolioResponseConverter
@@ -10,7 +11,7 @@ public static class TinvestPortfolioResponseConverter
     };
 
     public static PortfolioSnapshot? Convert(
-        this OrderExecution.Contracts.PortfolioResponse? source,
+        this PortfolioResponse? source,
         Guid? bookId)
     {
         if (source == null)

@@ -1,6 +1,7 @@
 using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
 using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Contracts.Interfaces;
 

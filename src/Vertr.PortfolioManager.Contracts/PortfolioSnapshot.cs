@@ -3,5 +3,5 @@ public record class PortfolioSnapshot(
     string AccountId,
     Guid? BookId,
     DateTime UpdatedAt,
-    PortfolioPosition[] Positions
+    Position[] Positions
     );

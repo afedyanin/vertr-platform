@@ -1,4 +1,5 @@
-namespace Vertr.OrderExecution.Contracts;
+namespace Vertr.PortfolioManager.Contracts;
+
 public record class PortfolioResponse
 {
     public string AccountId { get; init; } = string.Empty;

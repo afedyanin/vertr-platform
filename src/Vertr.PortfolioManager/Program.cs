@@ -4,7 +4,7 @@ using Vertr.Infrastructure.Kafka;
 using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.BackgroundServices;
 using Vertr.PortfolioManager.DataAccess;
-using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager;
 

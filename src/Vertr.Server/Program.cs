@@ -1,3 +1,5 @@
+using Vertr.TinvestGateway.Application;
+
 namespace Vertr.Server;
 
 public class Program
@@ -6,6 +8,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         var configuration = builder.Configuration;
+
+        builder.Services.AddTinvestGateway();
+
         var app = builder.Build();
 
         app.Run();

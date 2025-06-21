@@ -1,0 +1,6 @@
+@Vertr.Platform.Host_HostAddress = http://localhost:5228
+
+GET {{Vertr.Platform.Host_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

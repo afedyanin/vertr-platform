@@ -9,6 +9,4 @@ public class PortfolioPosition
     public Guid InstrumentId { get; set; }
 
     public decimal Balance { get; set; }
-
-    public required PortfolioSnapshot PortfolioSnapshot { get; set; }
 }

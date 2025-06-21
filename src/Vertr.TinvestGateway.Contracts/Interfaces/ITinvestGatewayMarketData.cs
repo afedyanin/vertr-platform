@@ -11,7 +11,8 @@ public interface ITinvestGatewayMarketData
     public Task<Instrument?> GetInstrumentById(string instumentId);
 
     public Task<Candle[]?> GetCandles(
-        string ticker, string classCode,
+        string classCode,
+        string ticker,
         CandleInterval interval,
         DateTime from,
         DateTime to,

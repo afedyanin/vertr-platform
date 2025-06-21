@@ -32,7 +32,7 @@ internal static class PortfolioConverter
             JsonDataType = response.GetType().FullName,
         };
 
-        res.Positions = response.Positions.Convert(res);
+        res.Positions = response.Positions.Convert(res.Id);
 
         return res;
     }
@@ -55,18 +55,17 @@ internal static class PortfolioConverter
 
     private static PortfolioPosition Convert(
         this Position source,
-        PortfolioSnapshot parent)
+        Guid parentSnapshotId)
         => new PortfolioPosition
         {
             Id = Guid.NewGuid(),
-            PortfolioSnapshotId = parent.Id,
+            PortfolioSnapshotId = parentSnapshotId,
             Balance = source.Balance,
             InstrumentId = new Guid(source.InstrumentId),
-            PortfolioSnapshot = parent
         };
 
     private static PortfolioPosition[] Convert(
         this Position[] source,
-        PortfolioSnapshot parent)
-        => [.. source.Select(t => t.Convert(parent))];
+        Guid parentSnapshotId)
+        => [.. source.Select(t => t.Convert(parentSnapshotId))];
 }

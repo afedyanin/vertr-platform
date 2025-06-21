@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Vertr.MarketData.Contracts;
 using Vertr.TinvestGateway.Contracts;
 using Vertr.TinvestGateway.Contracts.Interfaces;
 
@@ -78,5 +79,60 @@ public class TinvestController : ControllerBase
     {
         var portfolio = await _tinvestGatewayAccounts.GetPortfolio(accountId, bookId);
         return Ok(portfolio);
+    }
+
+    [HttpGet("instrument-by-ticker/{classCode}/{ticker}")]
+    public async Task<IActionResult> GetInstrumentByTicker(string classCode, string ticker)
+    {
+        var instrument = await _tinvestGatewayMarketData.GetInstrumentByTicker(ticker, classCode);
+        return Ok(instrument);
+    }
+
+    [HttpGet("instrument-by-id/{instrumentId}")]
+    public async Task<IActionResult> GetInstrumentById(string instrumentId)
+    {
+        var instrument = await _tinvestGatewayMarketData.GetInstrumentById(instrumentId);
+        return Ok(instrument);
+    }
+
+    [HttpGet("instrument-find/{query}")]
+    public async Task<IActionResult> FindInstrument(string query)
+    {
+        var instruments = await _tinvestGatewayMarketData.FindInstrument(query);
+        return Ok(instruments);
+    }
+
+    [HttpGet("candles/{classCode}/{ticker}/{interval}")]
+    public async Task<IActionResult> GetCandles(
+        string classCode,
+        string ticker,
+        CandleInterval interval,
+        DateTime from,
+        DateTime to,
+        int? limit = 100)
+    {
+        var candles = await _tinvestGatewayMarketData.GetCandles(classCode, ticker, interval, from, to, limit);
+        return Ok(candles);
+    }
+
+    [HttpPost("order")]
+    public async Task<IActionResult> PostOrder(PostOrderRequest request)
+    {
+        var response = await _tinvestGatewayOrders.PostOrder(request);
+        return Ok(response);
+    }
+
+    [HttpGet("order-state/{accountId}/{orderId}")]
+    public async Task<IActionResult> GetOrderState(string accountId, string orderId)
+    {
+        var orderState = await _tinvestGatewayOrders.GetOrderState(accountId, orderId);
+        return Ok(orderState);
+    }
+
+    [HttpDelete("order/{accountId}/{orderId}")]
+    public async Task<IActionResult> CancelOrder(string accountId, string orderId)
+    {
+        var date = await _tinvestGatewayOrders.CancelOrder(accountId, orderId);
+        return Ok(date);
     }
 }

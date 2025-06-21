@@ -54,8 +54,8 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
     }
 
     public async Task<Candle[]?> GetCandles(
-        string ticker,
         string classCode,
+        string ticker,
         CandleInterval interval,
         DateTime from,
         DateTime to,

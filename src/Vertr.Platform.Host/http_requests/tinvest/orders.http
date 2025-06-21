@@ -1,0 +1,42 @@
+@base_address = https://localhost:7085
+
+@account_id = f7c33024-67bc-428e-a149-e916e87e79ad
+@sber_id = e6123145-9665-43e0-8413-cd61b8aa9b13
+
+## Buy, Sell
+@order_direction = Buy
+## Limit, Market, Bestprice
+@order_type = Limit
+## Unspecified, Day, FillAndKill, FillOrKill
+@time_in_force = Day
+## Unspecified, Point, Currency
+@price_type = Unspecified
+
+### Новая заявка
+
+POST {{base_address}}/tinvest/order
+Accept: application/json
+Content-Type: application/json
+
+{
+  "accountId": "{{account_id}}",
+  "instrumentId": "{{sber_id}}",
+  "requestId": "3fa85f65-5717-4562-b3fc-2c963f66afa6",
+  "orderDirection": "{{order_direction}}",
+  "orderType": "{{order_type}}",
+  "timeInForceType": "{{time_in_force}}",
+  "priceType": "{{price_type}}",
+  "price": 315,
+  "quantityLots": 1
+}
+
+### Статус заявки
+@order_id = e026b663-4371-42ab-9434-bd1ed4c631d8
+
+GET {{base_address}}/tinvest/order-state/{{account_id}}/{{order_id}}
+Accept: application/json
+
+
+### Снять заявку
+DELETE {{base_address}}/tinvest/order/{{account_id}}/{{order_id}}
+Accept: application/json

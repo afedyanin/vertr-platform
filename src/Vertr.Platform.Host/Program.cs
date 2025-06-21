@@ -16,8 +16,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        var configuration = builder.Configuration;
+
         // Add modules
-        builder.Services.AddTinvestGateway();
+        builder.Services.AddTinvestGateway(configuration);
 
         var app = builder.Build();
 

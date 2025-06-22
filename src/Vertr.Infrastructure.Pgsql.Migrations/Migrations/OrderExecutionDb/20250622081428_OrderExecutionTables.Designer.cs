@@ -12,7 +12,7 @@ using Vertr.OrderExecution.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
 {
     [DbContext(typeof(OrderExecutionDbContext))]
-    [Migration("20250517215145_OrderExecutionTables")]
+    [Migration("20250622081428_OrderExecutionTables")]
     partial class OrderExecutionTables
     {
         /// <inheritdoc />

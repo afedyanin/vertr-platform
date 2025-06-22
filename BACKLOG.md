@@ -7,7 +7,10 @@
 
 ## Orders
 
-- ...
+- Orders controller
+- DAL Order Events
+- постинг ордера - сохранение евентов в БД
+
 
 # 2025-06-18
 

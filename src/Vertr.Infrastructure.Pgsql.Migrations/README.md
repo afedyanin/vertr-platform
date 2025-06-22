@@ -6,6 +6,20 @@
 dotnet tool install --global dotnet-ef
 ```
 
+## Run OrderExecution tablse migration 
+
+### Create migration
+
+```shell
+dotnet ef migrations add OrderExecutionTables --context  OrderExecutionDbContext
+```
+
+### Run migration
+
+```shell
+dotnet ef database update --context OrderExecutionDbContext
+```
+
 ## Run PortfolioManager tables migration
 
 ### Create migration
@@ -20,17 +34,3 @@ dotnet ef migrations add PortfolioTables --context PortfolioDbContext
 dotnet ef database update --context PortfolioDbContext
 ```
 
-
-## Run OrderExecution tablse migration 
-
-### Create migration
-
-```shell
-dotnet ef migrations add OrderExecutionTables --context  OrderExecutionDbContext
-```
-
-### Run migration
-
-```shell
-dotnet ef database update --context OrderExecutionDbContext
-```

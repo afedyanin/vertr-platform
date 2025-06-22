@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.MarketData.Application\Vertr.MarketData.Application.csproj" />
+    <ProjectReference Include="..\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.TinvestGateway.Application\Vertr.TinvestGateway.Application.csproj" />
   </ItemGroup>
 

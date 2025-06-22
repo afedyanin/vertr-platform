@@ -35,4 +35,26 @@ internal class OperationEventRepository : RepositoryBase, IOperationEventReposit
 
         return savedRecords > 0;
     }
+
+    public async Task<int> DeleteByAccountId(string accountId)
+    {
+        using var context = await GetDbContext();
+
+        var count = await context.Operations
+            .Where(s => s.AccountId == accountId)
+            .ExecuteDeleteAsync();
+
+        return count;
+    }
+
+    public async Task<int> DeleteByBookId(Guid bookId)
+    {
+        using var context = await GetDbContext();
+
+        var count = await context.Operations
+            .Where(s => s.BookId == bookId)
+            .ExecuteDeleteAsync();
+
+        return count;
+    }
 }

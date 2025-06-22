@@ -9,4 +9,6 @@ public interface IPortfolioManager
     public Task<PortfolioSnapshot[]> GetPortfolioHistory(string accountId, Guid? bookId = null, int maxRecords = 100);
 
     public Task<PortfolioSnapshot?> MakeSnapshot(string accountId, Guid? bookId = null);
+
+    public Task Delete(string accountId, Guid? bookId = null);
 }

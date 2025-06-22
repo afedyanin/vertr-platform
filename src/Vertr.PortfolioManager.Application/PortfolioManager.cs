@@ -16,13 +16,16 @@ internal class PortfolioManager : IPortfolioManager
         ];
 
     private readonly IPortfolioSnapshotRepository _portfolioSnapshotRepository;
+    private readonly IOperationEventRepository _operationEventRepository;
     private readonly ITinvestGatewayAccounts _tinvestGateway;
 
     public PortfolioManager(
         IPortfolioSnapshotRepository portfolioSnapshotRepository,
+        IOperationEventRepository operationEventRepository,
         ITinvestGatewayAccounts tinvestGateway)
     {
         _portfolioSnapshotRepository = portfolioSnapshotRepository;
+        _operationEventRepository = operationEventRepository;
         _tinvestGateway = tinvestGateway;
     }
 
@@ -45,5 +48,19 @@ internal class PortfolioManager : IPortfolioManager
         }
 
         return snapshot;
+    }
+
+    public async Task Delete(string accountId, Guid? bookId = null)
+    {
+        if (bookId != null)
+        {
+            _ = await _operationEventRepository.DeleteByBookId(bookId.Value);
+            _ = await _portfolioSnapshotRepository.DeleteByBookId(bookId.Value);
+
+            return;
+        }
+
+        _ = await _operationEventRepository.DeleteByAccountId(accountId);
+        _ = await _portfolioSnapshotRepository.DeleteByAccountId(accountId);
     }
 }

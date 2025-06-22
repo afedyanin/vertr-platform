@@ -1,5 +1,6 @@
 
 using System.Text.Json.Serialization;
+using Vertr.MarketData.Application;
 using Vertr.TinvestGateway.Application;
 
 namespace Vertr.Platform.Host;
@@ -10,14 +11,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         builder.Services
             .AddControllers()
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
@@ -25,10 +23,10 @@ public class Program
 
         // Add modules
         builder.Services.AddTinvestGateway(configuration);
+        builder.Services.AddMarketData();
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

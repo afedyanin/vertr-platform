@@ -13,7 +13,7 @@ namespace Vertr.TinvestGateway.Application.BackgroundServices;
 public class PortfolioStreamService : StreamServiceBase
 {
     private readonly IPortfolioManager _portfolioManager;
-    protected override bool IsEnabled => TinvestSettings.PositionStreamEnabled;
+    protected override bool IsEnabled => TinvestSettings.PortfolioStreamEnabled;
 
     public PortfolioStreamService(
         IPortfolioManager portfolioManager,

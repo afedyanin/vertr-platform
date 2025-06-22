@@ -5,11 +5,9 @@ public class TinvestSettings
 {
     public InvestApiSettings? InvestApiSettings { get; set; }
 
-    public bool PositionStreamEnabled { get; set; }
-
     public bool PortfolioStreamEnabled { get; set; }
 
-    public bool OrderTradeStreamEnabled { get; set; }
+    public bool OrderTradesStreamEnabled { get; set; }
 
     public bool OrderStateStreamEnabled { get; set; }
 

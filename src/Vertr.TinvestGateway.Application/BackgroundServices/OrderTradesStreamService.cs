@@ -14,7 +14,7 @@ public class OrderTradesStreamService : StreamServiceBase
 {
     private readonly IPortfolioManager _portfolioManager;
 
-    protected override bool IsEnabled => TinvestSettings.OrderTradeStreamEnabled;
+    protected override bool IsEnabled => TinvestSettings.OrderTradesStreamEnabled;
 
     public OrderTradesStreamService(
         IPortfolioManager portfolioManager,

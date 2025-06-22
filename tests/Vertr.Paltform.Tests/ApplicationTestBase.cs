@@ -43,6 +43,8 @@ public abstract class ApplicationTestBase
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
         _configuration = configurationBuilder.Build();
+        services.AddSingleton(_ => _configuration);
+
         var connectionString = _configuration.GetConnectionString(_connStringName);
 
         services.AddTinvestGateway(_configuration);

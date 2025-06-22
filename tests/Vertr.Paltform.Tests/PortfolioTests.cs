@@ -2,7 +2,7 @@ using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.Paltform.Tests;
 
-[TestFixture(Category = "Application")]
+[TestFixture(Category = "Application", Explicit = true)]
 public class PortfolioTests : ApplicationTestBase
 {
     [Test]

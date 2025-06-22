@@ -1,0 +1,66 @@
+@base_address = https://localhost:7085
+
+@account_id = f7c33024-67bc-428e-a149-e916e87e79ad
+@sber_id = e6123145-9665-43e0-8413-cd61b8aa9b13
+@book_id = 3fa85f64-5717-4562-b3fc-2c963f66afa6
+
+### Исполнить рыночный ордер
+POST {{base_address}}/orders/execute
+Accept: application/json
+Content-Type: application/json
+
+{
+  "requestId": "{{$guid}}",
+  "instrumentId": "{{sber_id}}",
+  "qtyLots": 3,
+  "portfolioId": {
+    "accountId": "{{account_id}}",
+    "bookId": "{{book_id}}"
+  }
+}
+
+### Открыть позицию
+POST {{base_address}}/orders/open
+Accept: application/json
+Content-Type: application/json
+
+{
+  "requestId": "{{$guid}}",
+  "instrumentId": "{{sber_id}}",
+  "qtyLots": 3,
+  "portfolioId": {
+    "accountId": "{{account_id}}",
+    "bookId": "{{book_id}}"
+  }
+}
+
+### Закрыть позицию
+POST {{base_address}}/orders/close
+Accept: application/json
+Content-Type: application/json
+
+{
+  "requestId": "{{$guid}}",
+  "instrumentId": "{{sber_id}}",
+  "portfolioId": {
+    "accountId": "{{account_id}}",
+    "bookId": "{{book_id}}"
+  }
+}
+
+### Развернуть позицию
+POST {{base_address}}/orders/reverse
+Accept: application/json
+Content-Type: application/json
+
+{
+  "requestId": "{{$guid}}",
+  "instrumentId": "{{sber_id}}",
+  "portfolioId": {
+    "accountId": "{{account_id}}",
+    "bookId": "{{book_id}}"
+  }
+}
+
+
+

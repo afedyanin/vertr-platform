@@ -3,7 +3,7 @@ using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Contracts.Interfaces;
 
-namespace Vertr.PortfolioManager.Application.Internal;
+namespace Vertr.PortfolioManager.Application;
 
 internal class PortfolioManager : IPortfolioManager
 {

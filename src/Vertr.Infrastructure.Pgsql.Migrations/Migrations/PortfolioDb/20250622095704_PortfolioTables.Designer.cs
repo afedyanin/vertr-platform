@@ -12,8 +12,8 @@ using Vertr.PortfolioManager.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     [DbContext(typeof(PortfolioDbContext))]
-    [Migration("20250518074613_PortfolioTablesV3")]
-    partial class PortfolioTablesV3
+    [Migration("20250622095704_PortfolioTables")]
+    partial class PortfolioTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                     b.ToTable("operation_events", (string)null);
                 });
 
-            modelBuilder.Entity("Vertr.PortfolioManager.Application.Entities.PortfolioPosition", b =>
+            modelBuilder.Entity("Vertr.PortfolioManager.Contracts.PortfolioPosition", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -86,7 +86,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                     b.ToTable("portfolio_positions", (string)null);
                 });
 
-            modelBuilder.Entity("Vertr.PortfolioManager.Application.Entities.PortfolioSnapshot", b =>
+            modelBuilder.Entity("Vertr.PortfolioManager.Contracts.PortfolioSnapshot", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -120,19 +120,17 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                     b.ToTable("portfolio_snapshots", (string)null);
                 });
 
-            modelBuilder.Entity("Vertr.PortfolioManager.Application.Entities.PortfolioPosition", b =>
+            modelBuilder.Entity("Vertr.PortfolioManager.Contracts.PortfolioPosition", b =>
                 {
-                    b.HasOne("Vertr.PortfolioManager.Application.Entities.PortfolioSnapshot", "PortfolioSnapshot")
+                    b.HasOne("Vertr.PortfolioManager.Contracts.PortfolioSnapshot", null)
                         .WithMany("Positions")
                         .HasForeignKey("PortfolioSnapshotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("portfolio_position_snapshot_fk");
-
-                    b.Navigation("PortfolioSnapshot");
                 });
 
-            modelBuilder.Entity("Vertr.PortfolioManager.Application.Entities.PortfolioSnapshot", b =>
+            modelBuilder.Entity("Vertr.PortfolioManager.Contracts.PortfolioSnapshot", b =>
                 {
                     b.Navigation("Positions");
                 });

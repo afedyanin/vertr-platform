@@ -12,11 +12,28 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "operation_events",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    account_id = table.Column<string>(type: "text", nullable: false),
+                    book_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    json_data = table.Column<string>(type: "json", nullable: true),
+                    json_data_type = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("operation_events_pkey", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "portfolio_snapshots",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     account_id = table.Column<string>(type: "text", nullable: false),
+                    book_id = table.Column<Guid>(type: "uuid", nullable: true),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     json_data = table.Column<string>(type: "json", nullable: true),
                     json_data_type = table.Column<string>(type: "text", nullable: true)
@@ -55,6 +72,9 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "operation_events");
+
             migrationBuilder.DropTable(
                 name: "portfolio_positions");
 

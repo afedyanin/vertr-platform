@@ -56,7 +56,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                     b.ToTable("operation_events", (string)null);
                 });
 
-            modelBuilder.Entity("Vertr.PortfolioManager.Application.Entities.PortfolioPosition", b =>
+            modelBuilder.Entity("Vertr.PortfolioManager.Contracts.PortfolioPosition", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +83,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                     b.ToTable("portfolio_positions", (string)null);
                 });
 
-            modelBuilder.Entity("Vertr.PortfolioManager.Application.Entities.PortfolioSnapshot", b =>
+            modelBuilder.Entity("Vertr.PortfolioManager.Contracts.PortfolioSnapshot", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -117,19 +117,17 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                     b.ToTable("portfolio_snapshots", (string)null);
                 });
 
-            modelBuilder.Entity("Vertr.PortfolioManager.Application.Entities.PortfolioPosition", b =>
+            modelBuilder.Entity("Vertr.PortfolioManager.Contracts.PortfolioPosition", b =>
                 {
-                    b.HasOne("Vertr.PortfolioManager.Application.Entities.PortfolioSnapshot", "PortfolioSnapshot")
+                    b.HasOne("Vertr.PortfolioManager.Contracts.PortfolioSnapshot", null)
                         .WithMany("Positions")
                         .HasForeignKey("PortfolioSnapshotId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("portfolio_position_snapshot_fk");
-
-                    b.Navigation("PortfolioSnapshot");
                 });
 
-            modelBuilder.Entity("Vertr.PortfolioManager.Application.Entities.PortfolioSnapshot", b =>
+            modelBuilder.Entity("Vertr.PortfolioManager.Contracts.PortfolioSnapshot", b =>
                 {
                     b.Navigation("Positions");
                 });

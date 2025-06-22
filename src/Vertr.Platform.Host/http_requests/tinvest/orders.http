@@ -21,7 +21,7 @@ Content-Type: application/json
 {
   "accountId": "{{account_id}}",
   "instrumentId": "{{sber_id}}",
-  "requestId": "3fa85f65-5717-4562-b3fc-2c963f66afa6",
+  "requestId": "{{$guid}}",
   "orderDirection": "{{order_direction}}",
   "orderType": "{{order_type}}",
   "timeInForceType": "{{time_in_force}}",

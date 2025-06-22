@@ -3,6 +3,8 @@ using System.Text.Json.Serialization;
 using Vertr.MarketData.Application;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.DataAccess;
+using Vertr.PortfolioManager.Application;
+using Vertr.PortfolioManager.DataAccess;
 using Vertr.TinvestGateway.Application;
 
 namespace Vertr.Platform.Host;
@@ -29,7 +31,9 @@ public class Program
         builder.Services.AddTinvestGateway(configuration);
         builder.Services.AddMarketData();
         builder.Services.AddOrderExecution();
-        builder.Services.AddOrderExecutionDataAccess(connectionString);
+        builder.Services.AddOrderExecutionDataAccess(connectionString!);
+        builder.Services.AddPortfolioManager();
+        builder.Services.AddPortfolioManagerDataAccess(connectionString!);
 
         var app = builder.Build();
 

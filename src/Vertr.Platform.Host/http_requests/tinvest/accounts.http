@@ -14,31 +14,31 @@ POST {{base_address}}/tinvest/sandbox-account?accountName={{account_name}}
 Accept: text/plain
 Content-Type: application/json
 
+### @account_id = {{account.response.body.*}}
+@account_id = f7c33024-67bc-428e-a149-e916e87e79ad
+
 ### Депозит
 @depo_amount = 50000
 @depo_currency = RUB
-PUT {{base_address}}/tinvest/sandbox-account/{{account.response.body.*}}?amount={{depo_amount}}&currency={{depo_currency}}
+PUT {{base_address}}/tinvest/sandbox-account/{{account_id}}?amount={{depo_amount}}&currency={{depo_currency}}
 Accept: application/json
 Content-Type: application/json
 
 ### Список операций
-GET {{base_address}}/tinvest/operations/{{account.response.body.*}}
+GET {{base_address}}/tinvest/operations/{{account_id}}
 Accept: application/json
 
 ### Позиции
-#GET {{base_address}}/tinvest/positions/{{account.response.body.*}}
-GET {{base_address}}/tinvest/positions/f7c33024-67bc-428e-a149-e916e87e79ad
+GET {{base_address}}/tinvest/positions/{{account_id}}
 Accept: application/json
 
 ### Портфолио
-#GET {{base_address}}/tinvest/portfolio/{{account.response.body.*}}
-GET {{base_address}}/tinvest/portfolio/f7c33024-67bc-428e-a149-e916e87e79ad
+GET {{base_address}}/tinvest/portfolio/{{account_id}}
 Accept: application/json
 
 
 ### Удалить акаунт
-DELETE {{base_address}}/tinvest/sandbox-account/{{account.response.body.*}}
-#DELETE {{base_address}}/tinvest/sandbox-account/2e387051-b810-430a-9ae4-49ec95ec301c
+DELETE {{base_address}}/tinvest/sandbox-account/{{account_id}}
 Accept: application/json
 
 

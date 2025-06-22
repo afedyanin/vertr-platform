@@ -34,10 +34,10 @@ internal class PortfolioSnapshotEntityConfiguration : IEntityTypeConfiguration<P
             .HasColumnName("json_data")
             .HasColumnType("json");
 
-        // TODO Fix it
-        //builder.HasMany(e => e.Positions)
-            //.WithOne(p => p.PortfolioSnapshot)
-            //.HasForeignKey(e => e.PortfolioSnapshotId)
-            //.HasConstraintName("portfolio_position_snapshot_fk");
+        builder.HasMany(e => e.Positions)
+        .WithOne()
+        .HasForeignKey(e => e.PortfolioSnapshotId)
+        .HasConstraintName("portfolio_position_snapshot_fk")
+        .IsRequired();
     }
 }

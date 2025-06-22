@@ -8,7 +8,5 @@ public class ReversePositionRequest : IRequest<ExecuteOrderResponse>
 
     public Guid InstrumentId { get; init; }
 
-    public long QtyLots { get; init; }
-
     public required PortfolioIdentity PortfolioId { get; init; }
 }

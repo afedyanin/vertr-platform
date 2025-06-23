@@ -9,7 +9,7 @@ internal static class OperationEventExtensions
         WriteIndented = true,
     };
 
-    public static OperationEvent Convert(this OrderExecution.Contracts.OrderOperation source)
+    public static OperationEvent Convert(this OrderExecution.Contracts.TradeOperation source)
         => new OperationEvent
         {
             AccountId = source.AccountId,
@@ -20,6 +20,6 @@ internal static class OperationEventExtensions
             JsonDataType = source.GetType().FullName,
         };
 
-    public static OperationEvent[] Convert(this OrderExecution.Contracts.OrderOperation[] source)
+    public static OperationEvent[] Convert(this OrderExecution.Contracts.TradeOperation[] source)
         => [.. source.Select(Convert)];
 }

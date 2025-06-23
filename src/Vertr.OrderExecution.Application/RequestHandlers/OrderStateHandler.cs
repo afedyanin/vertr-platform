@@ -55,12 +55,12 @@ internal class OrderStateHandler : IRequestHandler<OrderStateRequest>
 
         var operations = orderState.CreateOperations(portfolioId);
 
-        var orderOperationsRequest = new OrderOperationsRequest
+        var tradeOperationsRequest = new TradeOperationsRequest
         {
             Operations = operations,
         };
 
         _logger.LogDebug($"Publish OrderState operations for OrderId={orderState.OrderId}");
-        await _mediator.Send(orderOperationsRequest, cancellationToken);
+        await _mediator.Send(tradeOperationsRequest, cancellationToken);
     }
 }

@@ -6,20 +6,20 @@ using Vertr.PortfolioManager.Contracts.Requests;
 
 namespace Vertr.PortfolioManager.Application.RequestHandlers;
 
-internal class OrderOperationHandler : IRequestHandler<OrderOperationsRequest>
+internal class TradeOperationsHandler : IRequestHandler<TradeOperationsRequest>
 {
     private readonly IOperationEventRepository _operationEventRepository;
-    private readonly ILogger<OrderOperationHandler> _logger;
+    private readonly ILogger<TradeOperationsHandler> _logger;
 
-    public OrderOperationHandler(
+    public TradeOperationsHandler(
         IOperationEventRepository operationEventRepository,
-        ILogger<OrderOperationHandler> logger)
+        ILogger<TradeOperationsHandler> logger)
     {
         _operationEventRepository = operationEventRepository;
         _logger = logger;
     }
 
-    public async Task Handle(OrderOperationsRequest request, CancellationToken cancellationToken)
+    public async Task Handle(TradeOperationsRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Order operations received.");
 

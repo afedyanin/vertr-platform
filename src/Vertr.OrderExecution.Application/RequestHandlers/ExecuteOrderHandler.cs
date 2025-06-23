@@ -93,15 +93,15 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
 
-        var orderOperations = response.CreateOperations(portfolioId);
+        var tradeOperations = response.CreateOperations(portfolioId);
 
-        var orderOperationsRequest = new OrderOperationsRequest
+        var tradeOperationsRequest = new TradeOperationsRequest
         {
-            Operations = orderOperations,
+            Operations = tradeOperations,
         };
 
         _logger.LogDebug($"Publish ExecuteOrder operations for OrderId={response.OrderId}");
-        await _mediator.Send(orderOperationsRequest, cancellationToken);
+        await _mediator.Send(tradeOperationsRequest, cancellationToken);
 
         return response.OrderId;
     }

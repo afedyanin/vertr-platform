@@ -8,15 +8,15 @@ namespace Vertr.OrderExecution.Application.Factories;
 
 internal static class TinvestOperationsFactory
 {
-    public static OrderOperation[] CreateOperations(
+    public static TradeOperation[] CreateOperations(
         this PostOrderResponse response,
         PortfolioIdentity portfolioId)
     {
-        var opCommission = new OrderOperation
+        var opCommission = new TradeOperation
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = OrderOperationType.BrokerFee,
+            OperationType = TradeOperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = response.OrderId,
@@ -27,11 +27,11 @@ internal static class TinvestOperationsFactory
         return [opCommission];
     }
 
-    public static OrderOperation[] CreateOperations(
+    public static TradeOperation[] CreateOperations(
         this OrderState state,
         PortfolioIdentity portfolioId)
     {
-        var opTrades = new OrderOperation
+        var opTrades = new TradeOperation
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
@@ -43,11 +43,11 @@ internal static class TinvestOperationsFactory
             Trades = state.OrderStages
         };
 
-        var opCommission = new OrderOperation
+        var opCommission = new TradeOperation
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            OperationType = OrderOperationType.BrokerFee,
+            OperationType = TradeOperationType.BrokerFee,
             BookId = portfolioId.BookId,
             AccountId = portfolioId.AccountId,
             OrderId = state.OrderId,
@@ -58,13 +58,13 @@ internal static class TinvestOperationsFactory
         return [opTrades, opCommission];
     }
 
-    public static OrderOperation[] CreateOperations(
+    public static TradeOperation[] CreateOperations(
         this OrderTrades trades,
         PortfolioIdentity portfolioId)
     {
         Debug.Assert(trades.AccountId == portfolioId.AccountId);
 
-        var opTrades = new OrderOperation
+        var opTrades = new TradeOperation
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
@@ -79,12 +79,12 @@ internal static class TinvestOperationsFactory
         return [opTrades];
     }
 
-    private static OrderOperationType ToOperationType(this OrderDirection direction)
+    private static TradeOperationType ToOperationType(this OrderDirection direction)
         => direction switch
         {
-            OrderDirection.Unspecified => OrderOperationType.Unspecified,
-            OrderDirection.Buy => OrderOperationType.Buy,
-            OrderDirection.Sell => OrderOperationType.Sell,
+            OrderDirection.Unspecified => TradeOperationType.Unspecified,
+            OrderDirection.Buy => TradeOperationType.Buy,
+            OrderDirection.Sell => TradeOperationType.Sell,
             _ => throw new NotImplementedException(),
         };
 }

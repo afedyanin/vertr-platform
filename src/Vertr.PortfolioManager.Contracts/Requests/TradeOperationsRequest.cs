@@ -2,7 +2,7 @@ using MediatR;
 using Vertr.OrderExecution.Contracts;
 
 namespace Vertr.PortfolioManager.Contracts.Requests;
-public class OrderOperationsRequest : IRequest
+public class TradeOperationsRequest : IRequest
 {
-    public OrderOperation[]? Operations { get; init; }
+    public TradeOperation[]? Operations { get; init; }
 }

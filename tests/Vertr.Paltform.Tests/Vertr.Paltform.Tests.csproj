@@ -10,14 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
@@ -28,10 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.MarketData.Application\Vertr.MarketData.Application.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.TinvestGateway.Application\Vertr.TinvestGateway.Application.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Platform.Host\Vertr.Platform.Host.csproj" />
   </ItemGroup>
 
   <ItemGroup>

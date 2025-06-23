@@ -25,14 +25,14 @@ public class TinvestController : ControllerBase
     }
 
     [HttpGet("sandbox-accounts")]
-    public async Task<IActionResult> GetSandboxAccount()
+    public async Task<IActionResult> GetSandboxAccounts()
     {
         var accounts = await _tinvestGatewayAccounts.GetSandboxAccounts();
         return Ok(accounts);
     }
 
     [HttpGet("accounts")]
-    public async Task<IActionResult> GetAccount()
+    public async Task<IActionResult> GetAccounts()
     {
         var accounts = await _tinvestGatewayAccounts.GetAccounts();
         return Ok(accounts);

@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
-using Vertr.PortfolioManager.Contracts;
 using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;

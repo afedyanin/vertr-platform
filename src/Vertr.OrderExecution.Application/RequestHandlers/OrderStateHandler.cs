@@ -40,7 +40,7 @@ internal class OrderStateHandler : IRequestHandler<OrderStateRequest>
 
         _logger.LogInformation($"OrderState received: OrderId={orderState.OrderId} RequestId={orderState.OrderRequestId} AccountId={request.AccountId}");
 
-        var portfolioId = await _orderEventRepository.GetPortfolioIdByOrderId(orderState.OrderId);
+        var portfolioId = await _orderEventRepository.ResolvePortfolioByOrderId(orderState.OrderId);
 
         if (portfolioId == null)
         {

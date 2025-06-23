@@ -12,7 +12,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
     {
     }
 
-    public async Task<PortfolioIdentity?> GetPortfolioIdByOrderId(string orderId)
+    public async Task<PortfolioIdentity?> ResolvePortfolioByOrderId(string orderId)
     {
         using var context = await GetDbContext();
 

@@ -7,5 +7,5 @@ public interface IOrderEventRepository
 {
     public Task<bool> Save(OrderEvent orderEvent);
 
-    public Task<PortfolioIdentity?> GetPortfolioIdByOrderId(string orderId);
+    public Task<PortfolioIdentity?> ResolvePortfolioByOrderId(string orderId);
 }

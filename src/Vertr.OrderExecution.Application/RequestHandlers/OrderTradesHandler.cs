@@ -35,7 +35,7 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
 
         _logger.LogDebug($"OrderTrades received: {orderTrades}");
 
-        var portfolioId = await _orderEventRepository.GetPortfolioIdByOrderId(orderTrades.OrderId);
+        var portfolioId = await _orderEventRepository.ResolvePortfolioByOrderId(orderTrades.OrderId);
 
         if (portfolioId == null)
         {

@@ -48,6 +48,8 @@ public class OrderStateStreamService : StreamServiceBase
                     AccountId = response.OrderState.AccountId,
                 };
 
+                logger.LogInformation($"New order state received for AccountId={response.OrderState.AccountId}");
+
                 await Mediator.Send(orderStateRequest, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Ping)

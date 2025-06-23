@@ -10,9 +10,7 @@ internal class PortfolioManager : IPortfolioManager
     // TODO: Move it into DB
     private static readonly string[] _accounts =
         [
-          "a48c2760-20ae-4e0a-8d4b-4005cdb10d70",
-          "f7c33024-67bc-428e-a149-e916e87e79ad",
-          "0e284896-ba30-440f-9626-18ab2e2cc2f0"
+            "b883ab13-997b-4823-9698-20bac64aeaad"
         ];
 
     private readonly IPortfolioSnapshotRepository _portfolioSnapshotRepository;

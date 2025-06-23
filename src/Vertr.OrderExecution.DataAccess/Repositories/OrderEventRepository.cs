@@ -17,9 +17,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         using var context = await GetDbContext();
 
         var orderEvents = context.OrderEvents
-            .Where(
-                e => e.OrderId != null &&
-                e.OrderId.Equals(orderId, StringComparison.OrdinalIgnoreCase));
+            .Where(e => e.OrderId != null && e.OrderId == orderId);
 
         var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null)?.AccountId;
         var bookId = orderEvents.FirstOrDefault(e => e.BookId != null)?.BookId;

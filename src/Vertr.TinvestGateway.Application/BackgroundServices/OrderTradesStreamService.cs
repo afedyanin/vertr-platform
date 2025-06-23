@@ -47,6 +47,8 @@ public class OrderTradesStreamService : StreamServiceBase
                     OrderTrades = response.OrderTrades.Convert(),
                 };
 
+                logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");
+
                 await Mediator.Send(orderTradesRequest, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Ping)

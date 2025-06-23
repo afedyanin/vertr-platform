@@ -15,10 +15,10 @@ Accept: text/plain
 Content-Type: application/json
 
 ### @account_id = {{account.response.body.*}}
-@account_id = f7c33024-67bc-428e-a149-e916e87e79ad
+@account_id = b883ab13-997b-4823-9698-20bac64aeaad
 
 ### Депозит
-@depo_amount = 50000
+@depo_amount = 150000
 @depo_currency = RUB
 PUT {{base_address}}/tinvest/sandbox-account/{{account_id}}?amount={{depo_amount}}&currency={{depo_currency}}
 Accept: application/json

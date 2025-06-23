@@ -7,7 +7,7 @@ namespace Vertr.Paltform.Tests;
 public class PortfolioTests : ApplicationTestBase
 {
     private static readonly Guid _bookId = Guid.NewGuid();
-    private const string _accountId = "f7633300-4c3f-467e-9cb5-1245ef16aadb";
+    private const string _accountId = "b883ab13-997b-4823-9698-20bac64aeaad";
     private const string _baseAddress = "https://localhost:7085";
 
     public PortfolioTests() : base(_baseAddress)

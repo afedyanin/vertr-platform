@@ -30,6 +30,11 @@ internal static class TinvestOperationsFactory
         this OrderState state,
         PortfolioIdentity portfolioId)
     {
+        // TODO: Нужно проверять ряд условий перед созданием операций
+        // - статус ордера
+        // - ненулевые суммы коммисий и/или трейдов
+        return [];
+
         var opTrades = new TradeOperation
         {
             Id = Guid.NewGuid(),

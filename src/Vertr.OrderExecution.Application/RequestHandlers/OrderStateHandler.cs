@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
+using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.PortfolioManager.Contracts.Requests;
 
@@ -33,16 +34,26 @@ internal class OrderStateHandler : IRequestHandler<OrderStateRequest>
             return;
         }
 
-        _logger.LogDebug($"OrderState received: {orderState}");
+        // Сейчас вся необходимая информация приходит либо в OrderResponse, либо в OrderTrades
+        // Для избежания дублирования событий, ничего не делаем
+        return;
+
+        _logger.LogInformation($"OrderState received: OrderId={orderState.OrderId} RequestId={orderState.OrderRequestId} AccountId={request.AccountId}");
 
         var portfolioId = await _orderEventRepository.GetPortfolioIdByOrderId(orderState.OrderId);
 
         if (portfolioId == null)
         {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
-            // TODO: Использовать OrderState.AccountId, когда он появится в SDK. См. обработку OrderTrades
-            _logger.LogWarning($"Cannot get portfolio identity for OrderId={orderState.OrderId}. Skipping message.");
-            return;
+            _logger.LogWarning($"Cannot get portfolio identity for OrderId={orderState.OrderId}. Using OrderTrades.AccountId");
+
+            if (string.IsNullOrEmpty(request.AccountId))
+            {
+                _logger.LogWarning($"Cannot get AccountId for OrderId={orderState.OrderId}. OrderTrades.AccountId is empty. Skipping message.");
+                return;
+            }
+
+            portfolioId = new PortfolioIdentity(request.AccountId);
         }
 
         var orderEvent = orderState.CreateEvent(portfolioId);

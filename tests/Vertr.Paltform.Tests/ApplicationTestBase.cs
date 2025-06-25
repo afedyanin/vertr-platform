@@ -33,7 +33,7 @@ public abstract class ApplicationTestBase
 
     protected async Task<PortfolioSnapshot?> GetPortfolio(string accountId)
     {
-        var res = await VertrClient.MakeSnapshot(accountId);
+        var res = await VertrClient.GetPortfolio(accountId);
         return res;
     }
 

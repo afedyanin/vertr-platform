@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.TinvestGateway.Contracts;
 
@@ -6,38 +5,29 @@ namespace Vertr.TinvestGateway.Application.Converters;
 
 internal static class PortfolioConverter
 {
-    private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
-    {
-        WriteIndented = true,
-    };
-
     public static PortfolioSnapshot? Convert(
-        this Tinkoff.InvestApi.V1.PortfolioResponse source,
-        Guid? bookId)
+        this Tinkoff.InvestApi.V1.PortfolioResponse source)
     {
         if (source == null)
         {
             return null;
         }
 
-        var response = source.Convert();
+        var response = source.ConvertToResponse();
 
         var res = new PortfolioSnapshot
         {
-            Id = Guid.NewGuid(),
             UpdatedAt = DateTime.UtcNow,
             AccountId = response.AccountId,
-            BookId = bookId,
-            JsonData = JsonSerializer.Serialize(response, _jsonSerializerOptions),
-            JsonDataType = response.GetType().FullName,
+            BookId = Guid.Empty,
+            Positions = response.Positions.Convert()
         };
-
-        res.Positions = response.Positions.Convert(res.Id);
 
         return res;
     }
 
-    private static PortfolioResponse Convert(this Tinkoff.InvestApi.V1.PortfolioResponse source)
+    private static PortfolioResponse ConvertToResponse(
+        this Tinkoff.InvestApi.V1.PortfolioResponse source)
         => new PortfolioResponse
         {
             AccountId = source.AccountId,
@@ -53,19 +43,14 @@ internal static class PortfolioConverter
             Positions = source.Positions.ToArray().Convert(),
         };
 
-    private static PortfolioPosition Convert(
-        this Position source,
-        Guid parentSnapshotId)
+    private static PortfolioPosition Convert(this Position source)
         => new PortfolioPosition
         {
-            Id = Guid.NewGuid(),
-            PortfolioSnapshotId = parentSnapshotId,
             Balance = source.Balance,
             InstrumentId = new Guid(source.InstrumentId),
         };
 
     private static PortfolioPosition[] Convert(
-        this Position[] source,
-        Guid parentSnapshotId)
-        => [.. source.Select(t => t.Convert(parentSnapshotId))];
+        this Position[] source)
+        => [.. source.Select(t => t.Convert())];
 }

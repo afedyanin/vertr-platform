@@ -1,17 +1,11 @@
 namespace Vertr.PortfolioManager.Contracts;
 public class PortfolioSnapshot
 {
-    public Guid Id { get; set; }
-
     public required string AccountId { get; set; }
 
-    public Guid? BookId { get; set; }
+    public Guid BookId { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 
     public IList<PortfolioPosition> Positions { get; set; } = [];
-
-    public string? JsonData { get; set; }
-
-    public string? JsonDataType { get; set; }
 }

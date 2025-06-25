@@ -35,7 +35,7 @@ internal abstract class PositionHandlerBase
             throw new InvalidOperationException($"Cannot find instrument with Id={instrumentId}");
         }
 
-        var portfolio = await _portfolioManager.MakeSnapshot(portfolioId.AccountId, portfolioId.BookId);
+        var portfolio = await _portfolioManager.GetPortfolio(portfolioId.AccountId, portfolioId.BookId);
 
         if (portfolio == null)
         {

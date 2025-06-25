@@ -75,9 +75,9 @@ public class TinvestController : ControllerBase
     }
 
     [HttpGet("portfolio/{accountId}")]
-    public async Task<IActionResult> GetPortfolio(string accountId, Guid? bookId = null)
+    public async Task<IActionResult> GetPortfolio(string accountId)
     {
-        var portfolio = await _tinvestGatewayAccounts.GetPortfolio(accountId, bookId);
+        var portfolio = await _tinvestGatewayAccounts.GetPortfolio(accountId);
         return Ok(portfolio);
     }
 

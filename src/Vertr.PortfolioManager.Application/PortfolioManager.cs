@@ -1,7 +1,6 @@
 using Vertr.PortfolioManager.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
-using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.Application;
 
@@ -13,52 +12,31 @@ internal class PortfolioManager : IPortfolioManager
             "b883ab13-997b-4823-9698-20bac64aeaad"
         ];
 
-    private readonly IPortfolioSnapshotRepository _portfolioSnapshotRepository;
+    private readonly IPortfolioRepository _portfolioRepository;
     private readonly IOperationEventRepository _operationEventRepository;
-    private readonly ITinvestGatewayAccounts _tinvestGateway;
 
     public PortfolioManager(
-        IPortfolioSnapshotRepository portfolioSnapshotRepository,
-        IOperationEventRepository operationEventRepository,
-        ITinvestGatewayAccounts tinvestGateway)
+        IPortfolioRepository portfolioRepository,
+        IOperationEventRepository operationEventRepository)
     {
-        _portfolioSnapshotRepository = portfolioSnapshotRepository;
+        _portfolioRepository = portfolioRepository;
         _operationEventRepository = operationEventRepository;
-        _tinvestGateway = tinvestGateway;
     }
 
     public Task<string[]> GetActiveAccounts()
         => Task.FromResult(_accounts);
  
-    public Task<PortfolioSnapshot?> GetLastPortfolio(string accountId, Guid? bookId = null)
-        => _portfolioSnapshotRepository.GetLast(accountId, bookId);
+    public Task<PortfolioSnapshot?> GetPortfolio(string accountId, Guid? bookId = null)
+        => _portfolioRepository.GetPortfolio(accountId, bookId);
 
-    public Task<PortfolioSnapshot[]> GetPortfolioHistory(string accountId, Guid? bookId = null, int maxRecords = 100)
-        => _portfolioSnapshotRepository.GetHistory(accountId, bookId, maxRecords);
-
-    public async Task<PortfolioSnapshot?> MakeSnapshot(string accountId, Guid? bookId = null)
+    public async Task DeleteOperationEvents(string accountId, Guid? bookId = null)
     {
-        var snapshot = await _tinvestGateway.GetPortfolio(accountId, bookId);
-
-        if (snapshot != null)
+        if (bookId == null)
         {
-            var saved = await _portfolioSnapshotRepository.Save(snapshot);
-        }
-
-        return snapshot;
-    }
-
-    public async Task Delete(string accountId, Guid? bookId = null)
-    {
-        if (bookId != null)
-        {
-            _ = await _operationEventRepository.DeleteByBookId(bookId.Value);
-            _ = await _portfolioSnapshotRepository.DeleteByBookId(bookId.Value);
-
+            _ = await _operationEventRepository.DeleteByAccountId(accountId);
             return;
         }
 
-        _ = await _operationEventRepository.DeleteByAccountId(accountId);
-        _ = await _portfolioSnapshotRepository.DeleteByAccountId(accountId);
+        _ = await _operationEventRepository.DeleteByBookId(bookId.Value);
     }
 }

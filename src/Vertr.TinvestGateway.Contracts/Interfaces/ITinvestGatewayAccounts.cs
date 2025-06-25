@@ -20,5 +20,5 @@ public interface ITinvestGatewayAccounts
 
     public Task<PositionsResponse?> GetPositions(string accountId);
 
-    public Task<PortfolioSnapshot?> GetPortfolio(string accountId, Guid? bookId = null);
+    public Task<PortfolioSnapshot?> GetPortfolio(string accountId);
 }

@@ -30,7 +30,7 @@ public interface IVertrPlatformClient
     public Task<PositionsResponse?> GetPositions(string accountId);
 
     [Get("/tinvest/operations/portfolio")]
-    public Task<PortfolioSnapshot?> GetPortfolio(string accountId, Guid? bookId = null);
+    public Task<PortfolioSnapshot?> GetPortfolio(string accountId);
 
     [Get("/tinvest/instrument-by-ticker/{classCode}/{ticker}")]
     public Task<Instrument?> GetInstrumentByTicker(string classCode, string ticker);
@@ -81,11 +81,5 @@ public interface IVertrPlatformClient
 
 
     [Get("/portfolio/{accountId}")]
-    public Task<PortfolioSnapshot?> GetLast(string accountId, Guid? bookId = null);
-
-    [Get("/portfolio/history/{accountId}")]
-    public Task<PortfolioSnapshot[]?> GetHistory(string accountId, Guid? bookId = null, int maxRecords = 100);
-
-    [Post("/portfolio/{accountId}")]
-    public Task<PortfolioSnapshot?> MakeSnapshot(string accountId, Guid? bookId = null);
+    public Task<PortfolioSnapshot?> GetPortfolioSnapshot(string accountId, Guid? bookId = null);
 }

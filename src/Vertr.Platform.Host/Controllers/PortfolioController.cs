@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host.Controllers;
@@ -17,7 +18,8 @@ public class PortfolioController : ControllerBase
     [HttpGet("{accountId}")]
     public async Task<IActionResult> GetLast(string accountId, Guid? bookId = null)
     {
-        var portfolio = await _portfolioManager.GetPortfolio(accountId, bookId);
+        var identity = new PortfolioIdentity(accountId, bookId);
+        var portfolio = await _portfolioManager.GetPortfolio(identity);
         return Ok(portfolio);
     }
 }

@@ -25,14 +25,7 @@ internal class MarketDataService : IMarketDataService
     public async Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)
     {
         // TODO: Use Redis to Cache instrument
-
-        if (instrumentIdentity.InstrumentId.HasValue)
-        {
-            return await _tinvestGatewayMarketData.GetInstrumentById(instrumentIdentity.InstrumentId.Value.ToString());
-        }
-
-        return await _tinvestGatewayMarketData.GetInstrumentByTicker(
-            instrumentIdentity.ClassCode,
-            instrumentIdentity.Ticker);
+        var instrument = await _tinvestGatewayMarketData.GetInstrument(instrumentIdentity);
+        return instrument;
     }
 }

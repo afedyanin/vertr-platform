@@ -1,3 +1,5 @@
+using Vertr.MarketData.Contracts;
+using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.TinvestGateway.Contracts;
 
@@ -18,8 +20,7 @@ internal static class PortfolioConverter
         var res = new PortfolioSnapshot
         {
             UpdatedAt = DateTime.UtcNow,
-            AccountId = response.AccountId,
-            BookId = Guid.Empty,
+            Identity = new PortfolioIdentity(response.AccountId),
             Positions = response.Positions.Convert()
         };
 
@@ -47,7 +48,7 @@ internal static class PortfolioConverter
         => new PortfolioPosition
         {
             Balance = source.Balance,
-            InstrumentId = new Guid(source.InstrumentId),
+            InstrumentIdentity = new InstrumentIdentity(Guid.Parse(source.InstrumentId))
         };
 
     private static PortfolioPosition[] Convert(

@@ -84,14 +84,16 @@ public class TinvestController : ControllerBase
     [HttpGet("instrument-by-ticker/{classCode}/{ticker}")]
     public async Task<IActionResult> GetInstrumentByTicker(string classCode, string ticker)
     {
-        var instrument = await _tinvestGatewayMarketData.GetInstrumentByTicker(ticker, classCode);
+        var identity = new InstrumentIdentity(classCode, ticker);
+        var instrument = await _tinvestGatewayMarketData.GetInstrument(identity);
         return Ok(instrument);
     }
 
     [HttpGet("instrument-by-id/{instrumentId}")]
     public async Task<IActionResult> GetInstrumentById(string instrumentId)
     {
-        var instrument = await _tinvestGatewayMarketData.GetInstrumentById(instrumentId);
+        var identity = new InstrumentIdentity(Guid.Parse(instrumentId));
+        var instrument = await _tinvestGatewayMarketData.GetInstrument(identity);
         return Ok(instrument);
     }
 
@@ -111,7 +113,8 @@ public class TinvestController : ControllerBase
         DateTime to,
         int? limit = 100)
     {
-        var candles = await _tinvestGatewayMarketData.GetCandles(classCode, ticker, interval, from, to, limit);
+        var identity = new InstrumentIdentity(classCode, ticker);
+        var candles = await _tinvestGatewayMarketData.GetCandles(identity, interval, from, to, limit);
         return Ok(candles);
     }
 

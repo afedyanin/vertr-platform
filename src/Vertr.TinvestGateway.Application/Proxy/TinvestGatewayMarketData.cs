@@ -25,29 +25,28 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
         return instruments;
     }
 
-    public async Task<Instrument?> GetInstrumentByTicker(string classCode, string ticker)
+    public async Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)
     {
-        var request = new Tinkoff.InvestApi.V1.InstrumentRequest
-        {
-            ClassCode = classCode,
-            Id = ticker,
-            IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Ticker,
-        };
+        var request = instrumentIdentity.Id.HasValue ?
+            new Tinkoff.InvestApi.V1.InstrumentRequest
+            {
+                Id = instrumentIdentity.Id.Value.ToString(),
+                IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Uid,
+            } :
+            new Tinkoff.InvestApi.V1.InstrumentRequest
+            {
+                ClassCode = instrumentIdentity.ClassCode,
+                Id = instrumentIdentity.Ticker,
+                IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Ticker,
+            };
 
         var response = await InvestApiClient.Instruments.GetInstrumentByAsync(request);
-        var instrument = response.Instrument.ToInstrument();
 
-        return instrument;
-    }
-    public async Task<Instrument?> GetInstrumentById(string instumentId)
-    {
-        var request = new Tinkoff.InvestApi.V1.InstrumentRequest
+        if (response == null || response.Instrument == null)
         {
-            Id = instumentId,
-            IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Uid,
-        };
+            return null;
+        }
 
-        var response = await InvestApiClient.Instruments.GetInstrumentByAsync(request);
         var instrument = response.Instrument.ToInstrument();
 
         return instrument;
@@ -60,11 +59,9 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
         DateTime to,
         int? limit)
     {
-        var instrument = instrumentIdentity.InstrumentId.HasValue ?
-            await GetInstrumentById(instrumentIdentity.InstrumentId.Value.ToString()) :
-            await GetInstrumentByTicker(instrumentIdentity.ClassCode, instrumentIdentity.Ticker);
+        var instrument = await GetInstrument(instrumentIdentity);
 
-        if (instrument == null || !instrument.InstrumentIdentity.InstrumentId.HasValue)
+        if (instrument == null)
         {
             return [];
         }
@@ -73,7 +70,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
         {
             From = Timestamp.FromDateTime(from.ToUniversalTime()),
             To = Timestamp.FromDateTime(to.ToUniversalTime()),
-            InstrumentId = instrument.InstrumentIdentity.InstrumentId.Value.ToString(),
+            InstrumentId = instrument.InstrumentIdentity.Id!.Value.ToString(),
             Interval = interval.Convert(),
         };
 

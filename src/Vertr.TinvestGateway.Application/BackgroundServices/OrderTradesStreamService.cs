@@ -3,12 +3,11 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
-using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
-using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
@@ -19,14 +18,12 @@ public class OrderTradesStreamService : StreamServiceBase
     protected override bool IsEnabled => TinvestSettings.OrderTradesStreamEnabled;
 
     public OrderTradesStreamService(
-        ITinvestGatewayMarketData tinvestGatewayMarketData,
-        IMarketDataService marketDataService,
         IPortfolioManager portfolioManager,
         IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
         IMediator mediator,
         ILogger<OrderTradesStreamService> logger) :
-            base(tinvestOptions, investApiClient, tinvestGatewayMarketData, marketDataService, mediator, logger)
+            base(tinvestOptions, investApiClient, mediator, logger)
     {
         _portfolioManager = portfolioManager;
     }
@@ -49,7 +46,7 @@ public class OrderTradesStreamService : StreamServiceBase
                 var orderTradesRequest = new OrderTradesRequest
                 {
                     OrderTrades = response.OrderTrades.Convert(),
-                    InstrumentIdentity = response.OrderTrades.InstrumentUid,
+                    InstrumentIdentity = new InstrumentIdentity(Guid.Parse(response.OrderTrades.InstrumentUid)),
                 };
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");

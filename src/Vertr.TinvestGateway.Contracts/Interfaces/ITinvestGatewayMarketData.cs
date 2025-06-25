@@ -6,9 +6,7 @@ public interface ITinvestGatewayMarketData
 {
     public Task<Instrument[]?> FindInstrument(string query);
 
-    public Task<Instrument?> GetInstrumentByTicker(string classCode, string ticker);
-
-    public Task<Instrument?> GetInstrumentById(string instumentId);
+    public Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity);
 
     public Task<Candle[]?> GetCandles(
         InstrumentIdentity instrumentIdentity,

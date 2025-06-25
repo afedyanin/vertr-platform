@@ -12,8 +12,7 @@ internal static class OperationEventExtensions
     public static OperationEvent Convert(this OrderExecution.Contracts.TradeOperation source)
         => new OperationEvent
         {
-            AccountId = source.AccountId,
-            BookId = source.BookId,
+            PortfolioIdentity = source.PortfolioIdentity,
             CreatedAt = source.CreatedAt,
             Id = source.Id,
             JsonData = JsonSerializer.Serialize(source, _jsonSerializerOptions),

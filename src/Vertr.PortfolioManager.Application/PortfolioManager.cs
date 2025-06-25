@@ -1,3 +1,4 @@
+using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
@@ -26,17 +27,12 @@ internal class PortfolioManager : IPortfolioManager
     public Task<string[]> GetActiveAccounts()
         => Task.FromResult(_accounts);
  
-    public Task<PortfolioSnapshot?> GetPortfolio(string accountId, Guid? bookId = null)
-        => _portfolioRepository.GetPortfolio(accountId, bookId);
+    public Task<PortfolioSnapshot?> GetPortfolio(PortfolioIdentity portfolioIdentity)
+        => _portfolioRepository.GetPortfolio(portfolioIdentity);
 
-    public async Task DeleteOperationEvents(string accountId, Guid? bookId = null)
+    public async Task Remove(PortfolioIdentity portfolioIdentity)
     {
-        if (bookId == null)
-        {
-            _ = await _operationEventRepository.DeleteByAccountId(accountId);
-            return;
-        }
-
-        _ = await _operationEventRepository.DeleteByBookId(bookId.Value);
+        await _portfolioRepository.Remove(portfolioIdentity);
+        await _operationEventRepository.Delete(portfolioIdentity);
     }
 }

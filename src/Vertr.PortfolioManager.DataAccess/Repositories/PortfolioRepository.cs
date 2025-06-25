@@ -1,3 +1,4 @@
+using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
 
@@ -5,17 +6,12 @@ namespace Vertr.PortfolioManager.DataAccess.Repositories;
 
 internal class PortfolioRepository : IPortfolioRepository
 {
-    public Task<PortfolioSnapshot?> GetPortfolio(string accountId, Guid? bookId = null)
+    public Task<PortfolioSnapshot?> GetPortfolio(PortfolioIdentity portfolioIdentity)
     {
         throw new NotImplementedException();
     }
 
-    public Task RemoveByAccountId(string accountId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task RemoveByBookId(Guid bookId)
+    public Task Remove(PortfolioIdentity portfolioIdentity)
     {
         throw new NotImplementedException();
     }

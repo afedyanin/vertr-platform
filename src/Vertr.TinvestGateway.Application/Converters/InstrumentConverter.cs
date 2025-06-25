@@ -6,12 +6,13 @@ internal static class InstrumentConverter
 {
     public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.InstrumentShort instrument)
         => new Instrument(
-            instrument.Isin,
-            instrument.Ticker,
-            instrument.ClassCode,
+            new InstrumentIdentity(
+                instrument.ClassCode,
+                instrument.Ticker,
+                Guid.Parse(instrument.Uid),
+                instrument.Isin),
             instrument.InstrumentType,
             instrument.Name,
-            instrument.Uid,
             instrument.InstrumentKind.ToString(),
             null,
             null
@@ -19,12 +20,13 @@ internal static class InstrumentConverter
 
     public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.Instrument instrument)
         => new Instrument(
-            instrument.Isin,
-            instrument.Ticker,
-            instrument.ClassCode,
+            new InstrumentIdentity(
+                instrument.ClassCode,
+                instrument.Ticker,
+                Guid.Parse(instrument.Uid),
+                instrument.Isin),
             instrument.InstrumentType,
             instrument.Name,
-            instrument.Uid,
             instrument.InstrumentKind.ToString(),
             instrument.Currency,
             instrument.Lot

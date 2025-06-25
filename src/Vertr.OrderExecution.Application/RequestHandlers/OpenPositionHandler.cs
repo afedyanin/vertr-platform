@@ -16,7 +16,7 @@ internal class OpenPositionHandler : PositionHandlerBase, IRequestHandler<OpenPo
 
     public async Task<ExecuteOrderResponse> Handle(OpenPositionRequest request, CancellationToken cancellationToken)
     {
-        var currentLots = await GetCurrentPositionInLots(request.PortfolioId, request.InstrumentId);
+        var currentLots = await GetCurrentPositionInLots(request.PortfolioIdentity, request.InstrumentIdentity);
 
         if (currentLots != 0L)
         {
@@ -28,9 +28,9 @@ internal class OpenPositionHandler : PositionHandlerBase, IRequestHandler<OpenPo
 
         var orderRequest = new ExecuteOrderRequest
         {
-            PortfolioId = request.PortfolioId,
-            InstrumentId = request.InstrumentId,
             RequestId = request.RequestId,
+            PortfolioIdentity = request.PortfolioIdentity,
+            InstrumentIdentity = request.InstrumentIdentity,
             QtyLots = request.QtyLots,
         };
 

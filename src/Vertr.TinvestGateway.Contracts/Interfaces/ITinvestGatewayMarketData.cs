@@ -6,13 +6,12 @@ public interface ITinvestGatewayMarketData
 {
     public Task<Instrument[]?> FindInstrument(string query);
 
-    public Task<Instrument?> GetInstrumentByTicker(string ticker, string classCode);
+    public Task<Instrument?> GetInstrumentByTicker(string classCode, string ticker);
 
     public Task<Instrument?> GetInstrumentById(string instumentId);
 
     public Task<Candle[]?> GetCandles(
-        string classCode,
-        string ticker,
+        InstrumentIdentity instrumentIdentity,
         CandleInterval interval,
         DateTime from,
         DateTime to,

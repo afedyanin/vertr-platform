@@ -1,4 +1,5 @@
 using MediatR;
+using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
@@ -25,26 +26,27 @@ internal abstract class PositionHandlerBase
     }
 
     protected async Task<long> GetCurrentPositionInLots(
-        PortfolioIdentity portfolioId,
-        Guid instrumentId)
+        PortfolioIdentity portfolioIdentity,
+        InstrumentIdentity instrumentIdentity)
     {
-        var instrument = await _marketDataService.GetInstrument(instrumentId.ToString());
+        var instrument = await _marketDataService.GetInstrument(instrumentIdentity);
 
         if (instrument == null)
         {
-            throw new InvalidOperationException($"Cannot find instrument with Id={instrumentId}");
+            throw new InvalidOperationException($"Cannot find instrument with Identity={instrumentIdentity}");
         }
 
-        var portfolio = await _portfolioManager.GetPortfolio(portfolioId.AccountId, portfolioId.BookId);
+        var portfolio = await _portfolioManager.GetPortfolio(portfolioIdentity);
 
         if (portfolio == null)
         {
             return 0L;
         }
 
-        var position = portfolio.Positions.SingleOrDefault(p => p.InstrumentId == instrumentId);
+        // TODO: Test me
+        var position = portfolio.Positions.SingleOrDefault(p => p.InstrumentIdentity == instrumentIdentity);
 
-        // TODO: Refactor this
+        // TODO: Refactor me
         var posQty = position?.Balance ?? 0L;
         var lotSize = instrument.LotSize ?? 1L;
 

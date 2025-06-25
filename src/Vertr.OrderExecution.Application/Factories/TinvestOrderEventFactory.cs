@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Text.Json;
+using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Application.Entities;
 using Vertr.OrderExecution.Contracts;
-using Vertr.PortfolioManager.Contracts;
 using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
@@ -14,68 +14,57 @@ internal static class TinvestOrderEventFactory
         WriteIndented = true,
     };
 
-    public static OrderEvent CreateEvent(this PostOrderRequest request, PortfolioIdentity portfolioId)
+    public static OrderEvent CreateEvent(
+        this PostOrderRequest request,
+        InstrumentIdentity instrumentIdentity,
+        PortfolioIdentity portfolioIdentity)
     {
-        Debug.Assert(request.AccountId == portfolioId.AccountId);
+        Debug.Assert(request.AccountId == portfolioIdentity.AccountId);
 
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            AccountId = portfolioId.AccountId,
-            BookId = portfolioId.BookId,
-            InstrumentId = request.InstrumentId,
+            PortfolioIdentity = portfolioIdentity,
+            InstrumentIdentity = instrumentIdentity,
             RequestId = request.RequestId,
             JsonDataType = request.GetType().FullName,
             JsonData = JsonSerializer.Serialize(request, _jsonOptions),
         };
     }
 
-    public static OrderEvent CreateEvent(this PostOrderResponse response, PortfolioIdentity portfolioId)
+    public static OrderEvent CreateEvent(
+        this PostOrderResponse response,
+        InstrumentIdentity instrumentIdentity,
+        PortfolioIdentity portfolioIdentity)
     {
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            AccountId = portfolioId.AccountId,
-            BookId = portfolioId.BookId,
+            PortfolioIdentity = portfolioIdentity,
+            InstrumentIdentity = instrumentIdentity,
             RequestId = Guid.Parse(response.OrderRequestId),
             OrderId = response.OrderId,
             JsonDataType = response.GetType().FullName,
             JsonData = JsonSerializer.Serialize(response, _jsonOptions),
-            InstrumentId = Guid.Parse(response.InstrumentId),
         };
 
     }
 
-    public static OrderEvent CreateEvent(this OrderState state, PortfolioIdentity portfolioId)
+    public static OrderEvent CreateEvent(
+        this OrderTrades trades,
+        InstrumentIdentity instrumentIdentity,
+        PortfolioIdentity portfolioIdentity)
     {
-        return new OrderEvent
-        {
-            Id = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
-            AccountId = portfolioId.AccountId,
-            BookId = portfolioId.BookId,
-            InstrumentId = Guid.Parse(state.InstrumentId),
-            RequestId = Guid.Parse(state.OrderRequestId),
-            OrderId = state.OrderId,
-            JsonDataType = state.GetType().FullName,
-            JsonData = JsonSerializer.Serialize(state, _jsonOptions)
-
-        };
-    }
-
-    public static OrderEvent CreateEvent(this OrderTrades trades, PortfolioIdentity portfolioId)
-    {
-        Debug.Assert(trades.AccountId == portfolioId.AccountId);
+        Debug.Assert(trades.AccountId == portfolioIdentity.AccountId);
 
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            AccountId = portfolioId.AccountId,
-            BookId = portfolioId.BookId,
-            InstrumentId = Guid.Parse(trades.InstrumentId),
+            PortfolioIdentity = portfolioIdentity,
+            InstrumentIdentity = instrumentIdentity,
             OrderId = trades.OrderId,
             JsonDataType = trades.GetType().FullName,
             JsonData = JsonSerializer.Serialize(trades, _jsonOptions)

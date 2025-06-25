@@ -1,12 +1,9 @@
 namespace Vertr.MarketData.Contracts;
 
 public record class Instrument(
-    string? Isin,
-    string? Ticker,
-    string? ClassCode,
+    InstrumentIdentity InstrumentIdentity,
     string? InstrumentType,
     string? Name,
-    string? Uid,
     string? InstrumentKind,
     string? Currency,
     decimal? LotSize

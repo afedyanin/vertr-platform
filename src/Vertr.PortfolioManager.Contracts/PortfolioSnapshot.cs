@@ -1,9 +1,9 @@
+using Vertr.OrderExecution.Contracts;
+
 namespace Vertr.PortfolioManager.Contracts;
 public class PortfolioSnapshot
 {
-    public required string AccountId { get; set; }
-
-    public Guid BookId { get; set; }
+    public required PortfolioIdentity Identity { get; set; }
 
     public DateTime UpdatedAt { get; set; }
 

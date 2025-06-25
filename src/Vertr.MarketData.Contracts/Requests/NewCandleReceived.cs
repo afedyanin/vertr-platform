@@ -8,5 +8,5 @@ public class NewCandleReceived : IRequest
 
     public CandleInterval? Interval { get; init; }
 
-    public string? Ticker { get; init; }
+    public required InstrumentIdentity InstrumentIdentity { get; init; }
 }

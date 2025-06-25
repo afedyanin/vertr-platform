@@ -1,3 +1,4 @@
+using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 
 namespace Vertr.OrderExecution.Contracts;
@@ -11,11 +12,9 @@ public record class TradeOperation
 
     public string? OrderId { get; init; }
 
-    public required string AccountId { get; init; }
+    public required PortfolioIdentity PortfolioIdentity { get; init; }
 
-    public Guid? BookId { get; init; }
-
-    public Guid? InstrumentId { get; init; }
+    public required InstrumentIdentity InstrumentIdentity { get; init; }
 
     public Trade[] Trades { get; init; } = [];
 

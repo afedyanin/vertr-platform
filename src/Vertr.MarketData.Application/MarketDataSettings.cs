@@ -12,17 +12,16 @@ public class MarketDataSettings
 
         foreach (var kvp in Subscriptions)
         {
-            (var clasCcode, var symbol) = ParseKey(kvp.Key);
+            (var clasCcode, var ticker) = ParseKey(kvp.Key);
 
-            if (clasCcode == null || symbol == null)
+            if (clasCcode == null || ticker == null)
             {
                 continue;
             }
 
             res.Add(new CandleSubscription
             {
-                ClassCode = clasCcode,
-                Symbol = symbol,
+                InstrumentIdentity = new InstrumentIdentity(clasCcode, ticker),
                 Interval = kvp.Value
             });
 

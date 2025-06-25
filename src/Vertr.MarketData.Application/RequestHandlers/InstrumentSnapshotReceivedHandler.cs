@@ -18,7 +18,7 @@ internal class InstrumentSnapshotReceivedHandler : IRequestHandler<InstrumentSna
         // TODO: Save instruments to Redis
 
         var instruments = request.Instruments == null ? [] :
-            request.Instruments.Select(t => $"{t.ClassCode}.{t.Ticker}").ToArray();
+            request.Instruments.Select(t => $"{t.InstrumentIdentity.ClassCode}.{t.InstrumentIdentity.Ticker}").ToArray();
 
         var allInstruments = string.Join(',', instruments);
 

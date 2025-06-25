@@ -11,12 +11,12 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
 {
     private readonly IOrderEventRepository _orderEventRepository;
     private readonly IMediator _mediator;
-    private readonly ILogger<OrderStateHandler> _logger;
+    private readonly ILogger<OrderTradesHandler> _logger;
 
     public OrderTradesHandler(
         IOrderEventRepository orderEventRepository,
         IMediator mediator,
-        ILogger<OrderStateHandler> logger)
+        ILogger<OrderTradesHandler> logger)
     {
         _orderEventRepository = orderEventRepository;
         _mediator = mediator;
@@ -27,17 +27,11 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
     {
         var orderTrades = request.OrderTrades;
 
-        if (orderTrades == null)
-        {
-            _logger.LogWarning($"Empty OrderTrades received. Skipping message.");
-            return;
-        }
-
         _logger.LogDebug($"OrderTrades received: {orderTrades}");
 
-        var portfolioId = await _orderEventRepository.ResolvePortfolioByOrderId(orderTrades.OrderId);
+        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderId(orderTrades.OrderId);
 
-        if (portfolioId == null)
+        if (portfolioIdentity == null)
         {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
             _logger.LogWarning($"Cannot get portfolio identity for OrderId={orderTrades.OrderId}. Using OrderTrades.AccountId");
@@ -48,10 +42,10 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
                 return;
             }
 
-            portfolioId = new Contracts.PortfolioIdentity(orderTrades.AccountId);
+            portfolioIdentity = new Contracts.PortfolioIdentity(orderTrades.AccountId);
         }
 
-        var orderEvent = orderTrades.CreateEvent(portfolioId);
+        var orderEvent = orderTrades.CreateEvent(request.InstrumentIdentity, portfolioIdentity);
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)
@@ -59,7 +53,7 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
             _logger.LogWarning($"Cannot save OrderTrades event for OrderId={orderEvent.OrderId}");
         }
 
-        var operations = orderTrades.CreateOperations(portfolioId);
+        var operations = orderTrades.CreateOperations(request.InstrumentIdentity, portfolioIdentity);
 
         var tradeOperationsRequest = new TradeOperationsRequest
         {

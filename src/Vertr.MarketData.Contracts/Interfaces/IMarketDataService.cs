@@ -4,5 +4,5 @@ public interface IMarketDataService
 {
     public Task<CandleSubscription[]> GetSubscriptions();
 
-    public Task<Instrument?> GetInstrument(string instrumentId);
+    public Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity);
 }

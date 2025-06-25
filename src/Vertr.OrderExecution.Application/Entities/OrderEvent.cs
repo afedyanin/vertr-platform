@@ -1,3 +1,6 @@
+using Vertr.MarketData.Contracts;
+using Vertr.OrderExecution.Contracts;
+
 namespace Vertr.OrderExecution.Application.Entities;
 
 public class OrderEvent
@@ -8,11 +11,9 @@ public class OrderEvent
 
     public string? OrderId { get; set; }
 
-    public Guid? InstrumentId { get; set; }
+    public required InstrumentIdentity InstrumentIdentity { get; set; }
 
-    public required string AccountId { get; set; }
-
-    public Guid? BookId { get; set; }
+    public required PortfolioIdentity PortfolioIdentity { get; init; }
 
     public DateTime CreatedAt { get; set; }
 

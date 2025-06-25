@@ -25,7 +25,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
         return instruments;
     }
 
-    public async Task<Instrument?> GetInstrumentByTicker(string ticker, string classCode)
+    public async Task<Instrument?> GetInstrumentByTicker(string classCode, string ticker)
     {
         var request = new Tinkoff.InvestApi.V1.InstrumentRequest
         {
@@ -54,24 +54,17 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
     }
 
     public async Task<Candle[]?> GetCandles(
-        string classCode,
-        string ticker,
+        InstrumentIdentity instrumentIdentity,
         CandleInterval interval,
         DateTime from,
         DateTime to,
         int? limit)
     {
-        var instrumentRequest = new Tinkoff.InvestApi.V1.InstrumentRequest
-        {
-            ClassCode = classCode,
-            Id = ticker,
-            IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Ticker,
-        };
+        var instrument = instrumentIdentity.InstrumentId.HasValue ?
+            await GetInstrumentById(instrumentIdentity.InstrumentId.Value.ToString()) :
+            await GetInstrumentByTicker(instrumentIdentity.ClassCode, instrumentIdentity.Ticker);
 
-        var instrumentResponse = await InvestApiClient.Instruments.GetInstrumentByAsync(instrumentRequest);
-        var instrumentId = instrumentResponse?.Instrument.Uid;
-
-        if (string.IsNullOrEmpty(instrumentId))
+        if (instrument == null || !instrument.InstrumentIdentity.InstrumentId.HasValue)
         {
             return [];
         }
@@ -80,7 +73,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
         {
             From = Timestamp.FromDateTime(from.ToUniversalTime()),
             To = Timestamp.FromDateTime(to.ToUniversalTime()),
-            InstrumentId = instrumentId,
+            InstrumentId = instrument.InstrumentIdentity.InstrumentId.Value.ToString(),
             Interval = interval.Convert(),
         };
 

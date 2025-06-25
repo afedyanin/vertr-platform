@@ -1,4 +1,5 @@
 using MediatR;
+using Vertr.MarketData.Contracts;
 
 namespace Vertr.OrderExecution.Contracts.Requests;
 
@@ -6,9 +7,9 @@ public class OpenPositionRequest : IRequest<ExecuteOrderResponse>
 {
     public Guid RequestId { get; init; }
 
-    public Guid InstrumentId { get; init; }
+    public required InstrumentIdentity InstrumentIdentity { get; init; }
+
+    public required PortfolioIdentity PortfolioIdentity { get; init; }
 
     public long QtyLots { get; init; }
-
-    public required PortfolioIdentity PortfolioId { get; init; }
 }

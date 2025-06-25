@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
-using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.MarketData.Contracts.Requests;
 using Vertr.TinvestGateway.Application.Converters;
@@ -14,12 +13,6 @@ namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
-    private readonly IMarketDataService _marketDataService;
-    private readonly ITinvestGatewayMarketData _tinvestGatewayMarketData;
-
-    private readonly Dictionary<string, Instrument> _instruments = [];
-    private readonly Dictionary<string, CandleInterval> _intervals = [];
-
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 
     public MarketDataStreamService(
@@ -29,39 +22,8 @@ public class MarketDataStreamService : StreamServiceBase
         InvestApiClient investApiClient,
         IMediator mediator,
         ILogger<MarketDataStreamService> logger) :
-            base(tinvestOptions, investApiClient, mediator, logger)
+            base(tinvestOptions, investApiClient, tinvestGatewayMarketData, marketDataService, mediator, logger)
     {
-        _tinvestGatewayMarketData = tinvestGatewayMarketData;
-        _marketDataService = marketDataService;
-    }
-
-    protected override async Task OnBeforeStart(CancellationToken stoppingToken)
-    {
-        var subscriptions = await _marketDataService.GetSubscriptions();
-        _instruments.Clear();
-
-        foreach (var subscription in subscriptions)
-        {
-            var instrument = await _tinvestGatewayMarketData.GetInstrumentByTicker(subscription.Symbol, subscription.ClassCode);
-
-            if (instrument != null)
-            {
-                _instruments[instrument.Uid!] = instrument;
-                _intervals[instrument.Uid!] = subscription.Interval;
-            }
-        }
-
-        if (_instruments.Count != 0)
-        {
-            var request = new InstrumentSnapshotReceived
-            {
-                Instruments = [.. _instruments.Values]
-            };
-
-            await Mediator.Send(request, stoppingToken);
-        }
-
-        await base.OnBeforeStart(stoppingToken);
     }
 
     protected override async Task Subscribe(
@@ -101,7 +63,7 @@ public class MarketDataStreamService : StreamServiceBase
                     {
                         Candle = response.Candle.Convert(),
                         Interval = _intervals[response.Candle.InstrumentUid],
-                        Ticker = $"{instrument.ClassCode}.{instrument.Ticker}"
+                        InstrumentIdentity = instrument.InstrumentIdentity,
                     };
 
                     await Mediator.Send(marketDataCandleRequest, stoppingToken);

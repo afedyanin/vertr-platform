@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
@@ -32,13 +33,13 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
 
     public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Posting new market order for PortfolioId={request.PortfolioId}");
+        _logger.LogInformation($"Posting new market order for PortfolioId={request.PortfolioIdentity}");
 
         var orderId = await PostMarketOrder(
             request.RequestId,
-            request.InstrumentId,
+            request.InstrumentIdentity,
+            request.PortfolioIdentity,
             request.QtyLots,
-            request.PortfolioId,
             cancellationToken);
 
         var response = new ExecuteOrderResponse
@@ -51,16 +52,16 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
 
     private async Task<string?> PostMarketOrder(
         Guid requestId,
-        Guid instrumentId,
+        InstrumentIdentity instrumentIdentity,
+        PortfolioIdentity portfolioIdentity,
         long qtyLots,
-        PortfolioIdentity portfolioId,
         CancellationToken cancellationToken)
     {
         var request = new PostOrderRequest
         {
-            AccountId = portfolioId.AccountId,
+            AccountId = portfolioIdentity.AccountId,
             RequestId = requestId,
-            InstrumentId = instrumentId,
+            InstrumentIdentity = instrumentIdentity,
             OrderDirection = qtyLots > 0 ? OrderDirection.Buy : OrderDirection.Sell,
             Price = decimal.Zero,
             OrderType = OrderType.Market,
@@ -69,7 +70,9 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
             QuantityLots = Math.Abs(qtyLots),
         };
 
-        var savedRequest = await _orderEventRepository.Save(request.CreateEvent(portfolioId));
+        var postOrderEvent = request.CreateEvent(instrumentIdentity, portfolioIdentity);
+
+        var savedRequest = await _orderEventRepository.Save(postOrderEvent);
 
         if (!savedRequest)
         {
@@ -86,14 +89,16 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
             return null;
         }
 
-        var savedResponse = await _orderEventRepository.Save(response.CreateEvent(portfolioId));
+        var orderResponseEvent = response.CreateEvent(instrumentIdentity, portfolioIdentity);
+
+        var savedResponse = await _orderEventRepository.Save(orderResponseEvent);
 
         if (!savedResponse)
         {
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
 
-        var tradeOperations = response.CreateOperations(portfolioId);
+        var tradeOperations = response.CreateOperations(instrumentIdentity, portfolioIdentity);
 
         var tradeOperationsRequest = new TradeOperationsRequest
         {
@@ -105,5 +110,4 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
 
         return response.OrderId;
     }
-
 }

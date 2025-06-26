@@ -12,12 +12,13 @@ public abstract class ApplicationTestBase
 {
     private const decimal _initialAmount = 100_000;
     private static readonly InstrumentIdentity _sber = new InstrumentIdentity(new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13"));
+    private const string _baseAddress = "https://localhost:7085";
 
     protected IVertrPlatformClient VertrClient { get; private set; }
 
-    public ApplicationTestBase(string baseAddress)
+    public ApplicationTestBase()
     {
-        VertrClient = RestService.For<IVertrPlatformClient>(baseAddress);
+        VertrClient = RestService.For<IVertrPlatformClient>(_baseAddress);
     }
 
     protected async Task<string> OpenAccount(decimal amount = _initialAmount)

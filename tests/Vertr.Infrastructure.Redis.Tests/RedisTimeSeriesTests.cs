@@ -1,4 +1,3 @@
-using NetTopologySuite.Index.HPRtree;
 using NRedisStack;
 using NRedisStack.RedisStackCommands;
 using StackExchange.Redis;

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Vertr.MarketData.Contracts;
 
 public record class InstrumentIdentity
@@ -5,9 +7,11 @@ public record class InstrumentIdentity
     public Guid? Id { get; init; }
 
     public string? ClassCode { get; init; }
+
     public string? Ticker { get; init; }
 
-    public string? Isin { get; init; }
+    [JsonConstructor]
+    private InstrumentIdentity() { }
 
     public InstrumentIdentity(Guid id)
     {
@@ -17,12 +21,10 @@ public record class InstrumentIdentity
     public InstrumentIdentity(
         string classCode,
         string ticker,
-        Guid? id = null,
-        string? isin = null)
+        Guid? id = null)
     {
         ClassCode = classCode;
         Ticker = ticker;
         Id = id;
-        Isin = isin;
     }
 }

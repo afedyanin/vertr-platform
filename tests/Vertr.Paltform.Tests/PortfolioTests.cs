@@ -8,11 +8,6 @@ public class PortfolioTests : ApplicationTestBase
 {
     private static readonly Guid _bookId = Guid.NewGuid();
     private const string _accountId = "b883ab13-997b-4823-9698-20bac64aeaad";
-    private const string _baseAddress = "https://localhost:7085";
-
-    public PortfolioTests() : base(_baseAddress)
-    {
-    }
 
     [Test]
     public async Task CanOpenAccount()

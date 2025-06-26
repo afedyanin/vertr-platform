@@ -7,12 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="Vertr.MarketData.Application" />
-    <InternalsVisibleTo Include="Vertr.MarketData.DataAccess" />
+    <ProjectReference Include="..\Vertr.Infrastructure.Redis\Vertr.Infrastructure.Redis.csproj" />
+    <ProjectReference Include="..\Vertr.MarketData.Application\Vertr.MarketData.Application.csproj" />
   </ItemGroup>
 
 </Project>

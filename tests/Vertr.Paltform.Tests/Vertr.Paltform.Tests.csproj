@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Vertr.Infrastructure.Redis\Vertr.Infrastructure.Redis.csproj" />
     <ProjectReference Include="..\..\src\Vertr.Platform.Host\Vertr.Platform.Host.csproj" />
   </ItemGroup>
 

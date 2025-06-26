@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.MarketData.Contracts.Requests;
 
 namespace Vertr.MarketData.Application.RequestHandlers;
@@ -7,23 +8,19 @@ namespace Vertr.MarketData.Application.RequestHandlers;
 internal class InstrumentSnapshotReceivedHandler : IRequestHandler<InstrumentSnapshotReceived>
 {
     private readonly ILogger<InstrumentSnapshotReceivedHandler> _logger;
+    private readonly IMarketInstrumentRepository _marketInstrumentRepository;
 
-    public InstrumentSnapshotReceivedHandler(ILogger<InstrumentSnapshotReceivedHandler> logger)
+    public InstrumentSnapshotReceivedHandler(
+        IMarketInstrumentRepository marketInstrumentRepository,
+        ILogger<InstrumentSnapshotReceivedHandler> logger)
     {
         _logger = logger;
+        _marketInstrumentRepository = marketInstrumentRepository;
     }
 
-    public Task Handle(InstrumentSnapshotReceived request, CancellationToken cancellationToken)
+    public async Task Handle(InstrumentSnapshotReceived request, CancellationToken cancellationToken)
     {
-        // TODO: Save instruments to Redis
-
-        var instruments = request.Instruments == null ? [] :
-            request.Instruments.Select(t => $"{t.InstrumentIdentity.ClassCode}.{t.InstrumentIdentity.Ticker}").ToArray();
-
-        var allInstruments = string.Join(',', instruments);
-
-        _logger.LogInformation($"Instruments Snapshot received: {allInstruments}");
-
-        return Task.CompletedTask;
+        var instruments = request.Instruments ?? [];
+        await _marketInstrumentRepository.Save(instruments);
     }
 }

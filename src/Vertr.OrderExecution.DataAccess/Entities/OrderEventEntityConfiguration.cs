@@ -23,8 +23,13 @@ internal class OrderEventEntityConfiguration : IEntityTypeConfiguration<OrderEve
         builder.Property(e => e.OrderId)
             .HasColumnName("order_id");
 
-        builder.Property(e => e.InstrumentId)
-            .HasColumnName("instrument_id");
+        builder.Property(e => e.ClassCode)
+            .HasColumnName("class_code")
+            .IsRequired();
+
+        builder.Property(e => e.Ticker)
+            .HasColumnName("ticker")
+            .IsRequired();
 
         builder.Property(e => e.AccountId)
             .HasColumnName("account_id")

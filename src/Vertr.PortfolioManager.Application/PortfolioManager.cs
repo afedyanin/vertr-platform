@@ -30,9 +30,13 @@ internal class PortfolioManager : IPortfolioManager
     public Task<PortfolioSnapshot?> GetPortfolio(PortfolioIdentity portfolioIdentity)
         => _portfolioRepository.GetPortfolio(portfolioIdentity);
 
-    public async Task Remove(PortfolioIdentity portfolioIdentity)
+    public async Task Remove(PortfolioIdentity portfolioIdentity, bool deleteOperations = false)
     {
         await _portfolioRepository.Remove(portfolioIdentity);
-        await _operationEventRepository.Delete(portfolioIdentity);
+
+        if (deleteOperations)
+        {
+            await _operationEventRepository.DeleteAll(portfolioIdentity);
+        }
     }
 }

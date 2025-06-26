@@ -1,4 +1,5 @@
 using Refit;
+using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Host;
@@ -10,7 +11,7 @@ namespace Vertr.Paltform.Tests;
 public abstract class ApplicationTestBase
 {
     private const decimal _initialAmount = 100_000;
-    private static readonly Guid _sberId = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
+    private static readonly InstrumentIdentity _sber = new InstrumentIdentity(new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13"));
 
     protected IVertrPlatformClient VertrClient { get; private set; }
 
@@ -37,14 +38,14 @@ public abstract class ApplicationTestBase
         return res;
     }
 
-    protected async Task<ExecuteOrderResponse?> OpenPosition(PortfolioIdentity portfolioId, long qtyLots)
+    protected async Task<ExecuteOrderResponse?> OpenPosition(PortfolioIdentity portfolioIdentity, long qtyLots)
     {
         var req = new OpenPositionRequest
         {
             RequestId = Guid.NewGuid(),
-            PortfolioId = portfolioId,
+            PortfolioIdentity = portfolioIdentity,
+            InstrumentIdentity = _sber,
             QtyLots = qtyLots,
-            InstrumentId = _sberId,
         };
 
         var res = await VertrClient.OpenPosition(req);
@@ -52,13 +53,13 @@ public abstract class ApplicationTestBase
         return res;
     }
 
-    protected async Task<ExecuteOrderResponse?> ReversePosition(PortfolioIdentity portfolioId)
+    protected async Task<ExecuteOrderResponse?> ReversePosition(PortfolioIdentity portfolioIdentity)
     {
         var req = new ReversePositionRequest
         {
             RequestId = Guid.NewGuid(),
-            PortfolioId = portfolioId,
-            InstrumentId = _sberId,
+            PortfolioIdentity = portfolioIdentity,
+            InstrumentIdentity = _sber,
         };
 
         var res = await VertrClient.RevertPosition(req);

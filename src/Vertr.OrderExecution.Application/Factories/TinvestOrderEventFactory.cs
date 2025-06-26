@@ -25,8 +25,10 @@ internal static class TinvestOrderEventFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            PortfolioIdentity = portfolioIdentity,
-            InstrumentIdentity = instrumentIdentity,
+            AccountId = portfolioIdentity.AccountId,
+            BookId = portfolioIdentity.BookId,
+            ClassCode = instrumentIdentity.ClassCode!,
+            Ticker = instrumentIdentity.Ticker!,
             RequestId = request.RequestId,
             JsonDataType = request.GetType().FullName,
             JsonData = JsonSerializer.Serialize(request, _jsonOptions),
@@ -42,8 +44,10 @@ internal static class TinvestOrderEventFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            PortfolioIdentity = portfolioIdentity,
-            InstrumentIdentity = instrumentIdentity,
+            AccountId = portfolioIdentity.AccountId,
+            BookId = portfolioIdentity.BookId,
+            ClassCode = instrumentIdentity.ClassCode!,
+            Ticker = instrumentIdentity.Ticker!,
             RequestId = Guid.Parse(response.OrderRequestId),
             OrderId = response.OrderId,
             JsonDataType = response.GetType().FullName,
@@ -63,8 +67,10 @@ internal static class TinvestOrderEventFactory
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
-            PortfolioIdentity = portfolioIdentity,
-            InstrumentIdentity = instrumentIdentity,
+            AccountId = portfolioIdentity.AccountId,
+            BookId = portfolioIdentity.BookId,
+            ClassCode = instrumentIdentity.ClassCode!,
+            Ticker = instrumentIdentity.Ticker!,
             OrderId = trades.OrderId,
             JsonDataType = trades.GetType().FullName,
             JsonData = JsonSerializer.Serialize(trades, _jsonOptions)

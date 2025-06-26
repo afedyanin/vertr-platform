@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Application.Abstractions;
 using Vertr.PortfolioManager.Application.Entities;
 
@@ -10,21 +11,30 @@ internal class OperationEventRepository : RepositoryBase, IOperationEventReposit
     {
     }
 
-    public async Task<OperationEvent[]> GetAll(string accountId, Guid? bookId = null, int maxRecords = 1000)
+    public async Task<OperationEvent[]> GetAll(PortfolioIdentity portfolioIdentity, int maxRecords = 1000)
     {
         using var context = await GetDbContext();
 
-        var snapshot = await context
+        if (!portfolioIdentity.BookId.HasValue)
+        {
+            return await context
+                .Operations
+                .AsNoTracking()
+                .Where(x => x.AccountId == portfolioIdentity.AccountId)
+                .OrderByDescending(x => x.CreatedAt)
+                .Take(maxRecords)
+                .ToArrayAsync();
+        }
+
+        return await context
             .Operations
             .AsNoTracking()
             .Where(x =>
-                x.AccountId == accountId &&
-                ((bookId.HasValue && x.BookId == bookId.Value) || x.BookId == null))
+                x.AccountId == portfolioIdentity.AccountId &&
+                x.BookId == portfolioIdentity.BookId)
             .OrderByDescending(x => x.CreatedAt)
             .Take(maxRecords)
             .ToArrayAsync();
-
-        return snapshot;
     }
 
     public async Task<bool> Save(OperationEvent[] operationEvents)
@@ -36,25 +46,19 @@ internal class OperationEventRepository : RepositoryBase, IOperationEventReposit
         return savedRecords > 0;
     }
 
-    public async Task<int> DeleteByAccountId(string accountId)
+    public async Task<int> DeleteAll(PortfolioIdentity portfolioIdentity)
     {
         using var context = await GetDbContext();
 
-        var count = await context.Operations
-            .Where(s => s.AccountId == accountId)
+        if (!portfolioIdentity.BookId.HasValue)
+        {
+            return await context.Operations
+                .Where(s => s.AccountId == portfolioIdentity.AccountId)
+                .ExecuteDeleteAsync();
+        }
+
+        return await context.Operations
+            .Where(s => s.BookId == portfolioIdentity.BookId.Value)
             .ExecuteDeleteAsync();
-
-        return count;
-    }
-
-    public async Task<int> DeleteByBookId(Guid bookId)
-    {
-        using var context = await GetDbContext();
-
-        var count = await context.Operations
-            .Where(s => s.BookId == bookId)
-            .ExecuteDeleteAsync();
-
-        return count;
     }
 }

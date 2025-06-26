@@ -9,5 +9,5 @@ public interface IOperationEventRepository
 
     public Task<bool> Save(OperationEvent[] operationEvents);
 
-    public Task<int> Delete(PortfolioIdentity portfolioIdentity);
+    public Task<int> DeleteAll(PortfolioIdentity portfolioIdentity);
 }

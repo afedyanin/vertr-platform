@@ -8,5 +8,5 @@ public interface IPortfolioManager
 
     public Task<PortfolioSnapshot?> GetPortfolio(PortfolioIdentity portfolioIdentity);
 
-    public Task Remove(PortfolioIdentity portfolioIdentity);
+    public Task Remove(PortfolioIdentity portfolioIdentity, bool deleteOperations = false);
 }

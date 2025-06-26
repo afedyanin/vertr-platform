@@ -17,7 +17,7 @@ public class MarketDataController : ControllerBase
     [HttpGet("subsciptions")]
     public async Task<IActionResult> GetSubscriptions()
     {
-        var subscriptions = await _marketDataService.GetSubscriptions();
+        var subscriptions = await _marketDataService.InitializeSubscriptions();
         return Ok(subscriptions);
     }
 }

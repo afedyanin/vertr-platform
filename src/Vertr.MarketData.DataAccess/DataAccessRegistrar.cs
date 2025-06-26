@@ -8,7 +8,7 @@ public static class DataAccessRegistrar
 {
     public static IServiceCollection AddMarketDataDataAccess(this IServiceCollection services)
     {
-        services.AddTransient<IMarketInstrumentRepository, MarketInstrumentRepository>();
+        services.AddTransient<IStaticMarketDataRepository, MarketInstrumentRepository>();
 
         return services;
     }

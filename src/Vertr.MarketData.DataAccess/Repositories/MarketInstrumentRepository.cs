@@ -2,10 +2,11 @@ using System.Text.Json;
 using StackExchange.Redis;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.MarketData.DataAccess.Converters;
 
 namespace Vertr.MarketData.DataAccess.Repositories;
 
-public class MarketInstrumentRepository : IMarketInstrumentRepository
+public class MarketInstrumentRepository : IStaticMarketDataRepository
 {
     private const string _instrumentsByIdKey = "md:instruments:id";
     private const string _instrumentsByTickerKey = "md:instruments:ticker";
@@ -19,14 +20,34 @@ public class MarketInstrumentRepository : IMarketInstrumentRepository
         _database = _redis.GetDatabase();
     }
 
-    public Task<Instrument?> Get(InstrumentIdentity instrumentIdentity)
+    public async Task<Instrument?> Get(InstrumentIdentity instrumentIdentity)
     {
-        throw new NotImplementedException();
+        // TODO: use in memory cache?
+        if (instrumentIdentity.Id.HasValue)
+        {
+            var idKey = GetIdKey(instrumentIdentity);
+            var resByKey = await _database.HashGetAsync(_instrumentsByIdKey, idKey);
+            if (resByKey.HasValue)
+            {
+                return resByKey.Convert();
+            }
+        }
+
+        var tickerKey = GetTickerKey(instrumentIdentity);
+        var resByTicker = await _database.HashGetAsync(_instrumentsByTickerKey, tickerKey);
+
+        if (resByTicker.HasValue)
+        {
+            return resByTicker.Convert();
+        }
+
+        return null;
     }
 
-    public Task<Instrument[]> GetAll()
+    public async Task<Instrument[]?> GetAll()
     {
-        throw new NotImplementedException();
+        var res = await _database.HashGetAllAsync(_instrumentsByIdKey);
+        return res.Convert();
     }
 
     public async Task Save(Instrument[] instruments)
@@ -50,21 +71,8 @@ public class MarketInstrumentRepository : IMarketInstrumentRepository
 
     public async Task Clear()
     {
-        // TODO: Use scan
-        var idKeys = await _database.HashKeysAsync(_instrumentsByIdKey);
-
-        foreach (var idKey in idKeys)
-        {
-            await _database.HashDeleteAsync(_instrumentsByIdKey, idKey);
-        }
-
-        // TODO: Use scan
-        var tickerKeys = await _database.HashKeysAsync(_instrumentsByTickerKey);
-
-        foreach (var tickerKey in tickerKeys)
-        {
-            await _database.HashDeleteAsync(_instrumentsByIdKey, tickerKey);
-        }
+        await _database.KeyDeleteAsync(_instrumentsByIdKey);
+        await _database.KeyDeleteAsync(_instrumentsByTickerKey);
     }
 
     private static string GetTickerKey(InstrumentIdentity instrumentIdentity)
@@ -72,4 +80,24 @@ public class MarketInstrumentRepository : IMarketInstrumentRepository
 
     private static string GetIdKey(InstrumentIdentity instrumentIdentity)
         => $"{instrumentIdentity.Id}";
+
+    public Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<CandleInterval?> GetInterval(InstrumentIdentity instrumentIdentity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Instrument[]?> GetInstruments()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<CandleSubscription[]?> GetSubscriptions()
+    {
+        throw new NotImplementedException();
+    }
 }

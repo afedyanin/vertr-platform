@@ -4,16 +4,16 @@ using Vertr.MarketData.Contracts.Requests;
 
 namespace Vertr.MarketData.Application.RequestHandlers;
 
-internal class NewCandleReceivedHandler : IRequestHandler<NewCandleReceived>
+internal class CandleReceivedHandler : IRequestHandler<CandleReceived>
 {
-    private readonly ILogger<NewCandleReceivedHandler> _logger;
+    private readonly ILogger<CandleReceivedHandler> _logger;
 
-    public NewCandleReceivedHandler(ILogger<NewCandleReceivedHandler> logger)
+    public CandleReceivedHandler(ILogger<CandleReceivedHandler> logger)
     {
         _logger = logger;
     }
 
-    public Task Handle(NewCandleReceived request, CancellationToken cancellationToken)
+    public Task Handle(CandleReceived request, CancellationToken cancellationToken)
     {
         var candle = request.Candle;
 

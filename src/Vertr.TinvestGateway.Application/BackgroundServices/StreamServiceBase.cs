@@ -40,13 +40,14 @@ public abstract class StreamServiceBase : BackgroundService
     {
         try
         {
+            await OnBeforeStart(stoppingToken);
+
             if (!IsEnabled)
             {
                 Logger.LogWarning($"{_serviceName} is disabled.");
                 return;
             }
 
-            await OnBeforeStart(stoppingToken);
             await StartConsumingLoop(stoppingToken);
 
             Logger.LogInformation($"{_serviceName} execution completed at {DateTime.UtcNow:O}");

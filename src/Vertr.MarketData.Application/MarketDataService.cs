@@ -9,23 +9,46 @@ internal class MarketDataService : IMarketDataService
 {
     private readonly MarketDataSettings _settings;
     private readonly ITinvestGatewayMarketData _tinvestGatewayMarketData;
+    private readonly IStaticMarketDataRepository _marketInstrumentRepository;
 
     public MarketDataService(
         IOptions<MarketDataSettings> options,
-        ITinvestGatewayMarketData tinvestGatewayMarketData
-        )
+        ITinvestGatewayMarketData tinvestGatewayMarketData,
+        IStaticMarketDataRepository marketInstrumentRepository)
     {
         _settings = options.Value;
         _tinvestGatewayMarketData = tinvestGatewayMarketData;
+        _marketInstrumentRepository = marketInstrumentRepository;
     }
 
-    public Task<CandleSubscription[]> GetSubscriptions()
-        => Task.FromResult(_settings.GetCandleSubscriptions());
-
-    public async Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)
+    public async Task Initialize()
     {
-        // TODO: Use Redis to Cache instrument
-        var instrument = await _tinvestGatewayMarketData.GetInstrument(instrumentIdentity);
-        return instrument;
+        await _marketInstrumentRepository.Clear();
+
+        // TODO: Add static instruments from config (RUB)
+        var instruments = new List<Instrument>();
+
+        var subscriptions = _settings.GetCandleSubscriptions();
+
+        foreach (var subscription in subscriptions)
+        {
+            var instrument = await _tinvestGatewayMarketData.GetInstrument(subscription.InstrumentIdentity);
+            var interval = subscription.Interval;
+
+            if (instrument != null)
+            {
+                instruments.Add(instrument);
+            }
+        }
+
+        await _marketInstrumentRepository.Save([.. instruments]);
+    }
+
+    public Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)
+        => _marketInstrumentRepository.Get(instrumentIdentity);
+
+    public Task<CandleSubscription[]?> GetSubscriptions()
+    {
+        throw new NotImplementedException();
     }
 }

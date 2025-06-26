@@ -79,6 +79,14 @@ public class MarketDataTests : ApplicationTestBase
         Console.WriteLine(sber.ToString());
     }
 
+    [Test]
+    public async Task CanDeleteKey()
+    {
+        var db = _redis!.GetDatabase();
+        var deleted = await db.KeyDeleteAsync("mds:isntruments");
+        Assert.That(deleted, Is.True);
+    }
+
     private static string GetKey(Instrument instrument)
         => $"{instrument.InstrumentIdentity.ClassCode}:{instrument.InstrumentIdentity.Ticker}";
 

@@ -8,10 +8,10 @@ internal class OrderEventEntityConfiguration : IEntityTypeConfiguration<OrderEve
 {
     public void Configure(EntityTypeBuilder<OrderEvent> builder)
     {
-        builder.ToTable("order_events");
+        builder.ToTable("orders");
 
         builder.HasKey(e => e.Id)
-            .HasName("order_events_pkey");
+            .HasName("orders_pkey");
 
         builder.Property(e => e.Id)
             .HasColumnName("id")

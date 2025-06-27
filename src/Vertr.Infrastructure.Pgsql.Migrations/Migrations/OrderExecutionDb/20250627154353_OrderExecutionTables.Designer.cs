@@ -9,10 +9,10 @@ using Vertr.OrderExecution.DataAccess;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     [DbContext(typeof(OrderExecutionDbContext))]
-    [Migration("20250622081428_OrderExecutionTables")]
+    [Migration("20250627154353_OrderExecutionTables")]
     partial class OrderExecutionTables
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Vertr.OrderExecution.Application.Entities.OrderEvent", b =>
+            modelBuilder.Entity("Vertr.OrderExecution.Contracts.OrderEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,13 +41,14 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
                         .HasColumnType("uuid")
                         .HasColumnName("book_id");
 
+                    b.Property<string>("ClassCode")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("class_code");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
-
-                    b.Property<Guid?>("InstrumentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("instrument_id");
 
                     b.Property<string>("JsonData")
                         .HasColumnType("json")
@@ -65,10 +66,15 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
                         .HasColumnType("uuid")
                         .HasColumnName("request_id");
 
-                    b.HasKey("Id")
-                        .HasName("order_events_pkey");
+                    b.Property<string>("Ticker")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ticker");
 
-                    b.ToTable("order_events", (string)null);
+                    b.HasKey("Id")
+                        .HasName("orders_pkey");
+
+                    b.ToTable("orders", (string)null);
                 });
 #pragma warning restore 612, 618
         }

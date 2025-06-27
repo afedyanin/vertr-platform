@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     /// <inheritdoc />
     public partial class OrderExecutionTables : Migration
@@ -12,13 +12,14 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "order_events",
+                name: "orders",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     request_id = table.Column<Guid>(type: "uuid", nullable: true),
                     order_id = table.Column<string>(type: "text", nullable: true),
-                    instrument_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    class_code = table.Column<string>(type: "text", nullable: false),
+                    ticker = table.Column<string>(type: "text", nullable: false),
                     account_id = table.Column<string>(type: "text", nullable: false),
                     book_id = table.Column<Guid>(type: "uuid", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -27,7 +28,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("order_events_pkey", x => x.id);
+                    table.PrimaryKey("orders_pkey", x => x.id);
                 });
         }
 
@@ -35,7 +36,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "order_events");
+                name: "orders");
         }
     }
 }

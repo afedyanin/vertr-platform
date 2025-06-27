@@ -8,14 +8,20 @@ internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<Trad
 {
     public void Configure(EntityTypeBuilder<TradeOperation> builder)
     {
-        builder.ToTable("operation_events");
+        builder.ToTable("operations");
 
         builder.HasKey(e => e.Id)
-            .HasName("operation_events_pkey");
+            .HasName("operations_pkey");
 
         builder.Property(e => e.Id)
             .HasColumnName("id")
             .IsRequired();
+
+        builder.Property(e => e.OrderId)
+            .HasColumnName("order_id");
+
+        builder.Property(e => e.OperationType)
+            .HasColumnName("operation_type");
 
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at")
@@ -32,7 +38,7 @@ internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<Trad
             .HasColumnName("class_code")
             .IsRequired();
 
-        builder.Property(e => e.ClassCode)
+        builder.Property(e => e.Ticker)
             .HasColumnName("ticker")
             .IsRequired();
 

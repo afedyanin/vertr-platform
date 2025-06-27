@@ -18,7 +18,6 @@ public static class TinvestGatewayRegistrar
         services.AddInvestApiClient((_, settings) => configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
 
         services.AddTransient<IMarketDataGateway, TinvestGatewayMarketData>();
-
         services.AddTransient<IPortfolioGateway, TinvestGatewayPortfolio>();
         services.AddTransient<IOrderExecutionGateway, TinvestGatewayOrders>();
 

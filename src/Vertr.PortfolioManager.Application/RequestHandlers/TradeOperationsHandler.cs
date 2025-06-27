@@ -45,7 +45,7 @@ internal class TradeOperationsHandler : IRequestHandler<TradeOperationsRequest>
                 UpdatedAt = DateTime.UtcNow,
             };
 
-            var updated = await portfolio.ApplyOperation(operation);
+            var updated = portfolio.ApplyOperation(operation);
             _portfolioRepository.Save(updated);
         }
     }

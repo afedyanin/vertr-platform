@@ -5,30 +5,65 @@ namespace Vertr.PortfolioManager.Application.Extensions;
 
 internal static class PortfolioExtensions
 {
-    public static async Task<Portfolio> ApplyOperation(this Portfolio portfolio, TradeOperation operation)
+    public static Portfolio ApplyOperation(this Portfolio portfolio, TradeOperation operation)
     {
-        var applyTask = operation.OperationType switch
-        {
-            TradeOperationType.Buy => portfolio.ApplyBuy(operation),
-            // TODO: Implement this
-            TradeOperationType.Unspecified => throw new NotImplementedException(),
-            TradeOperationType.Input => throw new NotImplementedException(),
-            TradeOperationType.Output => throw new NotImplementedException(),
-            TradeOperationType.ServiceFee => throw new NotImplementedException(),
-            TradeOperationType.BrokerFee => throw new NotImplementedException(),
-            TradeOperationType.Sell => throw new NotImplementedException(),
-            _ => throw new NotImplementedException()
-        };
+        var instrumentIdentity = new InstrumentIdentity(operation.ClassCode, operation.Ticker);
 
-        await applyTask;
+        var position = portfolio.GetPosition(instrumentIdentity);
+
+        if (position == null)
+        {
+            position = new Position
+            {
+                InstrumentIdentity = instrumentIdentity,
+                Balance = 0,
+            };
+
+            portfolio.Positions.Add(position);
+        }
+
+        var _ = operation.OperationType switch
+        {
+            TradeOperationType.Buy => position.ApplyBuy(operation),
+            TradeOperationType.Sell => position.ApplySell(operation),
+            TradeOperationType.Input => position.ApplyInput(operation),
+            TradeOperationType.Output => position.ApplyOutput(operation),
+            TradeOperationType.ServiceFee => position.ApplyFee(operation),
+            TradeOperationType.BrokerFee => position.ApplyFee(operation),
+            _ => throw new NotImplementedException($"OperationType={operation.OperationType} is not implemented.")
+        };
 
         return portfolio;
     }
 
-    private static Task ApplyBuy(this Portfolio portfolio, TradeOperation operation)
+    private static Position ApplyBuy(this Position position, TradeOperation operation)
     {
-        // TODO: Implement this
-        return Task.CompletedTask;
+        position.Balance += operation.Quantity;
+        return position;
+    }
+
+    private static Position ApplySell(this Position position, TradeOperation operation)
+    {
+        position.Balance -= operation.Quantity;
+        return position;
+    }
+
+    private static Position ApplyFee(this Position position, TradeOperation operation)
+    {
+        position.Balance -= operation.Amount ?? decimal.Zero;
+        return position;
+    }
+
+    private static Position ApplyInput(this Position position, TradeOperation operation)
+    {
+        position.Balance += operation.Amount ?? decimal.Zero;
+        return position;
+    }
+
+    private static Position ApplyOutput(this Position position, TradeOperation operation)
+    {
+        position.Balance -= operation.Amount ?? decimal.Zero;
+        return position;
     }
 
     private static Position? GetPosition(this Portfolio portfolio, InstrumentIdentity instrumentIdentity)

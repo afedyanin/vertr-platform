@@ -85,7 +85,6 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
         return operations;
     }
 
-
     public async Task<PortfolioSnapshot?> GetPortfolio(string accountId)
     {
         var request = new Tinkoff.InvestApi.V1.PortfolioRequest

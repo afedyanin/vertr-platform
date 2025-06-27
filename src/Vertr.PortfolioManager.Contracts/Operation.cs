@@ -1,5 +1,4 @@
 using Vertr.OrderExecution.Contracts;
-using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.PortfolioManager.Contracts;
 

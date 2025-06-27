@@ -20,7 +20,7 @@ internal class CandleReceivedHandler : IRequestHandler<CandleReceived>
         if (candle != null)
         {
             // TODO: Save Candle to Redis
-            _logger.LogInformation($"New candle received {request.InstrumentIdentity.Ticker} ({request.Interval}): Time={candle.TimeUtc:O} Close={candle.Close}");
+            //_logger.LogInformation($"New candle received {request.InstrumentIdentity.Ticker} ({request.Interval}): Time={candle.TimeUtc:O} Close={candle.Close}");
         }
 
         return Task.CompletedTask;

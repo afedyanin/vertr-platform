@@ -12,24 +12,24 @@ namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
-    private readonly IMarketDataService _marketDataService;
+    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
 
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 
     public MarketDataStreamService(
-        IMarketDataService marketDataService,
+        IStaticMarketDataProvider staticMarketDataProvider,
         IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
         IMediator mediator,
         ILogger<MarketDataStreamService> logger) :
             base(tinvestOptions, investApiClient, mediator, logger)
     {
-        _marketDataService = marketDataService;
+        _staticMarketDataProvider = staticMarketDataProvider;
     }
 
     protected override async Task OnBeforeStart(CancellationToken stoppingToken)
     {
-        await _marketDataService.Initialize();
+        await _staticMarketDataProvider.Load();
     }
 
     protected override async Task Subscribe(
@@ -37,13 +37,7 @@ public class MarketDataStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        var subscriptions = await _marketDataService.GetSubscriptions();
-
-        if (subscriptions == null)
-        {
-            logger.LogWarning($"No subscriptions defined.");
-            return;
-        }
+        var subscriptions = await _staticMarketDataProvider.GetSubscriptions();
 
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {

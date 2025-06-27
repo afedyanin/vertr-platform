@@ -65,8 +65,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Platform.Host", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Paltform.Tests", "tests\Vertr.Paltform.Tests\Vertr.Paltform.Tests.csproj", "{EAF4A8B2-041A-4666-B0D8-A2AA98EF6F46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.MarketData.DataAccess", "src\Vertr.MarketData.DataAccess\Vertr.MarketData.DataAccess.csproj", "{ED116E61-FDD0-4BB1-98A3-1497BEBA25E4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,10 +147,6 @@ Global
 		{EAF4A8B2-041A-4666-B0D8-A2AA98EF6F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAF4A8B2-041A-4666-B0D8-A2AA98EF6F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAF4A8B2-041A-4666-B0D8-A2AA98EF6F46}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED116E61-FDD0-4BB1-98A3-1497BEBA25E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED116E61-FDD0-4BB1-98A3-1497BEBA25E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED116E61-FDD0-4BB1-98A3-1497BEBA25E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED116E61-FDD0-4BB1-98A3-1497BEBA25E4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -183,7 +177,6 @@ Global
 		{A89F45E7-83EB-985C-90F4-79E156E28C16} = {687DD54E-6D20-49E7-A9A6-6B8B62DE5F15}
 		{9AD11F66-F78C-4E91-A0C4-64FEC65E659E} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{EAF4A8B2-041A-4666-B0D8-A2AA98EF6F46} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
-		{ED116E61-FDD0-4BB1-98A3-1497BEBA25E4} = {00C85C0F-89D2-4D0B-B93D-C172A3CEE3C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

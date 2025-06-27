@@ -9,7 +9,7 @@ public static class MarketDataRegistrar
     {
         services.AddOptions<MarketDataSettings>().BindConfiguration(nameof(MarketDataSettings));
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MarketDataSettings).Assembly));
-        services.AddTransient<IMarketDataService, MarketDataService>();
+        services.AddSingleton<IStaticMarketDataProvider, StaticMarketDataProvider>();
 
         return services;
     }

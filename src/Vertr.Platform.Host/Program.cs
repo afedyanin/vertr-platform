@@ -1,9 +1,6 @@
 
 using System.Text.Json.Serialization;
-using StackExchange.Redis;
-using Vertr.Infrastructure.Redis;
 using Vertr.MarketData.Application;
-using Vertr.MarketData.DataAccess;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.DataAccess;
 using Vertr.PortfolioManager.Application;
@@ -30,17 +27,9 @@ public class Program
         var configuration = builder.Configuration;
         var connectionString = configuration.GetConnectionString(_connStringName);
 
-        var cnfigurationOptions = new ConfigurationOptions()
-        {
-            EndPoints = { "localhost" },
-        };
-
-        builder.Services.AddRedis(cnfigurationOptions);
-
         // Add modules
         builder.Services.AddTinvestGateway(configuration);
         builder.Services.AddMarketData();
-        builder.Services.AddMarketDataDataAccess();
         builder.Services.AddOrderExecution();
         builder.Services.AddOrderExecutionDataAccess(connectionString!);
         builder.Services.AddPortfolioManager();

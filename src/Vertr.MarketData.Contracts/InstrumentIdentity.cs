@@ -4,11 +4,15 @@ namespace Vertr.MarketData.Contracts;
 
 public record class InstrumentIdentity
 {
-    public Guid? Id { get; init; }
+    public Guid Id { get; init; } = Guid.Empty;
 
-    public string? ClassCode { get; init; }
+    public string ClassCode { get; init; } = string.Empty;
 
-    public string? Ticker { get; init; }
+    public string Ticker { get; init; } = string.Empty;
+
+    public string Symbol => $"{ClassCode}.{Ticker}";
+
+    public bool HasUid => Id != Guid.Empty;
 
     [JsonConstructor]
     private InstrumentIdentity() { }
@@ -25,6 +29,6 @@ public record class InstrumentIdentity
     {
         ClassCode = classCode;
         Ticker = ticker;
-        Id = id;
+        Id = id ?? Guid.Empty;
     }
 }

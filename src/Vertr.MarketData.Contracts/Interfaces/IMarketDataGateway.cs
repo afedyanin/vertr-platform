@@ -1,8 +1,5 @@
-using Vertr.MarketData.Contracts;
-
-namespace Vertr.TinvestGateway.Contracts.Interfaces;
-
-public interface ITinvestGatewayMarketData
+namespace Vertr.MarketData.Contracts.Interfaces;
+public interface IMarketDataGateway
 {
     public Task<Instrument[]?> FindInstrument(string query);
 

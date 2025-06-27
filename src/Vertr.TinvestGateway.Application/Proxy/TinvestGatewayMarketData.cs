@@ -1,12 +1,12 @@
 using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
-using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Application.Proxy;
 
-internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMarketData
+internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
 {
     public TinvestGatewayMarketData(InvestApiClient investApiClient) : base(investApiClient)
     {
@@ -27,10 +27,10 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
 
     public async Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)
     {
-        var request = instrumentIdentity.Id.HasValue ?
+        var request = instrumentIdentity.HasUid ?
             new Tinkoff.InvestApi.V1.InstrumentRequest
             {
-                Id = instrumentIdentity.Id.Value.ToString(),
+                Id = instrumentIdentity.Id.ToString(),
                 IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Uid,
             } :
             new Tinkoff.InvestApi.V1.InstrumentRequest
@@ -70,7 +70,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, ITinvestGatewayMar
         {
             From = Timestamp.FromDateTime(from.ToUniversalTime()),
             To = Timestamp.FromDateTime(to.ToUniversalTime()),
-            InstrumentId = instrument.InstrumentIdentity.Id!.Value.ToString(),
+            InstrumentId = instrument.InstrumentIdentity.Id.ToString(),
             Interval = interval.Convert(),
         };
 

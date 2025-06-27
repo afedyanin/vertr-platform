@@ -4,7 +4,6 @@ using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Host;
 using Vertr.PortfolioManager.Contracts;
-using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.Paltform.Tests;
 

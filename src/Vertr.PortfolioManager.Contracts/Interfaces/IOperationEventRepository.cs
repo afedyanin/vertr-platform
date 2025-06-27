@@ -1,7 +1,6 @@
 using Vertr.OrderExecution.Contracts;
-using Vertr.PortfolioManager.Application.Entities;
 
-namespace Vertr.PortfolioManager.Application.Abstractions;
+namespace Vertr.PortfolioManager.Contracts.Interfaces;
 
 public interface IOperationEventRepository
 {

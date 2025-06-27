@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.DataAccess.Entities;
 
 namespace Vertr.PortfolioManager.DataAccess;

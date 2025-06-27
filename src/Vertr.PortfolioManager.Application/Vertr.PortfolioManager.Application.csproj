@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.PortfolioManager.Contracts\Vertr.PortfolioManager.Contracts.csproj" />
-    <ProjectReference Include="..\Vertr.TinvestGateway.Contracts\Vertr.TinvestGateway.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

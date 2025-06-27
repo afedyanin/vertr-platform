@@ -1,15 +1,14 @@
 using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
 using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
-using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Application.Proxy;
 
-internal class TinvestGatewayAccounts : TinvestGatewayBase, ITinvestGatewayAccounts
+internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
 {
-    public TinvestGatewayAccounts(InvestApiClient investApiClient) : base(investApiClient)
+    public TinvestGatewayPortfolio(InvestApiClient investApiClient) : base(investApiClient)
     {
     }
 

@@ -3,10 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Interfaces;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.BackgroundServices;
 using Vertr.TinvestGateway.Application.Proxy;
 using Vertr.TinvestGateway.Application.Settings;
-using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Application;
 
@@ -19,7 +19,7 @@ public static class TinvestGatewayRegistrar
 
         services.AddTransient<IMarketDataGateway, TinvestGatewayMarketData>();
 
-        services.AddTransient<ITinvestGatewayAccounts, TinvestGatewayAccounts>();
+        services.AddTransient<IPortfolioGateway, TinvestGatewayPortfolio>();
         services.AddTransient<IOrderExecutionGateway, TinvestGatewayOrders>();
 
         services.AddHostedService<MarketDataStreamService>();

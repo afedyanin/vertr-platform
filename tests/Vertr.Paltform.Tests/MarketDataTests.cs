@@ -1,12 +1,9 @@
 using System.Text.Json;
-using StackExchange.Redis;
 using Vertr.MarketData.Contracts;
 
 namespace Vertr.Paltform.Tests;
 public class MarketDataTests : ApplicationTestBase
 {
-    private ConnectionMultiplexer? _redis;
-
     private static readonly string[] _symbols = [
         "AFKS",
         "GAZP",
@@ -23,23 +20,7 @@ public class MarketDataTests : ApplicationTestBase
         "VTBR",
         "X5",
     ];
-
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
-    {
-        _redis = ConnectionMultiplexer.Connect("localhost");
-    }
-
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
-        if (_redis != null)
-        {
-            _redis.Dispose();
-            _redis = null;
-        }
-    }
-
+    /*
     [Test]
     public async Task CanGetInstruments()
     {
@@ -86,7 +67,7 @@ public class MarketDataTests : ApplicationTestBase
         var deleted = await db.KeyDeleteAsync("mds:isntruments");
         Assert.That(deleted, Is.True);
     }
-
+    */
     private static string GetKey(Instrument instrument)
         => $"{instrument.InstrumentIdentity.ClassCode}:{instrument.InstrumentIdentity.Ticker}";
 

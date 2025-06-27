@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.DataAccess.Entities;
 

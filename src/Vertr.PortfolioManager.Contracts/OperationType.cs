@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.PortfolioManager.Contracts;
 
 public enum OperationType
 {

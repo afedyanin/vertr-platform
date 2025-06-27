@@ -1,6 +1,7 @@
 using System.Text.Json;
+using Vertr.PortfolioManager.Contracts;
 
-namespace Vertr.PortfolioManager.Application.Entities;
+namespace Vertr.PortfolioManager.Application.Extensions;
 
 internal static class OperationEventExtensions
 {

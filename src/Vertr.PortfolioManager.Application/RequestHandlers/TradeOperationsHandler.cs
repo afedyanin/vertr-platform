@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Vertr.PortfolioManager.Application.Abstractions;
-using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.Application.Extensions;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts.Requests;
 
 namespace Vertr.PortfolioManager.Application.RequestHandlers;

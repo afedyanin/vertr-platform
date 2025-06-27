@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Vertr.OrderExecution.Contracts;
-using Vertr.PortfolioManager.Application.Abstractions;
-using Vertr.PortfolioManager.Application.Entities;
+using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.DataAccess.Repositories;
 internal class OperationEventRepository : RepositoryBase, IOperationEventRepository

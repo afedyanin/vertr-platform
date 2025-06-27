@@ -1,6 +1,6 @@
 using Vertr.OrderExecution.Contracts;
-using Vertr.PortfolioManager.Application.Abstractions;
 using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.DataAccess.Repositories;
 

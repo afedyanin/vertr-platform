@@ -1,6 +1,7 @@
 using Vertr.OrderExecution.Contracts;
+using Vertr.TinvestGateway.Contracts;
 
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.PortfolioManager.Contracts;
 
 public record class Operation
 {

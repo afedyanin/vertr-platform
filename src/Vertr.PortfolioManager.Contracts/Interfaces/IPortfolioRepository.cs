@@ -1,7 +1,6 @@
 using Vertr.OrderExecution.Contracts;
-using Vertr.PortfolioManager.Contracts;
 
-namespace Vertr.PortfolioManager.Application.Abstractions;
+namespace Vertr.PortfolioManager.Contracts.Interfaces;
 public interface IPortfolioRepository
 {
     public Task<PortfolioSnapshot?> GetPortfolio(PortfolioIdentity portfolioIdentity);

@@ -1,7 +1,6 @@
-using Vertr.PortfolioManager.Contracts;
+namespace Vertr.PortfolioManager.Contracts.Interfaces;
 
-namespace Vertr.TinvestGateway.Contracts.Interfaces;
-public interface ITinvestGatewayAccounts
+public interface IPortfolioGateway
 {
     public Task<Account[]?> GetAccounts();
 

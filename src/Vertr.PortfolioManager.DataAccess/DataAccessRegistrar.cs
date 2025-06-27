@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Infrastructure.Pgsql;
-using Vertr.PortfolioManager.Application.Abstractions;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.PortfolioManager.DataAccess.Repositories;
 
 namespace Vertr.PortfolioManager.DataAccess;

@@ -9,9 +9,9 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
 {
     public TradingSignalHandler(
         IMediator mediator,
-        IPortfolioManager portfolioManager,
+        IPortfolioRepository portfolioRepository,
         IStaticMarketDataProvider staticMarketDataProvider
-        ) : base(mediator, portfolioManager, staticMarketDataProvider)
+        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
     {
     }
 

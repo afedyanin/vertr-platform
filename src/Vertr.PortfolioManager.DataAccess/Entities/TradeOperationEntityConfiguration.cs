@@ -28,7 +28,31 @@ internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<Trad
         builder.Property(e => e.BookId)
             .HasColumnName("book_id");
 
-        // TODO: Add columns
+        builder.Property(e => e.ClassCode)
+            .HasColumnName("class_code")
+            .IsRequired();
+
+        builder.Property(e => e.ClassCode)
+            .HasColumnName("ticker")
+            .IsRequired();
+
+        builder.Property(e => e.Amount)
+            .HasColumnName("amount");
+
+        builder.Property(e => e.TradeId)
+            .HasColumnName("trade_id");
+
+        builder.Property(e => e.ExecutionTime)
+            .HasColumnName("execution_time");
+
+        builder.Property(e => e.Price)
+            .HasColumnName("price");
+
+        builder.Property(e => e.Quantity)
+            .HasColumnName("quantity");
+
+        builder.Property(e => e.Message)
+            .HasColumnName("message");
     }
 }
 

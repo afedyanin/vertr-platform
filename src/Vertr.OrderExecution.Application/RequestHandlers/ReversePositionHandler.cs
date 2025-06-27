@@ -9,9 +9,9 @@ internal class ReversePositionHandler : PositionHandlerBase, IRequestHandler<Rev
 {
     public ReversePositionHandler(
         IMediator mediator,
-        IPortfolioManager portfolioManager,
+        IPortfolioRepository portfolioRepository,
         IStaticMarketDataProvider staticMarketDataProvider
-        ) : base(mediator, portfolioManager, staticMarketDataProvider)
+        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
     {
     }
 

@@ -21,7 +21,7 @@ public record class TradeOperation
 
     public string? Message { get; init; }
 
-    public string TradeId { get; init; } = string.Empty;
+    public string? TradeId { get; init; }
 
     public DateTime ExecutionTime { get; init; }
 

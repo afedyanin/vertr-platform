@@ -8,9 +8,9 @@ internal class ClosePositionHandler : PositionHandlerBase, IRequestHandler<Close
 {
     public ClosePositionHandler(
         IMediator mediator,
-        IPortfolioManager portfolioManager,
+        IPortfolioRepository portfolioRepository,
         IStaticMarketDataProvider staticMarketDataProvider
-        ) : base(mediator, portfolioManager, staticMarketDataProvider)
+        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
     {
     }
 

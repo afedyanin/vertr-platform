@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
@@ -9,22 +8,22 @@ namespace Vertr.Platform.Host.Controllers;
 [ApiController]
 public class PortfolioController : ControllerBase
 {
-    private readonly IPortfolioManager _portfolioManager;
+    private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
 
     public PortfolioController(
         IPortfolioGateway portfolioGateway,
-        IPortfolioManager portfolioManager)
+        IPortfolioRepository portfolioRepository)
     {
         _portfolioGateway = portfolioGateway;
-        _portfolioManager = portfolioManager;
+        _portfolioRepository = portfolioRepository;
     }
 
     [HttpGet("{accountId}")]
     public async Task<IActionResult> GetLast(string accountId, Guid? bookId = null)
     {
         var identity = new PortfolioIdentity(accountId, bookId);
-        var portfolio = await _portfolioManager.GetPortfolio(identity);
+        var portfolio = await _portfolioRepository.GetPortfolio(identity);
         return Ok(portfolio);
     }
 

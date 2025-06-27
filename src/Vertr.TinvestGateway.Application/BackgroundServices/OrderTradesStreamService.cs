@@ -13,19 +13,19 @@ namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public class OrderTradesStreamService : StreamServiceBase
 {
-    private readonly IPortfolioManager _portfolioManager;
+    private readonly IPortfolioRepository _portfolioRepository;
 
     protected override bool IsEnabled => TinvestSettings.OrderTradesStreamEnabled;
 
     public OrderTradesStreamService(
-        IPortfolioManager portfolioManager,
+        IPortfolioRepository portfolioRepository,
         IOptions<TinvestSettings> tinvestOptions,
         InvestApiClient investApiClient,
         IMediator mediator,
         ILogger<OrderTradesStreamService> logger) :
             base(tinvestOptions, investApiClient, mediator, logger)
     {
-        _portfolioManager = portfolioManager;
+        _portfolioRepository = portfolioRepository;
     }
 
     protected override async Task Subscribe(
@@ -33,7 +33,7 @@ public class OrderTradesStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        var accounts = await _portfolioManager.GetActiveAccounts();
+        var accounts = await _portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
         request.Accounts.Add(accounts);
 

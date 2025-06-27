@@ -8,9 +8,9 @@ internal class OpenPositionHandler : PositionHandlerBase, IRequestHandler<OpenPo
 {
     public OpenPositionHandler(
         IMediator mediator,
-        IPortfolioManager portfolioManager,
+        IPortfolioRepository portfolioRepository,
         IStaticMarketDataProvider staticMarketDataProvider
-        ) : base(mediator, portfolioManager, staticMarketDataProvider)
+        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
     {
     }
 

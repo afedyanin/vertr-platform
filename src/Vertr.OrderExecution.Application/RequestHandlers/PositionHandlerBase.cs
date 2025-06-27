@@ -8,20 +8,19 @@ namespace Vertr.OrderExecution.Application.RequestHandlers;
 internal abstract class PositionHandlerBase
 {
     private readonly IStaticMarketDataProvider _marketDataProvider;
-
-    private readonly IPortfolioManager _portfolioManager;
+    private readonly IPortfolioRepository _portfolioRepository;
 
     protected IMediator Mediator { get; private set; }
 
     protected PositionHandlerBase(
         IMediator mediator,
-        IPortfolioManager portfolioManager,
+        IPortfolioRepository portfolioRepository,
         IStaticMarketDataProvider marketDataProvider
         )
     {
         Mediator = mediator;
 
-        _portfolioManager = portfolioManager;
+        _portfolioRepository = portfolioRepository;
         _marketDataProvider = marketDataProvider;
     }
 
@@ -36,7 +35,7 @@ internal abstract class PositionHandlerBase
             throw new InvalidOperationException($"Cannot find instrument with Identity={instrumentIdentity}");
         }
 
-        var portfolio = await _portfolioManager.GetPortfolio(portfolioIdentity);
+        var portfolio = await _portfolioRepository.GetPortfolio(portfolioIdentity);
 
         if (portfolio == null)
         {

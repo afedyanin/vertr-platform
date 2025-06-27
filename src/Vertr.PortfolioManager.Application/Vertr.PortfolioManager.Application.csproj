@@ -8,15 +8,14 @@
 
   <ItemGroup>
     <Compile Remove="Converters\**" />
-    <Compile Remove="Extensions\**" />
     <EmbeddedResource Remove="Converters\**" />
-    <EmbeddedResource Remove="Extensions\**" />
     <None Remove="Converters\**" />
-    <None Remove="Extensions\**" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.6" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
   </ItemGroup>
 

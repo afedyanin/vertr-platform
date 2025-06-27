@@ -9,9 +9,9 @@ public class PortfolioTests : ApplicationTestBase
     private static readonly Guid _bookId = new Guid("D8EBF841-D37B-47C0-AAD3-F778E29B1B85");
 
     [TestCase(_accountId)]
-    public async Task CanGetInitialPortfolioState(string accountId)
+    public void CanGetInitialPortfolioState(string accountId)
     {
-        var portfolio = await GetPortfolio(accountId);
+        var portfolio = GetPortfolio(accountId);
 
         Assert.That(portfolio, Is.Not.Null);
         Assert.That(portfolio.Positions, Is.Not.Null);
@@ -24,7 +24,7 @@ public class PortfolioTests : ApplicationTestBase
     public async Task CanOpenPosition(string accountId)
     {
         _ = await OpenPosition(GetPortfolioIdentity(accountId), 3);
-        var portfolio = await GetPortfolio(accountId);
+        var portfolio = GetPortfolio(accountId);
 
         DumpPortfolio(portfolio!);
     }
@@ -33,7 +33,7 @@ public class PortfolioTests : ApplicationTestBase
     public async Task CanReversePosition(string accountId)
     {
         _ = await ReversePosition(GetPortfolioIdentity(accountId));
-        var portfolio = await GetPortfolio(accountId);
+        var portfolio = GetPortfolio(accountId);
 
         DumpPortfolio(portfolio!);
     }

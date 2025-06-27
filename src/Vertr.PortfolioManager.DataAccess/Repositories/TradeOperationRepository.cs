@@ -10,7 +10,17 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
     {
     }
 
-    public async Task<TradeOperation[]> GetAll(PortfolioIdentity portfolioIdentity, int maxRecords = 1000)
+    public async Task<TradeOperation[]> GetAll()
+    {
+        using var context = await GetDbContext();
+
+        return await context
+            .Operations
+            .OrderBy(x => x.CreatedAt)
+            .ToArrayAsync();
+    }
+
+    public async Task<TradeOperation[]> GetByPortfolio(PortfolioIdentity portfolioIdentity)
     {
         using var context = await GetDbContext();
 
@@ -18,21 +28,17 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
         {
             return await context
                 .Operations
-                .AsNoTracking()
                 .Where(x => x.AccountId == portfolioIdentity.AccountId)
                 .OrderByDescending(x => x.CreatedAt)
-                .Take(maxRecords)
                 .ToArrayAsync();
         }
 
         return await context
             .Operations
-            .AsNoTracking()
             .Where(x =>
                 x.AccountId == portfolioIdentity.AccountId &&
                 x.BookId == portfolioIdentity.BookId)
             .OrderByDescending(x => x.CreatedAt)
-            .Take(maxRecords)
             .ToArrayAsync();
     }
 

@@ -2,7 +2,9 @@ namespace Vertr.PortfolioManager.Contracts.Interfaces;
 
 public interface ITradeOperationRepository
 {
-    public Task<TradeOperation[]> GetAll(PortfolioIdentity portfolioIdentity, int maxRecords = 1000);
+    public Task<TradeOperation[]> GetAll();
+
+    public Task<TradeOperation[]> GetByPortfolio(PortfolioIdentity portfolioIdentity);
 
     public Task<bool> Save(TradeOperation[] tradeOoperations);
 

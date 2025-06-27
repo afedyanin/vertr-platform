@@ -33,9 +33,9 @@ public abstract class ApplicationTestBase
         await VertrClient.CloseAccount(accountId);
     }
 
-    protected async Task<Portfolio?> GetPortfolio(string accountId)
+    protected Portfolio? GetPortfolio(string accountId)
     {
-        var res = await VertrClient.GetPortfolio(accountId);
+        var res = VertrClient.GetPortfolio(accountId);
         return res;
     }
 

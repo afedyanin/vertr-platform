@@ -29,7 +29,8 @@ public class MarketDataStreamService : StreamServiceBase
 
     protected override async Task OnBeforeStart(CancellationToken stoppingToken)
     {
-        await _staticMarketDataProvider.Load();
+        var marketDataRequest = new InitialLoadMarketDataRequest();
+        await Mediator.Send(marketDataRequest, stoppingToken);
     }
 
     protected override async Task Subscribe(
@@ -65,7 +66,7 @@ public class MarketDataStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Candle)
             {
-                var marketDataCandleRequest = new CandleReceived
+                var marketDataCandleRequest = new CandleReceivedRequest
                 {
                     Candle = response.Candle.Convert(),
                     InstrumentId = response.Candle.InstrumentUid,

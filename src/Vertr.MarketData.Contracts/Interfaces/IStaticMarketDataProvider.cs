@@ -12,5 +12,5 @@ public interface IStaticMarketDataProvider
 
     public Task<CandleSubscription[]> GetSubscriptions();
 
-    public Task Load();
+    public Task InitialLoad();
 }

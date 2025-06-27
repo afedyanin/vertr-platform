@@ -58,7 +58,7 @@ public interface IVertrPlatformClient
     #region portfolio
 
     [Get("/portfolio/{accountId}")]
-    public Task<Portfolio?> GetPortfolio(string accountId, Guid? bookId = null);
+    public Portfolio? GetPortfolio(string accountId, Guid? bookId = null);
 
     [Get("/portfolio/sandbox-accounts")]
     public Task<Account[]?> GetSandboxAccounts();

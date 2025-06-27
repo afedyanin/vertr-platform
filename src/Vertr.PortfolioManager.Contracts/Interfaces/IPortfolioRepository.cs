@@ -1,11 +1,13 @@
 namespace Vertr.PortfolioManager.Contracts.Interfaces;
 public interface IPortfolioRepository
 {
-    public Task<string[]> GetActiveAccounts();
+    public string[] GetActiveAccounts();
 
-    public Task<Portfolio?> GetPortfolio(PortfolioIdentity portfolioIdentity);
+    public Portfolio[] GetAllPortfolios();
 
-    public Task SetPortfolio(Portfolio portfolio);
+    public Portfolio? GetPortfolio(PortfolioIdentity portfolioIdentity);
 
-    public Task Remove(PortfolioIdentity portfolioIdentity);
+    public void Save(Portfolio portfolio);
+
+    public void Delete(PortfolioIdentity portfolioIdentity);
 }

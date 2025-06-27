@@ -33,7 +33,7 @@ public class OrderTradesStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        var accounts = await _portfolioRepository.GetActiveAccounts();
+        var accounts = _portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
         request.Accounts.Add(accounts);
 

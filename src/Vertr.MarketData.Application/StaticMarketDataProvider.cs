@@ -13,6 +13,10 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
     private readonly Dictionary<Guid, CandleInterval> _intervalsById = [];
     private readonly List<CandleSubscription> _subscriptions = [];
 
+    private bool _isInitialized = false;
+    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+
+
     public StaticMarketDataProvider(
         IOptions<MarketDataSettings> options,
         IMarketDataGateway gateway)
@@ -22,10 +26,30 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
         _subscriptions = [.. _settings.GetCandleSubscriptions()];
 
     }
-    public async Task Load()
+    public async Task InitialLoad()
     {
-        LoadIntervals();
-        await Loadnstruments();
+        if (_isInitialized)
+        {
+            return;
+        }
+
+        _semaphore.Wait();
+
+        try
+        {
+            if (_isInitialized)
+            {
+                return;
+            }
+
+            LoadIntervals();
+            await Loadnstruments();
+            _isInitialized = true;
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
     }
 
     public Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)

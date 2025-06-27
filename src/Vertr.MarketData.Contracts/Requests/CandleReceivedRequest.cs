@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Vertr.MarketData.Contracts.Requests;
 
-public class CandleReceived : IRequest
+public class CandleReceivedRequest : IRequest
 {
     public required string InstrumentId { get; init; }
 

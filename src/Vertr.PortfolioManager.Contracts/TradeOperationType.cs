@@ -1,4 +1,4 @@
-namespace Vertr.OrderExecution.Contracts.Enums;
+namespace Vertr.PortfolioManager.Contracts;
 
 public enum TradeOperationType
 {

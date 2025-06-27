@@ -1,17 +1,16 @@
 using Microsoft.EntityFrameworkCore;
-using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.DataAccess.Repositories;
-internal class OperationEventRepository : RepositoryBase, IOperationEventRepository
+internal class TradeOperationRepository : RepositoryBase, ITradeOperationRepository
 {
-    public OperationEventRepository(
+    public TradeOperationRepository(
         IDbContextFactory<PortfolioDbContext> contextFactory) : base(contextFactory)
     {
     }
 
-    public async Task<OperationEvent[]> GetAll(PortfolioIdentity portfolioIdentity, int maxRecords = 1000)
+    public async Task<TradeOperation[]> GetAll(PortfolioIdentity portfolioIdentity, int maxRecords = 1000)
     {
         using var context = await GetDbContext();
 
@@ -37,7 +36,7 @@ internal class OperationEventRepository : RepositoryBase, IOperationEventReposit
             .ToArrayAsync();
     }
 
-    public async Task<bool> Save(OperationEvent[] operationEvents)
+    public async Task<bool> Save(TradeOperation[] operationEvents)
     {
         using var context = await GetDbContext();
         await context.Operations.AddRangeAsync(operationEvents);

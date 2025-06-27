@@ -1,5 +1,3 @@
-using Vertr.OrderExecution.Contracts;
-
 namespace Vertr.PortfolioManager.Contracts;
 public class PortfolioSnapshot
 {

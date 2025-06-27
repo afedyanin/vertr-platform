@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
@@ -17,10 +18,12 @@ internal static class TinvestOperationsFactory
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             OperationType = TradeOperationType.BrokerFee,
-            PortfolioIdentity = portfolioIdentity,
+            AccountId = portfolioIdentity.AccountId,
+            BookId = portfolioIdentity.BookId,
             OrderId = response.OrderId,
             Amount = response.ExecutedCommission,
-            InstrumentIdentity = instrumentIdentity,
+            ClassCode = instrumentIdentity.ClassCode,
+            Ticker = instrumentIdentity.Ticker,
         };
 
         return [opCommission];
@@ -33,18 +36,28 @@ internal static class TinvestOperationsFactory
     {
         Debug.Assert(trades.AccountId == portfolioIdentity.AccountId);
 
-        var opTrades = new TradeOperation
-        {
-            Id = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
-            OperationType = trades.Direction.ToOperationType(),
-            PortfolioIdentity = portfolioIdentity,
-            OrderId = trades.OrderId,
-            InstrumentIdentity = instrumentIdentity,
-            Trades = trades.Trades
-        };
+        var opTrades = new List<TradeOperation>();
 
-        return [opTrades];
+        foreach (var trade in trades.Trades)
+        {
+            var opTrade = new TradeOperation
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
+                OperationType = trades.Direction.ToOperationType(),
+                AccountId = portfolioIdentity.AccountId,
+                BookId = portfolioIdentity.BookId,
+                OrderId = trades.OrderId,
+                ClassCode = instrumentIdentity.ClassCode,
+                Ticker = instrumentIdentity.Ticker,
+                Price = trade.Price,
+                Quantity = trade.Quantity,
+                ExecutionTime = trade.ExecutionTime,
+                TradeId = trade.TradeId,
+            };
+        }
+
+        return [.. opTrades];
     }
 
     private static TradeOperationType ToOperationType(this OrderDirection direction)

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Requests;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
@@ -42,7 +43,7 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
                 return;
             }
 
-            portfolioIdentity = new Contracts.PortfolioIdentity(orderTrades.AccountId);
+            portfolioIdentity = new PortfolioIdentity(orderTrades.AccountId);
         }
 
         var orderEvent = orderTrades.CreateEvent(request.InstrumentIdentity, portfolioIdentity);

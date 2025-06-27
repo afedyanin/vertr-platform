@@ -1,3 +1,5 @@
+using Vertr.PortfolioManager.Contracts;
+
 namespace Vertr.OrderExecution.Contracts.Interfaces;
 
 public interface IOrderEventRepository

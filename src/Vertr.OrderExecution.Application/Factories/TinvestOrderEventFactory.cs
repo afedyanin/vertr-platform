@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 

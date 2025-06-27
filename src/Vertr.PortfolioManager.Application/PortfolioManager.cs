@@ -1,4 +1,3 @@
-using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
@@ -13,11 +12,11 @@ internal class PortfolioManager : IPortfolioManager
         ];
 
     private readonly IPortfolioRepository _portfolioRepository;
-    private readonly IOperationEventRepository _operationEventRepository;
+    private readonly ITradeOperationRepository _operationEventRepository;
 
     public PortfolioManager(
         IPortfolioRepository portfolioRepository,
-        IOperationEventRepository operationEventRepository)
+        ITradeOperationRepository operationEventRepository)
     {
         _portfolioRepository = portfolioRepository;
         _operationEventRepository = operationEventRepository;

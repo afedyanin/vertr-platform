@@ -8,7 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{8D5C72
 		.editorconfig = .editorconfig
 		BACKLOG.md = BACKLOG.md
 		README.md = README.md
-		REDIS_KEYS.md = REDIS_KEYS.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}"

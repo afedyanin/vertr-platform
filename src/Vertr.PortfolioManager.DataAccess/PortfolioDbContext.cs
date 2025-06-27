@@ -6,7 +6,7 @@ namespace Vertr.PortfolioManager.DataAccess;
 
 public class PortfolioDbContext : DbContext
 {
-    public DbSet<OperationEvent> Operations { get; set; }
+    public DbSet<TradeOperation> Operations { get; set; }
 
     public PortfolioDbContext(DbContextOptions<PortfolioDbContext> options) : base(options)
     {
@@ -14,6 +14,6 @@ public class PortfolioDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        new OperationEventEntityConfiguration().Configure(modelBuilder.Entity<OperationEvent>());
+        new TradeOperationEntityConfiguration().Configure(modelBuilder.Entity<TradeOperation>());
     }
 }

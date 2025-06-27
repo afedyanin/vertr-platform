@@ -5,8 +5,8 @@ namespace Vertr.TinvestGateway.Application.Converters;
 
 internal static class OperationConverter
 {
-    public static Operation Convert(this Tinkoff.InvestApi.V1.Operation source)
-        => new Operation
+    public static TradeOperation Convert(this Tinkoff.InvestApi.V1.Operation source)
+        => new TradeOperation
         {
             ParentOperationId = source.ParentOperationId,
             Currency = source.Currency,
@@ -25,7 +25,7 @@ internal static class OperationConverter
             OperationTrades = source.Trades.ToArray().Convert()
         };
 
-    public static Operation[] Convert(this Tinkoff.InvestApi.V1.Operation[] source)
+    public static TradeOperation[] Convert(this Tinkoff.InvestApi.V1.Operation[] source)
         => [.. source.Select(Convert)];
 
     public static Trade Convert(this Tinkoff.InvestApi.V1.OperationTrade source)

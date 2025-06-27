@@ -62,7 +62,7 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
         return balance;
     }
 
-    public async Task<Operation[]?> GetOperations(string accountId, DateTime? from = null, DateTime? to = null)
+    public async Task<TradeOperation[]?> GetOperations(string accountId, DateTime? from = null, DateTime? to = null)
     {
         var request = new Tinkoff.InvestApi.V1.OperationsRequest
         {

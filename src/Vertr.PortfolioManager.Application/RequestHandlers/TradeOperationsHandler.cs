@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Vertr.PortfolioManager.Application.Extensions;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts.Requests;
 
@@ -8,11 +7,11 @@ namespace Vertr.PortfolioManager.Application.RequestHandlers;
 
 internal class TradeOperationsHandler : IRequestHandler<TradeOperationsRequest>
 {
-    private readonly IOperationEventRepository _operationEventRepository;
+    private readonly ITradeOperationRepository _operationEventRepository;
     private readonly ILogger<TradeOperationsHandler> _logger;
 
     public TradeOperationsHandler(
-        IOperationEventRepository operationEventRepository,
+        ITradeOperationRepository operationEventRepository,
         ILogger<TradeOperationsHandler> logger)
     {
         _operationEventRepository = operationEventRepository;
@@ -23,15 +22,7 @@ internal class TradeOperationsHandler : IRequestHandler<TradeOperationsRequest>
     {
         _logger.LogInformation($"Order operations received.");
 
-        var operationEvents = request.Operations!.Convert();
-
-        if (operationEvents == null)
-        {
-            _logger.LogWarning($"Cannot convert operation events.");
-            return;
-        }
-
-        var saved = await _operationEventRepository.Save(operationEvents);
+        var saved = await _operationEventRepository.Save(request.Operations);
 
         if (!saved)
         {
@@ -39,6 +30,5 @@ internal class TradeOperationsHandler : IRequestHandler<TradeOperationsRequest>
         }
 
         // TODO: Implement operation event handling
-
     }
 }

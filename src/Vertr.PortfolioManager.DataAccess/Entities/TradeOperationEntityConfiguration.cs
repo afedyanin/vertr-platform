@@ -4,9 +4,9 @@ using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.DataAccess.Entities;
 
-internal class OperationEventEntityConfiguration : IEntityTypeConfiguration<OperationEvent>
+internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<TradeOperation>
 {
-    public void Configure(EntityTypeBuilder<OperationEvent> builder)
+    public void Configure(EntityTypeBuilder<TradeOperation> builder)
     {
         builder.ToTable("operation_events");
 
@@ -28,12 +28,7 @@ internal class OperationEventEntityConfiguration : IEntityTypeConfiguration<Oper
         builder.Property(e => e.BookId)
             .HasColumnName("book_id");
 
-        builder.Property(e => e.JsonDataType)
-            .HasColumnName("json_data_type");
-
-        builder.Property(e => e.JsonData)
-            .HasColumnName("json_data")
-            .HasColumnType("json");
+        // TODO: Add columns
     }
 }
 

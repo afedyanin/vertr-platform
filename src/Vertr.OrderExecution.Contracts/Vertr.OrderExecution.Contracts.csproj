@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.PortfolioManager.Contracts\Vertr.PortfolioManager.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

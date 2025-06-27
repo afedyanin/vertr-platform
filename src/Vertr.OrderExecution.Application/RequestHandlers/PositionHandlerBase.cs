@@ -1,7 +1,7 @@
 using MediatR;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
-using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;

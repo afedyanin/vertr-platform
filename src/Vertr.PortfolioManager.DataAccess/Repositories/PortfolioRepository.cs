@@ -1,4 +1,3 @@
-using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 

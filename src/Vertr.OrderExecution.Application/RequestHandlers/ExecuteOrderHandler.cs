@@ -6,6 +6,7 @@ using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Requests;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;

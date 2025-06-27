@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Infrastructure.Pgsql\Vertr.Infrastructure.Pgsql.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj" />
+    <ProjectReference Include="..\Vertr.PortfolioManager.Contracts\Vertr.PortfolioManager.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

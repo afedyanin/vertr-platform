@@ -1,8 +1,0 @@
-services:
-  vertr.server:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_HTTP_PORTS=8008
-    ports:
-      - "8008"
-    restart: "always"

@@ -1,6 +1,0 @@
-services:
-  vertr.server:
-    image: ${DOCKER_REGISTRY-}vertrserver
-    build:
-      context: .
-      dockerfile: src/Vertr.Server/Dockerfile

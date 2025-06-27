@@ -8,55 +8,35 @@ namespace Vertr.Platform.Host;
 
 public interface IVertrPlatformClient
 {
-    [Get("/tinvest/sandbox-accounts")]
-    public Task<Account[]?> GetSandboxAccounts();
-
-    [Get("/tinvest/accounts")]
-    public Task<Account[]?> GetAccounts();
-
-    [Post("/tinvest/sandbox-account")]
-    public Task<string> CreateAccount(string accountName);
-
-    [Put("/tinvest/sandbox-account/{accountId}")]
-    public Task<Money?> PayIn(string accountId, [Body] Money money);
-
-    [Delete("/tinvest/sandbox-account/{accountId}")]
-    public Task CloseAccount(string accountId);
-
-    [Get("/tinvest/operations/portfolio")]
-    public Task<Portfolio?> GetPortfolio(string accountId);
-
-    [Get("/tinvest/instrument-by-ticker/{classCode}/{ticker}")]
-    public Task<Instrument?> GetInstrumentByTicker(string classCode, string ticker);
-
-    [Get("/tinvest/instrument-by-id/{instrumentId}")]
-    public Task<Instrument?> GetInstrumentById(string instrumentId);
-
-    [Get("/tinvest/instrument-find/{query}")]
-    public Task<Instrument[]?> FindInstrument(string query);
-
-    [Get("/tinvest/candles/{classCode}/{ticker}/{interval}")]
-    public Task<Candle[]?> GetCandles(
-        string classCode,
-        string ticker,
-        CandleInterval interval,
-        DateTime from,
-        DateTime to,
-        int? limit = 100);
-
-    [Post("/tinvest/order")]
-    public Task<PostOrderResponse?> PostOrder(PostOrderRequest request);
-
-    [Get("/tinvest/order-state/{accountId}/{orderId}")]
-    public Task<OrderState?> GetOrderState(string accountId, string orderId);
-
-    [Delete("/tinvest/order/{accountId}/{orderId}")]
-    public Task<DateTime> CancelOrder(string accountId, string orderId);
-
+    #region market-data
 
     [Get("/market-data/subsciptions")]
     public Task<CandleSubscription[]?> GetSubscriptions();
 
+    [Get("/market-data/instruments")]
+    public Task<Instrument[]?> GetInstruments();
+
+    [Get("/market-data/instrument-by-ticker/{classCode}/{ticker}")]
+    public Task<Instrument?> GetInstrumentByTicker(string classCode, string ticker);
+
+    [Get("/market-data/instrument-by-id/{instrumentId}")]
+    public Task<Instrument?> GetInstrumentById(string instrumentId);
+
+    [Get("/market-data/instrument-find/{query}")]
+    public Task<Instrument[]?> FindInstrument(string query);
+
+    #endregion
+
+    #region orders
+
+    [Post("/orders/post")]
+    public Task<PostOrderResponse?> PostOrder(PostOrderRequest request);
+
+    [Get("/orders/order-state/{accountId}/{orderId}")]
+    public Task<OrderState?> GetOrderState(string accountId, string orderId);
+
+    [Delete("/orders/order/{accountId}/{orderId}")]
+    public Task<DateTime> CancelOrder(string accountId, string orderId);
 
     [Post("/orders/execute")]
     public Task<ExecuteOrderResponse?> ExecuteOrder(ExecuteOrderRequest request);
@@ -73,7 +53,30 @@ public interface IVertrPlatformClient
     [Post("/orders/signal")]
     public Task<ExecuteOrderResponse?> PorocessSignal(TradingSignalRequest request);
 
+    #endregion
+
+    #region portfolio
 
     [Get("/portfolio/{accountId}")]
-    public Task<Portfolio?> GetPortfolioSnapshot(string accountId, Guid? bookId = null);
+    public Task<Portfolio?> GetPortfolio(string accountId, Guid? bookId = null);
+
+    [Get("/portfolio/sandbox-accounts")]
+    public Task<Account[]?> GetSandboxAccounts();
+
+    [Get("/portfolio/accounts")]
+    public Task<Account[]?> GetAccounts();
+
+    [Post("/portfolio/sandbox-account")]
+    public Task<string> CreateAccount(string accountName);
+
+    [Put("/portfolio/sandbox-account/{accountId}")]
+    public Task<Money?> PayIn(string accountId, [Body] Money money);
+
+    [Delete("/portfolio/sandbox-account/{accountId}")]
+    public Task CloseAccount(string accountId);
+
+    [Get("/portfolio/gateway-portfolio")]
+    public Task<Portfolio?> GetGatewayPortfolio(string accountId);
+
+    #endregion
 }

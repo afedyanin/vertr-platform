@@ -73,7 +73,17 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
         _instrumentsById.Clear();
         _instrumentsByTicker.Clear();
 
-        // TODO: Add static instruments from config (RUB)
+        foreach (var instrumentId in _settings.Instruments)
+        {
+            var instrument = await _gateway.GetInstrument(new InstrumentIdentity(instrumentId));
+            if (instrument != null)
+            {
+                var uid = instrument.InstrumentIdentity?.Id ?? Guid.Empty;
+                _instrumentsById[uid] = instrument;
+                _instrumentsByTicker[instrument.InstrumentIdentity?.Symbol ?? ""] = instrument;
+            }
+        }
+
         foreach (var subscription in _subscriptions)
         {
             var instrument = await _gateway.GetInstrument(subscription.InstrumentIdentity);

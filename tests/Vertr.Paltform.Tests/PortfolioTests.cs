@@ -5,16 +5,8 @@ namespace Vertr.Paltform.Tests;
 [TestFixture(Category = "Application", Explicit = true)]
 public class PortfolioTests : ApplicationTestBase
 {
-    private static readonly Guid _bookId = Guid.NewGuid();
     private const string _accountId = "b883ab13-997b-4823-9698-20bac64aeaad";
-
-    [Test]
-    public async Task CanOpenAccount()
-    {
-        var accountId = await OpenAccount();
-        Assert.That(accountId, Is.Not.Null);
-        Console.WriteLine($"AccountId={accountId}");
-    }
+    private static readonly Guid _bookId = new Guid("D8EBF841-D37B-47C0-AAD3-F778E29B1B85");
 
     [TestCase(_accountId)]
     public async Task CanGetInitialPortfolioState(string accountId)
@@ -27,7 +19,6 @@ public class PortfolioTests : ApplicationTestBase
 
         DumpPortfolio(portfolio);
     }
-
 
     [TestCase(_accountId)]
     public async Task CanOpenPosition(string accountId)

@@ -20,7 +20,7 @@ public class PortfolioController : ControllerBase
     }
 
     [HttpGet("{accountId}")]
-    public async Task<IActionResult> GetLast(string accountId, Guid? bookId = null)
+    public async Task<IActionResult> GetPortfolio(string accountId, Guid? bookId = null)
     {
         var identity = new PortfolioIdentity(accountId, bookId);
         var portfolio = await _portfolioRepository.GetPortfolio(identity);
@@ -63,8 +63,8 @@ public class PortfolioController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("portfolio/{accountId}")]
-    public async Task<IActionResult> GetPortfolio(string accountId)
+    [HttpGet("gateway-portfolio/{accountId}")]
+    public async Task<IActionResult> GetGatewayPortfolio(string accountId)
     {
         var portfolio = await _portfolioGateway.GetPortfolio(accountId);
         return Ok(portfolio);

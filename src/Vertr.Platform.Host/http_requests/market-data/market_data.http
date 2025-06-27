@@ -1,7 +1,0 @@
-@base_address = https://localhost:7085
-
-### Список подписок на свечи
-
-GET {{base_address}}/market-data/subsciptions
-Accept: application/json
-

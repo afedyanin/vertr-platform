@@ -10,6 +10,8 @@ public abstract class ApplicationTestBase
 {
     private const decimal _initialAmount = 100_000;
     private static readonly InstrumentIdentity _sber = new InstrumentIdentity(new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13"));
+    private static readonly InstrumentIdentity _rub = new InstrumentIdentity(new Guid("a92e2e25-a698-45cc-a781-167cf465257c"));
+
     private const string _baseAddress = "https://localhost:7085";
 
     protected IVertrPlatformClient VertrClient { get; private set; }

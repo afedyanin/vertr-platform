@@ -5,6 +5,7 @@ public class MarketDataSettings
 {
     public Dictionary<string, CandleInterval> Subscriptions { get; set; } = [];
 
+    public List<Guid> Instruments { get; set; } = [];
 
     public CandleSubscription[] GetCandleSubscriptions()
     {

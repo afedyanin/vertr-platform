@@ -47,7 +47,7 @@ public class PortfolioTests : ApplicationTestBase
         DumpPortfolio(portfolio!);
     }
 
-    private void DumpPortfolio(PortfolioSnapshot portfolio)
+    private void DumpPortfolio(Portfolio portfolio)
     {
         foreach (var position in portfolio.Positions)
         {

@@ -1,12 +1,11 @@
 using Vertr.MarketData.Contracts;
-using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.TinvestGateway.Application.Converters;
 
 internal static class PortfolioConverter
 {
-    public static PortfolioSnapshot? Convert(
+    public static Portfolio? Convert(
         this Tinkoff.InvestApi.V1.PortfolioResponse source)
     {
         if (source == null)
@@ -14,43 +13,25 @@ internal static class PortfolioConverter
             return null;
         }
 
-        var response = source.ConvertToResponse();
-
-        var res = new PortfolioSnapshot
+        var res = new Portfolio
         {
             UpdatedAt = DateTime.UtcNow,
-            Identity = new PortfolioIdentity(response.AccountId),
-            Positions = response.Positions.Convert()
+            Identity = new PortfolioIdentity(source.AccountId),
+            Positions = source.Positions.ToArray().Convert()
         };
 
         return res;
     }
 
-    private static PortfolioResponse ConvertToResponse(
-        this Tinkoff.InvestApi.V1.PortfolioResponse source)
-        => new PortfolioResponse
+    private static Position Convert(
+        this Tinkoff.InvestApi.V1.PortfolioPosition source)
+        => new Position
         {
-            AccountId = source.AccountId,
-            TotalAmountShares = source.TotalAmountShares,
-            TotalAmountBonds = source.TotalAmountBonds,
-            TotalAmountEtf = source.TotalAmountEtf,
-            TotalAmountCurrencies = source.TotalAmountCurrencies,
-            TotalAmountFutures = source.TotalAmountFutures,
-            TotalAmountOptions = source.TotalAmountOptions,
-            TotalAmountSp = source.TotalAmountSp,
-            TotalAmountPortfolio = source.TotalAmountPortfolio,
-            ExpectedYield = source.ExpectedYield,
-            Positions = source.Positions.ToArray().Convert(),
+            InstrumentIdentity = new InstrumentIdentity(Guid.Parse(source.InstrumentUid)),
+            Balance = source.Quantity,
         };
 
-    private static PortfolioPosition Convert(this Position source)
-        => new PortfolioPosition
-        {
-            Balance = source.Balance,
-            InstrumentIdentity = new InstrumentIdentity(Guid.Parse(source.InstrumentId))
-        };
-
-    private static PortfolioPosition[] Convert(
-        this Position[] source)
-        => [.. source.Select(t => t.Convert())];
+    private static Position[] Convert(
+        this Tinkoff.InvestApi.V1.PortfolioPosition[] source)
+        => [.. source.Select(Convert)];
 }

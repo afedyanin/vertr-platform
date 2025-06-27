@@ -61,32 +61,8 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
 
         return balance;
     }
-    /*
-    public async Task<TradeOperation[]?> GetOperations(string accountId, DateTime? from = null, DateTime? to = null)
-    {
-        var request = new Tinkoff.InvestApi.V1.OperationsRequest
-        {
-            AccountId = accountId,
-        };
 
-        if (from.HasValue)
-        {
-            request.From = Timestamp.FromDateTime(from.Value);
-        }
-
-        if (to.HasValue)
-        {
-            request.To = Timestamp.FromDateTime(to.Value);
-        }
-
-        var response = await InvestApiClient.Operations.GetOperationsAsync(request);
-        var operations = response.Operations.ToArray();
-
-        return operations;
-    }
-    */
-
-    public async Task<PortfolioSnapshot?> GetPortfolio(string accountId)
+    public async Task<Portfolio?> GetPortfolio(string accountId)
     {
         var request = new Tinkoff.InvestApi.V1.PortfolioRequest
         {
@@ -98,18 +74,5 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
         var portfolio = response.Convert();
 
         return portfolio;
-    }
-
-    public async Task<PositionsResponse?> GetPositions(string accountId)
-    {
-        var request = new Tinkoff.InvestApi.V1.PositionsRequest
-        {
-            AccountId = accountId,
-        };
-
-        var response = await InvestApiClient.Operations.GetPositionsAsync(request);
-        var result = response.Convert(accountId);
-
-        return result;
     }
 }

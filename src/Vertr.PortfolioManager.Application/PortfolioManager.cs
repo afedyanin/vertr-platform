@@ -25,7 +25,7 @@ internal class PortfolioManager : IPortfolioManager
     public Task<string[]> GetActiveAccounts()
         => Task.FromResult(_accounts);
  
-    public Task<PortfolioSnapshot?> GetPortfolio(PortfolioIdentity portfolioIdentity)
+    public Task<Portfolio?> GetPortfolio(PortfolioIdentity portfolioIdentity)
         => _portfolioRepository.GetPortfolio(portfolioIdentity);
 
     public async Task Remove(PortfolioIdentity portfolioIdentity, bool deleteOperations = false)

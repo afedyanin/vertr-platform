@@ -64,13 +64,6 @@ public class PortfolioController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("positions/{accountId}")]
-    public async Task<IActionResult> GetPositions(string accountId)
-    {
-        var positions = await _portfolioGateway.GetPositions(accountId);
-        return Ok(positions);
-    }
-
     [HttpGet("portfolio/{accountId}")]
     public async Task<IActionResult> GetPortfolio(string accountId)
     {

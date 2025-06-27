@@ -4,16 +4,6 @@ namespace Vertr.TinvestGateway.Application.Converters;
 
 internal static class OperationEnumsConverter
 {
-    public static OperationState Convert(this Tinkoff.InvestApi.V1.OperationState source)
-        => source switch
-        {
-            Tinkoff.InvestApi.V1.OperationState.Unspecified => OperationState.Unspecified,
-            Tinkoff.InvestApi.V1.OperationState.Executed => OperationState.Executed,
-            Tinkoff.InvestApi.V1.OperationState.Canceled => OperationState.Canceled,
-            Tinkoff.InvestApi.V1.OperationState.Progress => OperationState.Progress,
-            _ => throw new NotImplementedException(),
-        };
-
     public static TradeOperationType Convert(this Tinkoff.InvestApi.V1.OperationType source)
         => source switch
         {

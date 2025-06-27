@@ -5,7 +5,7 @@ namespace Vertr.PortfolioManager.DataAccess.Repositories;
 
 internal class PortfolioRepository : IPortfolioRepository
 {
-    public Task<PortfolioSnapshot?> GetPortfolio(PortfolioIdentity portfolioIdentity)
+    public Task<Portfolio?> GetPortfolio(PortfolioIdentity portfolioIdentity)
     {
         throw new NotImplementedException();
     }
@@ -15,7 +15,7 @@ internal class PortfolioRepository : IPortfolioRepository
         throw new NotImplementedException();
     }
 
-    public Task SetPortfolio(PortfolioSnapshot portfolio)
+    public Task SetPortfolio(Portfolio portfolio)
     {
         throw new NotImplementedException();
     }

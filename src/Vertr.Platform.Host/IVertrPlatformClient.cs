@@ -23,11 +23,8 @@ public interface IVertrPlatformClient
     [Delete("/tinvest/sandbox-account/{accountId}")]
     public Task CloseAccount(string accountId);
 
-    [Get("/tinvest/positions/{accountId}")]
-    public Task<PositionsResponse?> GetPositions(string accountId);
-
     [Get("/tinvest/operations/portfolio")]
-    public Task<PortfolioSnapshot?> GetPortfolio(string accountId);
+    public Task<Portfolio?> GetPortfolio(string accountId);
 
     [Get("/tinvest/instrument-by-ticker/{classCode}/{ticker}")]
     public Task<Instrument?> GetInstrumentByTicker(string classCode, string ticker);
@@ -78,5 +75,5 @@ public interface IVertrPlatformClient
 
 
     [Get("/portfolio/{accountId}")]
-    public Task<PortfolioSnapshot?> GetPortfolioSnapshot(string accountId, Guid? bookId = null);
+    public Task<Portfolio?> GetPortfolioSnapshot(string accountId, Guid? bookId = null);
 }

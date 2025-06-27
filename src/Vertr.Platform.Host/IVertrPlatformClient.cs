@@ -23,9 +23,6 @@ public interface IVertrPlatformClient
     [Delete("/tinvest/sandbox-account/{accountId}")]
     public Task CloseAccount(string accountId);
 
-    [Get("/tinvest/operations/{accountId}")]
-    public Task<Operation[]?> GetOperations(string accountId, DateTime? from = null, DateTime? to = null);
-
     [Get("/tinvest/positions/{accountId}")]
     public Task<PositionsResponse?> GetPositions(string accountId);
 
@@ -54,7 +51,7 @@ public interface IVertrPlatformClient
     public Task<PostOrderResponse?> PostOrder(PostOrderRequest request);
 
     [Get("/tinvest/order-state/{accountId}/{orderId}")]
-    public Task<OrderExecution.Contracts.OrderState?> GetOrderState(string accountId, string orderId);
+    public Task<OrderState?> GetOrderState(string accountId, string orderId);
 
     [Delete("/tinvest/order/{accountId}/{orderId}")]
     public Task<DateTime> CancelOrder(string accountId, string orderId);

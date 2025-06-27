@@ -61,7 +61,7 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
 
         return balance;
     }
-
+    /*
     public async Task<TradeOperation[]?> GetOperations(string accountId, DateTime? from = null, DateTime? to = null)
     {
         var request = new Tinkoff.InvestApi.V1.OperationsRequest
@@ -80,10 +80,11 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
         }
 
         var response = await InvestApiClient.Operations.GetOperationsAsync(request);
-        var operations = response.Operations.ToArray().Convert();
+        var operations = response.Operations.ToArray();
 
         return operations;
     }
+    */
 
     public async Task<PortfolioSnapshot?> GetPortfolio(string accountId)
     {

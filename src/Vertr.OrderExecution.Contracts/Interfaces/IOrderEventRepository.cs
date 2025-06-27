@@ -1,7 +1,4 @@
-using Vertr.OrderExecution.Application.Entities;
-using Vertr.OrderExecution.Contracts;
-
-namespace Vertr.OrderExecution.Application.Abstractions;
+namespace Vertr.OrderExecution.Contracts.Interfaces;
 
 public interface IOrderEventRepository
 {

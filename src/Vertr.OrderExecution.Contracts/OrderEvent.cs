@@ -1,4 +1,4 @@
-namespace Vertr.OrderExecution.Application.Entities;
+namespace Vertr.OrderExecution.Contracts;
 
 public class OrderEvent
 {

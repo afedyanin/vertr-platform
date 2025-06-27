@@ -1,13 +1,12 @@
 using Tinkoff.InvestApi;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
+using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
-using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.TinvestGateway.Application.Proxy;
 
-internal class TinvestGatewayOrders : TinvestGatewayBase, ITinvestGatewayOrders
+internal class TinvestGatewayOrders : TinvestGatewayBase, IOrderExecutionGateway
 {
     public TinvestGatewayOrders(InvestApiClient investApiClient) : base(investApiClient)
     {

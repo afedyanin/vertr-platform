@@ -1,9 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json;
 using Vertr.MarketData.Contracts;
-using Vertr.OrderExecution.Application.Entities;
 using Vertr.OrderExecution.Contracts;
-using Vertr.TinvestGateway.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 

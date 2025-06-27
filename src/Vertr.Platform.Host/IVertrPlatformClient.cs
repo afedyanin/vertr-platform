@@ -1,5 +1,6 @@
 using Refit;
 using Vertr.MarketData.Contracts;
+using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.TinvestGateway.Contracts;

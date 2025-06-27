@@ -10,9 +10,4 @@
     <PackageReference Include="MediatR" Version="12.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="Vertr.MarketData.Application" />
-    <InternalsVisibleTo Include="Vertr.MarketData.DataAccess" />
-  </ItemGroup>
-
 </Project>

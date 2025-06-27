@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Vertr.OrderExecution.Application.Abstractions;
-using Vertr.OrderExecution.Application.Entities;
 using Vertr.OrderExecution.Contracts;
+using Vertr.OrderExecution.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.DataAccess.Repositories;
 internal class OrderEventRepository : RepositoryBase, IOrderEventRepository

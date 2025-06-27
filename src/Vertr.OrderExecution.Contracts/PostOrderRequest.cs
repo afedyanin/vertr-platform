@@ -1,7 +1,7 @@
 using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.OrderExecution.Contracts;
 public record class PostOrderRequest
 {
     public required string AccountId { get; init; }

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Vertr.MarketData.Contracts;
+using Vertr.OrderExecution.Contracts;
+using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.TinvestGateway.Contracts;
 using Vertr.TinvestGateway.Contracts.Interfaces;
 
@@ -10,17 +11,14 @@ namespace Vertr.Platform.Host.Controllers;
 public class TinvestController : ControllerBase
 {
     private readonly ITinvestGatewayAccounts _tinvestGatewayAccounts;
-    private readonly ITinvestGatewayMarketData _tinvestGatewayMarketData;
-    private readonly ITinvestGatewayOrders _tinvestGatewayOrders;
+    private readonly IOrderExecutionGateway _tinvestGatewayOrders;
 
     public TinvestController(
         ITinvestGatewayAccounts tinvestGatewayAccounts,
-        ITinvestGatewayMarketData tinvestGatewayMarketData,
-        ITinvestGatewayOrders tinvestGatewayOrders
+        IOrderExecutionGateway tinvestGatewayOrders
         )
     {
         _tinvestGatewayAccounts = tinvestGatewayAccounts;
-        _tinvestGatewayMarketData = tinvestGatewayMarketData;
         _tinvestGatewayOrders = tinvestGatewayOrders;
     }
 
@@ -79,43 +77,6 @@ public class TinvestController : ControllerBase
     {
         var portfolio = await _tinvestGatewayAccounts.GetPortfolio(accountId);
         return Ok(portfolio);
-    }
-
-    [HttpGet("instrument-by-ticker/{classCode}/{ticker}")]
-    public async Task<IActionResult> GetInstrumentByTicker(string classCode, string ticker)
-    {
-        var identity = new InstrumentIdentity(classCode, ticker);
-        var instrument = await _tinvestGatewayMarketData.GetInstrument(identity);
-        return Ok(instrument);
-    }
-
-    [HttpGet("instrument-by-id/{instrumentId}")]
-    public async Task<IActionResult> GetInstrumentById(string instrumentId)
-    {
-        var identity = new InstrumentIdentity(Guid.Parse(instrumentId));
-        var instrument = await _tinvestGatewayMarketData.GetInstrument(identity);
-        return Ok(instrument);
-    }
-
-    [HttpGet("instrument-find/{query}")]
-    public async Task<IActionResult> FindInstrument(string query)
-    {
-        var instruments = await _tinvestGatewayMarketData.FindInstrument(query);
-        return Ok(instruments);
-    }
-
-    [HttpGet("candles/{classCode}/{ticker}/{interval}")]
-    public async Task<IActionResult> GetCandles(
-        string classCode,
-        string ticker,
-        CandleInterval interval,
-        DateTime from,
-        DateTime to,
-        int? limit = 100)
-    {
-        var identity = new InstrumentIdentity(classCode, ticker);
-        var candles = await _tinvestGatewayMarketData.GetCandles(identity, interval, from, to, limit);
-        return Ok(candles);
     }
 
     [HttpPost("order")]

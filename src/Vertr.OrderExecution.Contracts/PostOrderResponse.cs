@@ -1,6 +1,6 @@
 using Vertr.OrderExecution.Contracts.Enums;
 
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.OrderExecution.Contracts;
 public record class PostOrderResponse
 {
     public string OrderId { get; init; } = string.Empty;

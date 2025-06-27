@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Vertr.OrderExecution.Application.Entities;
+using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.DataAccess.Entities;
 
 namespace Vertr.OrderExecution.DataAccess;

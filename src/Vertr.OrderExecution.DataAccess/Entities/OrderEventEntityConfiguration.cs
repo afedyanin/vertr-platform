@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using Vertr.OrderExecution.Application.Entities;
+using Vertr.OrderExecution.Contracts;
 
 namespace Vertr.OrderExecution.DataAccess.Entities;
 

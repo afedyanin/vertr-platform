@@ -1,8 +1,8 @@
-using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 
-namespace Vertr.TinvestGateway.Contracts.Interfaces;
-public interface ITinvestGatewayOrders
+namespace Vertr.OrderExecution.Contracts.Interfaces;
+
+public interface IOrderExecutionGateway
 {
     public Task<PostOrderResponse?> PostOrder(PostOrderRequest request);
 

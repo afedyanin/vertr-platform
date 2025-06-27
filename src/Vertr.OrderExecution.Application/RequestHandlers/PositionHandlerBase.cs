@@ -7,7 +7,7 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 namespace Vertr.OrderExecution.Application.RequestHandlers;
 internal abstract class PositionHandlerBase
 {
-    private readonly IMarketDataService _marketDataService;
+    private readonly IStaticMarketDataProvider _marketDataProvider;
 
     private readonly IPortfolioManager _portfolioManager;
 
@@ -16,20 +16,20 @@ internal abstract class PositionHandlerBase
     protected PositionHandlerBase(
         IMediator mediator,
         IPortfolioManager portfolioManager,
-        IMarketDataService marketDataService
+        IStaticMarketDataProvider marketDataProvider
         )
     {
         Mediator = mediator;
 
         _portfolioManager = portfolioManager;
-        _marketDataService = marketDataService;
+        _marketDataProvider = marketDataProvider;
     }
 
     protected async Task<long> GetCurrentPositionInLots(
         PortfolioIdentity portfolioIdentity,
         InstrumentIdentity instrumentIdentity)
     {
-        var instrument = await _marketDataService.GetInstrument(instrumentIdentity);
+        var instrument = await _marketDataProvider.GetInstrument(instrumentIdentity);
 
         if (instrument == null)
         {

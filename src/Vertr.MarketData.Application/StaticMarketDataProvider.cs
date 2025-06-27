@@ -86,4 +86,11 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
             }
         }
     }
+
+    public async Task<Instrument[]> FindInstrument(string query)
+    {
+        var instruments = await _gateway.FindInstrument(query);
+
+        return instruments?.ToArray() ?? [];
+    }
 }

@@ -1,26 +1,24 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.MarketData.Contracts;
-using Vertr.OrderExecution.Application.Abstractions;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
+using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.PortfolioManager.Contracts.Requests;
-using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
 
 internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOrderResponse>
 {
-    private readonly ITinvestGatewayOrders _tinvestGateway;
+    private readonly IOrderExecutionGateway _tinvestGateway;
     private readonly IOrderEventRepository _orderEventRepository;
     private readonly IMediator _mediator;
     private readonly ILogger<PostOrderHandler> _logger;
 
     public PostOrderHandler(
-        ITinvestGatewayOrders tinvestGateway,
+        IOrderExecutionGateway tinvestGateway,
         IOrderEventRepository orderEventRepository,
         IMediator mediator,
         ILogger<PostOrderHandler> logger)

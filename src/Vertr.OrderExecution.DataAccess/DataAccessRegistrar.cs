@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Infrastructure.Pgsql;
-using Vertr.OrderExecution.Application.Abstractions;
+using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.DataAccess.Repositories;
 
 namespace Vertr.OrderExecution.DataAccess;

@@ -8,6 +8,8 @@ public interface IStaticMarketDataProvider
 
     public Task<Instrument[]> GetInstruments();
 
+    public Task<Instrument[]> FindInstrument(string query);
+
     public Task<CandleSubscription[]> GetSubscriptions();
 
     public Task Load();

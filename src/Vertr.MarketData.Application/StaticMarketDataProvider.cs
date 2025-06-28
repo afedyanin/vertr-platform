@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
@@ -133,7 +134,7 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
 
     public Task<Guid?> GetCurrencyId(string currencyCode)
     {
-        _settings.Currencies.TryGetValue(currencyCode, out var currencyId);
+        _settings.Currencies.TryGetValue(currencyCode.ToUpper(CultureInfo.InvariantCulture), out var currencyId);
         return Task.FromResult<Guid?>(currencyId);
     }
 

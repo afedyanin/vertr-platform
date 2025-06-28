@@ -6,7 +6,7 @@ namespace Vertr.Paltform.Tests;
 public class PortfolioTests : ApplicationTestBase
 {
     private const string _accountId = "b883ab13-997b-4823-9698-20bac64aeaad";
-    private static readonly Guid _bookId = new Guid("D8EBF841-D37B-47C0-AAD3-F778E29B1B85");
+    private static readonly Guid _subAccountId = new Guid("D8EBF841-D37B-47C0-AAD3-F778E29B1B85");
 
     [TestCase(_accountId)]
     public void CanGetInitialPortfolioState(string accountId)
@@ -45,5 +45,5 @@ public class PortfolioTests : ApplicationTestBase
             Console.WriteLine($"Instrument={position.InstrumentId} Balance={position.Balance}");
         }
     }
-    private static PortfolioIdentity GetPortfolioIdentity(string accountId) => new PortfolioIdentity(accountId, _bookId);
+    private static PortfolioIdentity GetPortfolioIdentity(string accountId) => new PortfolioIdentity(accountId, _subAccountId);
 }

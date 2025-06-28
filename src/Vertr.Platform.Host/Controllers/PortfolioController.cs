@@ -20,9 +20,9 @@ public class PortfolioController : ControllerBase
     }
 
     [HttpGet("{accountId}")]
-    public IActionResult GetPortfolio(string accountId, Guid? bookId = null)
+    public IActionResult GetPortfolio(string accountId, Guid? subAccountId = null)
     {
-        var identity = new PortfolioIdentity(accountId, bookId);
+        var identity = new PortfolioIdentity(accountId, subAccountId);
         var portfolio = _portfolioRepository.GetPortfolio(identity);
         return Ok(portfolio);
     }

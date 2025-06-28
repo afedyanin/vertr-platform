@@ -11,7 +11,7 @@ internal static class OrderTradesConverter
             AccountId = source.AccountId,
             CreatedAt = source.CreatedAt.ToDateTime(),
             Direction = source.Direction.Convert(),
-            InstrumentId = source.InstrumentUid,
+            InstrumentId = Guid.Parse(source.InstrumentUid),
             Trades = source.Trades.ToArray().Convert()
         };
 }

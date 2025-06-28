@@ -50,7 +50,7 @@ public class MarketDataStreamService : StreamServiceBase
         {
             candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
             {
-                InstrumentId = sub.InstrumentIdentity.Id.ToString(),
+                InstrumentId = sub.InstrumentId.ToString(),
                 Interval = sub.Interval.ConvertToSubscriptionInterval()
             });
         }

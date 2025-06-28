@@ -36,7 +36,7 @@ public record class OrderState
 
     public DateTime? OrderDate { get; init; }
 
-    public string InstrumentId { get; init; } = string.Empty;
+    public Guid InstrumentId { get; init; }
 
     public string OrderRequestId { get; init; } = string.Empty;
 

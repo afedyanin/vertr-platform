@@ -1,16 +1,15 @@
 using System.Diagnostics;
-using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
-internal static class TinvestOperationsFactory
+internal static class TradeOperationsFactory
 {
     public static TradeOperation[] CreateOperations(
         this PostOrderResponse response,
-        InstrumentIdentity instrumentIdentity,
+        Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
         var opCommission = new TradeOperation
@@ -22,8 +21,7 @@ internal static class TinvestOperationsFactory
             BookId = portfolioIdentity.BookId,
             OrderId = response.OrderId,
             Amount = response.ExecutedCommission,
-            ClassCode = instrumentIdentity.ClassCode,
-            Ticker = instrumentIdentity.Ticker,
+            InstrumentId = instrumentId,
         };
 
         return [opCommission];
@@ -31,7 +29,7 @@ internal static class TinvestOperationsFactory
 
     public static TradeOperation[] CreateOperations(
         this OrderTrades trades,
-        InstrumentIdentity instrumentIdentity,
+        Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
         Debug.Assert(trades.AccountId == portfolioIdentity.AccountId);
@@ -48,8 +46,7 @@ internal static class TinvestOperationsFactory
                 AccountId = portfolioIdentity.AccountId,
                 BookId = portfolioIdentity.BookId,
                 OrderId = trades.OrderId,
-                ClassCode = instrumentIdentity.ClassCode,
-                Ticker = instrumentIdentity.Ticker,
+                InstrumentId = instrumentId,
                 Price = trade.Price,
                 Quantity = trade.Quantity,
                 ExecutionTime = trade.ExecutionTime,

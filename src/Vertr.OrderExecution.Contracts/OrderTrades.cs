@@ -10,7 +10,7 @@ public record class OrderTrades
 
     public OrderDirection Direction { get; init; }
 
-    public string InstrumentId { get; init; } = string.Empty;
+    public Guid InstrumentId { get; init; }
 
     public string AccountId { get; init; } = string.Empty;
 

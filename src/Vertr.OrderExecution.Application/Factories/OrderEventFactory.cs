@@ -1,12 +1,11 @@
 using System.Diagnostics;
 using System.Text.Json;
-using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
-internal static class TinvestOrderEventFactory
+internal static class OrderEventFactory
 {
     private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
     {
@@ -15,7 +14,7 @@ internal static class TinvestOrderEventFactory
 
     public static OrderEvent CreateEvent(
         this PostOrderRequest request,
-        InstrumentIdentity instrumentIdentity,
+        Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
         Debug.Assert(request.AccountId == portfolioIdentity.AccountId);
@@ -26,8 +25,7 @@ internal static class TinvestOrderEventFactory
             CreatedAt = DateTime.UtcNow,
             AccountId = portfolioIdentity.AccountId,
             BookId = portfolioIdentity.BookId,
-            ClassCode = instrumentIdentity.ClassCode!,
-            Ticker = instrumentIdentity.Ticker!,
+            InstrumentId = instrumentId,
             RequestId = request.RequestId,
             JsonDataType = request.GetType().FullName,
             JsonData = JsonSerializer.Serialize(request, _jsonOptions),
@@ -36,7 +34,7 @@ internal static class TinvestOrderEventFactory
 
     public static OrderEvent CreateEvent(
         this PostOrderResponse response,
-        InstrumentIdentity instrumentIdentity,
+        Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
         return new OrderEvent
@@ -45,8 +43,7 @@ internal static class TinvestOrderEventFactory
             CreatedAt = DateTime.UtcNow,
             AccountId = portfolioIdentity.AccountId,
             BookId = portfolioIdentity.BookId,
-            ClassCode = instrumentIdentity.ClassCode!,
-            Ticker = instrumentIdentity.Ticker!,
+            InstrumentId = instrumentId,
             RequestId = Guid.Parse(response.OrderRequestId),
             OrderId = response.OrderId,
             JsonDataType = response.GetType().FullName,
@@ -57,7 +54,7 @@ internal static class TinvestOrderEventFactory
 
     public static OrderEvent CreateEvent(
         this OrderTrades trades,
-        InstrumentIdentity instrumentIdentity,
+        Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
         Debug.Assert(trades.AccountId == portfolioIdentity.AccountId);
@@ -68,8 +65,7 @@ internal static class TinvestOrderEventFactory
             CreatedAt = DateTime.UtcNow,
             AccountId = portfolioIdentity.AccountId,
             BookId = portfolioIdentity.BookId,
-            ClassCode = instrumentIdentity.ClassCode!,
-            Ticker = instrumentIdentity.Ticker!,
+            InstrumentId = instrumentId,
             OrderId = trades.OrderId,
             JsonDataType = trades.GetType().FullName,
             JsonData = JsonSerializer.Serialize(trades, _jsonOptions)

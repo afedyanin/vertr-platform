@@ -27,7 +27,7 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
             };
         }
 
-        var currentLots = await GetCurrentPositionInLots(request.PortfolioIdentity, request.InstrumentIdentity);
+        var currentLots = await GetCurrentPositionInLots(request.PortfolioIdentity, request.InstrumentId);
 
         if (currentLots == 0L)
         {
@@ -35,7 +35,7 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
             {
                 RequestId = request.RequestId,
                 PortfolioIdentity = request.PortfolioIdentity,
-                InstrumentIdentity = request.InstrumentIdentity,
+                InstrumentId = request.InstrumentId,
                 QtyLots = request.QtyLots,
             };
 
@@ -63,7 +63,7 @@ internal class TradingSignalHandler : PositionHandlerBase, IRequestHandler<Tradi
         {
             RequestId = request.RequestId,
             PortfolioIdentity = request.PortfolioIdentity,
-            InstrumentIdentity = request.InstrumentIdentity,
+            InstrumentId = request.InstrumentId,
         };
 
         var reverseResponse = await Mediator.Send(reverseRequest, cancellationToken);

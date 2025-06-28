@@ -14,6 +14,6 @@ internal static class PostOrderRequestConverter
                 Quantity = request.QuantityLots,
                 OrderId = request.RequestId.ToString(),
                 TimeInForce = request.TimeInForceType.Convert(),
-                InstrumentId = request.InstrumentIdentity.Id.ToString(),
+                InstrumentId = request.InstrumentId.ToString(),
             };
 }

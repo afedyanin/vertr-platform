@@ -13,9 +13,7 @@ public record class TradeOperation
 
     public Guid? BookId { get; init; }
 
-    public required string ClassCode { get; init; }
-
-    public required string Ticker { get; init; }
+    public Guid InstrumentId { get; init; }
 
     public decimal? Amount { get; init; }
 

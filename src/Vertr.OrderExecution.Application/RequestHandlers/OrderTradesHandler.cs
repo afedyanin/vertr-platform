@@ -46,7 +46,7 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
             portfolioIdentity = new PortfolioIdentity(orderTrades.AccountId);
         }
 
-        var orderEvent = orderTrades.CreateEvent(request.InstrumentIdentity, portfolioIdentity);
+        var orderEvent = orderTrades.CreateEvent(request.InstrumentId, portfolioIdentity);
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)
@@ -54,7 +54,7 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
             _logger.LogWarning($"Cannot save OrderTrades event for OrderId={orderEvent.OrderId}");
         }
 
-        var operations = orderTrades.CreateOperations(request.InstrumentIdentity, portfolioIdentity);
+        var operations = orderTrades.CreateOperations(request.InstrumentId, portfolioIdentity);
 
         var tradeOperationsRequest = new TradeOperationsRequest
         {

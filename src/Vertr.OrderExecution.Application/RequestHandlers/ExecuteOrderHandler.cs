@@ -36,7 +36,7 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
 
         var orderId = await PostMarketOrder(
             request.RequestId,
-            request.InstrumentIdentity,
+            request.InstrumentId,
             request.PortfolioIdentity,
             request.QtyLots,
             cancellationToken);
@@ -51,7 +51,7 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
 
     private async Task<string?> PostMarketOrder(
         Guid requestId,
-        InstrumentIdentity instrumentIdentity,
+        Guid instrumentId,
         PortfolioIdentity portfolioIdentity,
         long qtyLots,
         CancellationToken cancellationToken)
@@ -60,7 +60,7 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
         {
             AccountId = portfolioIdentity.AccountId,
             RequestId = requestId,
-            InstrumentIdentity = instrumentIdentity,
+            InstrumentId = instrumentId,
             OrderDirection = qtyLots > 0 ? OrderDirection.Buy : OrderDirection.Sell,
             Price = decimal.Zero,
             OrderType = OrderType.Market,
@@ -69,7 +69,7 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
             QuantityLots = Math.Abs(qtyLots),
         };
 
-        var postOrderEvent = request.CreateEvent(instrumentIdentity, portfolioIdentity);
+        var postOrderEvent = request.CreateEvent(instrumentId, portfolioIdentity);
 
         var savedRequest = await _orderEventRepository.Save(postOrderEvent);
 
@@ -88,7 +88,7 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
             return null;
         }
 
-        var orderResponseEvent = response.CreateEvent(instrumentIdentity, portfolioIdentity);
+        var orderResponseEvent = response.CreateEvent(instrumentId, portfolioIdentity);
 
         var savedResponse = await _orderEventRepository.Save(orderResponseEvent);
 
@@ -97,7 +97,7 @@ internal class PostOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOr
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
 
-        var tradeOperations = response.CreateOperations(instrumentIdentity, portfolioIdentity);
+        var tradeOperations = response.CreateOperations(instrumentId, portfolioIdentity);
 
         var tradeOperationsRequest = new TradeOperationsRequest
         {

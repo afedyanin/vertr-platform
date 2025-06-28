@@ -2,7 +2,8 @@ namespace Vertr.MarketData.Contracts;
 
 public record class Instrument
 {
-    public required InstrumentIdentity InstrumentIdentity { get; init; }
+    public Guid Id { get; set; }
+    public required Symbol Symbol { get; init; }
     public string? InstrumentType { get; init; }
     public string? Name { get; init; }
     public string? InstrumentKind { get; init; }

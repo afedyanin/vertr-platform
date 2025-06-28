@@ -1,11 +1,10 @@
-using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 
 namespace Vertr.OrderExecution.Contracts;
 public record class PostOrderRequest
 {
     public required string AccountId { get; init; }
-    public required InstrumentIdentity InstrumentIdentity { get; init; }
+    public required Guid InstrumentId { get; init; }
     public required Guid RequestId { get; init; }
     public required OrderDirection OrderDirection { get; init; }
     public required OrderType OrderType { get; init; }

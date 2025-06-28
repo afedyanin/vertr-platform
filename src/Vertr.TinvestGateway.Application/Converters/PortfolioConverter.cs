@@ -27,7 +27,7 @@ internal static class PortfolioConverter
         this Tinkoff.InvestApi.V1.PortfolioPosition source)
         => new Position
         {
-            InstrumentIdentity = new InstrumentIdentity(Guid.Parse(source.InstrumentUid)),
+            InstrumentId = Guid.Parse(source.InstrumentUid),
             Balance = source.Quantity,
         };
 

@@ -2,9 +2,9 @@ namespace Vertr.MarketData.Contracts.Interfaces;
 
 public interface IStaticMarketDataProvider
 {
-    public Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity);
+    public Task<Instrument?> GetInstrument(Symbol symbol);
 
-    public Task<CandleInterval> GetInterval(InstrumentIdentity instrumentIdentity);
+    public Task<Instrument?> GetInstrumentById(Guid instrumentId);
 
     public Task<Instrument[]> GetInstruments();
 

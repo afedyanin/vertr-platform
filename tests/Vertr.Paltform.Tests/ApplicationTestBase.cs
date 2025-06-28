@@ -1,5 +1,4 @@
 using Refit;
-using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Host;
 using Vertr.PortfolioManager.Contracts;
@@ -9,8 +8,8 @@ namespace Vertr.Paltform.Tests;
 public abstract class ApplicationTestBase
 {
     private const decimal _initialAmount = 100_000;
-    private static readonly InstrumentIdentity _sber = new InstrumentIdentity(new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13"));
-    private static readonly InstrumentIdentity _rub = new InstrumentIdentity(new Guid("a92e2e25-a698-45cc-a781-167cf465257c"));
+    private static readonly Guid _sber = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
+    private static readonly Guid _rub = new Guid("a92e2e25-a698-45cc-a781-167cf465257c");
 
     private const string _baseAddress = "https://localhost:7085";
 
@@ -45,7 +44,7 @@ public abstract class ApplicationTestBase
         {
             RequestId = Guid.NewGuid(),
             PortfolioIdentity = portfolioIdentity,
-            InstrumentIdentity = _sber,
+            InstrumentId = _sber,
             QtyLots = qtyLots,
         };
 
@@ -60,7 +59,7 @@ public abstract class ApplicationTestBase
         {
             RequestId = Guid.NewGuid(),
             PortfolioIdentity = portfolioIdentity,
-            InstrumentIdentity = _sber,
+            InstrumentId = _sber,
         };
 
         var res = await VertrClient.RevertPosition(req);

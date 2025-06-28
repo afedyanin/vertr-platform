@@ -3,10 +3,12 @@ public interface IMarketDataGateway
 {
     public Task<Instrument[]?> FindInstrument(string query);
 
-    public Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity);
+    public Task<Instrument?> GetInstrument(Symbol instrumentIdentity);
+
+    public Task<Instrument?> GetInstrument(Guid instrumentId);
 
     public Task<Candle[]?> GetCandles(
-        InstrumentIdentity instrumentIdentity,
+        Symbol instrumentIdentity,
         CandleInterval interval,
         DateTime from,
         DateTime to,

@@ -25,20 +25,34 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         return instruments;
     }
 
-    public async Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)
+    public async Task<Instrument?> GetInstrument(Guid instrumentId)
     {
-        var request = instrumentIdentity.HasUid ?
-            new Tinkoff.InvestApi.V1.InstrumentRequest
-            {
-                Id = instrumentIdentity.Id.ToString(),
-                IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Uid,
-            } :
-            new Tinkoff.InvestApi.V1.InstrumentRequest
-            {
-                ClassCode = instrumentIdentity.ClassCode,
-                Id = instrumentIdentity.Ticker,
-                IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Ticker,
-            };
+        var request = new Tinkoff.InvestApi.V1.InstrumentRequest
+        {
+            Id = instrumentId.ToString(),
+            IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Uid,
+        };
+
+        var response = await InvestApiClient.Instruments.GetInstrumentByAsync(request);
+
+        if (response == null || response.Instrument == null)
+        {
+            return null;
+        }
+
+        var instrument = response.Instrument.ToInstrument();
+
+        return instrument;
+    }
+
+    public async Task<Instrument?> GetInstrument(Symbol symbol)
+    {
+        var request = new Tinkoff.InvestApi.V1.InstrumentRequest
+        {
+            ClassCode = symbol.ClassCode,
+            Id = symbol.Ticker,
+            IdType = Tinkoff.InvestApi.V1.InstrumentIdType.Ticker,
+        };
 
         var response = await InvestApiClient.Instruments.GetInstrumentByAsync(request);
 
@@ -53,13 +67,13 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
     }
 
     public async Task<Candle[]?> GetCandles(
-        InstrumentIdentity instrumentIdentity,
+        Symbol symbol,
         CandleInterval interval,
         DateTime from,
         DateTime to,
         int? limit)
     {
-        var instrument = await GetInstrument(instrumentIdentity);
+        var instrument = await GetInstrument(symbol);
 
         if (instrument == null)
         {
@@ -70,7 +84,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         {
             From = Timestamp.FromDateTime(from.ToUniversalTime()),
             To = Timestamp.FromDateTime(to.ToUniversalTime()),
-            InstrumentId = instrument.InstrumentIdentity.Id.ToString(),
+            InstrumentId = instrument.Id.ToString(),
             Interval = interval.Convert(),
         };
 

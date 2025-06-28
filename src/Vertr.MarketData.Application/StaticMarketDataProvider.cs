@@ -9,8 +9,8 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
     private readonly IMarketDataGateway _gateway;
 
     private readonly Dictionary<Guid, Instrument> _instrumentsById = [];
-    private readonly Dictionary<string, Instrument> _instrumentsByTicker = [];
-    private readonly Dictionary<Guid, CandleInterval> _intervalsById = [];
+    private readonly Dictionary<Symbol, Instrument> _instruments = [];
+    private readonly Dictionary<Guid, CandleInterval> _intervals = [];
     private readonly List<CandleSubscription> _subscriptions = [];
 
     private bool _isInitialized = false;
@@ -23,7 +23,7 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
     {
         _settings = options.Value;
         _gateway = gateway;
-        _subscriptions = [.. _settings.GetCandleSubscriptions()];
+        _subscriptions = [.. GetCandleSubscriptions()];
 
     }
     public async Task InitialLoad()
@@ -52,71 +52,57 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
         }
     }
 
-    public Task<Instrument?> GetInstrument(InstrumentIdentity instrumentIdentity)
+    public Task<Instrument?> GetInstrumentById(Guid instrumentId)
     {
-        if (instrumentIdentity.HasUid &&
-            _instrumentsById.TryGetValue(instrumentIdentity.Id, out var instrumentById))
-        {
-            return Task.FromResult<Instrument?>(instrumentById);
-        }
+        _instrumentsById.TryGetValue(instrumentId, out var instrumentById);
+        return Task.FromResult(instrumentById);
+    }
 
-        _instrumentsByTicker.TryGetValue(instrumentIdentity.Symbol, out var instrumentByTicker);
-
+    public Task<Instrument?> GetInstrument(Symbol symbol)
+    {
+        _instruments.TryGetValue(symbol, out var instrumentByTicker);
         return Task.FromResult(instrumentByTicker);
     }
 
     public Task<Instrument[]> GetInstruments()
         => Task.FromResult(_instrumentsById.Values.ToArray());
 
-    public Task<CandleInterval> GetInterval(InstrumentIdentity instrumentIdentity)
-    {
-        _intervalsById.TryGetValue(instrumentIdentity.Id, out var interval);
-
-        return Task.FromResult(interval);
-    }
-
     public Task<CandleSubscription[]> GetSubscriptions()
         => Task.FromResult(_subscriptions.ToArray());
 
     private void LoadIntervals()
     {
-        _intervalsById.Clear();
+        _intervals.Clear();
 
         foreach (var item in _subscriptions)
         {
-            if (item.InstrumentIdentity != null &&
-                item.InstrumentIdentity.HasUid)
-            {
-                _intervalsById[item.InstrumentIdentity.Id] = item.Interval;
-            }
+            _intervals[item.InstrumentId] = item.Interval;
         }
     }
 
     private async Task Loadnstruments()
     {
         _instrumentsById.Clear();
-        _instrumentsByTicker.Clear();
+        _instruments.Clear();
 
         foreach (var instrumentId in _settings.Instruments)
         {
-            var instrument = await _gateway.GetInstrument(new InstrumentIdentity(instrumentId));
+            var instrument = await _gateway.GetInstrument(instrumentId);
             if (instrument != null)
             {
-                var uid = instrument.InstrumentIdentity?.Id ?? Guid.Empty;
-                _instrumentsById[uid] = instrument;
-                _instrumentsByTicker[instrument.InstrumentIdentity?.Symbol ?? ""] = instrument;
+                _instrumentsById[instrument.Id] = instrument;
+                _instruments[instrument.Symbol] = instrument;
             }
         }
 
         foreach (var subscription in _subscriptions)
         {
-            var instrument = await _gateway.GetInstrument(subscription.InstrumentIdentity);
+            var instrument = await _gateway.GetInstrument(subscription.InstrumentId);
 
             if (instrument != null)
             {
-                var uid = instrument.InstrumentIdentity?.Id ?? Guid.Empty;
-                _instrumentsById[uid] = instrument;
-                _instrumentsByTicker[instrument.InstrumentIdentity?.Symbol ?? ""] = instrument;
+                _instrumentsById[instrument.Id] = instrument;
+                _instruments[instrument.Symbol] = instrument;
             }
         }
     }
@@ -126,5 +112,22 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
         var instruments = await _gateway.FindInstrument(query);
 
         return instruments?.ToArray() ?? [];
+    }
+
+    private CandleSubscription[] GetCandleSubscriptions()
+    {
+        var res = new List<CandleSubscription>();
+
+        foreach (var kvp in _settings.Subscriptions)
+        {
+            res.Add(new CandleSubscription
+            {
+                InstrumentId = kvp.Key,
+                Interval = kvp.Value
+            });
+
+        }
+
+        return [.. res];
     }
 }

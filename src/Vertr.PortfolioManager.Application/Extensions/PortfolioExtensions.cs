@@ -1,4 +1,3 @@
-using Vertr.MarketData.Contracts;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.PortfolioManager.Application.Extensions;
@@ -7,15 +6,13 @@ internal static class PortfolioExtensions
 {
     public static Portfolio ApplyOperation(this Portfolio portfolio, TradeOperation operation)
     {
-        var instrumentIdentity = new InstrumentIdentity(operation.ClassCode, operation.Ticker);
-
-        var position = portfolio.GetPosition(instrumentIdentity);
+        var position = portfolio.GetPosition(operation.InstrumentId);
 
         if (position == null)
         {
             position = new Position
             {
-                InstrumentIdentity = instrumentIdentity,
+                InstrumentId = operation.InstrumentId,
                 Balance = 0,
             };
 
@@ -66,6 +63,6 @@ internal static class PortfolioExtensions
         return position;
     }
 
-    private static Position? GetPosition(this Portfolio portfolio, InstrumentIdentity instrumentIdentity)
-        => portfolio.Positions.FirstOrDefault(p => p.InstrumentIdentity == instrumentIdentity);
+    private static Position? GetPosition(this Portfolio portfolio, Guid instrumentId)
+        => portfolio.Positions.FirstOrDefault(p => p.InstrumentId == instrumentId);
 }

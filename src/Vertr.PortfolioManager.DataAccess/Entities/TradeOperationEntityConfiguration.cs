@@ -34,12 +34,8 @@ internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<Trad
         builder.Property(e => e.BookId)
             .HasColumnName("book_id");
 
-        builder.Property(e => e.ClassCode)
-            .HasColumnName("class_code")
-            .IsRequired();
-
-        builder.Property(e => e.Ticker)
-            .HasColumnName("ticker")
+        builder.Property(e => e.InstrumentId)
+            .HasColumnName("instrument_id")
             .IsRequired();
 
         builder.Property(e => e.Amount)

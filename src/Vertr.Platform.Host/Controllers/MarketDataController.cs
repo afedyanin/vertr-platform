@@ -32,16 +32,15 @@ public class MarketDataController : ControllerBase
     [HttpGet("instrument-by-ticker/{classCode}/{ticker}")]
     public async Task<IActionResult> GetInstrumentByTicker(string classCode, string ticker)
     {
-        var identity = new InstrumentIdentity(classCode, ticker);
+        var identity = new Symbol(classCode, ticker);
         var instrument = await _staticMarketDataProvider.GetInstrument(identity);
         return Ok(instrument);
     }
 
     [HttpGet("instrument-by-id/{instrumentId}")]
-    public async Task<IActionResult> GetInstrumentById(string instrumentId)
+    public async Task<IActionResult> GetInstrumentById(Guid instrumentId)
     {
-        var identity = new InstrumentIdentity(Guid.Parse(instrumentId));
-        var instrument = await _staticMarketDataProvider.GetInstrument(identity);
+        var instrument = await _staticMarketDataProvider.GetInstrumentById(instrumentId);
         return Ok(instrument);
     }
 

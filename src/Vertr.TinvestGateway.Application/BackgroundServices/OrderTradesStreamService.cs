@@ -46,7 +46,7 @@ public class OrderTradesStreamService : StreamServiceBase
                 var orderTradesRequest = new OrderTradesRequest
                 {
                     OrderTrades = response.OrderTrades.Convert(),
-                    InstrumentIdentity = new InstrumentIdentity(Guid.Parse(response.OrderTrades.InstrumentUid)),
+                    InstrumentId = Guid.Parse(response.OrderTrades.InstrumentUid),
                 };
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");

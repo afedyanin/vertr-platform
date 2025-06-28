@@ -42,7 +42,7 @@ public class PortfolioTests : ApplicationTestBase
     {
         foreach (var position in portfolio.Positions)
         {
-            Console.WriteLine($"Instrument={position.InstrumentIdentity.ClassCode}.{position.InstrumentIdentity.Ticker} Balance={position.Balance}");
+            Console.WriteLine($"Instrument={position.InstrumentId} Balance={position.Balance}");
         }
     }
     private static PortfolioIdentity GetPortfolioIdentity(string accountId) => new PortfolioIdentity(accountId, _bookId);

@@ -7,11 +7,8 @@ internal static class InstrumentConverter
     public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.InstrumentShort instrument)
         => new Instrument
         {
-            InstrumentIdentity = new InstrumentIdentity(
-                instrument.ClassCode,
-                instrument.Ticker,
-                Guid.Parse(instrument.Uid)
-                ),
+            Id = Guid.Parse(instrument.Uid),
+            Symbol = new Symbol(instrument.ClassCode, instrument.Ticker),
             InstrumentType = instrument.InstrumentType,
             Name = instrument.Name,
             InstrumentKind = instrument.InstrumentKind.ToString(),
@@ -20,11 +17,8 @@ internal static class InstrumentConverter
 public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.Instrument instrument)
         => new Instrument
         {
-            InstrumentIdentity = new InstrumentIdentity(
-                instrument.ClassCode,
-                instrument.Ticker,
-                Guid.Parse(instrument.Uid)
-                ),
+            Id = Guid.Parse(instrument.Uid),
+            Symbol = new Symbol(instrument.ClassCode, instrument.Ticker),
             InstrumentType = instrument.InstrumentType,
             Name = instrument.Name,
             InstrumentKind = instrument.InstrumentKind.ToString(),

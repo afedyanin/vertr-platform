@@ -8,9 +8,7 @@ public class OrderEvent
 
     public string? OrderId { get; set; }
 
-    public required string ClassCode { get; set; }
-
-    public required string Ticker { get; set; }
+    public Guid InstrumentId { get; set; }
 
     public required string AccountId { get; set; }
 

@@ -13,4 +13,8 @@ public interface IStaticMarketDataProvider
     public Task<CandleSubscription[]> GetSubscriptions();
 
     public Task InitialLoad();
+
+    public Task<Guid?> GetCurrencyId(string currencyCode);
+
+    public Task<Guid?> GetInstrumentCurrencyId(Guid instrumentId);
 }

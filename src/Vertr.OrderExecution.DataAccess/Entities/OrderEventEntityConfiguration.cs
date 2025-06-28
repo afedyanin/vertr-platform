@@ -31,8 +31,9 @@ internal class OrderEventEntityConfiguration : IEntityTypeConfiguration<OrderEve
             .HasColumnName("account_id")
             .IsRequired();
 
-        builder.Property(e => e.BookId)
-            .HasColumnName("book_id");
+        builder.Property(e => e.SubAccountId)
+            .HasColumnName("sub_account_id")
+            .IsRequired();
 
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at")

@@ -18,7 +18,7 @@ internal static class TradeOperationsFactory
             CreatedAt = DateTime.UtcNow,
             OperationType = TradeOperationType.BrokerFee,
             AccountId = portfolioIdentity.AccountId,
-            BookId = portfolioIdentity.BookId,
+            SubAccountId = portfolioIdentity.SubAccountId,
             OrderId = response.OrderId,
             Amount = response.ExecutedCommission,
             InstrumentId = instrumentId,
@@ -32,8 +32,6 @@ internal static class TradeOperationsFactory
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
-        Debug.Assert(trades.AccountId == portfolioIdentity.AccountId);
-
         var opTrades = new List<TradeOperation>();
 
         foreach (var trade in trades.Trades)
@@ -44,7 +42,7 @@ internal static class TradeOperationsFactory
                 CreatedAt = DateTime.UtcNow,
                 OperationType = trades.Direction.ToOperationType(),
                 AccountId = portfolioIdentity.AccountId,
-                BookId = portfolioIdentity.BookId,
+                SubAccountId = portfolioIdentity.SubAccountId,
                 OrderId = trades.OrderId,
                 InstrumentId = instrumentId,
                 Price = trade.Price,

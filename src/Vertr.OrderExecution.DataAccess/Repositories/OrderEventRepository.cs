@@ -20,14 +20,14 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
             .Where(e => e.OrderId != null && e.OrderId == orderId);
 
         var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null)?.AccountId;
-        var bookId = orderEvents.FirstOrDefault(e => e.BookId != null)?.BookId;
+        var subAccountId = orderEvents.FirstOrDefault(e => e.SubAccountId != Guid.Empty)?.SubAccountId;
 
         if (string.IsNullOrEmpty(accountId))
         {
             return null;
         }
 
-        return new PortfolioIdentity(accountId, bookId);
+        return new PortfolioIdentity(accountId, subAccountId);
     }
 
     public async Task<bool> Save(OrderEvent orderEvent)

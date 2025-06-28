@@ -36,7 +36,7 @@ internal class TradeOperationsHandler : IRequestHandler<TradeOperationsRequest>
 
         foreach (var operation in request.Operations)
         {
-            var portfolioIdentity = new PortfolioIdentity(operation.AccountId, operation.BookId);
+            var portfolioIdentity = new PortfolioIdentity(operation.AccountId, operation.SubAccountId);
             var portfolio = _portfolioRepository.GetPortfolio(portfolioIdentity);
 
             portfolio ??= new Portfolio

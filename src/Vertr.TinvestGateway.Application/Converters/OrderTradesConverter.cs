@@ -8,7 +8,6 @@ internal static class OrderTradesConverter
         => new OrderTrades
         {
             OrderId = source.OrderId,
-            AccountId = source.AccountId,
             CreatedAt = source.CreatedAt.ToDateTime(),
             Direction = source.Direction.Convert(),
             InstrumentId = Guid.Parse(source.InstrumentUid),

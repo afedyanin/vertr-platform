@@ -24,7 +24,7 @@ internal static class OrderEventFactory
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             AccountId = portfolioIdentity.AccountId,
-            BookId = portfolioIdentity.BookId,
+            SubAccountId = portfolioIdentity.SubAccountId,
             InstrumentId = instrumentId,
             RequestId = request.RequestId,
             JsonDataType = request.GetType().FullName,
@@ -42,7 +42,7 @@ internal static class OrderEventFactory
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             AccountId = portfolioIdentity.AccountId,
-            BookId = portfolioIdentity.BookId,
+            SubAccountId = portfolioIdentity.SubAccountId,
             InstrumentId = instrumentId,
             RequestId = Guid.Parse(response.OrderRequestId),
             OrderId = response.OrderId,
@@ -57,14 +57,12 @@ internal static class OrderEventFactory
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
-        Debug.Assert(trades.AccountId == portfolioIdentity.AccountId);
-
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             AccountId = portfolioIdentity.AccountId,
-            BookId = portfolioIdentity.BookId,
+            SubAccountId = portfolioIdentity.SubAccountId,
             InstrumentId = instrumentId,
             OrderId = trades.OrderId,
             JsonDataType = trades.GetType().FullName,

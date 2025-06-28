@@ -12,7 +12,5 @@ public record class OrderTrades
 
     public Guid InstrumentId { get; init; }
 
-    public string AccountId { get; init; } = string.Empty;
-
     public Trade[] Trades { get; init; } = [];
 }

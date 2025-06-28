@@ -6,7 +6,11 @@ public interface ITradeOperationRepository
 
     public Task<TradeOperation[]> GetByPortfolio(PortfolioIdentity portfolioIdentity);
 
+    public Task<TradeOperation[]> GetByAccountId(string accountId);
+
     public Task<bool> Save(TradeOperation[] tradeOoperations);
 
-    public Task<int> DeleteAll(PortfolioIdentity portfolioIdentity);
+    public Task<int> Delete(PortfolioIdentity portfolioIdentity);
+
+    public Task<int> DeleteByAccountId(string accountId);
 }

@@ -24,21 +24,23 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
     {
         using var context = await GetDbContext();
 
-        if (!portfolioIdentity.BookId.HasValue)
-        {
-            return await context
-                .Operations
-                .Where(x => x.AccountId == portfolioIdentity.AccountId)
-                .OrderByDescending(x => x.CreatedAt)
-                .ToArrayAsync();
-        }
-
         return await context
             .Operations
             .Where(x =>
                 x.AccountId == portfolioIdentity.AccountId &&
-                x.BookId == portfolioIdentity.BookId)
-            .OrderByDescending(x => x.CreatedAt)
+                x.SubAccountId == portfolioIdentity.SubAccountId)
+            .OrderBy(x => x.CreatedAt)
+            .ToArrayAsync();
+    }
+
+    public async Task<TradeOperation[]> GetByAccountId(string accountId)
+    {
+        using var context = await GetDbContext();
+
+        return await context
+            .Operations
+            .Where(x => x.AccountId == accountId)
+            .OrderBy(x => x.CreatedAt)
             .ToArrayAsync();
     }
 
@@ -51,19 +53,23 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
         return savedRecords > 0;
     }
 
-    public async Task<int> DeleteAll(PortfolioIdentity portfolioIdentity)
+    public async Task<int> Delete(PortfolioIdentity portfolioIdentity)
     {
         using var context = await GetDbContext();
 
-        if (!portfolioIdentity.BookId.HasValue)
-        {
-            return await context.Operations
-                .Where(s => s.AccountId == portfolioIdentity.AccountId)
-                .ExecuteDeleteAsync();
-        }
+        return await context.Operations
+            .Where(s =>
+            s.AccountId == portfolioIdentity.AccountId &&
+            s.SubAccountId == portfolioIdentity.SubAccountId)
+            .ExecuteDeleteAsync();
+    }
+
+    public async Task<int> DeleteByAccountId(string accountId)
+    {
+        using var context = await GetDbContext();
 
         return await context.Operations
-            .Where(s => s.BookId == portfolioIdentity.BookId.Value)
+            .Where(s => s.AccountId == accountId)
             .ExecuteDeleteAsync();
     }
 }

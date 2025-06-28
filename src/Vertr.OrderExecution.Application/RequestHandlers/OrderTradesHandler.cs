@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Requests;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
@@ -35,15 +34,8 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
         if (portfolioIdentity == null)
         {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
-            _logger.LogWarning($"Cannot get portfolio identity for OrderId={orderTrades.OrderId}. Using OrderTrades.AccountId");
-
-            if (string.IsNullOrEmpty(orderTrades.AccountId))
-            {
-                _logger.LogWarning($"Cannot get AccountId for OrderId={orderTrades.OrderId}. OrderTrades.AccountId is empty. Skipping message.");
-                return;
-            }
-
-            portfolioIdentity = new PortfolioIdentity(orderTrades.AccountId);
+            _logger.LogError($"Cannot get portfolio identity for OrderId={orderTrades.OrderId}.");
+            return;
         }
 
         var orderEvent = orderTrades.CreateEvent(request.InstrumentId, portfolioIdentity);

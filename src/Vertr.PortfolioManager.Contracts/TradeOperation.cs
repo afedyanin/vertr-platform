@@ -11,7 +11,7 @@ public record class TradeOperation
 
     public required string AccountId { get; init; }
 
-    public Guid? BookId { get; init; }
+    public Guid SubAccountId { get; init; }
 
     public Guid InstrumentId { get; init; }
 

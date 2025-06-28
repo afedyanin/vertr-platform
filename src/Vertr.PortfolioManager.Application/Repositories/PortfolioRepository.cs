@@ -6,7 +6,6 @@ namespace Vertr.PortfolioManager.Application.Repositories;
 
 internal class PortfolioRepository : IPortfolioRepository
 {
-    // TODO: Test dict key
     private readonly Dictionary<PortfolioIdentity, Portfolio> _portfolios = [];
 
     private readonly PortfolioSettings _portfolioSettings;

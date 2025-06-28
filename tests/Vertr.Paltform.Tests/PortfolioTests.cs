@@ -1,4 +1,5 @@
 using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Application.Extensions;
 
 namespace Vertr.Paltform.Tests;
 
@@ -9,9 +10,9 @@ public class PortfolioTests : ApplicationTestBase
     private static readonly Guid _subAccountId = new Guid("D8EBF841-D37B-47C0-AAD3-F778E29B1B85");
 
     [TestCase(_accountId)]
-    public void CanGetInitialPortfolioState(string accountId)
+    public async Task CanGetInitialPortfolioState(string accountId)
     {
-        var portfolio = GetPortfolio(accountId);
+        var portfolio = await GetPortfolio(accountId);
 
         Assert.That(portfolio, Is.Not.Null);
         Assert.That(portfolio.Positions, Is.Not.Null);
@@ -24,7 +25,7 @@ public class PortfolioTests : ApplicationTestBase
     public async Task CanOpenPosition(string accountId)
     {
         _ = await OpenPosition(GetPortfolioIdentity(accountId), 3);
-        var portfolio = GetPortfolio(accountId);
+        var portfolio = await GetPortfolio(accountId);
 
         DumpPortfolio(portfolio!);
     }
@@ -33,9 +34,32 @@ public class PortfolioTests : ApplicationTestBase
     public async Task CanReversePosition(string accountId)
     {
         _ = await ReversePosition(GetPortfolioIdentity(accountId));
-        var portfolio = GetPortfolio(accountId);
+        var portfolio = await GetPortfolio(accountId);
 
         DumpPortfolio(portfolio!);
+    }
+
+    [TestCase("0e284896-ba30-440f-9626-18ab2e2cc2f0")]
+    public async Task CanValidateTradeOperations(string accountId)
+    {
+        var operations = await GetGatewayOperations(accountId);
+
+        var portfolio = new Portfolio
+        {
+            Identity = new PortfolioIdentity(accountId),
+            UpdatedAt = DateTime.UtcNow,
+        };
+
+        foreach (var operation in operations!)
+        {
+            portfolio = portfolio.ApplyOperation(operation);
+        }
+
+        var gatewayPortfoio = await GetGatewayPortfolio(accountId);
+
+        // TODO Compare portfolios
+        Console.WriteLine(gatewayPortfoio);
+        Console.WriteLine(portfolio);
     }
 
     private void DumpPortfolio(Portfolio portfolio)

@@ -20,11 +20,11 @@ public class PortfolioController : ControllerBase
     }
 
     [HttpGet("{accountId}")]
-    public IActionResult GetPortfolio(string accountId, Guid? subAccountId = null)
+    public Task<IActionResult> GetPortfolio(string accountId, Guid? subAccountId = null)
     {
         var identity = new PortfolioIdentity(accountId, subAccountId);
         var portfolio = _portfolioRepository.GetPortfolio(identity);
-        return Ok(portfolio);
+        return Task.FromResult<IActionResult>(Ok(portfolio));
     }
 
     [HttpGet("sandbox-accounts")]

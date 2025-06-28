@@ -31,9 +31,9 @@ public abstract class ApplicationTestBase
         await VertrClient.CloseAccount(accountId);
     }
 
-    protected Portfolio? GetPortfolio(string accountId)
+    protected async Task<Portfolio?> GetPortfolio(string accountId)
     {
-        var res = VertrClient.GetPortfolio(accountId);
+        var res = await VertrClient.GetPortfolio(accountId);
         return res;
     }
 
@@ -64,5 +64,17 @@ public abstract class ApplicationTestBase
         var res = await VertrClient.RevertPosition(req);
 
         return res;
+    }
+
+    protected async Task<TradeOperation[]?> GetGatewayOperations(string accountId)
+    {
+        var ops = await VertrClient.GetGatewayOperations(accountId);
+        return ops;
+    }
+
+    protected async Task<Portfolio?> GetGatewayPortfolio(string accountId)
+    {
+        var portfolio = await VertrClient.GetGatewayPortfolio(accountId);
+        return portfolio;
     }
 }

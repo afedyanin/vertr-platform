@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vertr.Platform.Host\Vertr.Platform.Host.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

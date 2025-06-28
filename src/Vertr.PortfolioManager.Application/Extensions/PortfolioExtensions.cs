@@ -46,6 +46,7 @@ internal static class PortfolioExtensions
             _ => throw new NotImplementedException($"OperationType={operation.OperationType} is not implemented.")
         };
 
+        portfolio.UpdatedAt = DateTime.UtcNow;
         return portfolio;
     }
 

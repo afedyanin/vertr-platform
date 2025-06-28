@@ -11,6 +11,11 @@ internal static class TradeOperationsFactory
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
+        if (response.ExecutedCommission == null)
+        {
+            return [];
+        }
+
         var opCommission = new TradeOperation
         {
             Id = Guid.NewGuid(),
@@ -35,6 +40,11 @@ internal static class TradeOperationsFactory
 
         foreach (var trade in trades.Trades)
         {
+            if (trade.Price == null)
+            {
+                continue;
+            }
+
             var opTrade = new TradeOperation
             {
                 Id = Guid.NewGuid(),
@@ -48,6 +58,7 @@ internal static class TradeOperationsFactory
                 Quantity = trade.Quantity,
                 ExecutionTime = trade.ExecutionTime,
                 TradeId = trade.TradeId,
+                Amount = new Money(trade.Price.Amount * trade.Quantity, trade.Price.Currency),
             };
         }
 

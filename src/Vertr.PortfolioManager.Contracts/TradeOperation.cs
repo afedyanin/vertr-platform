@@ -15,7 +15,7 @@ public record class TradeOperation
 
     public Guid InstrumentId { get; init; }
 
-    public Money? Amount { get; init; }
+    public required Money Amount { get; init; }
 
     public string? Message { get; init; }
 

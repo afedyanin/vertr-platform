@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Vertr.Paltform.Tests"/>
+    <InternalsVisibleTo Include="Vertr.Paltform.Tests" />
   </ItemGroup>
   
     <ItemGroup>

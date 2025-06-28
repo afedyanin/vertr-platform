@@ -20,7 +20,7 @@ internal static class PortfolioExtensions
 
             portfolio.Positions.Add(position);
         }
-
+        /*
         var rubPosition = portfolio.GetPosition(Instrument.RUB);
 
         if (rubPosition == null)
@@ -45,6 +45,7 @@ internal static class PortfolioExtensions
             TradeOperationType.BrokerFee => position.ApplyFee(rubPosition, operation),
             _ => throw new NotImplementedException($"OperationType={operation.OperationType} is not implemented.")
         };
+        */
 
         portfolio.UpdatedAt = DateTime.UtcNow;
         return portfolio;

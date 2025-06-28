@@ -15,7 +15,9 @@ public record class TradeOperation
 
     public Guid InstrumentId { get; init; }
 
-    public decimal Amount { get; init; }
+    public decimal? Amount { get; init; }
+
+    public string? AmountCurrency { get; init; }
 
     public string? Message { get; init; }
 
@@ -23,7 +25,9 @@ public record class TradeOperation
 
     public DateTime ExecutionTime { get; init; }
 
-    public decimal Price { get; init; }
+    public decimal? Price { get; init; }
 
-    public long Quantity { get; init; }
+    public string? PriceCurrency { get; init; }
+
+    public long? Quantity { get; init; }
 }

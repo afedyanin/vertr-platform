@@ -1,4 +1,5 @@
 using Vertr.OrderExecution.Contracts;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.TinvestGateway.Application.Converters;
 
@@ -32,7 +33,7 @@ internal static class OrderStateConverter
         => new Trade
         {
             ExecutionTime = source.ExecutionTime.ToDateTime(),
-            Price = source.Price,
+            Price = source.Price.Convert(),
             Quantity = source.Quantity,
             TradeId = source.TradeId,
         };
@@ -44,11 +45,13 @@ internal static class OrderStateConverter
         => new Trade
         {
             ExecutionTime = source.DateTime.ToDateTime(),
-            Price = source.Price,
+            Price = new Money(source.Price),
             Quantity = source.Quantity,
             TradeId = source.TradeId,
         };
-    public static Trade[] Convert(this Tinkoff.InvestApi.V1.OrderTrade[] source)
+
+    public static Trade[] Convert(
+        this Tinkoff.InvestApi.V1.OrderTrade[] source)
         => [.. source.Select(t => t.Convert())];
 
     public static OrderState Convert(this Tinkoff.InvestApi.V1.OrderStateStreamResponse.Types.OrderState source)

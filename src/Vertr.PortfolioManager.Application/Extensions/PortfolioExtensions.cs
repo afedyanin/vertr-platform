@@ -55,8 +55,10 @@ internal static class PortfolioExtensions
         Position rubPosition,
         TradeOperation operation)
     {
+        /*
         rubPosition.Balance -= operation.Amount;
         position.Balance += operation.Quantity;
+        */
         return position;
     }
 
@@ -65,8 +67,8 @@ internal static class PortfolioExtensions
         Position rubPosition,
         TradeOperation operation)
     {
-        rubPosition.Balance += operation.Amount;
-        position.Balance -= operation.Quantity;
+        //rubPosition.Balance += operation.Amount;
+        //position.Balance -= operation.Quantity;
         return position;
     }
 
@@ -75,9 +77,10 @@ internal static class PortfolioExtensions
         Position rubPosition,
         TradeOperation operation)
     {
-        Debug.Assert(position == rubPosition);
+        Debug.Assert(position.InstrumentId == rubPosition.InstrumentId,
+            $"Assert Failed: Instrumentd={position.InstrumentId} RubInstrumentId={rubPosition.InstrumentId}");
 
-        position.Balance -= operation.Amount;
+        //position.Balance -= operation.Amount;
         return position;
     }
 
@@ -86,8 +89,10 @@ internal static class PortfolioExtensions
         Position rubPosition,
         TradeOperation operation)
     {
-        Debug.Assert(position == rubPosition);
-        position.Balance += operation.Amount;
+        Debug.Assert(position.InstrumentId == rubPosition.InstrumentId,
+            $"Assert Failed: Instrumentd={position.InstrumentId} RubInstrumentId={rubPosition.InstrumentId}");
+
+        //position.Balance += operation.Amount;
         return position;
     }
 
@@ -96,8 +101,10 @@ internal static class PortfolioExtensions
         Position rubPosition,
         TradeOperation operation)
     {
-        Debug.Assert(position == rubPosition);
-        position.Balance -= operation.Amount;
+        Debug.Assert(position.InstrumentId == rubPosition.InstrumentId,
+            $"Assert Failed: Instrumentd={position.InstrumentId} RubInstrumentId={rubPosition.InstrumentId}");
+
+        //position.Balance -= operation.Amount;
         return position;
     }
 

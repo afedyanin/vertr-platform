@@ -4,7 +4,8 @@ namespace Vertr.TinvestGateway.Application.Converters;
 
 internal static class OrderTradesConverter
 {
-    public static OrderTrades Convert(this Tinkoff.InvestApi.V1.OrderTrades source)
+    public static OrderTrades Convert(
+        this Tinkoff.InvestApi.V1.OrderTrades source)
         => new OrderTrades
         {
             OrderId = source.OrderId,

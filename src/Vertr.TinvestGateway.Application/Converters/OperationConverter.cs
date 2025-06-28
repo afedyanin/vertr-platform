@@ -60,7 +60,9 @@ internal static class OperationConverter
             SubAccountId = Guid.Empty,
             InstrumentId = Guid.Parse(source.InstrumentUid),
             Amount = Math.Abs(source.Payment),
+            AmountCurrency = source.Currency,
             Price = source.Price,
+            PriceCurrency = source.Currency,
             Quantity = source.Quantity,
             Message = source.Type
         };
@@ -87,7 +89,9 @@ internal static class OperationConverter
             SubAccountId = Guid.Empty,
             InstrumentId = Guid.Parse(source.InstrumentUid),
             Amount = operationTrade.Price * operationTrade.Quantity,
+            AmountCurrency = operationTrade.Price.Currency,
             Price = operationTrade.Price,
+            PriceCurrency = operationTrade.Price.Currency,
             Quantity = operationTrade.Quantity,
             TradeId = operationTrade.TradeId,
             ExecutionTime = operationTrade.DateTime.ToDateTime(),

@@ -1,3 +1,5 @@
+using Vertr.PortfolioManager.Contracts;
+
 namespace Vertr.OrderExecution.Contracts;
 
 public record class Trade
@@ -6,7 +8,7 @@ public record class Trade
 
     public DateTime ExecutionTime { get; init; }
 
-    public decimal Price { get; init; }
+    public Money? Price { get; init; }
 
     public long Quantity { get; init; }
 }

@@ -19,7 +19,8 @@ internal static class TradeOperationsFactory
             AccountId = portfolioIdentity.AccountId,
             SubAccountId = portfolioIdentity.SubAccountId,
             OrderId = response.OrderId,
-            Amount = response.ExecutedCommission,
+            Amount = response.ExecutedCommission?.Amount,
+            AmountCurrency = response.ExecutedCommission?.Currency,
             InstrumentId = instrumentId,
         };
 
@@ -44,9 +45,11 @@ internal static class TradeOperationsFactory
                 SubAccountId = portfolioIdentity.SubAccountId,
                 OrderId = trades.OrderId,
                 InstrumentId = instrumentId,
-                Price = trade.Price,
+                Price = trade.Price?.Amount,
+                PriceCurrency = trade.Price?.Currency,
                 Quantity = trade.Quantity,
-                Amount = trade.Price * trade.Quantity,
+                Amount = trade.Price?.Amount * trade.Quantity,
+                AmountCurrency = trade.Price?.Currency,
                 ExecutionTime = trade.ExecutionTime,
                 TradeId = trade.TradeId,
             };

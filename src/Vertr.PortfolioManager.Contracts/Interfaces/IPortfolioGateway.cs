@@ -13,4 +13,6 @@ public interface IPortfolioGateway
     public Task<Money?> PayIn(string accountId, Money money);
 
     public Task<Portfolio?> GetPortfolio(string accountId);
+
+    public Task<TradeOperation[]?> GetOperations(string accountId);
 }

@@ -9,7 +9,6 @@ public abstract class ApplicationTestBase
 {
     private const decimal _initialAmount = 100_000;
     private static readonly Guid _sber = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
-    private static readonly Guid _rub = new Guid("a92e2e25-a698-45cc-a781-167cf465257c");
 
     private const string _baseAddress = "https://localhost:7085";
 

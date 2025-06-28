@@ -1,4 +1,3 @@
-using Vertr.MarketData.Contracts;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.TinvestGateway.Application.Converters;

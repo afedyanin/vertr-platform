@@ -15,7 +15,7 @@ public record class TradeOperation
 
     public Guid InstrumentId { get; init; }
 
-    public decimal? Amount { get; init; }
+    public decimal Amount { get; init; }
 
     public string? Message { get; init; }
 

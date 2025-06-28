@@ -70,4 +70,10 @@ public class PortfolioController : ControllerBase
         return Ok(portfolio);
     }
 
+    [HttpGet("gateway-operations/{accountId}")]
+    public async Task<IActionResult> GetGatewayOperations(string accountId)
+    {
+        var operations = await _portfolioGateway.GetOperations(accountId);
+        return Ok(operations);
+    }
 }

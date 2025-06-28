@@ -36,7 +36,7 @@ public class Program
         builder.Services.AddPortfolioManager();
         builder.Services.AddPortfolioManagerDataAccess(connectionString!);
 
-        builder.Services.AddHostedService<ApplicationBootstrapService>();
+        // builder.Services.AddHostedService<ApplicationBootstrapService>();
 
         var app = builder.Build();
 

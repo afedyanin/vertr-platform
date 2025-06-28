@@ -78,5 +78,8 @@ public interface IVertrPlatformClient
     [Get("/portfolio/gateway-portfolio")]
     public Task<Portfolio?> GetGatewayPortfolio(string accountId);
 
+    [Get("/portfolio/gateway-operations/{accountId}")]
+    public Task<TradeOperation[]?> GetGatewayOperations(string accountId);
+
     #endregion
 }

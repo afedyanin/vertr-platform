@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.PortfolioManager.Contracts;
@@ -47,6 +46,7 @@ internal static class TradeOperationsFactory
                 InstrumentId = instrumentId,
                 Price = trade.Price,
                 Quantity = trade.Quantity,
+                Amount = trade.Price * trade.Quantity,
                 ExecutionTime = trade.ExecutionTime,
                 TradeId = trade.TradeId,
             };

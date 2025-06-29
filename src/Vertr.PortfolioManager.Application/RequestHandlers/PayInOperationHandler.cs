@@ -51,7 +51,8 @@ internal class PayInOperationHandler : IRequestHandler<PayInOperationRequest>
             Amount = request.Amount,
             InstrumentId = instrumentId.Value,
             Price = request.Amount,
-            Quantity = 1
+            Quantity = 1,
+            Message = "Внесение средств на счет"
         };
 
         var saved = await _operationEventRepository.Save([opPayIn]);

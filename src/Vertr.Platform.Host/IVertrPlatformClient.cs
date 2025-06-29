@@ -1,8 +1,13 @@
+using Microsoft.AspNetCore.Mvc;
 using Refit;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Host.Requests;
+using Vertr.PortfolioManager.Application.Services;
 using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host;
 
@@ -39,19 +44,19 @@ public interface IVertrPlatformClient
     public Task<DateTime> CancelOrder(string accountId, string orderId);
 
     [Post("/orders/execute")]
-    public Task<ExecuteOrderResponse?> ExecuteOrder(ExecuteOrderRequest request);
+    public Task<ExecuteOrderResponse?> ExecuteOrder(ExecuteRequest request);
 
     [Post("/orders/open")]
-    public Task<ExecuteOrderResponse?> OpenPosition(OpenPositionRequest request);
+    public Task<ExecuteOrderResponse?> OpenPosition(OpenRequest request);
 
     [Post("/orders/close")]
-    public Task<ExecuteOrderResponse?> ClosePosition(ClosePositionRequest request);
+    public Task<ExecuteOrderResponse?> ClosePosition(CloseRequest request);
 
     [Post("/orders/reverse")]
-    public Task<ExecuteOrderResponse?> RevertPosition(ReversePositionRequest request);
+    public Task<ExecuteOrderResponse?> RevertPosition(ReverseRequest request);
 
     [Post("/orders/signal")]
-    public Task<ExecuteOrderResponse?> PorocessSignal(TradingSignalRequest request);
+    public Task<ExecuteOrderResponse?> PorocessSignal(SignalRequest request);
 
     #endregion
 
@@ -79,7 +84,10 @@ public interface IVertrPlatformClient
     public Task<Portfolio?> GetGatewayPortfolio(string accountId);
 
     [Get("/portfolio/gateway-operations/{accountId}")]
-    public Task<TradeOperation[]?> GetGatewayOperations(string accountId);
+    public Task<TradeOperation[]?> GetGatewayOperations(string accountId, DateTime from, DateTime to);
+
+    [HttpPut("gateway-operations/replay/{accountId}")]
+    public Task<Portfolio[]?> GetGatewayOperationsReplay(string accountId, DateTime from, DateTime to);
 
     #endregion
 }

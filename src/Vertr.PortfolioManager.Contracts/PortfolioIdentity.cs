@@ -9,9 +9,7 @@ public record class PortfolioIdentity
     public Guid SubAccountId { get; private set; }
 
     [JsonConstructor]
-    public PortfolioIdentity()
-    {
-    }
+    protected PortfolioIdentity() { }
 
     public PortfolioIdentity(string accountId, Guid? subAccountId = null)
     {

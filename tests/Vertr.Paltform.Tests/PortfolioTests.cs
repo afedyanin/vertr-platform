@@ -5,14 +5,10 @@ namespace Vertr.Platform.Tests;
 [TestFixture(Category = "Application", Explicit = true)]
 public class PortfolioTests : ApplicationTestBase
 {
-    private static readonly string _accountId = "dd83bf2e-dac1-4638-a8b3-5d01c32c49b5";
-    private static readonly Guid _subAccountId = new Guid("dd83bf2e-dac2-4638-a8b3-5d01c32c49b5");
-    private static readonly PortfolioIdentity _identity = new PortfolioIdentity(_accountId, _subAccountId);
-
     [Test]
     public async Task CanGetInitialPortfolioState()
     {
-        var portfolio = await GetPortfolio(_identity);
+        var portfolio = await GetPortfolio();
 
         Assert.That(portfolio, Is.Not.Null);
         Assert.That(portfolio.Positions, Is.Not.Null);
@@ -24,8 +20,8 @@ public class PortfolioTests : ApplicationTestBase
     [Test]
     public async Task CanOpenPosition()
     {
-        _ = await OpenPosition(_identity, 3);
-        var portfolio = await GetPortfolio(_identity);
+        _ = await OpenPosition(3);
+        var portfolio = await GetPortfolio();
 
         DumpPortfolio(portfolio!);
     }
@@ -33,8 +29,8 @@ public class PortfolioTests : ApplicationTestBase
     [Test]
     public async Task CanReversePosition()
     {
-        _ = await ReversePosition(_identity);
-        var portfolio = await GetPortfolio(_identity);
+        _ = await ReversePosition();
+        var portfolio = await GetPortfolio();
 
         DumpPortfolio(portfolio!);
     }

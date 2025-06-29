@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Host.Requests;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.Platform.Host.Controllers;
 [Route("orders")]
@@ -42,37 +44,75 @@ public class OrdersController : ControllerBase
     }
 
     [HttpPost("execute")]
-    public async Task<IActionResult> ExecuteOrder(ExecuteOrderRequest request)
+    public async Task<IActionResult> ExecuteOrder(ExecuteRequest request)
     {
-        var response = await _mediator.Send(request);
+        var mediatorRequest = new ExecuteOrderRequest
+        {
+            InstrumentId = request.InstrumentId,
+            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            QtyLots = request.Lots,
+            RequestId = Guid.NewGuid(),
+        };
+
+        var response = await _mediator.Send(mediatorRequest);
         return Ok(response);
     }
 
     [HttpPost("open")]
-    public async Task<IActionResult> OpenPosition(OpenPositionRequest request)
+    public async Task<IActionResult> OpenPosition(OpenRequest request)
     {
-        var response = await _mediator.Send(request);
+        var mediatorRequest = new OpenPositionRequest
+        {
+            InstrumentId = request.InstrumentId,
+            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            QtyLots = request.Lots,
+            RequestId = Guid.NewGuid(),
+        };
+
+        var response = await _mediator.Send(mediatorRequest);
         return Ok(response);
     }
 
     [HttpPost("close")]
-    public async Task<IActionResult> ClosePosition(ClosePositionRequest request)
+    public async Task<IActionResult> ClosePosition(CloseRequest request)
     {
-        var response = await _mediator.Send(request);
+        var mediatorRequest = new ClosePositionRequest
+        {
+            InstrumentId = request.InstrumentId,
+            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            RequestId = Guid.NewGuid(),
+        };
+
+        var response = await _mediator.Send(mediatorRequest);
         return Ok(response);
     }
 
     [HttpPost("reverse")]
-    public async Task<IActionResult> RevertPosition(ReversePositionRequest request)
+    public async Task<IActionResult> RevertPosition(ReverseRequest request)
     {
-        var response = await _mediator.Send(request);
+        var mediatorRequest = new OpenPositionRequest
+        {
+            InstrumentId = request.InstrumentId,
+            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            RequestId = Guid.NewGuid(),
+        };
+
+        var response = await _mediator.Send(mediatorRequest);
         return Ok(response);
     }
 
     [HttpPost("signal")]
-    public async Task<IActionResult> PorocessSignal(TradingSignalRequest request)
+    public async Task<IActionResult> PorocessSignal(SignalRequest request)
     {
-        var response = await _mediator.Send(request);
+        var mediatorRequest = new TradingSignalRequest
+        {
+            InstrumentId = request.InstrumentId,
+            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            QtyLots = request.Lots,
+            RequestId = Guid.NewGuid(),
+        };
+
+        var response = await _mediator.Send(mediatorRequest);
         return Ok(response);
     }
 }

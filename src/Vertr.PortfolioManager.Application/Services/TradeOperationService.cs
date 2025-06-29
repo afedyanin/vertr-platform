@@ -32,11 +32,11 @@ public class TradeOperationService : ITradeOperationService
         switch (operation.OperationType)
         {
             case TradeOperationType.Buy:
-                operationPosition.Balance += operation.Amount.Value;
+                operationPosition.Balance += operation.Quantity ?? 0L;
                 currencyPosition.Balance -= operation.Amount.Value;
                 break;
             case TradeOperationType.Sell:
-                operationPosition.Balance -= operation.Amount.Value;
+                operationPosition.Balance -= operation.Quantity ?? 0L;
                 currencyPosition.Balance += operation.Amount.Value;
                 break;
             case TradeOperationType.BrokerFee:
@@ -92,6 +92,8 @@ public class TradeOperationService : ITradeOperationService
                 InstrumentId = instrumentId,
                 Balance = decimal.Zero,
             };
+
+            portfolio.Positions.Add(position);
         }
 
         return position;

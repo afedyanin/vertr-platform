@@ -16,7 +16,7 @@ internal static class OperationConverter
         var operations = new List<TradeOperation>();
         foreach (var operation in source.Operations)
         {
-            if (operation.Trades.Count != 0)
+            if (IsBySell(operation))
             {
                 foreach (var trade in operation.Trades)
                 {
@@ -99,4 +99,9 @@ internal static class OperationConverter
 
         return res;
     }
+
+    private static bool IsBySell(Tinkoff.InvestApi.V1.Operation operation)
+        => operation.OperationType is
+        Tinkoff.InvestApi.V1.OperationType.Sell or
+        Tinkoff.InvestApi.V1.OperationType.Buy;
 }

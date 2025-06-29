@@ -1,3 +1,4 @@
+using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
@@ -75,11 +76,13 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
         return portfolio;
     }
 
-    public async Task<TradeOperation[]?> GetOperations(string accountId)
+    public async Task<TradeOperation[]?> GetOperations(string accountId, DateTime from, DateTime to)
     {
         var request = new Tinkoff.InvestApi.V1.OperationsRequest
         {
             AccountId = accountId,
+            From = Timestamp.FromDateTime(from.ToUniversalTime()),
+            To = Timestamp.FromDateTime(to.ToUniversalTime()),
         };
 
         var response = await InvestApiClient.Operations.GetOperationsAsync(request);

@@ -14,5 +14,5 @@ public interface IPortfolioGateway
 
     public Task<Portfolio?> GetPortfolio(string accountId);
 
-    public Task<TradeOperation[]?> GetOperations(string accountId);
+    public Task<TradeOperation[]?> GetOperations(string accountId, DateTime from, DateTime to);
 }

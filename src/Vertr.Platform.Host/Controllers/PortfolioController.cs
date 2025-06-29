@@ -16,15 +16,18 @@ public class PortfolioController : ControllerBase
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
     private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly ILogger<PortfolioController> _logger;
 
     public PortfolioController(
         IPortfolioGateway portfolioGateway,
         IPortfolioRepository portfolioRepository,
-        IStaticMarketDataProvider staticMarketDataProvider)
+        IStaticMarketDataProvider staticMarketDataProvider,
+        ILogger<PortfolioController> logger)
     {
         _portfolioGateway = portfolioGateway;
         _portfolioRepository = portfolioRepository;
         _staticMarketDataProvider = staticMarketDataProvider;
+        _logger = logger;
     }
 
     [HttpGet("{accountId}")]
@@ -79,19 +82,20 @@ public class PortfolioController : ControllerBase
     }
 
     [HttpGet("gateway-operations/{accountId}")]
-    public async Task<IActionResult> GetGatewayOperations(string accountId)
+    public async Task<IActionResult> GetGatewayOperations(string accountId, DateTime from, DateTime to)
     {
-        var operations = await _portfolioGateway.GetOperations(accountId);
+        var operations = await _portfolioGateway.GetOperations(accountId, from, to);
+        _logger.LogInformation($"Total operations count={operations?.Count()}");
         return Ok(operations);
     }
 
     [HttpPut("gateway-operations/replay/{accountId}")]
-    public async Task<IActionResult> GetGatewayOperationsReplay(string accountId)
+    public async Task<IActionResult> GetGatewayOperationsReplay(string accountId, DateTime from, DateTime to)
     {
         var portfolioRepo = CreateEmptyRepository(accountId);
         var service = new TradeOperationService(portfolioRepo, _staticMarketDataProvider);
 
-        var operations = await _portfolioGateway.GetOperations(accountId);
+        var operations = await _portfolioGateway.GetOperations(accountId, from, to);
 
         if (operations != null)
         {

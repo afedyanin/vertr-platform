@@ -28,25 +28,26 @@ public class TradeOperationService : ITradeOperationService
 
         var currencyPosition = await GetCurrencyPosition(portfolio, operation);
         var operationPosition = GetOrCreatePosition(portfolio, operation.InstrumentId);
+        var operationAmount = Math.Abs(operation.Amount.Value);
 
         switch (operation.OperationType)
         {
             case TradeOperationType.Buy:
                 operationPosition.Balance += operation.Quantity ?? 0L;
-                currencyPosition.Balance -= operation.Amount.Value;
+                currencyPosition.Balance -= operationAmount;
                 break;
             case TradeOperationType.Sell:
                 operationPosition.Balance -= operation.Quantity ?? 0L;
-                currencyPosition.Balance += operation.Amount.Value;
+                currencyPosition.Balance += operationAmount;
                 break;
             case TradeOperationType.BrokerFee:
-                currencyPosition.Balance -= operation.Amount.Value;
+                currencyPosition.Balance -= operationAmount;
                 break;
             case TradeOperationType.Input:
-                currencyPosition.Balance += operation.Amount.Value;
+                currencyPosition.Balance += operationAmount;
                 break;
             case TradeOperationType.Output:
-                currencyPosition.Balance -= operation.Amount.Value;
+                currencyPosition.Balance -= operationAmount;
                 break;
             default:
                 throw new InvalidOperationException($"Unsupported TradeOperationType={operation.OperationType}");

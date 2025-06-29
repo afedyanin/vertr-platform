@@ -1,20 +1,16 @@
 using Grpc.Core;
-using MediatR;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Tinkoff.InvestApi;
 using Vertr.TinvestGateway.Application.Settings;
 
 namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public abstract class StreamServiceBase : BackgroundService
 {
-    protected InvestApiClient InvestApiClient { get; private set; }
+    protected IServiceProvider ServiceProvider { get; private set; }
 
     protected TinvestSettings TinvestSettings { get; private set; }
-
-    protected IMediator Mediator { get; private set; }
 
     protected abstract bool IsEnabled { get; }
 
@@ -23,15 +19,13 @@ public abstract class StreamServiceBase : BackgroundService
     private readonly string _serviceName;
 
     protected StreamServiceBase(
+        IServiceProvider serviceProvider,
         IOptions<TinvestSettings> tinvestOptions,
-        InvestApiClient investApiClient,
-        IMediator mediator,
         ILogger logger)
     {
+        ServiceProvider = serviceProvider;
         TinvestSettings = tinvestOptions.Value;
-        InvestApiClient = investApiClient;
         Logger = logger;
-        Mediator = mediator;
 
         _serviceName = GetType().Name;
     }

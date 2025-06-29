@@ -1,5 +1,6 @@
 using Grpc.Core;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
@@ -12,25 +13,23 @@ namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
-    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
-
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 
     public MarketDataStreamService(
-        IStaticMarketDataProvider staticMarketDataProvider,
+        IServiceProvider serviceProvider,
         IOptions<TinvestSettings> tinvestOptions,
-        InvestApiClient investApiClient,
-        IMediator mediator,
-        ILogger<MarketDataStreamService> logger) :
-            base(tinvestOptions, investApiClient, mediator, logger)
+        ILogger<OrderTradesStreamService> logger) :
+            base(serviceProvider, tinvestOptions, logger)
     {
-        _staticMarketDataProvider = staticMarketDataProvider;
     }
 
     protected override async Task OnBeforeStart(CancellationToken stoppingToken)
     {
+        using var scope = ServiceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
         var marketDataRequest = new InitialLoadMarketDataRequest();
-        await Mediator.Send(marketDataRequest, stoppingToken);
+        await mediator.Send(marketDataRequest, stoppingToken);
     }
 
     protected override async Task Subscribe(
@@ -38,7 +37,12 @@ public class MarketDataStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        var subscriptions = await _staticMarketDataProvider.GetSubscriptions();
+        using var scope = ServiceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IStaticMarketDataProvider>();
+        var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
+
+        var subscriptions = await staticMarketDataProvider.GetSubscriptions();
 
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {
@@ -60,7 +64,7 @@ public class MarketDataStreamService : StreamServiceBase
             SubscribeCandlesRequest = candleRequest,
         };
 
-        using var stream = InvestApiClient.MarketDataStream.MarketDataServerSideStream(request, headers: null, deadline, stoppingToken);
+        using var stream = investApiClient.MarketDataStream.MarketDataServerSideStream(request, headers: null, deadline, stoppingToken);
 
         await foreach (var response in stream.ResponseStream.ReadAllAsync(stoppingToken))
         {
@@ -72,7 +76,7 @@ public class MarketDataStreamService : StreamServiceBase
                     InstrumentId = response.Candle.InstrumentUid,
                 };
 
-                await Mediator.Send(marketDataCandleRequest, stoppingToken);
+                await mediator.Send(marketDataCandleRequest, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {

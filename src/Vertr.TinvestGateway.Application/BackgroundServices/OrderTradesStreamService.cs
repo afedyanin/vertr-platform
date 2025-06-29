@@ -1,5 +1,6 @@
 using Grpc.Core;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
@@ -12,19 +13,14 @@ namespace Vertr.TinvestGateway.Application.BackgroundServices;
 
 public class OrderTradesStreamService : StreamServiceBase
 {
-    private readonly IPortfolioRepository _portfolioRepository;
-
     protected override bool IsEnabled => TinvestSettings.OrderTradesStreamEnabled;
 
     public OrderTradesStreamService(
-        IPortfolioRepository portfolioRepository,
+        IServiceProvider serviceProvider,
         IOptions<TinvestSettings> tinvestOptions,
-        InvestApiClient investApiClient,
-        IMediator mediator,
         ILogger<OrderTradesStreamService> logger) :
-            base(tinvestOptions, investApiClient, mediator, logger)
+            base(serviceProvider, tinvestOptions, logger)
     {
-        _portfolioRepository = portfolioRepository;
     }
 
     protected override async Task Subscribe(
@@ -32,11 +28,17 @@ public class OrderTradesStreamService : StreamServiceBase
         DateTime? deadline = null,
         CancellationToken stoppingToken = default)
     {
-        var accounts = _portfolioRepository.GetActiveAccounts();
+
+        using var scope = ServiceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
+        var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
+
+        var accounts = portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
         request.Accounts.Add(accounts);
 
-        using var stream = InvestApiClient.OrdersStream.TradesStream(request, headers: null, deadline, stoppingToken);
+        using var stream = investApiClient.OrdersStream.TradesStream(request, headers: null, deadline, stoppingToken);
 
         await foreach (var response in stream.ResponseStream.ReadAllAsync(stoppingToken))
         {
@@ -50,7 +52,12 @@ public class OrderTradesStreamService : StreamServiceBase
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");
 
-                await Mediator.Send(orderTradesRequest, stoppingToken);
+                foreach (var operation in orderTradesRequest.OrderTrades)
+                {
+                    _logger.LogInformation($"Saving operation: {operation}");
+                }
+
+                await mediator.Send(orderTradesRequest, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Ping)
             {

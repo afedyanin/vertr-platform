@@ -25,7 +25,6 @@
   
   <ItemGroup>
     <Folder Include="Migrations\OrderExecutionDb\" />
-    <Folder Include="Migrations\PortfolioDb\" />
   </ItemGroup>
 
 </Project>

@@ -1,3 +1,4 @@
+using System.Security.Principal;
 using Refit;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Host;
@@ -31,9 +32,9 @@ public abstract class ApplicationTestBase
         await VertrClient.CloseAccount(accountId);
     }
 
-    protected async Task<Portfolio?> GetPortfolio(string accountId)
+    protected async Task<Portfolio?> GetPortfolio(PortfolioIdentity portfolioIdentity)
     {
-        var res = await VertrClient.GetPortfolio(accountId);
+        var res = await VertrClient.GetPortfolio(portfolioIdentity.AccountId, portfolioIdentity.SubAccountId);
         return res;
     }
 

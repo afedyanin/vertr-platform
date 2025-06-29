@@ -15,15 +15,14 @@ public class ApplicationBootstrapService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        var mediator = _serviceProvider.GetRequiredService<IMediator>();
+        using var scope = _serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
         var marketDataRequest = new InitialLoadMarketDataRequest();
-        var t1 = mediator.Send(marketDataRequest, cancellationToken);
+        await mediator.Send(marketDataRequest, cancellationToken);
 
         var portfoliosRequest = new InitialLoadPortfoliosRequest();
-        var t2 = mediator.Send(portfoliosRequest, cancellationToken);
-
-        await Task.WhenAll(t1, t2);
+        await mediator.Send(portfoliosRequest, cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

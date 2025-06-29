@@ -26,6 +26,8 @@ internal static class TradeOperationsFactory
             OrderId = response.OrderId,
             Amount = response.ExecutedCommission,
             InstrumentId = instrumentId,
+            Price = response.ExecutedCommission,
+            Quantity = 1
         };
 
         return [opCommission];

@@ -6,6 +6,8 @@ using Vertr.PortfolioManager.Application.Repositories;
 using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Application.Services;
 using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.PortfolioManager.Contracts.Requests;
+using MediatR;
 
 namespace Vertr.Platform.Host.Controllers;
 
@@ -16,17 +18,20 @@ public class PortfolioController : ControllerBase
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
     private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly IMediator _mediator;
     private readonly ILogger<PortfolioController> _logger;
 
     public PortfolioController(
         IPortfolioGateway portfolioGateway,
         IPortfolioRepository portfolioRepository,
         IStaticMarketDataProvider staticMarketDataProvider,
+        IMediator mediator,
         ILogger<PortfolioController> logger)
     {
         _portfolioGateway = portfolioGateway;
         _portfolioRepository = portfolioRepository;
         _staticMarketDataProvider = staticMarketDataProvider;
+        _mediator = mediator;
         _logger = logger;
     }
 
@@ -60,10 +65,20 @@ public class PortfolioController : ControllerBase
     }
 
     [HttpPut("sandbox-account/{accountId}")]
-    public async Task<IActionResult> PayIn(string accountId, decimal amount, string currency = "RUB")
+    public async Task<IActionResult> PayIn(string accountId, Guid subAccountId, decimal amount, string currency = "RUB")
     {
         var money = new Money(amount, currency);
         var balance = await _portfolioGateway.PayIn(accountId, money);
+
+        var request = new PayInOperationRequest
+        {
+            AccountId = accountId,
+            SubAccountId = subAccountId,
+            Amount = money,
+        };
+
+        await _mediator.Send(request);
+
         return Ok(balance);
     }
 

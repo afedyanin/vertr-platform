@@ -76,7 +76,7 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
         return portfolio;
     }
 
-    public async Task<TradeOperation[]?> GetOperations(string accountId, DateTime from, DateTime to)
+    public async Task<TradeOperation[]?> GetOperationsOld(string accountId, DateTime from, DateTime to)
     {
         var request = new Tinkoff.InvestApi.V1.OperationsRequest
         {
@@ -89,5 +89,39 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
         var operations = response.Convert(accountId);
 
         return operations;
+    }
+    public async Task<TradeOperation[]?> GetOperations(string accountId, DateTime from, DateTime to)
+    {
+        var request = new Tinkoff.InvestApi.V1.GetOperationsByCursorRequest
+        {
+            AccountId = accountId,
+            From = Timestamp.FromDateTime(from.ToUniversalTime()),
+            To = Timestamp.FromDateTime(to.ToUniversalTime()),
+            Limit = 1000,
+        };
+
+        var operations = new List<TradeOperation>();
+
+        var response = await InvestApiClient.Operations.GetOperationsByCursorAsync(request);
+        var converted = response.Convert(accountId);
+        operations.AddRange(converted);
+
+        while (response != null && response.HasNext)
+        {
+            request = new Tinkoff.InvestApi.V1.GetOperationsByCursorRequest
+            {
+                AccountId = accountId,
+                From = Timestamp.FromDateTime(from.ToUniversalTime()),
+                To = Timestamp.FromDateTime(to.ToUniversalTime()),
+                Limit = 1000,
+                Cursor = response.NextCursor
+            };
+
+            response = await InvestApiClient.Operations.GetOperationsByCursorAsync(request);
+            converted = response.Convert(accountId);
+            operations.AddRange(converted);
+        }
+
+        return [.. operations];
     }
 }

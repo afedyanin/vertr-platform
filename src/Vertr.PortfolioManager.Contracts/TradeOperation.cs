@@ -23,7 +23,9 @@ public record class TradeOperation
 
     public DateTime ExecutionTime { get; init; }
 
-    public Money? Price { get; init; }
+    // EF Core limit for complex types
+    // https://github.com/dotnet/efcore/issues/31376
+    public required Money Price { get; init; } = new Money(decimal.Zero, "");
 
     public long? Quantity { get; init; }
 }

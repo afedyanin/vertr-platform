@@ -17,15 +17,16 @@ internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<Trad
             .HasColumnName("id")
             .IsRequired();
 
-        builder.Property(e => e.OrderId)
-            .HasColumnName("order_id");
-
-        builder.Property(e => e.OperationType)
-            .HasColumnName("operation_type");
-
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at")
             .IsRequired();
+
+        builder.Property(e => e.OperationType)
+            .HasColumnName("operation_type")
+            .IsRequired();
+
+        builder.Property(e => e.OrderId)
+            .HasColumnName("order_id");
 
         builder.Property(e => e.AccountId)
             .HasColumnName("account_id")
@@ -39,8 +40,12 @@ internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<Trad
             .HasColumnName("instrument_id")
             .IsRequired();
 
-        builder.Property(e => e.Amount)
-            .HasColumnName("amount");
+        var amount = builder.ComplexProperty(e => e.Amount);
+        amount.Property(e => e.Value).HasColumnName("amount_value");
+        amount.Property(e => e.Currency).HasColumnName("amount_currency");
+
+        builder.Property(e => e.Message)
+            .HasColumnName("message");
 
         builder.Property(e => e.TradeId)
             .HasColumnName("trade_id");
@@ -48,14 +53,12 @@ internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<Trad
         builder.Property(e => e.ExecutionTime)
             .HasColumnName("execution_time");
 
-        builder.Property(e => e.Price)
-            .HasColumnName("price");
+        var price = builder.ComplexProperty(e => e.Price);
+        price.Property(e => e.Value).HasColumnName("price_value");
+        price.Property(e => e.Currency).HasColumnName("price_currency");
 
         builder.Property(e => e.Quantity)
             .HasColumnName("quantity");
-
-        builder.Property(e => e.Message)
-            .HasColumnName("message");
     }
 }
 

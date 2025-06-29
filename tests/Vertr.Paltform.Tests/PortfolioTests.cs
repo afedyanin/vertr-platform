@@ -5,13 +5,14 @@ namespace Vertr.Platform.Tests;
 [TestFixture(Category = "Application", Explicit = true)]
 public class PortfolioTests : ApplicationTestBase
 {
-    private const string _accountId = "b883ab13-997b-4823-9698-20bac64aeaad";
-    private static readonly Guid _subAccountId = new Guid("D8EBF841-D37B-47C0-AAD3-F778E29B1B85");
+    private static readonly string _accountId = "dd83bf2e-dac1-4638-a8b3-5d01c32c49b5";
+    private static readonly Guid _subAccountId = new Guid("dd83bf2e-dac2-4638-a8b3-5d01c32c49b5");
+    private static readonly PortfolioIdentity _identity = new PortfolioIdentity(_accountId, _subAccountId);
 
-    [TestCase(_accountId)]
-    public async Task CanGetInitialPortfolioState(string accountId)
+    [Test]
+    public async Task CanGetInitialPortfolioState()
     {
-        var portfolio = await GetPortfolio(accountId);
+        var portfolio = await GetPortfolio(_identity);
 
         Assert.That(portfolio, Is.Not.Null);
         Assert.That(portfolio.Positions, Is.Not.Null);
@@ -20,30 +21,23 @@ public class PortfolioTests : ApplicationTestBase
         DumpPortfolio(portfolio);
     }
 
-    [TestCase(_accountId)]
-    public async Task CanOpenPosition(string accountId)
+    [Test]
+    public async Task CanOpenPosition()
     {
-        _ = await OpenPosition(GetPortfolioIdentity(accountId), 3);
-        var portfolio = await GetPortfolio(accountId);
+        _ = await OpenPosition(_identity, 3);
+        var portfolio = await GetPortfolio(_identity);
 
         DumpPortfolio(portfolio!);
     }
 
-    [TestCase(_accountId)]
-    public async Task CanReversePosition(string accountId)
+    [Test]
+    public async Task CanReversePosition()
     {
-        _ = await ReversePosition(GetPortfolioIdentity(accountId));
-        var portfolio = await GetPortfolio(accountId);
+        _ = await ReversePosition(_identity);
+        var portfolio = await GetPortfolio(_identity);
 
         DumpPortfolio(portfolio!);
     }
-
-    /*
-    [TestCase("0e284896-ba30-440f-9626-18ab2e2cc2f0")]
-    public async Task CanValidateTradeOperations(string accountId)
-    {
-    }
-    */
 
     private void DumpPortfolio(Portfolio portfolio)
     {
@@ -52,5 +46,4 @@ public class PortfolioTests : ApplicationTestBase
             Console.WriteLine($"Instrument={position.InstrumentId} Balance={position.Balance}");
         }
     }
-    private static PortfolioIdentity GetPortfolioIdentity(string accountId) => new PortfolioIdentity(accountId, _subAccountId);
 }

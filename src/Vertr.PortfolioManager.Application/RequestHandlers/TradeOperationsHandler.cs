@@ -27,7 +27,13 @@ internal class TradeOperationsHandler : IRequestHandler<TradeOperationsRequest>
 
     public async Task Handle(TradeOperationsRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Order operations received.");
+        _logger.LogInformation($"Trade operations received.");
+
+        if (request.Operations.Length <= 0)
+        {
+            _logger.LogError("No operations from TradeOperationsRequest");
+            return;
+        }
 
         await SaveOperations(request.Operations);
 

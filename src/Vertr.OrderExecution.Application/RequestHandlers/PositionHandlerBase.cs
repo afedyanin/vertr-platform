@@ -27,13 +27,6 @@ internal abstract class PositionHandlerBase
         PortfolioIdentity portfolioIdentity,
         Guid instrumentId)
     {
-        var instrument = await _marketDataProvider.GetInstrumentById(instrumentId);
-
-        if (instrument == null)
-        {
-            throw new InvalidOperationException($"Cannot find instrument with Id={instrumentId}");
-        }
-
         var portfolio = _portfolioRepository.GetPortfolio(portfolioIdentity);
 
         if (portfolio == null)
@@ -41,13 +34,25 @@ internal abstract class PositionHandlerBase
             return 0L;
         }
 
-        // TODO: Test me
         var position = portfolio.Positions.SingleOrDefault(p => p.InstrumentId == instrumentId);
 
-        // TODO: Refactor me
-        var posQty = position?.Balance ?? 0L;
-        var lotSize = instrument.LotSize ?? 1L;
+        if (position == null)
+        {
+            return 0L;
+        }
 
-        return (long)(posQty / lotSize);
+        var instrument = await _marketDataProvider.GetInstrumentById(instrumentId);
+
+        if (instrument == null)
+        {
+            throw new InvalidOperationException($"Cannot find instrument with Id={instrumentId}");
+        }
+
+        if (instrument.LotSize == null)
+        {
+            throw new InvalidOperationException($"Cannot determine lot size for instrument with Id={instrumentId}");
+        }
+
+        return (long)(position.Balance / instrument.LotSize);
     }
 }

@@ -52,11 +52,6 @@ public class OrderTradesStreamService : StreamServiceBase
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");
 
-                foreach (var operation in orderTradesRequest.OrderTrades)
-                {
-                    _logger.LogInformation($"Saving operation: {operation}");
-                }
-
                 await mediator.Send(orderTradesRequest, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Ping)

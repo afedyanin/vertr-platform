@@ -62,6 +62,8 @@ internal static class TradeOperationsFactory
                 TradeId = trade.TradeId,
                 Amount = new Money(trade.Price.Value * trade.Quantity, trade.Price.Currency),
             };
+
+            opTrades.Add(opTrade);
         }
 
         return [.. opTrades];

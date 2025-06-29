@@ -44,6 +44,7 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
         if (!saved)
         {
             _logger.LogWarning($"Cannot save OrderTrades event for OrderId={orderEvent.OrderId}");
+            return;
         }
 
         var operations = orderTrades.CreateOperations(request.InstrumentId, portfolioIdentity);

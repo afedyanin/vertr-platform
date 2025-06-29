@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
+using Vertr.PortfolioManager.Application.Repositories;
+using Microsoft.Extensions.Options;
+using Vertr.PortfolioManager.Application.Services;
+using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host.Controllers;
 
@@ -10,13 +15,16 @@ public class PortfolioController : ControllerBase
 {
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
+    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
 
     public PortfolioController(
         IPortfolioGateway portfolioGateway,
-        IPortfolioRepository portfolioRepository)
+        IPortfolioRepository portfolioRepository,
+        IStaticMarketDataProvider staticMarketDataProvider)
     {
         _portfolioGateway = portfolioGateway;
         _portfolioRepository = portfolioRepository;
+        _staticMarketDataProvider = staticMarketDataProvider;
     }
 
     [HttpGet("{accountId}")]
@@ -75,5 +83,38 @@ public class PortfolioController : ControllerBase
     {
         var operations = await _portfolioGateway.GetOperations(accountId);
         return Ok(operations);
+    }
+
+    [HttpPut("gateway-operations/replay/{accountId}")]
+    public async Task<IActionResult> GetGatewayOperationsReplay(string accountId)
+    {
+        var portfolioRepo = CreateEmptyRepository(accountId);
+        var service = new TradeOperationService(portfolioRepo, _staticMarketDataProvider);
+
+        var operations = await _portfolioGateway.GetOperations(accountId);
+
+        if (operations != null)
+        {
+            foreach (var operation in operations)
+            {
+                var portfolio = await service.ApplyOperation(operation);
+                portfolioRepo.Save(portfolio);
+            }
+        }
+
+        var portfolios = portfolioRepo.GetAllPortfolios();
+
+        return Ok(portfolios);
+    }
+
+    private static IPortfolioRepository CreateEmptyRepository(string accountId)
+    {
+        var settings = new PortfolioSettings()
+        {
+            Accounts = [accountId]
+        };
+
+        var repo = new PortfolioRepository(Options.Create(settings));
+        return repo;
     }
 }

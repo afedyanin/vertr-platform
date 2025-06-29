@@ -42,7 +42,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.TinvestGateway.Applic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Platform.Host", "src\Vertr.Platform.Host\Vertr.Platform.Host.csproj", "{9AD11F66-F78C-4E91-A0C4-64FEC65E659E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Paltform.Tests", "tests\Vertr.Paltform.Tests\Vertr.Paltform.Tests.csproj", "{EAF4A8B2-041A-4666-B0D8-A2AA98EF6F46}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Platform.Tests", "tests\Vertr.Paltform.Tests\Vertr.Platform.Tests.csproj", "{EAF4A8B2-041A-4666-B0D8-A2AA98EF6F46}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.MarketData.Contracts", "src\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj", "{DBAE3F57-2CD3-5406-FAD1-E149799CB292}"
 EndProject

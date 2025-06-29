@@ -1,6 +1,6 @@
 using Vertr.PortfolioManager.Contracts;
 
-namespace Vertr.Paltform.Tests;
+namespace Vertr.Platform.Tests;
 
 [TestFixture(Category = "Application", Explicit = true)]
 public class PortfolioTests : ApplicationTestBase
@@ -38,28 +38,12 @@ public class PortfolioTests : ApplicationTestBase
         DumpPortfolio(portfolio!);
     }
 
+    /*
     [TestCase("0e284896-ba30-440f-9626-18ab2e2cc2f0")]
     public async Task CanValidateTradeOperations(string accountId)
     {
-        var operations = await GetGatewayOperations(accountId);
-
-        var portfolio = new Portfolio
-        {
-            Identity = new PortfolioIdentity(accountId),
-            UpdatedAt = DateTime.UtcNow,
-        };
-
-        foreach (var operation in operations!)
-        {
-            portfolio = portfolio.ApplyOperation(operation);
-        }
-
-        var gatewayPortfoio = await GetGatewayPortfolio(accountId);
-
-        // TODO Compare portfolios
-        Console.WriteLine(gatewayPortfoio);
-        Console.WriteLine(portfolio);
     }
+    */
 
     private void DumpPortfolio(Portfolio portfolio)
     {

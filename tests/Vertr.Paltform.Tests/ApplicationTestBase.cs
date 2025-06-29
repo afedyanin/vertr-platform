@@ -3,7 +3,7 @@ using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Host;
 using Vertr.PortfolioManager.Contracts;
 
-namespace Vertr.Paltform.Tests;
+namespace Vertr.Platform.Tests;
 
 public abstract class ApplicationTestBase
 {

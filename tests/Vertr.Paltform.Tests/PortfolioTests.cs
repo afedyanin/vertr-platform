@@ -1,5 +1,4 @@
 using Vertr.PortfolioManager.Contracts;
-using Vertr.PortfolioManager.Application.Extensions;
 
 namespace Vertr.Paltform.Tests;
 

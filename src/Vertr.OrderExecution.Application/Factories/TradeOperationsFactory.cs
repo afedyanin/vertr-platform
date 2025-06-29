@@ -58,7 +58,7 @@ internal static class TradeOperationsFactory
                 Quantity = trade.Quantity,
                 ExecutionTime = trade.ExecutionTime,
                 TradeId = trade.TradeId,
-                Amount = new Money(trade.Price.Amount * trade.Quantity, trade.Price.Currency),
+                Amount = new Money(trade.Price.Value * trade.Quantity, trade.Price.Currency),
             };
         }
 

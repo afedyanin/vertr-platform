@@ -22,7 +22,7 @@ public abstract class ApplicationTestBase
     protected async Task<string> OpenAccount(decimal amount = _initialAmount)
     {
         var accountId = await VertrClient.CreateAccount("application test");
-        _ = await VertrClient.PayIn(accountId, new Money(amount));
+        _ = await VertrClient.PayIn(accountId, new Money(amount, "RUB"));
         return accountId;
     }
 

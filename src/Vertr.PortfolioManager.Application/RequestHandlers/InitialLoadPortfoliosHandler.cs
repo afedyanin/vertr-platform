@@ -6,25 +6,27 @@ namespace Vertr.PortfolioManager.Application.RequestHandlers;
 internal class InitialLoadPortfoliosHandler : IRequestHandler<InitialLoadPortfoliosRequest>
 {
     private readonly ITradeOperationRepository _tradeOperationRepository;
-    private readonly IMediator _mediator;
+    private readonly ITradeOperationService _tradeOperationService;
+    private readonly IPortfolioRepository _portfolioRepository;
 
     public InitialLoadPortfoliosHandler(
         ITradeOperationRepository tradeOperationRepository,
-        IMediator mediator)
+        ITradeOperationService tradeOperationService,
+        IPortfolioRepository portfolioRepository)
     {
         _tradeOperationRepository = tradeOperationRepository;
-        _mediator = mediator;
+        _tradeOperationService = tradeOperationService;
+        _portfolioRepository = portfolioRepository;
     }
 
     public async Task Handle(InitialLoadPortfoliosRequest request, CancellationToken cancellationToken)
     {
         var allOperations = await _tradeOperationRepository.GetAll();
 
-        var opRequest = new TradeOperationsRequest
+        foreach (var operation in allOperations)
         {
-            Operations = allOperations
-        };
-
-        await _mediator.Send(opRequest);
+            var portfolio = await _tradeOperationService.ApplyOperation(operation);
+            _portfolioRepository.Save(portfolio);
+        }
     }
 }

@@ -78,6 +78,9 @@ internal static class OperationConverter
             return null;
         }
 
+        var price = operationTrade.Price.Convert();
+        var priceAamount = price.Value * operationTrade.Quantity;
+
         var res = new TradeOperation
         {
             Id = Guid.Parse(source.Id),
@@ -88,6 +91,7 @@ internal static class OperationConverter
             InstrumentId = Guid.Parse(source.InstrumentUid),
             Price = operationTrade.Price.Convert(),
             Quantity = operationTrade.Quantity,
+            Amount = new Money(priceAamount, price.Currency),
             TradeId = operationTrade.TradeId,
             ExecutionTime = operationTrade.DateTime.ToDateTime(),
             Message = source.Type

@@ -29,6 +29,6 @@ internal static class MoneyValueConverter
         => new Google.Type.Money
         {
             CurrencyCode = money.Currency,
-            DecimalValue = money.Amount,
+            DecimalValue = money.Value,
         };
 }

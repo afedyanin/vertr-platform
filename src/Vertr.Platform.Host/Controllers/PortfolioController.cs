@@ -70,6 +70,11 @@ public class PortfolioController : ControllerBase
         var money = new Money(amount, currency);
         var balance = await _portfolioGateway.PayIn(accountId, money);
 
+        if (balance == null || balance.Value == decimal.Zero)
+        {
+            return BadRequest("Balance is empty");
+        }
+
         var request = new PayInOperationRequest
         {
             AccountId = accountId,

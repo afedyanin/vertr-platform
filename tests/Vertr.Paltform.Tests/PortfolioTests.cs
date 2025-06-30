@@ -27,9 +27,27 @@ public class PortfolioTests : ApplicationTestBase
     }
 
     [Test]
+    public async Task CanClosePosition()
+    {
+        _ = await ClosePosition();
+        var portfolio = await GetPortfolio();
+
+        DumpPortfolio(portfolio!);
+    }
+
+    [Test]
     public async Task CanReversePosition()
     {
         _ = await ReversePosition();
+        var portfolio = await GetPortfolio();
+
+        DumpPortfolio(portfolio!);
+    }
+
+    [Test]
+    public async Task CanDepositAmount()
+    {
+        await PayIn(100000);
         var portfolio = await GetPortfolio();
 
         DumpPortfolio(portfolio!);

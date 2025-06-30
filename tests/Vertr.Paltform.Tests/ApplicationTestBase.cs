@@ -1,4 +1,5 @@
 using Refit;
+using Tinkoff.InvestApi.V1;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Host;
 using Vertr.Platform.Host.Requests;
@@ -12,8 +13,8 @@ public abstract class ApplicationTestBase
 
     private static readonly Guid _sber = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
 
-    private static readonly string _accountId = "dd83bf2e-dac1-4638-a8b3-5d01c32c49b5";
-    private static readonly Guid _subAccountId = new Guid("dd83bf2e-dac2-4638-a8b3-5d01c32c49b5");
+    private static readonly string _accountId = "93cda594-5556-44ca-8005-1c893e8d3142";
+    private static readonly Guid _subAccountId = new Guid("93cda594-5555-44ca-8005-1c893e8d3142");
 
     protected IVertrPlatformClient VertrClient { get; private set; }
 
@@ -36,12 +37,25 @@ public abstract class ApplicationTestBase
         return res;
     }
 
+    protected async Task<ExecuteOrderResponse?> ClosePosition()
+    {
+        var req = new CloseRequest(_sber, _accountId, _subAccountId);
+        var res = await VertrClient.ClosePosition(req);
+
+        return res;
+    }
+
     protected async Task<ExecuteOrderResponse?> ReversePosition()
     {
         var req = new ReverseRequest(_sber, _accountId, _subAccountId);
         var res = await VertrClient.RevertPosition(req);
 
         return res;
+    }
+
+    protected async Task PayIn(decimal amount)
+    {
+        _ = await VertrClient.PayIn(_accountId, _subAccountId, amount);
     }
 
     /*

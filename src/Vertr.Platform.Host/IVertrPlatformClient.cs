@@ -75,7 +75,7 @@ public interface IVertrPlatformClient
     public Task<string> CreateAccount(string accountName);
 
     [Put("/portfolio/sandbox-account/{accountId}")]
-    public Task<Money?> PayIn(string accountId, [Body] Money money);
+    public Task<Money?> PayIn(string accountId, Guid subAccountId, decimal amount, string currency = "RUB");
 
     [Delete("/portfolio/sandbox-account/{accountId}")]
     public Task CloseAccount(string accountId);

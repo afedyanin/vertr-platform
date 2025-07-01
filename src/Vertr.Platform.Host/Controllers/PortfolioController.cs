@@ -131,6 +131,21 @@ public class PortfolioController : ControllerBase
         return Ok(portfolios);
     }
 
+    [HttpPut("position-overrides/{accountId}/{subAccountId}")]
+    public async Task<IActionResult> OverridePositions(string accountId, Guid subAccountId, PositionOverride[] overrides)
+    {
+        var req = new PositionOverridesRequest
+        {
+            AccountId = accountId,
+            SubAccountId = subAccountId,
+            Overrides = overrides
+        };
+
+        await _mediator.Send(req);
+
+        return Ok();
+    }
+
     private static IPortfolioRepository CreateEmptyRepository(string accountId)
     {
         var settings = new PortfolioSettings()

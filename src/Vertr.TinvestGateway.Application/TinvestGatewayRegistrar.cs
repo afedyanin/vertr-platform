@@ -23,6 +23,7 @@ public static class TinvestGatewayRegistrar
 
         services.AddHostedService<MarketDataStreamService>();
         services.AddHostedService<OrderTradesStreamService>();
+        services.AddHostedService<OrderStateStreamService>();
 
         return services;
     }

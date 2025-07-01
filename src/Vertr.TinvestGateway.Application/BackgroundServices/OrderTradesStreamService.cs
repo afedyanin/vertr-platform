@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
@@ -33,6 +34,7 @@ public class OrderTradesStreamService : StreamServiceBase
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
+        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IStaticMarketDataProvider>();
 
         var accounts = portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
@@ -44,10 +46,19 @@ public class OrderTradesStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.OrderTrades)
             {
+                var instrumentId = Guid.Parse(response.OrderTrades.InstrumentUid);
+                var instrument = await staticMarketDataProvider.GetInstrumentById(instrumentId);
+
+                if (instrument == null || instrument.Currency == null)
+                {
+                    logger.LogError($"Invalid or unknown instrument: InstrumentId={instrumentId}");
+                    continue;
+                }
+
                 var orderTradesRequest = new OrderTradesRequest
                 {
-                    OrderTrades = response.OrderTrades.Convert(),
-                    InstrumentId = Guid.Parse(response.OrderTrades.InstrumentUid),
+                    InstrumentId = instrumentId,
+                    OrderTrades = response.OrderTrades.Convert(instrument.Currency),
                 };
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");
@@ -64,4 +75,6 @@ public class OrderTradesStreamService : StreamServiceBase
             }
         }
     }
+
+
 }

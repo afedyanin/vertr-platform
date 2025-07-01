@@ -90,7 +90,7 @@ public class OrdersController : ControllerBase
     [HttpPost("reverse")]
     public async Task<IActionResult> RevertPosition(ReverseRequest request)
     {
-        var mediatorRequest = new OpenPositionRequest
+        var mediatorRequest = new ReversePositionRequest
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),

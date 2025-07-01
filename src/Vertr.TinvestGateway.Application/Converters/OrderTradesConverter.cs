@@ -6,14 +6,15 @@ namespace Vertr.TinvestGateway.Application.Converters;
 internal static class OrderTradesConverter
 {
     public static OrderTrades Convert(
-        this Tinkoff.InvestApi.V1.OrderTrades source)
+        this Tinkoff.InvestApi.V1.OrderTrades source,
+        string currency)
         => new OrderTrades
         {
             OrderId = source.OrderId,
             CreatedAt = source.CreatedAt.ToDateTime(),
             Direction = source.Direction.Convert(),
             InstrumentId = Guid.Parse(source.InstrumentUid),
-            Trades = source.Trades.ToArray().Convert("")
+            Trades = source.Trades.ToArray().Convert(currency)
         };
 
     public static Trade Convert(this Tinkoff.InvestApi.V1.OrderTrade source, string currency)

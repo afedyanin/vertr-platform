@@ -33,7 +33,7 @@ internal class PayInOperationHandler : IRequestHandler<PayInOperationRequest>
     {
         _logger.LogInformation($"Pay in operation received.");
 
-        var instrumentId = await _staticMarketDataProvider.GetCurrencyId(request.Amount.Currency);
+        var instrumentId = _staticMarketDataProvider.GetCurrencyId(request.Amount.Currency);
 
         if (instrumentId == null)
         {
@@ -52,7 +52,6 @@ internal class PayInOperationHandler : IRequestHandler<PayInOperationRequest>
             InstrumentId = instrumentId.Value,
             Price = request.Amount,
             Quantity = 1,
-            Message = "Внесение средств на счет"
         };
 
         var saved = await _operationEventRepository.Save([opPayIn]);

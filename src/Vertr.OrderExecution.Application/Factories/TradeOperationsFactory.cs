@@ -58,7 +58,6 @@ internal static class TradeOperationsFactory
                 InstrumentId = instrumentId,
                 Price = trade.Price,
                 Quantity = trade.Quantity,
-                ExecutionTime = trade.ExecutionTime,
                 TradeId = trade.TradeId,
                 Amount = new Money(trade.Price.Value * trade.Quantity, trade.Price.Currency),
             };

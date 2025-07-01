@@ -63,7 +63,6 @@ internal static class OperationConverter
             Amount = source.Payment.Convert(),
             Price = source.Price.Convert(),
             Quantity = source.Quantity,
-            Message = source.Description,
         };
 
         return res;
@@ -85,7 +84,7 @@ internal static class OperationConverter
         var res = new TradeOperation
         {
             Id = Guid.Parse(source.Id),
-            CreatedAt = source.Date.ToDateTime(),
+            CreatedAt = operationTrade.Date.ToDateTime(),
             OperationType = source.Type.Convert(),
             AccountId = accountId,
             SubAccountId = Guid.Empty,
@@ -94,8 +93,6 @@ internal static class OperationConverter
             Quantity = operationTrade.Quantity,
             Amount = new Money(priceAamount, price.Currency),
             TradeId = operationTrade.Num,
-            ExecutionTime = operationTrade.Date.ToDateTime(),
-            Message = source.Description
         };
 
         return res;
@@ -159,7 +156,6 @@ internal static class OperationConverter
             Amount = source.Payment.Convert(),
             Price = source.Price.Convert(),
             Quantity = source.Quantity,
-            Message = source.Type
         };
 
         return res;
@@ -181,7 +177,7 @@ internal static class OperationConverter
         var res = new TradeOperation
         {
             Id = Guid.Parse(source.Id),
-            CreatedAt = source.Date.ToDateTime(),
+            CreatedAt = operationTrade.DateTime.ToDateTime(),
             OperationType = source.OperationType.Convert(),
             AccountId = accountId,
             SubAccountId = Guid.Empty,
@@ -190,8 +186,6 @@ internal static class OperationConverter
             Quantity = operationTrade.Quantity,
             Amount = new Money(priceAamount, price.Currency),
             TradeId = operationTrade.TradeId,
-            ExecutionTime = operationTrade.DateTime.ToDateTime(),
-            Message = source.Type
         };
 
         return res;

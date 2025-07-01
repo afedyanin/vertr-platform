@@ -9,10 +9,10 @@ using Vertr.OrderExecution.DataAccess;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     [DbContext(typeof(OrderExecutionDbContext))]
-    [Migration("20250629154420_OrderExecutionTables")]
+    [Migration("20250701030902_OrderExecutionTables")]
     partial class OrderExecutionTables
     {
         /// <inheritdoc />

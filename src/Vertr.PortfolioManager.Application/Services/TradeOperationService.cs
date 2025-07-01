@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
@@ -7,13 +9,16 @@ public class TradeOperationService : ITradeOperationService
 {
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly ILogger<TradeOperationService> _logger;
 
     public TradeOperationService(
         IPortfolioRepository portfolioRepository,
-        IStaticMarketDataProvider staticMarketDataProvider)
+        IStaticMarketDataProvider staticMarketDataProvider,
+        ILogger<TradeOperationService>? logger = null)
     {
         _portfolioRepository = portfolioRepository;
         _staticMarketDataProvider = staticMarketDataProvider;
+        _logger = logger ?? NullLoggerFactory.Instance.CreateLogger<TradeOperationService>();
     }
 
     public async Task<Portfolio> ApplyOperation(TradeOperation operation)
@@ -72,13 +77,16 @@ public class TradeOperationService : ITradeOperationService
 
     private async Task<Guid?> GetCurrrencyId(string currencyCode, Guid instrumentId)
     {
-        var currencyId = await _staticMarketDataProvider.GetCurrencyId(currencyCode);
+        var currencyId = _staticMarketDataProvider.GetCurrencyId(currencyCode);
 
         if (currencyId == null)
         {
+            _logger.LogInformation($"Detecting currency by instrumentId={instrumentId}");
             currencyId = await _staticMarketDataProvider.GetInstrumentCurrencyId(instrumentId);
+
         }
 
+        _logger.LogInformation($"Selected currencyId={currencyId}");
         return currencyId;
     }
 

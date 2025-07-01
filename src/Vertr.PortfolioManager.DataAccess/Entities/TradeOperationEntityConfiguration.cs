@@ -44,14 +44,8 @@ internal class TradeOperationEntityConfiguration : IEntityTypeConfiguration<Trad
         amount.Property(e => e.Value).HasColumnName("amount_value");
         amount.Property(e => e.Currency).HasColumnName("amount_currency");
 
-        builder.Property(e => e.Message)
-            .HasColumnName("message");
-
         builder.Property(e => e.TradeId)
             .HasColumnName("trade_id");
-
-        builder.Property(e => e.ExecutionTime)
-            .HasColumnName("execution_time");
 
         var price = builder.ComplexProperty(e => e.Price);
         price.Property(e => e.Value).HasColumnName("price_value");

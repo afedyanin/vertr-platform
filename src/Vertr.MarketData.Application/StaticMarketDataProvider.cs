@@ -132,10 +132,16 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
         return [.. res];
     }
 
-    public Task<Guid?> GetCurrencyId(string currencyCode)
+    public Guid? GetCurrencyId(string currencyCode)
     {
-        _settings.Currencies.TryGetValue(currencyCode.ToUpper(CultureInfo.InvariantCulture), out var currencyId);
-        return Task.FromResult<Guid?>(currencyId);
+        if (_settings.Currencies.TryGetValue(
+            currencyCode.ToUpper(CultureInfo.InvariantCulture),
+            out var currencyId))
+        {
+            return currencyId;
+        }
+
+        return null;
     }
 
     public async Task<Guid?> GetInstrumentCurrencyId(Guid instrumentId)
@@ -147,6 +153,6 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
             return null;
         }
 
-        return await GetCurrencyId(instrument.Currency);
+        return GetCurrencyId(instrument.Currency);
     }
 }

@@ -17,11 +17,7 @@ public record class TradeOperation
 
     public required Money Amount { get; init; }
 
-    public string? Message { get; init; }
-
     public string? TradeId { get; init; }
-
-    public DateTime ExecutionTime { get; init; }
 
     // EF Core limit for complex types
     // https://github.com/dotnet/efcore/issues/31376

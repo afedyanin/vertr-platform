@@ -9,7 +9,7 @@ using Vertr.PortfolioManager.DataAccess;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.PortfolioDb
 {
     [DbContext(typeof(PortfolioDbContext))]
     partial class PortfolioDbContextModelSnapshot : ModelSnapshot
@@ -39,17 +39,9 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<DateTime>("ExecutionTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("execution_time");
-
                     b.Property<Guid>("InstrumentId")
                         .HasColumnType("uuid")
                         .HasColumnName("instrument_id");
-
-                    b.Property<string>("Message")
-                        .HasColumnType("text")
-                        .HasColumnName("message");
 
                     b.Property<int>("OperationType")
                         .HasColumnType("integer")

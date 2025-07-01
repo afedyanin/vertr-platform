@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.PortfolioDb
 {
     /// <inheritdoc />
     public partial class PortfolioTables : Migration
@@ -22,9 +22,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                     account_id = table.Column<string>(type: "text", nullable: false),
                     sub_account_id = table.Column<Guid>(type: "uuid", nullable: false),
                     instrument_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    message = table.Column<string>(type: "text", nullable: true),
                     trade_id = table.Column<string>(type: "text", nullable: true),
-                    execution_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     quantity = table.Column<long>(type: "bigint", nullable: true),
                     amount_currency = table.Column<string>(type: "text", nullable: false),
                     amount_value = table.Column<decimal>(type: "numeric", nullable: false),

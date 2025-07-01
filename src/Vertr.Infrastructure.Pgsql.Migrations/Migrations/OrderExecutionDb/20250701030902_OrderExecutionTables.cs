@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     /// <inheritdoc />
     public partial class OrderExecutionTables : Migration

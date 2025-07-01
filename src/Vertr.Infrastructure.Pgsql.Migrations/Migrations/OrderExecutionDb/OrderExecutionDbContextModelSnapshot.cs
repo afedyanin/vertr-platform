@@ -8,7 +8,7 @@ using Vertr.OrderExecution.DataAccess;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     [DbContext(typeof(OrderExecutionDbContext))]
     partial class OrderExecutionDbContextModelSnapshot : ModelSnapshot

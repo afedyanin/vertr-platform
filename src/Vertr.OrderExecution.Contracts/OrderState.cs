@@ -1,4 +1,5 @@
 using Vertr.OrderExecution.Contracts.Enums;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Contracts;
 
@@ -12,23 +13,23 @@ public record class OrderState
 
     public long LotsExecuted { get; init; }
 
-    public decimal InitialOrderPrice { get; init; }
+    public Money? InitialOrderPrice { get; init; }
 
-    public decimal ExecutedOrderPrice { get; init; }
+    public Money? ExecutedOrderPrice { get; init; }
 
-    public decimal TotalOrderAmount { get; init; }
+    public Money? TotalOrderAmount { get; init; }
 
-    public decimal AveragePositionPrice { get; init; }
+    public Money? AveragePositionPrice { get; init; }
 
-    public decimal InitialCommission { get; init; }
+    public Money? InitialCommission { get; init; }
 
-    public decimal ExecutedCommission { get; init; }
+    public Money? ExecutedCommission { get; init; }
 
     public OrderDirection Direction { get; init; }
 
-    public decimal InitialSecurityPrice { get; init; }
+    public Money? InitialSecurityPrice { get; init; }
 
-    public decimal ServiceCommission { get; init; }
+    public Money? ServiceCommission { get; init; }
 
     public string Currency { get; init; } = string.Empty;
 

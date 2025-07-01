@@ -68,6 +68,57 @@ internal static class TradeOperationsFactory
         return [.. opTrades];
     }
 
+    public static TradeOperation[] CreateOperations(
+        this OrderState state,
+        Guid instrumentId,
+        PortfolioIdentity portfolioIdentity)
+    {
+        var opTrades = new List<TradeOperation>();
+
+        foreach (var trade in state.OrderStages)
+        {
+            if (trade.Price == null)
+            {
+                continue;
+            }
+
+            var opTrade = new TradeOperation
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
+                OperationType = state.Direction.ToOperationType(),
+                AccountId = portfolioIdentity.AccountId,
+                SubAccountId = portfolioIdentity.SubAccountId,
+                OrderId = state.OrderId,
+                InstrumentId = instrumentId,
+                Price = trade.Price,
+                Quantity = trade.Quantity,
+                TradeId = trade.TradeId,
+                Amount = new Money(trade.Price.Value * trade.Quantity, trade.Price.Currency),
+            };
+
+            opTrades.Add(opTrade);
+        }
+
+        var opCommission = new TradeOperation
+        {
+            Id = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+            OperationType = TradeOperationType.BrokerFee,
+            SubAccountId = portfolioIdentity.SubAccountId,
+            AccountId = portfolioIdentity.AccountId,
+            OrderId = state.OrderId,
+            Amount = state.ExecutedCommission,
+            InstrumentId = instrumentId,
+            Price = state.ExecutedCommission,
+            Quantity = 1
+        };
+
+        opTrades.Add(opCommission);
+
+        return [.. opTrades];
+    }
+
     private static TradeOperationType ToOperationType(this OrderDirection direction)
         => direction switch
         {

@@ -47,18 +47,12 @@ public class OrderTradesStreamService : StreamServiceBase
             if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.OrderTrades)
             {
                 var instrumentId = Guid.Parse(response.OrderTrades.InstrumentUid);
-                var instrument = await staticMarketDataProvider.GetInstrumentById(instrumentId);
-
-                if (instrument == null || instrument.Currency == null)
-                {
-                    logger.LogError($"Invalid or unknown instrument: InstrumentId={instrumentId}");
-                    continue;
-                }
+                var currency = await staticMarketDataProvider.GetInstrumentCurrency(instrumentId);
 
                 var orderTradesRequest = new OrderTradesRequest
                 {
                     InstrumentId = instrumentId,
-                    OrderTrades = response.OrderTrades.Convert(instrument.Currency),
+                    OrderTrades = response.OrderTrades.Convert(currency),
                 };
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");

@@ -155,4 +155,16 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
 
         return GetCurrencyId(instrument.Currency);
     }
+
+    public async Task<string> GetInstrumentCurrency(Guid instrumentId)
+    {
+        var instrument = await GetInstrumentById(instrumentId);
+
+        if (instrument == null || instrument.Currency == null)
+        {
+            return string.Empty;
+        }
+
+        return instrument.Currency ?? string.Empty;
+    }
 }

@@ -16,5 +16,7 @@ public interface IStaticMarketDataProvider
 
     public Task<Guid?> GetInstrumentCurrencyId(Guid instrumentId);
 
+    public Task<string> GetInstrumentCurrency(Guid instrumentId);
+
     public Guid? GetCurrencyId(string currencyCode);
 }

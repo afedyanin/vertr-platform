@@ -54,6 +54,9 @@ public class TradeOperationService : ITradeOperationService
             case TradeOperationType.Output:
                 currencyPosition.Balance -= operationAmount;
                 break;
+            case TradeOperationType.PositionOverride:
+                operationPosition.Balance = operationAmount;
+                break;
             default:
                 throw new InvalidOperationException($"Unsupported TradeOperationType={operation.OperationType}");
         }

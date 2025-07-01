@@ -189,5 +189,8 @@ public enum TradeOperationType
     OptionExpiration = 64,
 
     // Экспирация фьючерса.
-    FutureExpiration = 65
+    FutureExpiration = 65,
+
+    // Оверрайд поизций
+    PositionOverride = 120
 }

@@ -1,5 +1,4 @@
 using Refit;
-using Tinkoff.InvestApi.V1;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Host;
 using Vertr.Platform.Host.Requests;

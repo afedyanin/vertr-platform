@@ -69,4 +69,22 @@ internal static class OrderEventFactory
             JsonData = JsonSerializer.Serialize(trades, _jsonOptions)
         };
     }
+
+    public static OrderEvent CreateEvent(
+        this OrderState state,
+        PortfolioIdentity portfolioId)
+    {
+        return new OrderEvent
+        {
+            Id = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
+            AccountId = portfolioId.AccountId,
+            SubAccountId = portfolioId.SubAccountId,
+            InstrumentId = state.InstrumentId,
+            RequestId = Guid.Parse(state.OrderRequestId),
+            OrderId = state.OrderId,
+            JsonDataType = state.GetType().FullName,
+            JsonData = JsonSerializer.Serialize(state, _jsonOptions)
+        };
+    }
 }

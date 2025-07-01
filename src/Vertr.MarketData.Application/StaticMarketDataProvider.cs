@@ -86,6 +86,16 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
         _instrumentsById.Clear();
         _instruments.Clear();
 
+        foreach (var item in _settings.Currencies.Values)
+        {
+            var instrument = await _gateway.GetInstrument(item);
+            if (instrument != null)
+            {
+                _instrumentsById[instrument.Id] = instrument;
+                _instruments[instrument.Symbol] = instrument;
+            }
+        }
+
         foreach (var instrumentId in _settings.Instruments)
         {
             var instrument = await _gateway.GetInstrument(instrumentId);

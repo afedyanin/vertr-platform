@@ -84,12 +84,11 @@ public class TradeOperationService : ITradeOperationService
 
         if (currencyId == null)
         {
-            _logger.LogInformation($"Detecting currency by instrumentId={instrumentId}");
+            _logger.LogDebug($"Detecting currency by instrumentId={instrumentId}");
             currencyId = await _staticMarketDataProvider.GetInstrumentCurrencyId(instrumentId);
 
         }
 
-        _logger.LogInformation($"Selected currencyId={currencyId}");
         return currencyId;
     }
 

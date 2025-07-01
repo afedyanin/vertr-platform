@@ -1,0 +1,27 @@
+@baseAddress = https://localhost:7085
+
+@accountId = 93cda594-5556-44ca-8005-1c893e8d3142
+@subAccountId = 93cda594-5555-44ca-8005-1c893e8d3142
+@sberInstrumentId = e6123145-9665-43e0-8413-cd61b8aa9b13
+
+### Gateway portfolio
+GET {{baseAddress}}/portfolio/gateway-portfolio/{{accountId}}
+
+
+### Local portfolio
+GET {{baseAddress}}/portfolio/{{accountId}}?subAccountId={{subAccountId}}
+
+
+
+
+### Reverse position
+POST {{baseAddress}}/orders/reverse
+Content-Type: application/json
+
+{
+  "instrumentId": "{{sberInstrumentId}}",
+  "accountId": "{{accountId}}",
+  "subAccountId": "{{subAccountId}}"
+}
+
+

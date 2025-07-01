@@ -29,6 +29,8 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
 
         _logger.LogDebug($"OrderTrades received: {orderTrades}");
 
+        // TODO: OrderTrades может прийти раньше, чем сохранится OrderResponse, поэтому может не найти портфолио !!!
+        // TODO: Нужна общая очередь для обработки респонсов по ордерам
         var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderId(orderTrades.OrderId);
 
         if (portfolioIdentity == null)

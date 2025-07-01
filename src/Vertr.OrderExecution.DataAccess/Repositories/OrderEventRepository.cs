@@ -30,6 +30,24 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         return new PortfolioIdentity(accountId, subAccountId);
     }
 
+    public async Task<PortfolioIdentity?> ResolvePortfolioByOrderRequestId(Guid orderRequestId)
+    {
+        using var context = await GetDbContext();
+
+        var orderEvents = context.OrderEvents
+            .Where(e => e.RequestId != null && e.RequestId == orderRequestId);
+
+        var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null)?.AccountId;
+        var subAccountId = orderEvents.FirstOrDefault(e => e.SubAccountId != Guid.Empty)?.SubAccountId;
+
+        if (string.IsNullOrEmpty(accountId))
+        {
+            return null;
+        }
+
+        return new PortfolioIdentity(accountId, subAccountId);
+    }
+
     public async Task<bool> Save(OrderEvent orderEvent)
     {
         using var context = await GetDbContext();

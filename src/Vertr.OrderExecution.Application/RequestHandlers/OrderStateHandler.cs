@@ -34,7 +34,9 @@ internal class OrderStateHandler : IRequestHandler<OrderStateRequest>
 
         _logger.LogInformation($"OrderState received: OrderId={orderState.OrderId} RequestId={orderState.OrderRequestId} AccountId={request.AccountId}");
 
-        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderId(orderState.OrderId);
+        // TODO: Order State приходит раньше, чем сохраняется OrderResponse, поэтому не находит портфолио !!!
+
+        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderRequestId(Guid.Parse(orderState.OrderRequestId));
 
         if (portfolioIdentity == null)
         {

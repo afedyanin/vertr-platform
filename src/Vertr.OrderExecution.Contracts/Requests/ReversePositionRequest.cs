@@ -1,13 +1,7 @@
 using MediatR;
-using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Contracts.Requests;
 
-public class ReversePositionRequest : IRequest<ExecuteOrderResponse>
+public class ReversePositionRequest : OrderRequestBase, IRequest<ExecuteOrderResponse>
 {
-    public Guid RequestId { get; init; }
-
-    public Guid InstrumentId { get; init; }
-
-    public required PortfolioIdentity PortfolioIdentity { get; init; }
 }

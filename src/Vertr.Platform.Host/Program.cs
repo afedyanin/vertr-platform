@@ -30,6 +30,8 @@ public class Program
 
         // Add modules
         builder.Services.AddTinvestGateway(configuration);
+        builder.Services.AddTinvestOrders();
+
         builder.Services.AddMarketData();
         builder.Services.AddOrderExecution();
         builder.Services.AddOrderExecutionDataAccess(connectionString!);

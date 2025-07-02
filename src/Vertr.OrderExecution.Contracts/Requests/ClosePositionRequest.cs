@@ -1,13 +1,7 @@
 using MediatR;
-using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Contracts.Requests;
 
-public class ClosePositionRequest : IRequest<ExecuteOrderResponse>
+public class ClosePositionRequest : OrderRequestBase, IRequest<ExecuteOrderResponse>
 {
-    public Guid RequestId { get; init; }
-
-    public Guid InstrumentId { get; init; }
-
-    public required PortfolioIdentity PortfolioIdentity { get; init; }
 }

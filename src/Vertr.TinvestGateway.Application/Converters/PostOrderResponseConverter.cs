@@ -22,5 +22,6 @@ internal static class PostOrderResponseConverter
             InstrumentId = Guid.Parse(response.InstrumentUid),
             OrderType = response.OrderType.Convert(),
             OrderDirection = response.Direction.Convert(),
+            Source = OrderEventSource.Tinvest
         };
 }

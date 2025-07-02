@@ -19,9 +19,14 @@ public static class TinvestGatewayRegistrar
 
         services.AddTransient<IMarketDataGateway, TinvestGatewayMarketData>();
         services.AddTransient<IPortfolioGateway, TinvestGatewayPortfolio>();
-        services.AddTransient<IOrderExecutionGateway, TinvestGatewayOrders>();
-
         services.AddHostedService<MarketDataStreamService>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddTinvestOrders(this IServiceCollection services)
+    {
+        services.AddTransient<IOrderExecutionGateway, TinvestGatewayOrders>();
         services.AddHostedService<OrderTradesStreamService>();
         services.AddHostedService<OrderStateStreamService>();
 

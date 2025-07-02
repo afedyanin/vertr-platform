@@ -33,4 +33,6 @@ public record class PostOrderResponse
     public string Message { get; init; } = string.Empty;
 
     public Guid InstrumentId { get; init; }
+
+    public OrderEventSource Source { get; init; }
 }

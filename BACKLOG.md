@@ -1,5 +1,13 @@
 # 2025-07-15
 
+## Channels
+
+- https://learn.microsoft.com/en-us/dotnet/core/extensions/channels
+- https://saigontechnology.com/blog/implement-producerconsumer-patterns-using-channel-in-c/
+- https://habr.com/ru/articles/508726/
+- https://www.youtube.com/watch?v=lHC38t1w9Nc
+- 
+
 ## TPL DataFlow
 
 - [Dataflow (Task Parallel Library)](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library)

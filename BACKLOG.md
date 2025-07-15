@@ -1,3 +1,34 @@
+# 2025-07-15
+
+## TPL DataFlow
+
+- [Dataflow (Task Parallel Library)](https://learn.microsoft.com/en-us/dotnet/standard/parallel-programming/dataflow-task-parallel-library)
+
+## Redis pub/sub
+
+- [Redis Pub/sub](https://redis.io/docs/latest/develop/pubsub/)
+
+- [Efficient Microservices Communication: Redis Pub/Sub Message Broker Implementation Guide](https://github.com/Vahidalizadeh7070/RedisMessageBrokerMedium)
+- https://blog.devops.dev/efficient-microservices-communication-redis-pub-sub-message-broker-implementation-guide-6e5a5f491e18
+
+- [Implementing Redis Pub-Sub in .NET: A Step-by-Step Guide](https://medium.com/@muhammadzakaria616/implementing-redis-pub-sub-in-net-a-step-by-step-guide-9823202507d0)
+
+- [Simple Messaging in .NET With Redis Pub/Sub](https://www.milanjovanovic.tech/blog/simple-messaging-in-dotnet-with-redis-pubsub)
+- [Publish/Subscribe messaging pattern in Redis](https://github.com/ServiceStack/ServiceStack.Examples/blob/master/src/Docs/redis-client/redis-pubsub.md)
+- [Redis for .NET Developers – Redis Pub Sub](https://taswar.zeytinsoft.com/redis-pub-sub/)
+- [The Redis Feature You Didn't Know You Needed](https://www.youtube.com/watch?v=jRTChmMRCIA)
+
+## Redis streams
+
+- [Redis Streams](https://redis.io/docs/latest/develop/data-types/streams/)
+- [How to use Redis Streams with .NET](https://redis.io/learn/develop/dotnet/streams/stream-basics)
+- [Redis Stream — надёжность и масштабируемость ваших систем сообщений](https://habr.com/ru/articles/456270/)
+- [Building a High-Performance Message Queue with Redis Streams](https://goatreview.com/building-a-high-performance-message-queue-with-redis-streams/)
+- [Redis Streams With .NET Examples](https://github.com/redis-developer/redis-streams-with-dotnet/tree/main)
+
+
+
+
 # 2025-07-08
 
 ## MDS

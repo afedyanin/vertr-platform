@@ -1,3 +1,71 @@
+# 2025-07-16
+
+## Vertr.Strategies
+
+IStrategy 
+
+- Start/Stop
+- Id
+- RuntimeStatus (Started/Stopped)
+
+StrategyMeta
+
+- Id,
+- Type
+- ParamsJson
+
+StrategyController + MediatorCommands 
+
+IStrategyRepository - CRUD
+
+IStrategyHostingService 
+
+- Load/Unload
+- Start/Stop
+- GetActiveStrategies
+- GetStatus
+
+StrategyFactory
+
+- CreateInstanceByMetadata
+
+## Vertr.MarketData
+
+IMarketDataFeed
+
+- Produce(Candle)
+- Subscribe(Ticker, Interval)
+
+MarketDataFeed
+
+- Maintain Subscriptions as Cahnnels
+- Single Channel Reader for Produce
+- Split Candle Message to Subscribers
+
+## Refactor
+
+- Выпилить Mediator из гейтвея, заменить на Channels
+- Использовать Channels внутри, вместо Mediator: OrderEvents, OperationEvents, TradingSignals
+- Перейти на локальные версии БД: PgSql -> SQLite
+- Полностью автономная версия VERTR без Docker поддежрки инфры.
+
+## SQLite
+
+https://github.com/Webreaper/Damselfly/tree/master
+https://metanit.com/sharp/efcore/1.2.php
+https://kenslearningcurve.com/tutorials/using-sqlite-with-entity-framework-core-in-c/
+https://learn.microsoft.com/ru-ru/ef/core/providers/sqlite/limitations
+https://metanit.com/sharp/adonetcore/4.1.php
+https://sqlite.org/about.html
+https://learn.microsoft.com/ru-ru/dotnet/standard/data/sqlite/dapper-limitations
+https://www.infoworld.com/article/2337428/how-to-work-with-dapper-and-sqlite-in-asp-net-core.html
+https://jasonwatmore.com/net-7-dapper-sqlite-crud-api-tutorial-in-aspnet-core
+https://ironpdf.com/blog/net-help/dapper-csharp/
+https://github.com/GarethElms/Dapper-a-simple-web-app-using-dapper-and-sqlite
+
+
+
+
 # 2025-07-15
 
 ## Channels

@@ -6,7 +6,10 @@
 - https://saigontechnology.com/blog/implement-producerconsumer-patterns-using-channel-in-c/
 - https://habr.com/ru/articles/508726/
 - https://www.youtube.com/watch?v=lHC38t1w9Nc
-- 
+- https://devblogs.microsoft.com/dotnet/an-introduction-to-system-threading-channels/?WT.mc_id=ondotnet-c9-cephilli
+- [C# Channels - Publish / Subscribe Workflows](https://deniskyashif.com/2019/12/08/csharp-channels-part-1/)
+
+
 
 ## TPL DataFlow
 

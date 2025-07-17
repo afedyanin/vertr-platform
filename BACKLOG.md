@@ -1,3 +1,13 @@
+# 2025-07-17
+
+## Circular Buffer
+
+- https://www.codeproject.com/Tips/5258667/A-Generic-Circular-Buffer-in-Csharp
+- https://www.code-spot.co.za/2022/08/14/implementing-and-using-buffers-in-c/
+- https://jonlabelle.com/snippets/view/csharp/c-circular-buffer
+- https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.utilities.circularbuffer-1?view=visualstudiosdk-2022
+- 
+
 # 2025-07-16
 
 ## Vertr.Strategies

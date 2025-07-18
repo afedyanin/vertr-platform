@@ -19,34 +19,32 @@ internal class MarketDataRepository : IMarketDataRepository
     {
         var repoKey = GetKey(symbol, interval);
 
-        if (!_repoDict.TryGetValue(repoKey, out var repo))
+        lock (_lockObj)
         {
-            // TODO: Refactor this
-            lock (_lockObj)
+            if (!_repoDict.TryGetValue(repoKey, out var repo))
             {
                 repo = new CandleRepository(_maxCandlesCapacity);
                 _repoDict[repoKey] = repo;
             }
-        }
 
-        repo.Add(candle);
+            repo.Add(candle);
+        }
     }
 
     public void AddRange(Symbol symbol, CandleInterval interval, Candle[] candles)
     {
         var repoKey = GetKey(symbol, interval);
 
-        if (!_repoDict.TryGetValue(repoKey, out var repo))
+        lock (_lockObj)
         {
-            // TODO: Refactor this
-            lock (_lockObj)
+            if (!_repoDict.TryGetValue(repoKey, out var repo))
             {
                 repo = new CandleRepository(_maxCandlesCapacity);
                 _repoDict[repoKey] = repo;
             }
-        }
 
-        repo.AddRange(candles);
+            repo.AddRange(candles);
+        }
     }
 
     public Candle[] GetAll(Symbol symbol, CandleInterval interval, int maxCount = 0)

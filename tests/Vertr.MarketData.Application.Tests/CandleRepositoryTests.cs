@@ -4,10 +4,22 @@ namespace Vertr.MarketData.Application.Tests;
 
 public class CandleRepositoryTests
 {
+    private static readonly DateTime _startDate = new DateTime(2025, 07, 07);
+
     [Test]
-    public void CanCreateRepo()
+    public void CanAddRange()
     {
-        var repo = new CandleRepository();
-        Assert.That(repo, Is.Not.Null);
+        var repo = new CandleRepository(3);
+        var candles = CandleFactory.CreateCandles(_startDate, 200);
+
+        repo.AddRange(candles);
+        var last = repo.GetLast();
+
+        Assert.That(last, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(repo.IsFull, Is.True);
+            Assert.That(last.TimeUtc, Is.EqualTo(candles[199].TimeUtc));
+        });
     }
 }

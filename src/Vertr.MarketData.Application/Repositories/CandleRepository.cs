@@ -5,36 +5,29 @@ namespace Vertr.MarketData.Application.Repositories;
 internal class CandleRepository
 {
     private readonly SortedList<DateTime, Candle> _sortedCandles;
+    private readonly int _maxCapacity;
 
-    private readonly object _lockObj = new object();
+    public bool IsFull => _sortedCandles.Count >= _maxCapacity;
 
     public CandleRepository(int capacity = 1000)
     {
-        _sortedCandles = new SortedList<DateTime, Candle>(capacity);
+        _maxCapacity = capacity;
+        _sortedCandles = new SortedList<DateTime, Candle>(_maxCapacity);
     }
 
     public void Add(Candle candle)
     {
-        // TODO: Refactor this
-        lock (_lockObj)
-        {
-            // TODO: Check capacity - remove first item 
-            _sortedCandles.Add(candle.TimeUtc, candle);
-        }
+        CheckAndAdd(candle);
     }
 
     public void AddRange(Candle[] candles)
     {
-        // TODO: Refactor this
-        lock (_lockObj)
+        foreach (var candle in candles)
         {
-            foreach (var candle in candles)
-            {
-                // TODO: Check capacity - remove first item 
-                _sortedCandles.Add(candle.TimeUtc, candle);
-            }
+            CheckAndAdd(candle);
         }
     }
+
     public Candle? GetLast()
         => _sortedCandles.LastOrDefault().Value;
 
@@ -46,5 +39,15 @@ internal class CandleRepository
         }
 
         return [.. _sortedCandles.Take(maxCount).Select(kvp => kvp.Value)];
+    }
+
+    private void CheckAndAdd(Candle candle)
+    {
+        if (IsFull)
+        {
+            _sortedCandles.Remove(_sortedCandles.First().Key);
+        }
+
+        _sortedCandles.Add(candle.TimeUtc, candle);
     }
 }

@@ -11,18 +11,14 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.6" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.6" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="17.14.40264" />
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnit.Analyzers" Version="3.9.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.Platform.Host\Vertr.Platform.Host.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.MarketData.Application\Vertr.MarketData.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

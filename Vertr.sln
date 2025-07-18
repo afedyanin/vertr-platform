@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.MarketData.Contracts"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.PortfolioManager.Application", "src\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj", "{CD76DEB9-979D-4A9C-5320-6D28C3ACF5F7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.MarketData.Application.Tests", "tests\Vertr.MarketData.Application.Tests\Vertr.MarketData.Application.Tests.csproj", "{FBE9B57F-FE0E-44D4-A027-B1E07DBE9AE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,10 @@ Global
 		{CD76DEB9-979D-4A9C-5320-6D28C3ACF5F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD76DEB9-979D-4A9C-5320-6D28C3ACF5F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD76DEB9-979D-4A9C-5320-6D28C3ACF5F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBE9B57F-FE0E-44D4-A027-B1E07DBE9AE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBE9B57F-FE0E-44D4-A027-B1E07DBE9AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBE9B57F-FE0E-44D4-A027-B1E07DBE9AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBE9B57F-FE0E-44D4-A027-B1E07DBE9AE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -128,6 +134,7 @@ Global
 		{EAF4A8B2-041A-4666-B0D8-A2AA98EF6F46} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 		{DBAE3F57-2CD3-5406-FAD1-E149799CB292} = {00C85C0F-89D2-4D0B-B93D-C172A3CEE3C2}
 		{CD76DEB9-979D-4A9C-5320-6D28C3ACF5F7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{FBE9B57F-FE0E-44D4-A027-B1E07DBE9AE5} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

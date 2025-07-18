@@ -1,3 +1,8 @@
+# 2025-07-18
+
+- [Dictionary и SortedDictionary] https://habr.com/ru/articles/784852/
+- 
+
 # 2025-07-17
 
 ## Circular Buffer

@@ -45,9 +45,10 @@ internal class CandleRepository
     {
         if (IsFull)
         {
+            // remove oldest entry
             _sortedCandles.Remove(_sortedCandles.First().Key);
         }
 
-        _sortedCandles.Add(candle.TimeUtc, candle);
+        _sortedCandles[candle.TimeUtc] = candle;
     }
 }

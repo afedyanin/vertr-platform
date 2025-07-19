@@ -1,35 +1,7 @@
-using System.Collections.Generic;
-using Microsoft.VisualStudio.Utilities;
+namespace Vertr.Platform.Tests.Experimental;
 
-namespace Vertr.Platform.Tests;
-public class CircularBufferTests
+public class SortedCollectionTests
 {
-    [Test]
-    public void CanCheckCb()
-    {
-        var cb = new CircularBuffer<int>(10);
-
-        for (int i = 0; i < 10; i++)
-        {
-            cb.Add(i);
-        }
-
-        foreach (var i in cb)
-        {
-            Console.WriteLine(i);
-        }
-
-        for (int i = 10; i < 100; i++)
-        {
-            cb.Add(i);
-        }
-
-        foreach (var i in cb)
-        {
-            Console.WriteLine(i);
-        }
-    }
-
     [Test]
     public void SortedDictTest()
     {
@@ -87,6 +59,21 @@ public class CircularBufferTests
         top10 = sortedList.Take(10);
         top10str = string.Join(", ", top10);
         Console.WriteLine($"top 10 ={top10str}");
+    }
 
+    [Test]
+    public void CanAddSameValueTwice()
+    {
+        var sortedList = new SortedList<string, int>();
+        sortedList["banana"] = 3;
+        sortedList["apple"] = 4;
+        sortedList["pear"] = 1;
+
+        sortedList["orange"] = 2;
+        sortedList["orange"] = 8;
+        // sortedList.Add("orange", 8);
+
+        var allStr = string.Join(", ", sortedList);
+        Console.WriteLine($"{allStr}");
     }
 }

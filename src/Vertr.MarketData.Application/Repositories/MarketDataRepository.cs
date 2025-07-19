@@ -3,12 +3,11 @@ using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.MarketData.Application.Repositories;
 
+// Not thread safe 
 internal class MarketDataRepository : IMarketDataRepository
 {
     private readonly Dictionary<string, CandleRepository> _repoDict = [];
     private readonly int _maxCandlesCapacity;
-
-    private readonly object _lockObj = new object();
 
     public MarketDataRepository(int maxCandlesCapacity = 1000)
     {
@@ -19,32 +18,26 @@ internal class MarketDataRepository : IMarketDataRepository
     {
         var repoKey = GetKey(symbol, interval);
 
-        lock (_lockObj)
+        if (!_repoDict.TryGetValue(repoKey, out var repo))
         {
-            if (!_repoDict.TryGetValue(repoKey, out var repo))
-            {
-                repo = new CandleRepository(_maxCandlesCapacity);
-                _repoDict[repoKey] = repo;
-            }
-
-            repo.Add(candle);
+            repo = new CandleRepository(_maxCandlesCapacity);
+            _repoDict[repoKey] = repo;
         }
+
+        repo.Add(candle);
     }
 
     public void AddRange(Symbol symbol, CandleInterval interval, Candle[] candles)
     {
         var repoKey = GetKey(symbol, interval);
 
-        lock (_lockObj)
+        if (!_repoDict.TryGetValue(repoKey, out var repo))
         {
-            if (!_repoDict.TryGetValue(repoKey, out var repo))
-            {
-                repo = new CandleRepository(_maxCandlesCapacity);
-                _repoDict[repoKey] = repo;
-            }
-
-            repo.AddRange(candles);
+            repo = new CandleRepository(_maxCandlesCapacity);
+            _repoDict[repoKey] = repo;
         }
+
+        repo.AddRange(candles);
     }
 
     public Candle[] GetAll(Symbol symbol, CandleInterval interval, int maxCount = 0)

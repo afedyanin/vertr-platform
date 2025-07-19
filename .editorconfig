@@ -53,9 +53,9 @@ csharp_style_pattern_matching_over_is_with_cast_check = true:warning
 csharp_style_pattern_matching_over_as_with_null_check = true:warning
 csharp_style_prefer_not_pattern = true:warning
 csharp_style_prefer_extended_property_pattern = true:suggestion
-csharp_style_var_for_built_in_types = true:suggestion
-csharp_style_var_when_type_is_apparent = true:suggestion
-csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_for_built_in_types = true:warning
+csharp_style_var_when_type_is_apparent = true:warning
+csharp_style_var_elsewhere = true:warning
 dotnet_diagnostic.CA1309.severity = suggestion
 dotnet_diagnostic.CA1825.severity = suggestion
 dotnet_diagnostic.CA1507.severity = suggestion
@@ -80,6 +80,8 @@ csharp_style_expression_bodied_lambdas = false:silent
 csharp_style_expression_bodied_local_functions = false:silent
 csharp_prefer_system_threading_lock = true:suggestion
 csharp_style_prefer_implicitly_typed_lambda_expression = true:suggestion
+csharp_style_prefer_unbound_generic_type_in_nameof = true:suggestion
+csharp_prefer_static_anonymous_function = true:suggestion
 
 ##########################################
 # File Extension Settings

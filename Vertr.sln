@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Strategies.Contracts"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Strategies.Application", "src\Vertr.Strategies.Application\Vertr.Strategies.Application.csproj", "{A79638AB-77DD-4082-9B5E-1F764C6E72E5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Platform.Common", "src\Vertr.Platform.Common\Vertr.Platform.Common.csproj", "{755EE3FB-174A-482E-BFF8-2874A44BFEB4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,6 +128,10 @@ Global
 		{A79638AB-77DD-4082-9B5E-1F764C6E72E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A79638AB-77DD-4082-9B5E-1F764C6E72E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A79638AB-77DD-4082-9B5E-1F764C6E72E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{755EE3FB-174A-482E-BFF8-2874A44BFEB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{755EE3FB-174A-482E-BFF8-2874A44BFEB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{755EE3FB-174A-482E-BFF8-2874A44BFEB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{755EE3FB-174A-482E-BFF8-2874A44BFEB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -152,6 +158,7 @@ Global
 		{7162A705-D875-400C-BC4C-FABD2CCDFE48} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{616D91D9-2D2E-4F5D-BE64-87C3DC858105} = {7162A705-D875-400C-BC4C-FABD2CCDFE48}
 		{A79638AB-77DD-4082-9B5E-1F764C6E72E5} = {7162A705-D875-400C-BC4C-FABD2CCDFE48}
+		{755EE3FB-174A-482E-BFF8-2874A44BFEB4} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

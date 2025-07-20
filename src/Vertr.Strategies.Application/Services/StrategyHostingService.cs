@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Vertr.MarketData.Contracts;
-using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.Platform.Common;
 using Vertr.Strategies.Application.StrategiesImpl;
 using Vertr.Strategies.Contracts.Interfaces;
 
@@ -20,14 +20,21 @@ internal class StrategyHostingService : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _strategies = InitStrategies();
-        var consumer = _serviceProvider.GetRequiredService<IMarketDataConsumer>();
+        var consumer = _serviceProvider.GetRequiredService<IDataConsumer<Candle>>();
         await consumer.Consume(HandleMarketData, stoppingToken);
     }
 
-    private Task HandleMarketData(Candle candle, CancellationToken cancellationToken)
+    private async Task HandleMarketData(Candle candle, CancellationToken cancellationToken)
     {
-        Parallel.ForEach(_strategies, s => s.HandleMarketData(candle, cancellationToken));
-        return Task.CompletedTask;
+        foreach (var strategy in _strategies)
+        {
+            if (strategy.InstrumentId != candle.instrumentId)
+            {
+                continue;
+            }
+
+            await strategy.HandleMarketData(candle, cancellationToken);
+        }
     }
 
     private List<StrategyBase> InitStrategies()
@@ -40,7 +47,7 @@ internal class StrategyHostingService : BackgroundService
 
         foreach (var metadata in strategiesMeta)
         {
-            var strategy = StrategyFactory.Create(metadata);
+            var strategy = StrategyFactory.Create(metadata, _serviceProvider);
             res.Add(strategy);
         }
 

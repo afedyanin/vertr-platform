@@ -3,7 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.Platform.Common;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
 
@@ -29,7 +31,7 @@ public class MarketDataStreamService : StreamServiceBase
         using var scope = ServiceProvider.CreateScope();
         var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IStaticMarketDataProvider>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
-        var marketDataPublisher = scope.ServiceProvider.GetRequiredService<IMarketDataPublisher>();
+        var marketDataProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<Candle>>();
         var marketDataRepository = scope.ServiceProvider.GetRequiredService<IMarketDataRepository>();
 
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
@@ -64,7 +66,7 @@ public class MarketDataStreamService : StreamServiceBase
                 var candle = response.Candle.Convert(Guid.Parse(instrumentId));
 
                 marketDataRepository.Add(candle);
-                await marketDataPublisher.Publish(candle, stoppingToken);
+                await marketDataProducer.Produce(candle, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {

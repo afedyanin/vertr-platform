@@ -9,4 +9,12 @@ public class StrategyMetadata
     public string? Description { get; set; }
 
     public required string Type { get; set; }
+
+    public Guid InstrumentId { get; init; }
+
+    public required string AccountId { get; init; }
+
+    public Guid SubAccountId { get; init; }
+
+    public long QtyLots { get; init; }
 }

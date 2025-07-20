@@ -1,11 +1,9 @@
 using Grpc.Core;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts.Interfaces;
-using Vertr.MarketData.Contracts.Requests;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
 
@@ -25,11 +23,6 @@ public class MarketDataStreamService : StreamServiceBase
 
     protected override async Task OnBeforeStart(CancellationToken stoppingToken)
     {
-        using var scope = ServiceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-        var marketDataRequest = new InitialLoadMarketDataRequest();
-        await mediator.Send(marketDataRequest, stoppingToken);
     }
 
     protected override async Task Subscribe(
@@ -38,17 +31,17 @@ public class MarketDataStreamService : StreamServiceBase
         CancellationToken stoppingToken = default)
     {
         using var scope = ServiceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IStaticMarketDataProvider>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
-
-        var subscriptions = await staticMarketDataProvider.GetSubscriptions();
+        var marketDataPublisher = scope.ServiceProvider.GetRequiredService<IMarketDataPublisher>();
 
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {
             SubscriptionAction = Tinkoff.InvestApi.V1.SubscriptionAction.Subscribe,
             WaitingClose = TinvestSettings.WaitCandleClose,
         };
+
+        var subscriptions = await staticMarketDataProvider.GetSubscriptions();
 
         foreach (var sub in subscriptions)
         {
@@ -70,13 +63,10 @@ public class MarketDataStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Candle)
             {
-                var marketDataCandleRequest = new CandleReceivedRequest
-                {
-                    Candle = response.Candle.Convert(),
-                    InstrumentId = response.Candle.InstrumentUid,
-                };
+                var instrumentId = response.Candle.InstrumentUid;
+                var candle = response.Candle.Convert(Guid.Parse(instrumentId));
 
-                await mediator.Send(marketDataCandleRequest, stoppingToken);
+                await marketDataPublisher.Publish(candle, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {

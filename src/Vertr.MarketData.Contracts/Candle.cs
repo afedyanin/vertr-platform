@@ -6,5 +6,6 @@ public record class Candle(
     decimal Close,
     decimal High,
     decimal Low,
-    long Volume
+    long Volume,
+    Guid instrumentId
 );

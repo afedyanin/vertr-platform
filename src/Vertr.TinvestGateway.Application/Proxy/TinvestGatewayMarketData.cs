@@ -94,7 +94,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         }
 
         var response = await InvestApiClient.MarketData.GetCandlesAsync(request);
-        var candles = response.Candles.ToArray().Convert();
+        var candles = response.Candles.ToArray().Convert(instrument.Id);
 
         return candles;
     }

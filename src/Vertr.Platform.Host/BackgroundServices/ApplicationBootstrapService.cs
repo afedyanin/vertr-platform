@@ -18,9 +18,6 @@ public class ApplicationBootstrapService : IHostedService
         using var scope = _serviceProvider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
-        var marketDataRequest = new InitialLoadMarketDataRequest();
-        await mediator.Send(marketDataRequest, cancellationToken);
-
         var portfoliosRequest = new InitialLoadPortfoliosRequest();
         await mediator.Send(portfoliosRequest, cancellationToken);
     }

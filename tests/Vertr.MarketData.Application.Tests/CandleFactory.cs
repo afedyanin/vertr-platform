@@ -8,10 +8,11 @@ internal static class CandleFactory
     {
         var candles = new List<Candle>();
         var time = startDate;
+        var instrumentId = Guid.NewGuid();
 
         for (int i = 0; i < count; i++)
         {
-            var candle = new Candle(time, 10.1m, 10.2m, 10.3m, 10.4m, 100);
+            var candle = new Candle(time, 10.1m, 10.2m, 10.3m, 10.4m, 100, instrumentId);
             candles.Add(candle);
             time = time.AddMinutes(1);
         }

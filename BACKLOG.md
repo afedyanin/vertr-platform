@@ -5,6 +5,10 @@
 - Filter candles by Symbol & interval in StrategyHosting Service
 - Try Catch in Parallel.ForEach
 
+- https://habr.com/ru/articles/135942/
+- https://www.youtube.com/watch?v=lHuyl_WTpME
+- 
+
 # 2025-07-18
 
 - [Dictionary и SortedDictionary] https://habr.com/ru/articles/784852/

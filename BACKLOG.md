@@ -1,3 +1,10 @@
+# 2025-07-20
+
+- StrategyMetaRepo impl - SQLite
+- TradingSignals Channel impl
+- Filter candles by Symbol & interval in StrategyHosting Service
+- Try Catch in Parallel.ForEach
+
 # 2025-07-18
 
 - [Dictionary и SortedDictionary] https://habr.com/ru/articles/784852/

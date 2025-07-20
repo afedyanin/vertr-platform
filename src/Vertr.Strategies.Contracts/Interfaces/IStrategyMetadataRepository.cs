@@ -1,6 +1,6 @@
 namespace Vertr.Strategies.Contracts.Interfaces;
 
-public interface IStrategyRepository
+public interface IStrategyMetadataRepository
 {
     public StrategyMetadata? GetById(Guid id);
 

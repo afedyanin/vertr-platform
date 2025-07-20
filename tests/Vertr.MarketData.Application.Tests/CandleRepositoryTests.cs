@@ -10,7 +10,7 @@ public class CandleRepositoryTests
     public void CanAddRange()
     {
         var repo = new CandleRepository(3);
-        var candles = CandleFactory.CreateCandles(_startDate, 200);
+        var candles = CandleFactory.CreateCandles(_startDate, 200, Guid.NewGuid());
 
         repo.AddRange(candles);
         var last = repo.GetLast();

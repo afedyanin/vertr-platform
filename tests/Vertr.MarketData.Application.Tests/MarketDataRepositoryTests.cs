@@ -1,5 +1,4 @@
 using Vertr.MarketData.Application.Repositories;
-using Vertr.MarketData.Contracts;
 
 namespace Vertr.MarketData.Application.Tests;
 
@@ -7,22 +6,21 @@ public class MarketDataRepositoryTests
 {
     private static readonly DateTime _startDate = new DateTime(2025, 07, 07);
 
-    private static readonly Symbol _sber = new Symbol("TQBR", "SBER");
-    private static readonly Symbol _sberp = new Symbol("TQBR", "SBERP");
-    private static readonly CandleInterval _1min = CandleInterval.Min_1;
+    private static readonly Guid _sber = Guid.NewGuid();
+    private static readonly Guid _sberp = Guid.NewGuid();
 
     [Test]
     public void CanCreateRepository()
     {
         var repo = new MarketDataRepository(5);
-        var candles_sber = CandleFactory.CreateCandles(_startDate, 200);
-        var candles_sberp = CandleFactory.CreateCandles(_startDate.AddDays(12), 200);
+        var candles_sber = CandleFactory.CreateCandles(_startDate, 200, _sber);
+        var candles_sberp = CandleFactory.CreateCandles(_startDate.AddDays(12), 200, _sberp);
 
-        repo.AddRange(_sber, _1min, candles_sber);
-        repo.AddRange(_sberp, _1min, candles_sberp);
+        repo.AddRange(candles_sber);
+        repo.AddRange(candles_sberp);
 
-        var last_sber = repo.GetLast(_sber, _1min);
-        var last_sberp = repo.GetLast(_sberp, _1min);
+        var last_sber = repo.GetLast(_sber);
+        var last_sberp = repo.GetLast(_sberp);
 
         Assert.Multiple(() =>
         {

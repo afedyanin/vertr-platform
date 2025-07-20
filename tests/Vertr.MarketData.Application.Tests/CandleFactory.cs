@@ -4,11 +4,10 @@ namespace Vertr.MarketData.Application.Tests;
 
 internal static class CandleFactory
 {
-    public static Candle[] CreateCandles(DateTime startDate, int count)
+    public static Candle[] CreateCandles(DateTime startDate, int count, Guid instrumentId)
     {
         var candles = new List<Candle>();
         var time = startDate;
-        var instrumentId = Guid.NewGuid();
 
         for (int i = 0; i < count; i++)
         {

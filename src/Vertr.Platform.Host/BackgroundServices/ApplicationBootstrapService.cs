@@ -1,5 +1,4 @@
 using MediatR;
-using Vertr.MarketData.Contracts.Requests;
 using Vertr.PortfolioManager.Contracts.Requests;
 
 namespace Vertr.Platform.Host.BackgroundServices;

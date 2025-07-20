@@ -21,10 +21,6 @@ public class MarketDataStreamService : StreamServiceBase
     {
     }
 
-    protected override async Task OnBeforeStart(CancellationToken stoppingToken)
-    {
-    }
-
     protected override async Task Subscribe(
         ILogger logger,
         DateTime? deadline = null,
@@ -34,6 +30,7 @@ public class MarketDataStreamService : StreamServiceBase
         var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IStaticMarketDataProvider>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
         var marketDataPublisher = scope.ServiceProvider.GetRequiredService<IMarketDataPublisher>();
+        var marketDataRepository = scope.ServiceProvider.GetRequiredService<IMarketDataRepository>();
 
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {
@@ -66,6 +63,7 @@ public class MarketDataStreamService : StreamServiceBase
                 var instrumentId = response.Candle.InstrumentUid;
                 var candle = response.Candle.Convert(Guid.Parse(instrumentId));
 
+                marketDataRepository.Add(candle);
                 await marketDataPublisher.Publish(candle, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)

@@ -6,7 +6,7 @@ namespace Vertr.MarketData.Application.Repositories;
 // Not thread safe 
 internal class MarketDataRepository : IMarketDataRepository
 {
-    private readonly Dictionary<string, CandleRepository> _repoDict = [];
+    private readonly Dictionary<Guid, CandleRepository> _repoDict = [];
     private readonly int _maxCandlesCapacity;
 
     public MarketDataRepository(int maxCandlesCapacity = 1000)
@@ -14,37 +14,37 @@ internal class MarketDataRepository : IMarketDataRepository
         _maxCandlesCapacity = maxCandlesCapacity;
     }
 
-    public void Add(Symbol symbol, CandleInterval interval, Candle candle)
+    public void Add(Candle candle)
     {
-        var repoKey = GetKey(symbol, interval);
 
-        if (!_repoDict.TryGetValue(repoKey, out var repo))
+        if (!_repoDict.TryGetValue(candle.instrumentId, out var repo))
         {
             repo = new CandleRepository(_maxCandlesCapacity);
-            _repoDict[repoKey] = repo;
+            _repoDict[candle.instrumentId] = repo;
         }
 
         repo.Add(candle);
     }
 
-    public void AddRange(Symbol symbol, CandleInterval interval, Candle[] candles)
+    public void AddRange(Candle[] candles)
     {
-        var repoKey = GetKey(symbol, interval);
+        var gropued = candles.GroupBy(c => c.instrumentId);
 
-        if (!_repoDict.TryGetValue(repoKey, out var repo))
+        foreach (var group in gropued)
         {
-            repo = new CandleRepository(_maxCandlesCapacity);
-            _repoDict[repoKey] = repo;
-        }
+            if (!_repoDict.TryGetValue(group.Key, out var repo))
+            {
+                repo = new CandleRepository(_maxCandlesCapacity);
+                _repoDict[group.Key] = repo;
+            }
 
-        repo.AddRange(candles);
+            repo.AddRange([.. group.Select(s => s)]);
+        }
     }
 
-    public Candle[] GetAll(Symbol symbol, CandleInterval interval, int maxCount = 0)
+    public Candle[] GetAll(Guid instrumentId, int maxCount = 0)
     {
-        var repoKey = GetKey(symbol, interval);
-
-        if (!_repoDict.TryGetValue(repoKey, out var repo))
+        if (!_repoDict.TryGetValue(instrumentId, out var repo))
         {
             return [];
         }
@@ -52,18 +52,13 @@ internal class MarketDataRepository : IMarketDataRepository
         return repo.GetAll(maxCount);
     }
 
-    public Candle? GetLast(Symbol symbol, CandleInterval interval)
+    public Candle? GetLast(Guid instrumentId)
     {
-        var repoKey = GetKey(symbol, interval);
-
-        if (!_repoDict.TryGetValue(repoKey, out var repo))
+        if (!_repoDict.TryGetValue(instrumentId, out var repo))
         {
             return null;
         }
 
         return repo.GetLast();
     }
-
-    private static string GetKey(Symbol symbol, CandleInterval interval)
-        => $"{symbol.ClassCode}.{symbol.Ticker}.{interval}";
 }

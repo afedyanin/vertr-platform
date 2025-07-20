@@ -1,7 +1,8 @@
 # 2025-07-20
 
-- StrategyMetaRepo impl - SQLite
 - TradingSignals Channel impl
+
+- StrategyMetaRepo impl - SQLite
 - Filter candles by Symbol & interval in StrategyHosting Service
 - Try Catch in Parallel.ForEach
 

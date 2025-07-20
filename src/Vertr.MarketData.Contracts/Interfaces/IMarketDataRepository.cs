@@ -2,11 +2,11 @@ namespace Vertr.MarketData.Contracts.Interfaces;
 
 public interface IMarketDataRepository
 {
-    public void Add(Symbol symbol, CandleInterval interval, Candle candle);
+    public void Add(Candle candle);
 
-    public void AddRange(Symbol symbol, CandleInterval interval, Candle[] candles);
+    public void AddRange(Candle[] candles);
 
-    public Candle? GetLast(Symbol symbol, CandleInterval interval);
+    public Candle? GetLast(Guid instrumentId);
 
-    public Candle[] GetAll(Symbol symbol, CandleInterval interval, int maxCount = 0);
+    public Candle[] GetAll(Guid instrumentId, int maxCount = 0);
 }

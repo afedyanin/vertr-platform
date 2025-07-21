@@ -1,3 +1,9 @@
+# 2025-07-22
+
+- [I Removed MediatR – Building Your Own CQRS Handlers in .NET](https://www.youtube.com/watch?v=j1OUToRyVHc)
+- [Scrutor](https://github.com/khellang/Scrutor)
+- 
+
 # 2025-07-20
 
 - TradingSignals Channel impl

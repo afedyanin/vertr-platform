@@ -1,11 +1,11 @@
 using Grpc.Core;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Common;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
@@ -31,10 +31,10 @@ public class OrderTradesStreamService : StreamServiceBase
     {
 
         using var scope = ServiceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
         var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IStaticMarketDataProvider>();
+        var orderTradesProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderTradesRequest>>();
 
         var accounts = portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
@@ -57,7 +57,7 @@ public class OrderTradesStreamService : StreamServiceBase
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");
 
-                await mediator.Send(orderTradesRequest, stoppingToken);
+                await orderTradesProducer.Produce(orderTradesRequest, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.Ping)
             {

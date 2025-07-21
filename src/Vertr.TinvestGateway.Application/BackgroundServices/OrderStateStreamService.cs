@@ -1,10 +1,10 @@
 using Grpc.Core;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Common;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
@@ -29,9 +29,9 @@ public class OrderStateStreamService : StreamServiceBase
         CancellationToken stoppingToken = default)
     {
         using var scope = ServiceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
+        var orderStateProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderStateRequest>>();
 
         var accounts = portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.OrderStateStreamRequest();
@@ -51,7 +51,7 @@ public class OrderStateStreamService : StreamServiceBase
 
                 logger.LogInformation($"New order state received for AccountId={response.OrderState.AccountId}");
 
-                await mediator.Send(orderStateRequest, stoppingToken);
+                await orderStateProducer.Produce(orderStateRequest, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Ping)
             {

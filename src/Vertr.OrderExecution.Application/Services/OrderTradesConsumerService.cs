@@ -1,31 +1,29 @@
-using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Common;
 using Vertr.PortfolioManager.Contracts.Requests;
 
-namespace Vertr.OrderExecution.Application.RequestHandlers;
+namespace Vertr.OrderExecution.Application.Services;
 
-internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
+internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTradesRequest>
 {
     private readonly IOrderEventRepository _orderEventRepository;
-    private readonly IMediator _mediator;
-    private readonly ILogger<OrderTradesHandler> _logger;
+    private readonly ILogger<OrderTradesConsumerService> _logger;
 
-    public OrderTradesHandler(
-        IOrderEventRepository orderEventRepository,
-        IMediator mediator,
-        ILogger<OrderTradesHandler> logger)
+    public OrderTradesConsumerService(
+        IServiceProvider serviceProvider,
+        ILogger<OrderTradesConsumerService> logger) : base(serviceProvider)
     {
-        _orderEventRepository = orderEventRepository;
-        _mediator = mediator;
         _logger = logger;
+        _orderEventRepository = ServiceProvider.GetRequiredService<IOrderEventRepository>();
     }
 
-    public async Task Handle(OrderTradesRequest request, CancellationToken cancellationToken)
+    protected override async Task Handle(OrderTradesRequest data, CancellationToken cancellationToken = default)
     {
-        var orderTrades = request.OrderTrades;
+        var orderTrades = data.OrderTrades;
 
         _logger.LogDebug($"OrderTrades received: {orderTrades}");
 
@@ -40,7 +38,7 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
             return;
         }
 
-        var orderEvent = orderTrades.CreateEvent(request.InstrumentId, portfolioIdentity);
+        var orderEvent = orderTrades.CreateEvent(data.InstrumentId, portfolioIdentity);
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)
@@ -49,7 +47,7 @@ internal class OrderTradesHandler : IRequestHandler<OrderTradesRequest>
             return;
         }
 
-        var operations = orderTrades.CreateOperations(request.InstrumentId, portfolioIdentity);
+        var operations = orderTrades.CreateOperations(data.InstrumentId, portfolioIdentity);
 
         var tradeOperationsRequest = new TradeOperationsRequest
         {

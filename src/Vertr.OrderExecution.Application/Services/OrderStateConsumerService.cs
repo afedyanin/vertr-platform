@@ -1,30 +1,27 @@
-using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Common;
 
-namespace Vertr.OrderExecution.Application.RequestHandlers;
-
-internal class OrderStateHandler : IRequestHandler<OrderStateRequest>
+namespace Vertr.OrderExecution.Application.Services;
+internal class OrderStateConsumerService : DataConsumerServiceBase<OrderStateRequest>
 {
     private readonly IOrderEventRepository _orderEventRepository;
-    private readonly ILogger<OrderStateHandler> _logger;
-    private readonly IMediator _mediator;
+    private readonly ILogger<OrderStateConsumerService> _logger;
 
-    public OrderStateHandler(
-        IOrderEventRepository orderEventRepository,
-        IMediator mediator,
-        ILogger<OrderStateHandler> logger)
+    public OrderStateConsumerService(
+        IServiceProvider serviceProvider,
+        ILogger<OrderStateConsumerService> logger) : base(serviceProvider)
     {
-        _orderEventRepository = orderEventRepository;
-        _mediator = mediator;
         _logger = logger;
+        _orderEventRepository = ServiceProvider.GetRequiredService<IOrderEventRepository>();
     }
 
-    public async Task Handle(OrderStateRequest request, CancellationToken cancellationToken)
+    protected override async Task Handle(OrderStateRequest data, CancellationToken cancellationToken = default)
     {
-        var orderState = request.OrderState;
+        var orderState = data.OrderState;
 
         if (orderState == null)
         {

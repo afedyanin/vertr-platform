@@ -2,7 +2,7 @@ using System.Threading.Channels;
 
 namespace Vertr.Platform.Common;
 
-public class DataChannel<T> : IDataProducer<T>, IDataConsumer<T> where T : class
+internal class DataChannel<T> : IDataProducer<T>, IDataConsumer<T> where T : class
 {
     private readonly Channel<T> _channel;
 

@@ -8,6 +8,7 @@ using Vertr.PortfolioManager.Application.Services;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts.Requests;
 using MediatR;
+using Vertr.PortfolioManager.Contracts.Commands;
 
 namespace Vertr.Platform.Host.Controllers;
 
@@ -75,7 +76,7 @@ public class PortfolioController : ControllerBase
             return BadRequest("Balance is empty");
         }
 
-        var request = new PayInOperationRequest
+        var request = new PayInCommand
         {
             AccountId = accountId,
             SubAccountId = subAccountId,
@@ -113,7 +114,7 @@ public class PortfolioController : ControllerBase
     public async Task<IActionResult> GetGatewayOperationsReplay(string accountId, DateTime from, DateTime to)
     {
         var portfolioRepo = CreateEmptyRepository(accountId);
-        var service = new TradeOperationService(portfolioRepo, _staticMarketDataProvider);
+        var service = new TradeOperationConsumerService(portfolioRepo, _staticMarketDataProvider);
 
         var operations = await _portfolioGateway.GetOperations(accountId, from, to);
 
@@ -134,7 +135,7 @@ public class PortfolioController : ControllerBase
     [HttpPut("position-overrides/{accountId}/{subAccountId}")]
     public async Task<IActionResult> OverridePositions(string accountId, Guid subAccountId, PositionOverride[] overrides)
     {
-        var req = new PositionOverridesRequest
+        var req = new OverridePositionsCommand
         {
             AccountId = accountId,
             SubAccountId = subAccountId,

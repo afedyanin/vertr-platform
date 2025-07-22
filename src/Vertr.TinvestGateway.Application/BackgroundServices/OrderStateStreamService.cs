@@ -3,8 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
-using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.Platform.Common;
+using Vertr.OrderExecution.Contracts;
+using Vertr.Platform.Common.Channels;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
@@ -31,7 +31,7 @@ public class OrderStateStreamService : StreamServiceBase
         using var scope = ServiceProvider.CreateScope();
         var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
-        var orderStateProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderStateRequest>>();
+        var orderStateProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderState>>();
 
         var accounts = portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.OrderStateStreamRequest();
@@ -43,15 +43,11 @@ public class OrderStateStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
             {
-                var orderStateRequest = new OrderStateRequest
-                {
-                    OrderState = response.OrderState.Convert(),
-                    AccountId = response.OrderState.AccountId,
-                };
+                var orderState = response.OrderState.Convert(response.OrderState.AccountId);
 
                 logger.LogInformation($"New order state received for AccountId={response.OrderState.AccountId}");
 
-                await orderStateProducer.Produce(orderStateRequest, stoppingToken);
+                await orderStateProducer.Produce(orderState, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Ping)
             {

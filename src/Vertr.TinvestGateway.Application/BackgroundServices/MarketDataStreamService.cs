@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
-using Vertr.Platform.Common;
+using Vertr.Platform.Common.Channels;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
 

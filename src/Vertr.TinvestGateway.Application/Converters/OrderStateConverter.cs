@@ -28,7 +28,9 @@ internal static class OrderStateConverter
             OrderStages = source.Stages.ToArray().Convert(),
         };
 
-    public static OrderState Convert(this Tinkoff.InvestApi.V1.OrderStateStreamResponse.Types.OrderState source)
+    public static OrderState Convert(
+        this Tinkoff.InvestApi.V1.OrderStateStreamResponse.Types.OrderState source,
+        string accountId)
         => new OrderState
         {
             OrderId = source.OrderId,
@@ -44,5 +46,6 @@ internal static class OrderStateConverter
             LotsRequested = source.LotsRequested,
             LotsExecuted = source.LotsExecuted,
             OrderStages = source.Trades.ToArray().Convert(source.Currency),
+            AccountId = accountId
         };
 }

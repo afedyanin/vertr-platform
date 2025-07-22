@@ -1,7 +1,9 @@
 namespace Vertr.PortfolioManager.Contracts;
 public record class TradeOperation
 {
-    public Guid Id { get; init; }
+    public Guid? Id { get; set; }
+
+    public bool IsNew => Id is null;
 
     public DateTime CreatedAt { get; init; }
 

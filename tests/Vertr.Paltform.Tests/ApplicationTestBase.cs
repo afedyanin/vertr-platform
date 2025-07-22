@@ -1,5 +1,5 @@
 using Refit;
-using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Host;
 using Vertr.Platform.Host.Requests;
 using Vertr.PortfolioManager.Contracts;

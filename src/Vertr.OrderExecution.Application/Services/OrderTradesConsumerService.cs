@@ -1,16 +1,18 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Factories;
+using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Interfaces;
-using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.Platform.Common;
-using Vertr.PortfolioManager.Contracts.Requests;
+using Vertr.Platform.Common.Channels;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Services;
 
-internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTradesRequest>
+internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
 {
     private readonly IOrderEventRepository _orderEventRepository;
+    private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
+
     private readonly ILogger<OrderTradesConsumerService> _logger;
 
     public OrderTradesConsumerService(
@@ -19,26 +21,25 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTradesR
     {
         _logger = logger;
         _orderEventRepository = ServiceProvider.GetRequiredService<IOrderEventRepository>();
+        _tradeOperationsProducer = ServiceProvider.GetRequiredService<IDataProducer<TradeOperation>>();
     }
 
-    protected override async Task Handle(OrderTradesRequest data, CancellationToken cancellationToken = default)
+    protected override async Task Handle(OrderTrades data, CancellationToken cancellationToken = default)
     {
-        var orderTrades = data.OrderTrades;
-
-        _logger.LogDebug($"OrderTrades received: {orderTrades}");
+        _logger.LogDebug($"OrderTrades received: {data}");
 
         // TODO: OrderTrades может прийти раньше, чем сохранится OrderResponse, поэтому может не найти портфолио !!!
         // TODO: Нужна общая очередь для обработки респонсов по ордерам
-        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderId(orderTrades.OrderId);
+        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderId(data.OrderId);
 
         if (portfolioIdentity == null)
         {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
-            _logger.LogError($"Cannot get portfolio identity for OrderId={orderTrades.OrderId}.");
+            _logger.LogError($"Cannot get portfolio identity for OrderId={data.OrderId}.");
             return;
         }
 
-        var orderEvent = orderTrades.CreateEvent(data.InstrumentId, portfolioIdentity);
+        var orderEvent = data.CreateEvent(data.InstrumentId, portfolioIdentity);
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)
@@ -47,14 +48,14 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTradesR
             return;
         }
 
-        var operations = orderTrades.CreateOperations(data.InstrumentId, portfolioIdentity);
+        var operations = data.CreateOperations(data.InstrumentId, portfolioIdentity);
 
-        var tradeOperationsRequest = new TradeOperationsRequest
+        _logger.LogDebug($"Publish OrderTrades operations for OrderId={data.OrderId}");
+
+        foreach (var operation in operations)
         {
-            Operations = operations,
-        };
+            await _tradeOperationsProducer.Produce(operation, cancellationToken);
 
-        _logger.LogDebug($"Publish OrderTrades operations for OrderId={orderTrades.OrderId}");
-        await _mediator.Send(tradeOperationsRequest, cancellationToken);
+        }
     }
 }

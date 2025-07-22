@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts.Interfaces;
-using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.Platform.Common;
+using Vertr.OrderExecution.Contracts;
+using Vertr.Platform.Common.Channels;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Application.Converters;
 using Vertr.TinvestGateway.Application.Settings;
@@ -34,7 +34,7 @@ public class OrderTradesStreamService : StreamServiceBase
         var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
         var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IStaticMarketDataProvider>();
-        var orderTradesProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderTradesRequest>>();
+        var orderTradesProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderTrades>>();
 
         var accounts = portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
@@ -48,12 +48,7 @@ public class OrderTradesStreamService : StreamServiceBase
             {
                 var instrumentId = Guid.Parse(response.OrderTrades.InstrumentUid);
                 var currency = await staticMarketDataProvider.GetInstrumentCurrency(instrumentId);
-
-                var orderTradesRequest = new OrderTradesRequest
-                {
-                    InstrumentId = instrumentId,
-                    OrderTrades = response.OrderTrades.Convert(currency),
-                };
+                var orderTradesRequest = response.OrderTrades.Convert(currency);
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");
 

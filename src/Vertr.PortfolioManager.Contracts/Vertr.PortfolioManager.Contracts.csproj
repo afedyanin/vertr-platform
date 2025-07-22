@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.Platform.Common\Vertr.Platform.Common.csproj" />
   </ItemGroup>
   
 </Project>

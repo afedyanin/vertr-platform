@@ -8,7 +8,7 @@ public interface ITradeOperationRepository
 
     public Task<TradeOperation[]> GetByAccountId(string accountId);
 
-    public Task<bool> Save(TradeOperation[] tradeOoperations);
+    public Task<bool> Save(TradeOperation tradeOoperation);
 
     public Task<int> Delete(PortfolioIdentity portfolioIdentity);
 

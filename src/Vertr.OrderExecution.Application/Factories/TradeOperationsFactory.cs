@@ -18,7 +18,6 @@ internal static class TradeOperationsFactory
 
         var opCommission = new TradeOperation
         {
-            Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             OperationType = TradeOperationType.BrokerFee,
             AccountId = portfolioIdentity.AccountId,
@@ -49,7 +48,6 @@ internal static class TradeOperationsFactory
 
             var opTrade = new TradeOperation
             {
-                Id = Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,
                 OperationType = trades.Direction.ToOperationType(),
                 AccountId = portfolioIdentity.AccountId,
@@ -84,7 +82,6 @@ internal static class TradeOperationsFactory
 
             var opTrade = new TradeOperation
             {
-                Id = Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,
                 OperationType = state.Direction.ToOperationType(),
                 AccountId = portfolioIdentity.AccountId,
@@ -102,7 +99,6 @@ internal static class TradeOperationsFactory
 
         var opCommission = new TradeOperation
         {
-            Id = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             OperationType = TradeOperationType.BrokerFee,
             SubAccountId = portfolioIdentity.SubAccountId,

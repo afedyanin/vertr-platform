@@ -3,7 +3,7 @@ using Refit;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts;
-using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Host.Requests;
 using Vertr.PortfolioManager.Application.Services;
 using Vertr.PortfolioManager.Contracts;

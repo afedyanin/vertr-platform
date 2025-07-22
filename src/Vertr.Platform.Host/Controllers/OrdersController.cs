@@ -46,7 +46,7 @@ public class OrdersController : ControllerBase
     [HttpPost("execute")]
     public async Task<IActionResult> ExecuteOrder(ExecuteRequest request)
     {
-        var mediatorRequest = new ExecuteOrderRequest
+        var mediatorRequest = new ExecuteOrderCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -76,7 +76,7 @@ public class OrdersController : ControllerBase
     [HttpPost("close")]
     public async Task<IActionResult> ClosePosition(CloseRequest request)
     {
-        var mediatorRequest = new ClosePositionRequest
+        var mediatorRequest = new ClosePositionCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -90,7 +90,7 @@ public class OrdersController : ControllerBase
     [HttpPost("reverse")]
     public async Task<IActionResult> RevertPosition(ReverseRequest request)
     {
-        var mediatorRequest = new ReversePositionRequest
+        var mediatorRequest = new ReversePositionCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -104,7 +104,7 @@ public class OrdersController : ControllerBase
     [HttpPost("signal")]
     public async Task<IActionResult> PorocessSignal(SignalRequest request)
     {
-        var mediatorRequest = new TradingSignalRequest
+        var mediatorRequest = new TradingSignalCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),

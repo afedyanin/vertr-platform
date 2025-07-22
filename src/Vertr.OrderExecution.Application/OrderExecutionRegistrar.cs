@@ -1,8 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
+using Vertr.OrderExecution.Application.CommandHandlers;
+using Vertr.OrderExecution.Application.RequestHandlers;
 using Vertr.OrderExecution.Application.Services;
+using Vertr.OrderExecution.Contracts;
+using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Common;
+using Vertr.Platform.Common.Channels;
 
 namespace Vertr.OrderExecution.Application;
 
@@ -10,11 +15,17 @@ public static class OrderExecutionRegistrar
 {
     public static IServiceCollection AddOrderExecution(this IServiceCollection services)
     {
-        services.RegisterDataChannel<OrderStateRequest>();
-        services.RegisterDataChannel<OrderTradesRequest>();
+        services.RegisterDataChannel<OrderState>();
+        services.RegisterDataChannel<OrderTrades>();
 
         services.AddHostedService<OrderStateConsumerService>();
         services.AddHostedService<OrderTradesConsumerService>();
+
+        services.AddScoped<ICommandHandler<ClosePositionCommand, ExecuteOrderResponse>, ClosePositionHandler>();
+        services.AddScoped<ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse>, ExecuteOrderHandler>();
+        services.AddScoped<ICommandHandler<OpenPositionCommand, ExecuteOrderResponse>, OpenPositionHandler>();
+        services.AddScoped<ICommandHandler<ReversePositionCommand, ExecuteOrderResponse>, ReversePositionHandler>();
+        services.AddScoped<ICommandHandler<TradingSignalCommand, ExecuteOrderResponse>, TradingSignalHandler>();
 
         return services;
     }

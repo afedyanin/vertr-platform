@@ -42,4 +42,6 @@ public record class OrderState
     public string OrderRequestId { get; init; } = string.Empty;
 
     public Trade[] OrderStages { get; init; } = [];
+
+    public string? AccountId { get; init; }
 }

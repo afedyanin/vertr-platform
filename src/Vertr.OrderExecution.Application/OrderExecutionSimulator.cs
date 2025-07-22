@@ -1,24 +1,23 @@
-using MediatR;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.OrderExecution.Contracts.Interfaces;
-using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Common.Channels;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application;
 
 internal class OrderExecutionSimulator : IOrderExecutionGateway
 {
-    private readonly IMediator _medator;
     private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly IDataProducer<OrderTrades> _orderTradesProducer;
 
     public OrderExecutionSimulator(
-        IMediator mediator,
-        IStaticMarketDataProvider staticMarketDataProvider)
+        IStaticMarketDataProvider staticMarketDataProvider,
+        IDataProducer<OrderTrades> orderTradesProducer)
     {
-        _medator = mediator;
         _staticMarketDataProvider = staticMarketDataProvider;
+        _orderTradesProducer = orderTradesProducer;
     }
 
     public async Task<PostOrderResponse?> PostOrder(PostOrderRequest request)
@@ -62,30 +61,26 @@ internal class OrderExecutionSimulator : IOrderExecutionGateway
             Source = OrderEventSource.Simulated,
         };
 
-        var tradesRequest = new OrderTradesRequest
+        var trades = new OrderTrades
         {
-            InstrumentId = request.InstrumentId,
-            OrderTrades = new OrderTrades
-            {
-                InstrumentId = response.InstrumentId,
-                CreatedAt = DateTime.UtcNow,
-                Direction = response.OrderDirection,
-                OrderId = response.OrderId,
-                Trades =
-                [
-                    new Trade
-                    {
-                        TradeId = Guid.NewGuid().ToString(),
-                        ExecutionTime = DateTime.UtcNow,
-                        Price = orderPrice,
-                        Quantity = qty
-                    }
-                ]
-            },
+            InstrumentId = response.InstrumentId,
+            CreatedAt = DateTime.UtcNow,
+            Direction = response.OrderDirection,
+            OrderId = response.OrderId,
+            Trades =
+            [
+                new Trade
+                {
+                    TradeId = Guid.NewGuid().ToString(),
+                    ExecutionTime = DateTime.UtcNow,
+                    Price = orderPrice,
+                    Quantity = qty
+                }
+            ]
         };
 
         // Simulating order trades 
-        await _medator.Send(tradesRequest);
+        await _orderTradesProducer.Produce(trades);
 
         return response;
     }

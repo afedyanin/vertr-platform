@@ -1,5 +1,5 @@
 using Vertr.MarketData.Contracts;
-using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.OrderExecution.Contracts.Commands;
 
 namespace Vertr.Strategies.Application.StrategiesImpl;
 
@@ -9,8 +9,8 @@ internal class RandomWalkStrategy : StrategyBase
     {
     }
 
-    public override TradingSignalRequest CreateSignal(Candle candle)
-        => new TradingSignalRequest
+    public override TradingSignalCommand CreateSignal(Candle candle)
+        => new TradingSignalCommand
         {
             RequestId = Guid.NewGuid(),
             InstrumentId = InstrumentId,

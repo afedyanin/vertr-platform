@@ -1,12 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Factories;
+using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Interfaces;
-using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.Platform.Common;
+using Vertr.Platform.Common.Channels;
 
 namespace Vertr.OrderExecution.Application.Services;
-internal class OrderStateConsumerService : DataConsumerServiceBase<OrderStateRequest>
+internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>
 {
     private readonly IOrderEventRepository _orderEventRepository;
     private readonly ILogger<OrderStateConsumerService> _logger;
@@ -19,30 +19,28 @@ internal class OrderStateConsumerService : DataConsumerServiceBase<OrderStateReq
         _orderEventRepository = ServiceProvider.GetRequiredService<IOrderEventRepository>();
     }
 
-    protected override async Task Handle(OrderStateRequest data, CancellationToken cancellationToken = default)
+    protected override async Task Handle(OrderState data, CancellationToken cancellationToken = default)
     {
-        var orderState = data.OrderState;
-
-        if (orderState == null)
+        if (data == null)
         {
             _logger.LogWarning($"Empty OrderState received. Skipping message.");
             return;
         }
 
-        _logger.LogInformation($"OrderState received: OrderId={orderState.OrderId} RequestId={orderState.OrderRequestId} AccountId={request.AccountId}");
+        _logger.LogInformation($"OrderState received: OrderId={data.OrderId} RequestId={data.OrderRequestId} AccountId={data.AccountId}");
 
         // TODO: Order State приходит раньше, чем сохраняется OrderResponse, поэтому не находит портфолио !!!
 
-        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderRequestId(Guid.Parse(orderState.OrderRequestId));
+        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderRequestId(Guid.Parse(data.OrderRequestId));
 
         if (portfolioIdentity == null)
         {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
-            _logger.LogError($"Cannot get portfolio identity for OrderId={orderState.OrderId}.");
+            _logger.LogError($"Cannot get portfolio identity for OrderId={data.OrderId}.");
             return;
         }
 
-        var orderEvent = orderState.CreateEvent(portfolioIdentity);
+        var orderEvent = data.CreateEvent(portfolioIdentity);
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)

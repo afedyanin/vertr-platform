@@ -6,8 +6,6 @@ using Vertr.PortfolioManager.Application.Repositories;
 using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Application.Services;
 using Vertr.MarketData.Contracts.Interfaces;
-using Vertr.PortfolioManager.Contracts.Requests;
-using MediatR;
 using Vertr.PortfolioManager.Contracts.Commands;
 
 namespace Vertr.Platform.Host.Controllers;
@@ -19,20 +17,17 @@ public class PortfolioController : ControllerBase
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
     private readonly IStaticMarketDataProvider _staticMarketDataProvider;
-    private readonly IMediator _mediator;
     private readonly ILogger<PortfolioController> _logger;
 
     public PortfolioController(
         IPortfolioGateway portfolioGateway,
         IPortfolioRepository portfolioRepository,
         IStaticMarketDataProvider staticMarketDataProvider,
-        IMediator mediator,
         ILogger<PortfolioController> logger)
     {
         _portfolioGateway = portfolioGateway;
         _portfolioRepository = portfolioRepository;
         _staticMarketDataProvider = staticMarketDataProvider;
-        _mediator = mediator;
         _logger = logger;
     }
 

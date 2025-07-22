@@ -1,6 +1,3 @@
-using MediatR;
-using Vertr.PortfolioManager.Contracts.Requests;
-
 namespace Vertr.Platform.Host.BackgroundServices;
 
 public class ApplicationBootstrapService : IHostedService
@@ -15,8 +12,6 @@ public class ApplicationBootstrapService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         using var scope = _serviceProvider.CreateScope();
-        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
         var portfoliosRequest = new InitialLoadPortfoliosCommand();
         await mediator.Send(portfoliosRequest, cancellationToken);
     }

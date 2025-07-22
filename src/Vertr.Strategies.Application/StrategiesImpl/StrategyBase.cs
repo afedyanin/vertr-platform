@@ -1,24 +1,18 @@
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
-using Vertr.OrderExecution.Contracts.Commands;
+using Vertr.OrderExecution.Contracts;
+using Vertr.Platform.Common.Channels;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.Strategies.Application.StrategiesImpl;
 internal abstract class StrategyBase
 {
+    private readonly IDataProducer<TradingSignal> _tradingSignalProducer;
+
     protected IServiceProvider ServiceProvider { get; private set; }
+
     protected IMarketDataRepository MarketDataRepository { get; private set; }
-
-    private readonly IMediator _mediator;
-
-    protected StrategyBase(IServiceProvider serviceProvider)
-    {
-        ServiceProvider = serviceProvider;
-        MarketDataRepository = ServiceProvider.GetRequiredService<IMarketDataRepository>();
-        _mediator = ServiceProvider.GetRequiredService<IMediator>();
-    }
 
     public Guid Id { get; init; }
 
@@ -28,11 +22,18 @@ internal abstract class StrategyBase
 
     public long QtyLots { get; init; }
 
-    public virtual async Task HandleMarketData(Candle candle, CancellationToken cancellationToken = default)
+    protected StrategyBase(IServiceProvider serviceProvider)
     {
-        var sigal = CreateSignal(candle);
-        await _mediator.Send(sigal, cancellationToken);
+        ServiceProvider = serviceProvider;
+        MarketDataRepository = ServiceProvider.GetRequiredService<IMarketDataRepository>();
+        _tradingSignalProducer = ServiceProvider.GetRequiredService<IDataProducer<TradingSignal>>();
     }
 
-    public abstract TradingSignalCommand CreateSignal(Candle candle);
+    public virtual async Task HandleMarketData(Candle candle, CancellationToken cancellationToken = default)
+    {
+        var tradingSignal = CreateTradingSignal(candle);
+        await _tradingSignalProducer.Produce(tradingSignal, cancellationToken);
+    }
+
+    public abstract TradingSignal CreateTradingSignal(Candle candle);
 }

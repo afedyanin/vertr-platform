@@ -17,9 +17,11 @@ public static class OrderExecutionRegistrar
     {
         services.RegisterDataChannel<OrderState>();
         services.RegisterDataChannel<OrderTrades>();
+        services.RegisterDataChannel<TradingSignal>();
 
         services.AddHostedService<OrderStateConsumerService>();
         services.AddHostedService<OrderTradesConsumerService>();
+        services.AddHostedService<TradingSignalConsumerService>();
 
         services.AddScoped<ICommandHandler<ClosePositionCommand, ExecuteOrderResponse>, ClosePositionHandler>();
         services.AddScoped<ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse>, ExecuteOrderHandler>();

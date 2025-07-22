@@ -1,5 +1,5 @@
 using Vertr.MarketData.Contracts;
-using Vertr.OrderExecution.Contracts.Commands;
+using Vertr.OrderExecution.Contracts;
 
 namespace Vertr.Strategies.Application.StrategiesImpl;
 
@@ -9,9 +9,8 @@ internal class TrendFollowStrategy : StrategyBase
     {
     }
 
-    public override TradingSignalCommand CreateSignal(Candle candle)
-    {
-        var signal = new TradingSignalCommand
+    public override TradingSignal CreateTradingSignal(Candle candle)
+        => new TradingSignal
         {
             RequestId = Guid.NewGuid(),
             InstrumentId = InstrumentId,
@@ -19,9 +18,5 @@ internal class TrendFollowStrategy : StrategyBase
             QtyLots = QtyLots * GetSign(candle),
         };
 
-        return signal;
-    }
-
-    private int GetSign(Candle candle)
-        => candle.Open > candle.Close ? -1 : 1;
+    private int GetSign(Candle candle) => candle.Open > candle.Close ? -1 : 1;
 }

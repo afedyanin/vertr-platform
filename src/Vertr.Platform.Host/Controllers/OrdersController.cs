@@ -1,8 +1,9 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vertr.OrderExecution.Contracts;
+using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Common;
 using Vertr.Platform.Host.Requests;
 using Vertr.PortfolioManager.Contracts;
 
@@ -11,15 +12,28 @@ namespace Vertr.Platform.Host.Controllers;
 [ApiController]
 public class OrdersController : ControllerBase
 {
-    private readonly IMediator _mediator;
     private readonly IOrderExecutionGateway _orderExecutionGateway;
+    private readonly ICommandHandler<ClosePositionCommand, ExecuteOrderResponse> _closePositionHandler;
+    private readonly ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> _executeOrderHandler;
+    private readonly ICommandHandler<OpenPositionCommand, ExecuteOrderResponse> _openPositionHandler;
+    private readonly ICommandHandler<ReversePositionCommand, ExecuteOrderResponse> _reversePositionHandler;
+    private readonly ICommandHandler<TradingSignalCommand, ExecuteOrderResponse> _tradingSignalHandler;
 
     public OrdersController(
-        IOrderExecutionGateway orderExecutionGateway,
-        IMediator mediator)
+        ICommandHandler<ClosePositionCommand, ExecuteOrderResponse> closePositionHandler,
+        ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> executeOrderHandler,
+        ICommandHandler<OpenPositionCommand, ExecuteOrderResponse> openPositionHandler,
+        ICommandHandler<ReversePositionCommand, ExecuteOrderResponse> reversePositionHandler,
+        ICommandHandler<TradingSignalCommand, ExecuteOrderResponse> tradingSignalHandler,
+        IOrderExecutionGateway orderExecutionGateway)
     {
         _orderExecutionGateway = orderExecutionGateway;
-        _mediator = mediator;
+
+        _closePositionHandler = closePositionHandler;
+        _executeOrderHandler = executeOrderHandler;
+        _openPositionHandler = openPositionHandler;
+        _reversePositionHandler = reversePositionHandler;
+        _tradingSignalHandler = tradingSignalHandler;
     }
 
     [HttpPost("order")]
@@ -46,7 +60,7 @@ public class OrdersController : ControllerBase
     [HttpPost("execute")]
     public async Task<IActionResult> ExecuteOrder(ExecuteRequest request)
     {
-        var mediatorRequest = new ExecuteOrderCommand
+        var command = new ExecuteOrderCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -54,14 +68,15 @@ public class OrdersController : ControllerBase
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _mediator.Send(mediatorRequest);
+        var response = await _executeOrderHandler.Handle(command);
+
         return Ok(response);
     }
 
     [HttpPost("open")]
     public async Task<IActionResult> OpenPosition(OpenRequest request)
     {
-        var mediatorRequest = new OpenPositionRequest
+        var command = new OpenPositionCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -69,42 +84,42 @@ public class OrdersController : ControllerBase
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _mediator.Send(mediatorRequest);
+        var response = await _openPositionHandler.Handle(command);
         return Ok(response);
     }
 
     [HttpPost("close")]
     public async Task<IActionResult> ClosePosition(CloseRequest request)
     {
-        var mediatorRequest = new ClosePositionCommand
+        var command = new ClosePositionCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _mediator.Send(mediatorRequest);
+        var response = await _closePositionHandler.Handle(command);
         return Ok(response);
     }
 
     [HttpPost("reverse")]
     public async Task<IActionResult> RevertPosition(ReverseRequest request)
     {
-        var mediatorRequest = new ReversePositionCommand
+        var command = new ReversePositionCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _mediator.Send(mediatorRequest);
+        var response = await _reversePositionHandler.Handle(command);
         return Ok(response);
     }
 
     [HttpPost("signal")]
     public async Task<IActionResult> PorocessSignal(SignalRequest request)
     {
-        var mediatorRequest = new TradingSignalCommand
+        var command = new TradingSignalCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -112,7 +127,7 @@ public class OrdersController : ControllerBase
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _mediator.Send(mediatorRequest);
+        var response = await _tradingSignalHandler.Handle(command);
         return Ok(response);
     }
 }

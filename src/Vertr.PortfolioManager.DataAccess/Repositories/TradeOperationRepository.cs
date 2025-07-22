@@ -44,10 +44,10 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
             .ToArrayAsync();
     }
 
-    public async Task<bool> Save(TradeOperation[] operationEvents)
+    public async Task<bool> Save(TradeOperation operation)
     {
         using var context = await GetDbContext();
-        await context.Operations.AddRangeAsync(operationEvents);
+        context.Operations.Add(operation);
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;

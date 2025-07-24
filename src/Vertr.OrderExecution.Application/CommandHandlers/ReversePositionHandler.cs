@@ -12,7 +12,7 @@ internal class ReversePositionHandler : OrderHandlerBase, ICommandHandler<Revers
     public ReversePositionHandler(
         ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> executeOrderHandler,
         IPortfolioRepository portfolioRepository,
-        IStaticMarketDataProvider staticMarketDataProvider
+        IMarketInstrumentRepository staticMarketDataProvider
         ) : base(portfolioRepository, staticMarketDataProvider)
     {
         _executeOrderHandler = executeOrderHandler;

@@ -11,7 +11,7 @@
 - implement controller for strategies
 - implement controller (GET only) for trading signals
 - refactor market data module
-- compile solution without errors
+- [x] compile solution without errors
 - UI concept on Blazor (MudBlazor vs FluentUI)
 - implement integration tests
 - consider BACKTEST concept

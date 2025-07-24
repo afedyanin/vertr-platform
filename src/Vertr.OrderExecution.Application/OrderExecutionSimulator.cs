@@ -9,11 +9,11 @@ namespace Vertr.OrderExecution.Application;
 
 internal class OrderExecutionSimulator : IOrderExecutionGateway
 {
-    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
     private readonly IDataProducer<OrderTrades> _orderTradesProducer;
 
     public OrderExecutionSimulator(
-        IStaticMarketDataProvider staticMarketDataProvider,
+        IMarketInstrumentRepository staticMarketDataProvider,
         IDataProducer<OrderTrades> orderTradesProducer)
     {
         _staticMarketDataProvider = staticMarketDataProvider;

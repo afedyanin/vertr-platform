@@ -33,7 +33,7 @@ public class OrderTradesStreamService : StreamServiceBase
         using var scope = ServiceProvider.CreateScope();
         var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
-        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IStaticMarketDataProvider>();
+        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IMarketInstrumentRepository>();
         var orderTradesProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderTrades>>();
 
         var accounts = portfolioRepository.GetActiveAccounts();

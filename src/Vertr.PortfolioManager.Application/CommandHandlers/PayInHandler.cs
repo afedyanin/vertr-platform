@@ -11,12 +11,12 @@ internal class PayInHandler : ICommandHandler<PayInCommand>
 {
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
 
-    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
     private readonly ILogger<PayInHandler> _logger;
 
     public PayInHandler(
         IDataProducer<TradeOperation> tradeOperationsProducer,
-        IStaticMarketDataProvider staticMarketDataProvider,
+        IMarketInstrumentRepository staticMarketDataProvider,
         ILogger<PayInHandler> logger)
     {
         _tradeOperationsProducer = tradeOperationsProducer;

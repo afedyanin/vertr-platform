@@ -17,7 +17,7 @@ public class PortfolioController : ControllerBase
 {
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
-    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
     private readonly ILogger<PortfolioController> _logger;
 
     private readonly ICommandHandler<PayInCommand> _payInHandler;
@@ -28,7 +28,7 @@ public class PortfolioController : ControllerBase
         ICommandHandler<OverridePositionsCommand> overridePositionHandler,
         IPortfolioGateway portfolioGateway,
         IPortfolioRepository portfolioRepository,
-        IStaticMarketDataProvider staticMarketDataProvider,
+        IMarketInstrumentRepository staticMarketDataProvider,
         ILogger<PortfolioController> logger)
     {
         _portfolioGateway = portfolioGateway;

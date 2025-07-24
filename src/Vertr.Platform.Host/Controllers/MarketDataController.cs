@@ -8,9 +8,9 @@ namespace Vertr.Platform.Host.Controllers;
 
 public class MarketDataController : ControllerBase
 {
-    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
 
-    public MarketDataController(IStaticMarketDataProvider staticMarketDataProvider)
+    public MarketDataController(IMarketInstrumentRepository staticMarketDataProvider)
     {
         _staticMarketDataProvider = staticMarketDataProvider;
     }

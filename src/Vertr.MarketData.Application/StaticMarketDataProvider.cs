@@ -4,18 +4,13 @@ using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.MarketData.Application;
-internal class StaticMarketDataProvider : IStaticMarketDataProvider
+internal class StaticMarketDataProvider : IMarketInstrumentRepository
 {
     private readonly MarketDataSettings _settings;
     private readonly IMarketDataGateway _gateway;
 
     private readonly Dictionary<Guid, Instrument> _instrumentsById = [];
     private readonly Dictionary<Symbol, Instrument> _instruments = [];
-    private readonly Dictionary<Guid, CandleInterval> _intervals = [];
-    private readonly List<CandleSubscription> _subscriptions = [];
-
-    private bool _isInitialized = false;
-    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
 
     public StaticMarketDataProvider(
@@ -24,33 +19,6 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
     {
         _settings = options.Value;
         _gateway = gateway;
-        _subscriptions = [.. GetCandleSubscriptions()];
-
-    }
-    public async Task InitialLoad()
-    {
-        if (_isInitialized)
-        {
-            return;
-        }
-
-        _semaphore.Wait();
-
-        try
-        {
-            if (_isInitialized)
-            {
-                return;
-            }
-
-            LoadIntervals();
-            await Loadnstruments();
-            _isInitialized = true;
-        }
-        finally
-        {
-            _semaphore.Release();
-        }
     }
 
     public Task<Instrument?> GetInstrumentById(Guid instrumentId)
@@ -67,19 +35,6 @@ internal class StaticMarketDataProvider : IStaticMarketDataProvider
 
     public Task<Instrument[]> GetInstruments()
         => Task.FromResult(_instrumentsById.Values.ToArray());
-
-    public Task<CandleSubscription[]> GetSubscriptions()
-        => Task.FromResult(_subscriptions.ToArray());
-
-    private void LoadIntervals()
-    {
-        _intervals.Clear();
-
-        foreach (var item in _subscriptions)
-        {
-            _intervals[item.InstrumentId] = item.Interval;
-        }
-    }
 
     private async Task Loadnstruments()
     {

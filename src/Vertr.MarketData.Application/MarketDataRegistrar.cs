@@ -12,7 +12,7 @@ public static class MarketDataRegistrar
     public static IServiceCollection AddMarketData(this IServiceCollection services)
     {
         services.AddOptions<MarketDataSettings>().BindConfiguration(nameof(MarketDataSettings));
-        services.AddSingleton<IStaticMarketDataProvider, StaticMarketDataProvider>();
+        services.AddSingleton<IMarketInstrumentRepository, StaticMarketDataProvider>();
         services.AddSingleton<IMarketDataRepository, MarketDataRepository>();
 
         services.RegisterDataChannel<Candle>();

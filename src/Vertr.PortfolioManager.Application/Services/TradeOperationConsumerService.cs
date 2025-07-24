@@ -11,7 +11,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
 {
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly ITradeOperationRepository _tradeOperationRepository;
-    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
     private readonly ILogger<TradeOperationConsumerService> _logger;
 
     public TradeOperationConsumerService(
@@ -19,7 +19,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
         ILogger<TradeOperationConsumerService> logger) : base(serviceProvider)
     {
         _portfolioRepository = serviceProvider.GetRequiredService<IPortfolioRepository>();
-        _staticMarketDataProvider = serviceProvider.GetRequiredService<IStaticMarketDataProvider>();
+        _staticMarketDataProvider = serviceProvider.GetRequiredService<IMarketInstrumentRepository>();
         _tradeOperationRepository = serviceProvider.GetRequiredService<ITradeOperationRepository>();
         _logger = logger;
     }

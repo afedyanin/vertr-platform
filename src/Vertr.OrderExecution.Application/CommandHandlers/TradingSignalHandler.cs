@@ -14,7 +14,7 @@ internal class TradingSignalHandler : OrderHandlerBase, ICommandHandler<TradingS
         ICommandHandler<OpenPositionCommand, ExecuteOrderResponse> openPositionHandler,
         ICommandHandler<ReversePositionCommand, ExecuteOrderResponse> reversePositionHandler,
         IPortfolioRepository portfolioRepository,
-        IStaticMarketDataProvider staticMarketDataProvider
+        IMarketInstrumentRepository staticMarketDataProvider
         ) : base(portfolioRepository, staticMarketDataProvider)
     {
         _openPositionHandler = openPositionHandler;

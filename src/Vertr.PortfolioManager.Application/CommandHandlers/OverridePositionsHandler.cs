@@ -9,11 +9,11 @@ namespace Vertr.PortfolioManager.Application.CommandHandlers;
 internal class OverridePositionsHandler : ICommandHandler<OverridePositionsCommand>
 {
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
-    private readonly IStaticMarketDataProvider _staticMarketDataProvider;
+    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
 
     public OverridePositionsHandler(
         IDataProducer<TradeOperation> tradeOperationsProducer,
-        IStaticMarketDataProvider staticMarketDataProvider)
+        IMarketInstrumentRepository staticMarketDataProvider)
     {
         _tradeOperationsProducer = tradeOperationsProducer;
         _staticMarketDataProvider = staticMarketDataProvider;

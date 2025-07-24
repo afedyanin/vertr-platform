@@ -17,4 +17,10 @@ public class StrategyMetadata
     public Guid SubAccountId { get; init; }
 
     public long QtyLots { get; init; }
+
+    public bool IsActive { get; init; }
+
+    public string? ParamsJson { get; init; }
+
+    public DateTime UpdatedAt { get; set; }
 }

@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common;
 using Vertr.Platform.Common.Channels;
+using Vertr.PortfolioManager.Contracts;
+using Vertr.Strategies.Contracts;
 
 namespace Vertr.OrderExecution.Application.Services;
 
@@ -18,10 +19,10 @@ internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSig
     {
         var command = new TradingSignalCommand
         {
-            RequestId = data.RequestId,
+            RequestId = data.Id,
             InstrumentId = data.InstrumentId,
             QtyLots = data.QtyLots,
-            PortfolioIdentity = data.PortfolioIdentity,
+            PortfolioIdentity = new PortfolioIdentity(data.AccountId, data.SubAccountId),
         };
 
         _ = await _tradingSignalHandler.Handle(command, cancellationToken);

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

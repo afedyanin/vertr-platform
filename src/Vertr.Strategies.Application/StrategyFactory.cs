@@ -1,12 +1,12 @@
-using Vertr.PortfolioManager.Contracts;
 using Vertr.Strategies.Application.StrategiesImpl;
 using Vertr.Strategies.Contracts;
+using Vertr.Strategies.Contracts.Interfaces;
 
 namespace Vertr.Strategies.Application;
 
 internal static class StrategyFactory
 {
-    public static StrategyBase Create(StrategyMetadata strategyMetadata, IServiceProvider serviceProvider)
+    public static IStrategy Create(StrategyMetadata strategyMetadata, IServiceProvider serviceProvider)
     {
         ArgumentNullException.ThrowIfNull(strategyMetadata);
 
@@ -15,7 +15,8 @@ internal static class StrategyFactory
             return new RandomWalkStrategy(serviceProvider)
             {
                 Id = strategyMetadata.Id,
-                PortfolioIdentity = new PortfolioIdentity(strategyMetadata.AccountId, strategyMetadata.SubAccountId),
+                AccountId = strategyMetadata.AccountId,
+                SubAccountId = strategyMetadata.SubAccountId,
                 InstrumentId = strategyMetadata.InstrumentId,
                 QtyLots = strategyMetadata.QtyLots,
             };
@@ -26,7 +27,8 @@ internal static class StrategyFactory
             return new TrendFollowStrategy(serviceProvider)
             {
                 Id = strategyMetadata.Id,
-                PortfolioIdentity = new PortfolioIdentity(strategyMetadata.AccountId, strategyMetadata.SubAccountId),
+                AccountId = strategyMetadata.AccountId,
+                SubAccountId = strategyMetadata.SubAccountId,
                 InstrumentId = strategyMetadata.InstrumentId,
                 QtyLots = strategyMetadata.QtyLots,
             };

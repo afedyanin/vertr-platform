@@ -1,7 +1,23 @@
+
+
 # 2025-07-24
 
+## TODO
+
+- apply migration for StrategiesDb context
+- update readme for migrations
+- consider dataaccess for market data (stattic data & instruments)
+- use single Interval from appsetting config for all instruments
+- implement controller for strategies
+- implement controller (GET only) for trading signals
+- refactor market data module
+- compile solution without errors
+- UI concept on Blazor (MudBlazor vs FluentUI)
+- implement integration tests
+- consider BACKTEST concept
+
 - https://sqlitestudio.pl/
-- 
+
 
 # 2025-07-22
 

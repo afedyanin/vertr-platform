@@ -17,7 +17,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Vertr.Platform.Common\Vertr.Platform.Common.csproj" />
     <ProjectReference Include="..\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.Strategies.Contracts\Vertr.Strategies.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

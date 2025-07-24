@@ -2,11 +2,11 @@ namespace Vertr.Strategies.Contracts.Interfaces;
 
 public interface IStrategyMetadataRepository
 {
-    public StrategyMetadata? GetById(Guid id);
+    public Task<StrategyMetadata[]> GetAll();
 
-    public StrategyMetadata[] GetAll();
+    public Task<StrategyMetadata?> GetById(Guid id);
 
-    public void Save(StrategyMetadata metadata);
+    public Task<bool> Save(StrategyMetadata metadata);
 
-    public void Delete(Guid Id);
+    public Task<int> Delete(Guid Id);
 }

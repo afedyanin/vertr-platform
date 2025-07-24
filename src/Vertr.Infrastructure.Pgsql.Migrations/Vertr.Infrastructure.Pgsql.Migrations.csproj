@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.Strategies.DataAccess\Vertr.Strategies.DataAccess.csproj" />
   </ItemGroup>
   
   <ItemGroup>

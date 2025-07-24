@@ -4,7 +4,6 @@ using Vertr.Platform.Common;
 using Vertr.Platform.Common.Channels;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Commands;
-using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.Application.CommandHandlers;
 

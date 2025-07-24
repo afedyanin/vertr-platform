@@ -9,11 +9,9 @@ public class ApplicationBootstrapService : IHostedService
         _serviceProvider = serviceProvider;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken cancellationToken)
     {
-        using var scope = _serviceProvider.CreateScope();
-        var portfoliosRequest = new InitialLoadPortfoliosCommand();
-        await mediator.Send(portfoliosRequest, cancellationToken);
+        return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

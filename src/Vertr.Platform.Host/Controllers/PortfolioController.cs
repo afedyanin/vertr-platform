@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Application.Services;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts.Commands;
+using Vertr.Platform.Common;
 
 namespace Vertr.Platform.Host.Controllers;
 
@@ -19,7 +20,12 @@ public class PortfolioController : ControllerBase
     private readonly IStaticMarketDataProvider _staticMarketDataProvider;
     private readonly ILogger<PortfolioController> _logger;
 
+    private readonly ICommandHandler<PayInCommand> _payInHandler;
+    private readonly ICommandHandler<OverridePositionsCommand> _overridePositionHandler;
+
     public PortfolioController(
+        ICommandHandler<PayInCommand> payInHandler,
+        ICommandHandler<OverridePositionsCommand> overridePositionHandler,
         IPortfolioGateway portfolioGateway,
         IPortfolioRepository portfolioRepository,
         IStaticMarketDataProvider staticMarketDataProvider,
@@ -28,6 +34,8 @@ public class PortfolioController : ControllerBase
         _portfolioGateway = portfolioGateway;
         _portfolioRepository = portfolioRepository;
         _staticMarketDataProvider = staticMarketDataProvider;
+        _payInHandler = payInHandler;
+        _overridePositionHandler = overridePositionHandler;
         _logger = logger;
     }
 
@@ -78,7 +86,7 @@ public class PortfolioController : ControllerBase
             Amount = money,
         };
 
-        await _mediator.Send(request);
+        await _payInHandler.Handle(request);
 
         return Ok(balance);
     }
@@ -105,6 +113,7 @@ public class PortfolioController : ControllerBase
         return Ok(operations);
     }
 
+    /*
     [HttpPut("gateway-operations/replay/{accountId}")]
     public async Task<IActionResult> GetGatewayOperationsReplay(string accountId, DateTime from, DateTime to)
     {
@@ -126,6 +135,7 @@ public class PortfolioController : ControllerBase
 
         return Ok(portfolios);
     }
+    */
 
     [HttpPut("position-overrides/{accountId}/{subAccountId}")]
     public async Task<IActionResult> OverridePositions(string accountId, Guid subAccountId, PositionOverride[] overrides)
@@ -137,7 +147,7 @@ public class PortfolioController : ControllerBase
             Overrides = overrides
         };
 
-        await _mediator.Send(req);
+        await _overridePositionHandler.Handle(req);
 
         return Ok();
     }

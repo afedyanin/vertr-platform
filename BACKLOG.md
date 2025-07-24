@@ -1,3 +1,8 @@
+# 2025-07-24
+
+- https://sqlitestudio.pl/
+- 
+
 # 2025-07-22
 
 - [I Removed MediatR – Building Your Own CQRS Handlers in .NET](https://www.youtube.com/watch?v=j1OUToRyVHc)

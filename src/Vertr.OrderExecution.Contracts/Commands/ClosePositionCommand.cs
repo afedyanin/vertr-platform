@@ -1,5 +1,5 @@
 using Vertr.OrderExecution.Contracts.Commands;
-using Vertr.Platform.Common;
+using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.OrderExecution.Contracts.Requests;
 

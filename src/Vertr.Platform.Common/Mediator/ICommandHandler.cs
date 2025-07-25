@@ -1,4 +1,4 @@
-namespace Vertr.Platform.Common;
+namespace Vertr.Platform.Common.Mediator;
 
 public interface ICommandHandler<in TCommand> where TCommand : ICommand
 {

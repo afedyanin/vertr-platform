@@ -4,8 +4,8 @@ using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.OrderExecution.Contracts.Interfaces;
-using Vertr.Platform.Common;
 using Vertr.Platform.Common.Channels;
+using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;

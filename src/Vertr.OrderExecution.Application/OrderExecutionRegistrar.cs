@@ -6,8 +6,8 @@ using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.Platform.Common;
 using Vertr.Platform.Common.Channels;
+using Vertr.Platform.Common.Mediator;
 using Vertr.Strategies.Contracts;
 
 namespace Vertr.OrderExecution.Application;

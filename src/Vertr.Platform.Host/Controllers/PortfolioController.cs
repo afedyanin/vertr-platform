@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Application.Services;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts.Commands;
-using Vertr.Platform.Common;
+using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.Platform.Host.Controllers;
 

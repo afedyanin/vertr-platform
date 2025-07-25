@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.Platform.Common;
 using Vertr.Platform.Common.Channels;
+using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Application.CommandHandlers;
 using Vertr.PortfolioManager.Application.Repositories;
 using Vertr.PortfolioManager.Application.Services;

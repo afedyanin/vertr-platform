@@ -1,4 +1,4 @@
-namespace Vertr.Platform.Common;
+namespace Vertr.Platform.Common.Mediator;
 
 public interface IQueryHandler<in TQuery, TResponse> where TQuery : IQuery<TResponse>
 {

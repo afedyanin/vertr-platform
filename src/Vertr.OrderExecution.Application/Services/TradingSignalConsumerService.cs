@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.OrderExecution.Contracts.Commands;
-using Vertr.Platform.Common;
 using Vertr.Platform.Common.Channels;
+using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.Strategies.Contracts;
 

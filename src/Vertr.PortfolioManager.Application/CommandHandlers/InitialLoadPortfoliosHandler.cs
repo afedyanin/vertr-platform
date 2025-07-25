@@ -1,5 +1,5 @@
-using Vertr.Platform.Common;
 using Vertr.Platform.Common.Channels;
+using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Commands;
 using Vertr.PortfolioManager.Contracts.Interfaces;

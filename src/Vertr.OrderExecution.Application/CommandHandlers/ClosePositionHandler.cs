@@ -2,7 +2,7 @@ using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Application.CommandHandlers;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.Platform.Common;
+using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;

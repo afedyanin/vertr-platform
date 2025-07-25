@@ -12,7 +12,6 @@ internal class StaticMarketDataProvider : IMarketInstrumentRepository
     private readonly Dictionary<Guid, Instrument> _instrumentsById = [];
     private readonly Dictionary<Symbol, Instrument> _instruments = [];
 
-
     public StaticMarketDataProvider(
         IOptions<MarketDataSettings> options,
         IMarketDataGateway gateway)

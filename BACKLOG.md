@@ -1,3 +1,30 @@
+# 2025-07-25
+
+## TradingMode
+
+- RealTradiing
+- PaperTrading
+- Backtest
+
+## ITimeService
+
+- RealTime
+- BackTestTime
+
+- https://blog.nimblepros.com/blogs/finally-an-abstraction-for-time-in-net/
+- https://khalidabuhakmeh.com/dotnet-8-timeprovider-and-unit-tests
+
+
+## Backtest
+
+- Backtest MetaData - CRUD + DAL + Repo
+- Backtest Host - Background Service + Channel
+- Controller - Start/Cancel Back test
+
+## Market Data
+
+- realtime mode - intraday
+- bt mode - history data
 
 
 # 2025-07-24

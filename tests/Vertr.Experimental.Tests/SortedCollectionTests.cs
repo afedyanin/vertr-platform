@@ -1,4 +1,4 @@
-namespace Vertr.Platform.Tests.Experimental;
+namespace Vertr.Experimental.Tests;
 
 public class SortedCollectionTests
 {

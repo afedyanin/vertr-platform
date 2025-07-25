@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Vertr.Platform.Tests.Experimental;
+namespace Vertr.Experimental.Tests;
 public class MultipleInterfaces
 {
     public interface IBar { }

@@ -39,7 +39,9 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
             return;
         }
 
-        var orderEvent = data.CreateEvent(data.InstrumentId, portfolioIdentity);
+        var orderEvent = data.CreateEvent(
+            data.InstrumentId,
+            portfolioIdentity);
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)

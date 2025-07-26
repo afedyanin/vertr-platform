@@ -64,7 +64,7 @@ internal class OrderExecutionSimulator : IOrderExecutionGateway
         var trades = new OrderTrades
         {
             InstrumentId = response.InstrumentId,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = request.CreatedAt,
             Direction = response.OrderDirection,
             OrderId = response.OrderId,
             Trades =
@@ -72,7 +72,7 @@ internal class OrderExecutionSimulator : IOrderExecutionGateway
                 new Trade
                 {
                     TradeId = Guid.NewGuid().ToString(),
-                    ExecutionTime = DateTime.UtcNow,
+                    ExecutionTime = request.CreatedAt,
                     Price = orderPrice,
                     Quantity = qty
                 }

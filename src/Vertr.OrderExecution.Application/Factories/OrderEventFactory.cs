@@ -22,7 +22,7 @@ internal static class OrderEventFactory
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = request.CreatedAt,
             AccountId = portfolioIdentity.AccountId,
             SubAccountId = portfolioIdentity.SubAccountId,
             InstrumentId = instrumentId,
@@ -35,12 +35,13 @@ internal static class OrderEventFactory
     public static OrderEvent CreateEvent(
         this PostOrderResponse response,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity)
+        PortfolioIdentity portfolioIdentity,
+        DateTime createdAt)
     {
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = createdAt,
             AccountId = portfolioIdentity.AccountId,
             SubAccountId = portfolioIdentity.SubAccountId,
             InstrumentId = instrumentId,
@@ -49,7 +50,6 @@ internal static class OrderEventFactory
             JsonDataType = response.GetType().FullName,
             JsonData = JsonSerializer.Serialize(response, _jsonOptions),
         };
-
     }
 
     public static OrderEvent CreateEvent(
@@ -60,7 +60,7 @@ internal static class OrderEventFactory
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = trades.CreatedAt,
             AccountId = portfolioIdentity.AccountId,
             SubAccountId = portfolioIdentity.SubAccountId,
             InstrumentId = instrumentId,
@@ -77,7 +77,7 @@ internal static class OrderEventFactory
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = state.CreatedAt,
             AccountId = portfolioId.AccountId,
             SubAccountId = portfolioId.SubAccountId,
             InstrumentId = state.InstrumentId,

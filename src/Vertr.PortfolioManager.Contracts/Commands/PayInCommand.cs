@@ -9,4 +9,6 @@ public class PayInCommand : ICommand
     public Guid SubAccountId { get; init; }
 
     public required Money Amount { get; init; }
+
+    public DateTime CreatedAt { get; init; }
 }

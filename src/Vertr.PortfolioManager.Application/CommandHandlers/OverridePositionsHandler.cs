@@ -40,7 +40,7 @@ internal class OverridePositionsHandler : ICommandHandler<OverridePositionsComma
 
             var op = new TradeOperation
             {
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = request.CreatedAt,
                 OperationType = TradeOperationType.PositionOverride,
                 AccountId = request.AccountId,
                 SubAccountId = request.SubAccountId,

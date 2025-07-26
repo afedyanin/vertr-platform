@@ -11,4 +11,6 @@ public class OverridePositionsCommand : ICommand
     public Guid SubAccountId { get; init; }
 
     public PositionOverride[] Overrides { get; init; } = [];
+
+    public DateTime CreatedAt { get; init; }
 }

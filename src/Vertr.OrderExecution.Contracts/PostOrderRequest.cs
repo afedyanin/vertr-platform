@@ -12,4 +12,5 @@ public record class PostOrderRequest
     public required PriceType PriceType { get; init; }
     public required decimal Price { get; init; }
     public required long QuantityLots { get; init; }
+    public DateTime CreatedAt { get; init; }
 }

@@ -5,7 +5,8 @@ namespace Vertr.TinvestGateway.Application.Converters;
 internal static class PortfolioConverter
 {
     public static Portfolio? Convert(
-        this Tinkoff.InvestApi.V1.PortfolioResponse source)
+        this Tinkoff.InvestApi.V1.PortfolioResponse source,
+        DateTime createdAt)
     {
         if (source == null)
         {
@@ -14,7 +15,7 @@ internal static class PortfolioConverter
 
         var res = new Portfolio
         {
-            UpdatedAt = DateTime.UtcNow,
+            UpdatedAt = createdAt,
             Identity = new PortfolioIdentity(source.AccountId),
             Positions = source.Positions.ToArray().Convert()
         };

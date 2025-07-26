@@ -35,7 +35,7 @@ public record class OrderState
 
     public OrderType OrderType { get; init; }
 
-    public DateTime? OrderDate { get; init; }
+    public DateTime CreatedAt { get; init; }
 
     public Guid InstrumentId { get; init; }
 

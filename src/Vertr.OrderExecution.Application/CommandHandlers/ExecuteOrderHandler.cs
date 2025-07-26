@@ -68,7 +68,10 @@ internal class ExecuteOrderHandler : ICommandHandler<ExecuteOrderCommand, Execut
             QuantityLots = Math.Abs(qtyLots),
         };
 
-        var postOrderEvent = request.CreateEvent(instrumentId, portfolioIdentity);
+        var postOrderEvent = request.CreateEvent(
+            instrumentId,
+            portfolioIdentity
+            );
 
         var savedRequest = await _orderEventRepository.Save(postOrderEvent);
 
@@ -87,7 +90,10 @@ internal class ExecuteOrderHandler : ICommandHandler<ExecuteOrderCommand, Execut
             return null;
         }
 
-        var orderResponseEvent = response.CreateEvent(instrumentId, portfolioIdentity);
+        var orderResponseEvent = response.CreateEvent(
+            instrumentId,
+            portfolioIdentity,
+            request.CreatedAt);
 
         var savedResponse = await _orderEventRepository.Save(orderResponseEvent);
 

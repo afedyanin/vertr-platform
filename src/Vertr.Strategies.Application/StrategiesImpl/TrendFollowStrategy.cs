@@ -18,7 +18,7 @@ internal class TrendFollowStrategy : StrategyBase
             AccountId = AccountId,
             SubAccountId = SubAccountId,
             QtyLots = QtyLots * GetSign(candle),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = candle.TimeUtc,
         };
 
     private int GetSign(Candle candle) => candle.Open > candle.Close ? -1 : 1;

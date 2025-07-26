@@ -20,7 +20,7 @@ internal static class OrderStateConverter
             InstrumentId = Guid.Parse(source.InstrumentUid),
             LotsExecuted = source.LotsExecuted,
             LotsRequested = source.LotsRequested,
-            OrderDate = source.OrderDate.ToDateTime(),
+            CreatedAt = source.OrderDate.ToDateTime(),
             OrderRequestId = source.OrderRequestId,
             OrderType = source.OrderType.Convert(),
             ServiceCommission = source.ServiceCommission.Convert(),
@@ -35,7 +35,7 @@ internal static class OrderStateConverter
         {
             OrderId = source.OrderId,
             OrderRequestId = source.OrderRequestId,
-            OrderDate = source.CreatedAt?.ToDateTime(),
+            CreatedAt = source.CreatedAt?.ToDateTime(),
             ExecutionReportStatus = source.ExecutionReportStatus.Convert(),
             InstrumentId = Guid.Parse(source.InstrumentUid),
             Direction = source.Direction.Convert(),

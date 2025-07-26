@@ -18,7 +18,7 @@ internal class RandomWalkStrategy : StrategyBase
             AccountId = AccountId,
             SubAccountId = SubAccountId,
             QtyLots = QtyLots * GetSign(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = candle.TimeUtc,
         };
 
     public int GetSign() => Random.Shared.Next(2) == 0 ? -1 : 1;

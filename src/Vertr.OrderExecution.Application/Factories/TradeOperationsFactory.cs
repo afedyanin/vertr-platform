@@ -9,7 +9,8 @@ internal static class TradeOperationsFactory
     public static TradeOperation[] CreateOperations(
         this PostOrderResponse response,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity)
+        PortfolioIdentity portfolioIdentity,
+        DateTime createdtAt)
     {
         if (response.ExecutedCommission == null)
         {
@@ -18,7 +19,7 @@ internal static class TradeOperationsFactory
 
         var opCommission = new TradeOperation
         {
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = createdtAt,
             OperationType = TradeOperationType.BrokerFee,
             AccountId = portfolioIdentity.AccountId,
             SubAccountId = portfolioIdentity.SubAccountId,
@@ -48,7 +49,7 @@ internal static class TradeOperationsFactory
 
             var opTrade = new TradeOperation
             {
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = trades.CreatedAt,
                 OperationType = trades.Direction.ToOperationType(),
                 AccountId = portfolioIdentity.AccountId,
                 SubAccountId = portfolioIdentity.SubAccountId,
@@ -82,7 +83,7 @@ internal static class TradeOperationsFactory
 
             var opTrade = new TradeOperation
             {
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = state.CreatedAt,
                 OperationType = state.Direction.ToOperationType(),
                 AccountId = portfolioIdentity.AccountId,
                 SubAccountId = portfolioIdentity.SubAccountId,
@@ -99,7 +100,7 @@ internal static class TradeOperationsFactory
 
         var opCommission = new TradeOperation
         {
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = state.CreatedAt,
             OperationType = TradeOperationType.BrokerFee,
             SubAccountId = portfolioIdentity.SubAccountId,
             AccountId = portfolioIdentity.AccountId,

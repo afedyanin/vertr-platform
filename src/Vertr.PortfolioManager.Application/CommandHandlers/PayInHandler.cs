@@ -37,7 +37,7 @@ internal class PayInHandler : ICommandHandler<PayInCommand>
 
         var opPayIn = new TradeOperation
         {
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = request.CreatedAt,
             OperationType = TradeOperationType.Input,
             AccountId = request.AccountId,
             SubAccountId = request.SubAccountId,

@@ -71,7 +71,7 @@ internal class TinvestGatewayPortfolio : TinvestGatewayBase, IPortfolioGateway
         };
 
         var response = await InvestApiClient.Operations.GetPortfolioAsync(request);
-        var portfolio = response.Convert();
+        var portfolio = response.Convert(DateTime.UtcNow);
 
         return portfolio;
     }

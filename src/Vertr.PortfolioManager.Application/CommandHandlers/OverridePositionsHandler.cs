@@ -9,14 +9,14 @@ namespace Vertr.PortfolioManager.Application.CommandHandlers;
 internal class OverridePositionsHandler : ICommandHandler<OverridePositionsCommand>
 {
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
-    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
+    private readonly ICurrencyRepository _currencyRepository;
 
     public OverridePositionsHandler(
         IDataProducer<TradeOperation> tradeOperationsProducer,
-        IMarketInstrumentRepository staticMarketDataProvider)
+        ICurrencyRepository currencyRepository)
     {
         _tradeOperationsProducer = tradeOperationsProducer;
-        _staticMarketDataProvider = staticMarketDataProvider;
+        _currencyRepository = currencyRepository;
     }
 
     public async Task Handle(OverridePositionsCommand request, CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ internal class OverridePositionsHandler : ICommandHandler<OverridePositionsComma
 
         foreach (var item in request.Overrides)
         {
-            var currency = await _staticMarketDataProvider.GetInstrumentCurrency(item.InstrumentId);
+            var currency = await _currencyRepository.GetInstrumentCurrency(item.InstrumentId);
             var balance = new Money(item.Balance, currency);
 
             var op = new TradeOperation

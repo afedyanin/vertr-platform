@@ -40,6 +40,8 @@ public class MarketDataStreamService : StreamServiceBase
             WaitingClose = TinvestSettings.WaitCandleClose,
         };
 
+        // TODO: Implement this
+        /*
         var subscriptions = await staticMarketDataProvider.GetSubscriptions();
 
         foreach (var sub in subscriptions)
@@ -50,7 +52,7 @@ public class MarketDataStreamService : StreamServiceBase
                 Interval = sub.Interval.ConvertToSubscriptionInterval()
             });
         }
-
+        */
         var request = new Tinkoff.InvestApi.V1.MarketDataServerSideStreamRequest()
         {
             SubscribeCandlesRequest = candleRequest,

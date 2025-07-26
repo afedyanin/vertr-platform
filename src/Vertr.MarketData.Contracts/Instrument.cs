@@ -9,5 +9,6 @@ public record class Instrument
     public string? InstrumentKind { get; init; }
     public string? Currency { get; init; }
     public decimal? LotSize { get; init; }
+    public bool SubscribeToFeed { get; init; }
 }
 

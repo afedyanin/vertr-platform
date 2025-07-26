@@ -15,13 +15,6 @@ public class MarketDataController : ControllerBase
         _staticMarketDataProvider = staticMarketDataProvider;
     }
 
-    [HttpGet("subsciptions")]
-    public async Task<IActionResult> GetSubscriptions()
-    {
-        var subscriptions = await _staticMarketDataProvider.GetSubscriptions();
-        return Ok(subscriptions);
-    }
-
     [HttpGet("instruments")]
     public async Task<IActionResult> GetInstruments()
     {

@@ -59,17 +59,6 @@ internal class StaticMarketDataProvider : IMarketInstrumentRepository
                 _instruments[instrument.Symbol] = instrument;
             }
         }
-
-        foreach (var subscription in _subscriptions)
-        {
-            var instrument = await _gateway.GetInstrument(subscription.InstrumentId);
-
-            if (instrument != null)
-            {
-                _instrumentsById[instrument.Id] = instrument;
-                _instruments[instrument.Symbol] = instrument;
-            }
-        }
     }
 
     public async Task<Instrument[]> FindInstrument(string query)
@@ -77,23 +66,6 @@ internal class StaticMarketDataProvider : IMarketInstrumentRepository
         var instruments = await _gateway.FindInstrument(query);
 
         return instruments?.ToArray() ?? [];
-    }
-
-    private CandleSubscription[] GetCandleSubscriptions()
-    {
-        var res = new List<CandleSubscription>();
-
-        foreach (var kvp in _settings.Subscriptions)
-        {
-            res.Add(new CandleSubscription
-            {
-                InstrumentId = kvp.Key,
-                Interval = kvp.Value
-            });
-
-        }
-
-        return [.. res];
     }
 
     public Guid? GetCurrencyId(string currencyCode)

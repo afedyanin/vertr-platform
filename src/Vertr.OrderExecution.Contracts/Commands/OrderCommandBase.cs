@@ -9,4 +9,6 @@ public abstract class OrderCommandBase
     public Guid InstrumentId { get; init; }
 
     public required PortfolioIdentity PortfolioIdentity { get; init; }
+
+    public DateTime CreatedAt { get; init; }
 }

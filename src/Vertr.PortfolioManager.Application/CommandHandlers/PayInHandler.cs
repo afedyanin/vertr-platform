@@ -11,16 +11,16 @@ internal class PayInHandler : ICommandHandler<PayInCommand>
 {
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
 
-    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
+    private readonly ICurrencyRepository _currencyRepository;
     private readonly ILogger<PayInHandler> _logger;
 
     public PayInHandler(
         IDataProducer<TradeOperation> tradeOperationsProducer,
-        IMarketInstrumentRepository staticMarketDataProvider,
+        ICurrencyRepository currencyRepository,
         ILogger<PayInHandler> logger)
     {
         _tradeOperationsProducer = tradeOperationsProducer;
-        _staticMarketDataProvider = staticMarketDataProvider;
+        _currencyRepository = currencyRepository;
         _logger = logger;
     }
 
@@ -28,7 +28,7 @@ internal class PayInHandler : ICommandHandler<PayInCommand>
     {
         _logger.LogInformation($"Pay in operation received.");
 
-        var instrumentId = _staticMarketDataProvider.GetCurrencyId(request.Amount.Currency);
+        var instrumentId = _currencyRepository.GetCurrencyId(request.Amount.Currency);
 
         if (instrumentId == null)
         {

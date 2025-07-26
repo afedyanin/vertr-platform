@@ -6,7 +6,7 @@ internal static class PortfolioConverter
 {
     public static Portfolio? Convert(
         this Tinkoff.InvestApi.V1.PortfolioResponse source,
-        DateTime createdAt)
+        DateTime updatedAt)
     {
         if (source == null)
         {
@@ -15,7 +15,7 @@ internal static class PortfolioConverter
 
         var res = new Portfolio
         {
-            UpdatedAt = createdAt,
+            UpdatedAt = updatedAt,
             Identity = new PortfolioIdentity(source.AccountId),
             Positions = source.Positions.ToArray().Convert()
         };

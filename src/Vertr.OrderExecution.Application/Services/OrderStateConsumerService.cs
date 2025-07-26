@@ -40,7 +40,7 @@ internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>
             return;
         }
 
-        var orderEvent = data.CreateEvent(portfolioIdentity, data.);
+        var orderEvent = data.CreateEvent(portfolioIdentity);
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)

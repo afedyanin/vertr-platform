@@ -11,7 +11,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
 {
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly ITradeOperationRepository _tradeOperationRepository;
-    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
+    private readonly ICurrencyRepository _currencyRepository;
     private readonly ILogger<TradeOperationConsumerService> _logger;
 
     public TradeOperationConsumerService(
@@ -19,7 +19,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
         ILogger<TradeOperationConsumerService> logger) : base(serviceProvider)
     {
         _portfolioRepository = serviceProvider.GetRequiredService<IPortfolioRepository>();
-        _staticMarketDataProvider = serviceProvider.GetRequiredService<IMarketInstrumentRepository>();
+        _currencyRepository = serviceProvider.GetRequiredService<ICurrencyRepository>();
         _tradeOperationRepository = serviceProvider.GetRequiredService<ITradeOperationRepository>();
         _logger = logger;
     }
@@ -90,12 +90,12 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
 
     private async Task<Guid?> GetCurrrencyId(string currencyCode, Guid instrumentId)
     {
-        var currencyId = _staticMarketDataProvider.GetCurrencyId(currencyCode);
+        var currencyId = _currencyRepository.GetCurrencyId(currencyCode);
 
         if (currencyId == null)
         {
             _logger.LogDebug($"Detecting currency by instrumentId={instrumentId}");
-            currencyId = await _staticMarketDataProvider.GetInstrumentCurrencyId(instrumentId);
+            currencyId = await _currencyRepository.GetInstrumentCurrencyId(instrumentId);
 
         }
 

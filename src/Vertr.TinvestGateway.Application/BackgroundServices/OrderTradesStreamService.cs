@@ -33,7 +33,7 @@ public class OrderTradesStreamService : StreamServiceBase
         using var scope = ServiceProvider.CreateScope();
         var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
-        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IMarketInstrumentRepository>();
+        var currencyRepository = scope.ServiceProvider.GetRequiredService<ICurrencyRepository>();
         var orderTradesProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderTrades>>();
 
         var accounts = portfolioRepository.GetActiveAccounts();
@@ -47,7 +47,7 @@ public class OrderTradesStreamService : StreamServiceBase
             if (response.PayloadCase == Tinkoff.InvestApi.V1.TradesStreamResponse.PayloadOneofCase.OrderTrades)
             {
                 var instrumentId = Guid.Parse(response.OrderTrades.InstrumentUid);
-                var currency = await staticMarketDataProvider.GetInstrumentCurrency(instrumentId);
+                var currency = await currencyRepository.GetInstrumentCurrency(instrumentId);
                 var orderTradesRequest = response.OrderTrades.Convert(currency);
 
                 logger.LogInformation($"New order trades received for OrderId={response.OrderTrades.OrderId}");

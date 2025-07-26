@@ -38,6 +38,7 @@ internal class ExecuteOrderHandler : ICommandHandler<ExecuteOrderCommand, Execut
             request.InstrumentId,
             request.PortfolioIdentity,
             request.QtyLots,
+            request.CreatedAt,
             cancellationToken);
 
         var response = new ExecuteOrderResponse
@@ -53,6 +54,7 @@ internal class ExecuteOrderHandler : ICommandHandler<ExecuteOrderCommand, Execut
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity,
         long qtyLots,
+        DateTime createdAt,
         CancellationToken cancellationToken)
     {
         var request = new PostOrderRequest
@@ -66,6 +68,7 @@ internal class ExecuteOrderHandler : ICommandHandler<ExecuteOrderCommand, Execut
             PriceType = PriceType.Unspecified,
             TimeInForceType = TimeInForceType.Unspecified,
             QuantityLots = Math.Abs(qtyLots),
+            CreatedAt = createdAt,
         };
 
         var postOrderEvent = request.CreateEvent(
@@ -102,7 +105,10 @@ internal class ExecuteOrderHandler : ICommandHandler<ExecuteOrderCommand, Execut
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
 
-        var tradeOperations = response.CreateOperations(instrumentId, portfolioIdentity);
+        var tradeOperations = response.CreateOperations(
+            instrumentId,
+            portfolioIdentity,
+            request.CreatedAt);
 
         _logger.LogDebug($"Publish ExecuteOrder operations for OrderId={response.OrderId}");
 

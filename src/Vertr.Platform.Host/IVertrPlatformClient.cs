@@ -1,22 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Refit;
 using Vertr.MarketData.Contracts;
-using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Host.Requests;
-using Vertr.PortfolioManager.Application.Services;
 using Vertr.PortfolioManager.Contracts;
-using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host;
 
 public interface IVertrPlatformClient
 {
     #region market-data
-
-    [Get("/market-data/subsciptions")]
-    public Task<CandleSubscription[]?> GetSubscriptions();
 
     [Get("/market-data/instruments")]
     public Task<Instrument[]?> GetInstruments();

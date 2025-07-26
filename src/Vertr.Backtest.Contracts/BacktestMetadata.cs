@@ -1,0 +1,24 @@
+namespace Vertr.Backtest.Contracts;
+
+public class BacktestMetadata
+{
+    public Guid Id { get; set; }
+
+    public required string Name { get; set; }
+
+    public string? Description { get; set; }
+
+    public Guid InstrumentId { get; init; }
+
+    public required string AccountId { get; init; }
+
+    public Guid SubAccountId { get; init; }
+
+    public long QtyLots { get; init; }
+
+    public bool IsActive { get; init; }
+
+    public string? ParamsJson { get; init; }
+
+    public DateTime UpdatedAt { get; set; }
+}

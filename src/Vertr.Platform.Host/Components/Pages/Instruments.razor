@@ -11,15 +11,24 @@
     OnCellClick="HandleCellClick"
     OnCellFocus="HandleCellFocus"
     Items="@people"
-    Pagination="@pagination">
+    Pagination="@pagination"
+    RowSize="@DataGridRowSize.Medium">
     <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
     <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
     <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+    <TemplateColumn Title="Bonus">
+        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => Bonus(context))">Regular</FluentButton>
+        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => DoubleBonus(context))">Double</FluentButton>
+    </TemplateColumn>
 </FluentDataGrid>
 
 <FluentPaginator State="@pagination" />
 
+<p><strong>@message</strong></p>
+
 @code {
+    string message = string.Empty;
+
     PaginationState pagination = new PaginationState() { ItemsPerPage = 2 };
 
     record Person(int PersonId, string Name, DateOnly BirthDate);
@@ -35,6 +44,10 @@
     }.AsQueryable();
 
     private RenderFragment template = @<span />;
+
+    void Bonus(Person p) => message = $"You want to give {p.Name} a regular bonus";
+
+    void DoubleBonus(Person p) => message = $"You want to give {p.Name} a double bonus";
 
     private void HandleRowClick(FluentDataGridRow<Person> row)
     {

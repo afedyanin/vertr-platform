@@ -25,9 +25,28 @@ body {
 }
 
 .content {
-    padding: 0.5rem 1.5rem;
-    align-self: stretch !important;
-    width: 100%;
+  display: flex;
+  background-color: var(--neutral-layer-1);
+  padding: 0.5rem 1.5rem;
+  align-self: stretch !important;
+  width: 100%;
+}
+
+article {
+  padding: 1.5rem 1rem;
+  border-right: 1px solid var(--neutral-stroke-divider-rest);
+  margin: 0 0;
+  overflow-x: hidden;
+  transition: all 300ms ease-in-out;
+  width: calc(100% - 18rem);
+}
+
+aside {
+  padding: 1.5rem 1rem;
+  top: 0px;
+  height: 100vh;
+  position: sticky;
+  width: 18rem;
 }
 
 .manage {

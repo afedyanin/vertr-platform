@@ -1,14 +1,26 @@
-﻿@inherits LayoutComponentBase
+@using Vertr.Platform.Host.Components.Common
+@inherits LayoutComponentBase
 
 <FluentLayout>
     <FluentHeader>
         FluentBlazorApp
     </FluentHeader>
-    <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+    <FluentStack Class="body-stack" Orientation="Orientation.Horizontal" Width="100%" HorizontalGap="0">
         <NavMenu />
-        <FluentBodyContent Class="body-content">
+        <FluentBodyContent id="body-content" Style="height: calc(100dvh - 90px);">
             <div class="content">
-                @Body
+                <article id="article">
+                    <FluentMessageBarProvider Section="@App.MESSAGES_TOP" />
+                    @Body
+                </article>
+                <aside>
+                    <ConsoleLog />
+                </aside>
+
+                <FluentToastProvider MaxToastCount="10" />
+                <FluentDialogProvider />
+                <FluentTooltipProvider />
+
             </div>
         </FluentBodyContent>
     </FluentStack>

@@ -22,6 +22,8 @@
     OnCellFocus="HandleCellFocus"
     Items="@people"
     Pagination="@pagination"
+    ShowHover=true
+    DisplayMode="DataGridDisplayMode.Table"
     RowSize="@DataGridRowSize.Medium">
     <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
     <PropertyColumn Property="@(p => p.FirstName)" Sortable="true" />

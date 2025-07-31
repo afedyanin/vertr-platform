@@ -16,7 +16,8 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
     {
         var request = new Tinkoff.InvestApi.V1.FindInstrumentRequest
         {
-            Query = query
+            Query = query,
+            ApiTradeAvailableFlag = true,
         };
 
         var response = await InvestApiClient.Instruments.FindInstrumentAsync(request);

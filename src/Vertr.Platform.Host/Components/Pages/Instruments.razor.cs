@@ -90,10 +90,9 @@ public partial class Instruments
 
         DialogParameters parameters = new()
         {
-            Title = $"Hello {simplePerson.FirstName}",
-            PrimaryAction = "Yes",
-            PrimaryActionEnabled = false,
-            SecondaryAction = "No",
+            Title = "Search instrument",
+            PrimaryAction = "Select",
+            SecondaryAction = null,
             Width = "500px",
             TrapFocus = _trapFocus,
             Modal = _modal,

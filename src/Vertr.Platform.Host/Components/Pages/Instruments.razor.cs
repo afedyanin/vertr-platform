@@ -100,7 +100,7 @@ public partial class Instruments
             PreventScroll = true
         };
 
-        IDialogReference dialog = await DialogService.ShowDialogAsync<SimpleDialog>(simplePerson, parameters);
+        IDialogReference dialog = await DialogService.ShowDialogAsync<InstrumentScreener>(simplePerson, parameters);
         DialogResult? result = await dialog.Result;
 
 

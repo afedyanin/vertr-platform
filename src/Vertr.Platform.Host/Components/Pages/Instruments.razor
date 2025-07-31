@@ -6,7 +6,14 @@
 
 <h3>Instruments</h3>
 
-<FluentPaginator State="@pagination" SummaryTemplate="@template" />
+
+<FluentStack>
+    <FluentButton @onclick="@OpenDialogAsync" Appearance="Appearance.Accent">
+        New Item
+    </FluentButton>
+    <FluentSpacer />
+    <FluentPaginator State="@pagination" SummaryTemplate="@template" />
+</FluentStack>
 
 <FluentDataGrid TGridItem=SimplePerson
     OnRowClick="HandleRowClick"
@@ -21,7 +28,7 @@
     <PropertyColumn Property="@(p => p.LastName)" Sortable="true" />
     <PropertyColumn Property="@(p => p.Age)" Sortable="true" />
     <TemplateColumn Title="Details">
-        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => OpenPanelRightAsync(context))">...</FluentButton>
+        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => OpenPanelRightAsync(context))">>>></FluentButton>
     </TemplateColumn>
 </FluentDataGrid>
 

@@ -6,6 +6,9 @@ namespace Vertr.Platform.Host.Components.Pages;
 
 public partial class Instruments
 {
+    private bool _trapFocus = true;
+    private bool _modal = true;
+
     private string message = string.Empty;
 
     private PaginationState pagination = new PaginationState() { ItemsPerPage = 2 };
@@ -26,8 +29,9 @@ public partial class Instruments
 
     private void DoubleBonus(SimplePerson p) => message = $"You want to give {p.FirstName} {p.LastName} a double bonus";
 
-    private void HandleRowClick(FluentDataGridRow<SimplePerson> row)
+    private async Task HandleRowClick(FluentDataGridRow<SimplePerson> row)
     {
+        // await OpenPanelRightAsync(row.Item);
         DemoLogger.WriteLine($"Row clicked: {row.RowIndex}");
     }
 
@@ -55,13 +59,13 @@ public partial class Instruments
             Content = person,
             Alignment = HorizontalAlignment.Right,
             Title = $"Hello {person.FirstName}",
-            PrimaryAction = "Yes",
-            SecondaryAction = "No",
+            PrimaryAction = "Close",
+            SecondaryAction = null,
+            Width = "500px"
         });
         DialogResult result = await _dialog.Result;
         HandlePanel(result);
     }
-
     private static void HandlePanel(DialogResult result)
     {
         if (result.Cancelled)
@@ -75,6 +79,39 @@ public partial class Instruments
             var simplePerson = result.Data as SimplePerson;
             DemoLogger.WriteLine($"Panel closed by {simplePerson?.FirstName} {simplePerson?.LastName} ({simplePerson?.Age})");
             return;
+        }
+    }
+
+    private async Task OpenDialogAsync()
+    {
+        DemoLogger.WriteLine($"Open dialog centered");
+
+        var simplePerson = people.First();
+
+        DialogParameters parameters = new()
+        {
+            Title = $"Hello {simplePerson.FirstName}",
+            PrimaryAction = "Yes",
+            PrimaryActionEnabled = false,
+            SecondaryAction = "No",
+            Width = "500px",
+            TrapFocus = _trapFocus,
+            Modal = _modal,
+            PreventScroll = true
+        };
+
+        IDialogReference dialog = await DialogService.ShowDialogAsync<SimpleDialog>(simplePerson, parameters);
+        DialogResult? result = await dialog.Result;
+
+
+        if (result.Data is not null)
+        {
+            simplePerson = result.Data as SimplePerson;
+            DemoLogger.WriteLine($"Dialog closed by {simplePerson?.FirstName} {simplePerson?.LastName} ({simplePerson?.Age}) - Canceled: {result.Cancelled}");
+        }
+        else
+        {
+            DemoLogger.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
         }
     }
 }

@@ -1,11 +1,14 @@
 @page "/instruments"
 @using Vertr.Platform.Host.Components.Common
+@using Vertr.Platform.Host.Components.Models
+
+@inject IDialogService DialogService
 
 <h3>Instruments</h3>
 
 <FluentPaginator State="@pagination" SummaryTemplate="@template" />
 
-<FluentDataGrid TGridItem=Person
+<FluentDataGrid TGridItem=SimplePerson
     OnRowClick="HandleRowClick"
     OnRowFocus="HandleRowFocus"
     OnCellClick="HandleCellClick"
@@ -14,11 +17,11 @@
     Pagination="@pagination"
     RowSize="@DataGridRowSize.Medium">
     <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
-    <TemplateColumn Title="Bonus">
-        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => Bonus(context))">Regular</FluentButton>
-        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => DoubleBonus(context))">Double</FluentButton>
+    <PropertyColumn Property="@(p => p.FirstName)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.LastName)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Age)" Sortable="true" />
+    <TemplateColumn Title="Details">
+        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => OpenPanelRightAsync(context))">...</FluentButton>
     </TemplateColumn>
 </FluentDataGrid>
 
@@ -26,46 +29,6 @@
 
 <p><strong>@message</strong></p>
 
-@code {
-    string message = string.Empty;
-
-    PaginationState pagination = new PaginationState() { ItemsPerPage = 2 };
-
-    record Person(int PersonId, string Name, DateOnly BirthDate);
-
-    IQueryable<Person> people = new[]
-    {
-        new Person(10895, "Jean Martin", new DateOnly(1985, 3, 16)),
-        new Person(10944, "António Langa", new DateOnly(1991, 12, 1)),
-        new Person(11203, "Julie Smith", new DateOnly(1958, 10, 10)),
-        new Person(11205, "Nur Sari", new DateOnly(1922, 4, 27)),
-        new Person(11898, "Jose Hernandez", new DateOnly(2011, 5, 3)),
-        new Person(12130, "Kenji Sato", new DateOnly(2004, 1, 9)),
-    }.AsQueryable();
-
+@code{
     private RenderFragment template = @<span />;
-
-    void Bonus(Person p) => message = $"You want to give {p.Name} a regular bonus";
-
-    void DoubleBonus(Person p) => message = $"You want to give {p.Name} a double bonus";
-
-    private void HandleRowClick(FluentDataGridRow<Person> row)
-    {
-        DemoLogger.WriteLine($"Row clicked: {row.RowIndex}");
-    }
-
-    private void HandleRowFocus(FluentDataGridRow<Person> row)
-    {
-        DemoLogger.WriteLine($"Row focused: {row.RowIndex}");
-    }
-
-    private void HandleCellClick(FluentDataGridCell<Person> cell)
-    {
-        DemoLogger.WriteLine($"Cell clicked: {cell.GridColumn}");
-    }
-
-    private void HandleCellFocus(FluentDataGridCell<Person> cell)
-    {
-        DemoLogger.WriteLine($"Cell focused : {cell.GridColumn}");
-    }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
 using Vertr.Platform.Host.Components.Common;
@@ -6,59 +7,23 @@ namespace Vertr.Platform.Host.Components.Pages;
 
 public partial class Instruments
 {
-    private bool _trapFocus = true;
-    private bool _modal = true;
-
-    private string message = string.Empty;
-
-    private PaginationState pagination = new PaginationState() { ItemsPerPage = 2 };
-
-    private IQueryable<Instrument> instruments = new[]
-    {
-        new Instrument
-        {
-            Id = Guid.NewGuid(),
-            Symbol = new Symbol("CCC", "TTT"),
-            Currency = "rub",
-            Name = "Test instrument",
-            LotSize = 1,
-        },
-        new Instrument
-        {
-            Id = Guid.NewGuid(),
-            Symbol = new Symbol("AAA", "LLL"),
-            Currency = "rub",
-            Name = "Test instrument",
-            LotSize = 1,
-        },
-        new Instrument
-        {
-            Id = Guid.NewGuid(),
-            Symbol = new Symbol("CCC", "RRRR"),
-            Currency = "rub",
-            Name = "Test instrument",
-            LotSize = 1,
-        },
-        new Instrument
-        {
-            Id = Guid.NewGuid(),
-            Symbol = new Symbol("BBB", "REW"),
-            Currency = "rub",
-            Name = "Test instrument",
-            LotSize = 1,
-        },
-        new Instrument
-        {
-            Id = Guid.NewGuid(),
-            Symbol = new Symbol("EEE", "TTT"),
-            Currency = "rub",
-            Name = "Test instrument",
-            LotSize = 1,
-        },
-
-    }.AsQueryable();
-
     private IDialogReference? _dialog;
+
+    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 2 };
+
+    private IQueryable<Instrument> _instrumentList { get; set; }
+
+    [Inject]
+    private IHttpClientFactory _httpClientFactory { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        var items = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments");
+        _instrumentList = items?.AsQueryable() ?? Array.Empty<Instrument>().AsQueryable();
+    }
 
     private async Task HandleRowClick(FluentDataGridRow<Instrument> row)
     {
@@ -83,7 +48,7 @@ public partial class Instruments
 
     private async Task OpenPanelRightAsync(Instrument instrument)
     {
-        DemoLogger.WriteLine($"Open right panel");
+        // DemoLogger.WriteLine($"Open right panel");
 
         _dialog = await DialogService.ShowPanelAsync<InstrumentPanel>(instrument, new DialogParameters<Instrument>()
         {
@@ -101,23 +66,23 @@ public partial class Instruments
     {
         if (result.Cancelled)
         {
-            DemoLogger.WriteLine($"Panel cancelled");
+            // DemoLogger.WriteLine($"Panel cancelled");
             return;
         }
 
         if (result.Data is not null)
         {
             var instrument = result.Data as Instrument;
-            DemoLogger.WriteLine($"Panel closed by {instrument?.Name}");
+            // DemoLogger.WriteLine($"Panel closed by {instrument?.Name}");
             return;
         }
     }
 
     private async Task OpenDialogAsync()
     {
-        DemoLogger.WriteLine($"Open dialog centered");
+        // DemoLogger.WriteLine($"Open dialog centered");
 
-        var selected = instruments.First();
+        var selected = _instrumentList.First();
 
         DialogParameters parameters = new()
         {
@@ -125,8 +90,8 @@ public partial class Instruments
             PrimaryAction = "Select",
             SecondaryAction = null,
             Width = "500px",
-            TrapFocus = _trapFocus,
-            Modal = _modal,
+            TrapFocus = true,
+            Modal = true,
             PreventScroll = true
         };
 
@@ -137,11 +102,11 @@ public partial class Instruments
         if (result.Data is not null)
         {
             selected = result.Data as Instrument;
-            DemoLogger.WriteLine($"Dialog closed by {selected?.Name} Canceled: {result.Cancelled}");
+            //DemoLogger.WriteLine($"Dialog closed by {selected?.Name} Canceled: {result.Cancelled}");
         }
         else
         {
-            DemoLogger.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
+            //DemoLogger.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
         }
     }
 }

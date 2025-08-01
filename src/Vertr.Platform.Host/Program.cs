@@ -24,6 +24,8 @@ public class Program
 
         builder.Services.AddFluentUIComponents();
 
+        builder.Services.AddHttpClient("backend", client => client.BaseAddress = new Uri("https://localhost:7085"));
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 

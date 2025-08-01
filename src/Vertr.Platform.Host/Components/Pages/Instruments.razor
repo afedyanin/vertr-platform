@@ -10,10 +10,10 @@
 
 <FluentStack>
     <FluentButton @onclick="@OpenDialogAsync" Appearance="Appearance.Accent">
-        New Item
+        Add
     </FluentButton>
     <FluentSpacer />
-    <FluentPaginator State="@pagination" SummaryTemplate="@template" />
+    <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
 </FluentStack>
 
 <FluentDataGrid TGridItem=Instrument
@@ -21,8 +21,8 @@
     OnRowFocus="HandleRowFocus"
     OnCellClick="HandleCellClick"
     OnCellFocus="HandleCellFocus"
-    Items="@instruments"
-    Pagination="@pagination"
+    Items="@_instrumentList"
+    Pagination="@_pagination"
     ShowHover=true
     DisplayMode="DataGridDisplayMode.Table"
     RowSize="@DataGridRowSize.Medium">
@@ -33,16 +33,9 @@
     <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
     <PropertyColumn Property="@(p => p.Currency)" Sortable="true" />
     <PropertyColumn Property="@(p => p.LotSize)" Sortable="true" />
-<!--
-        <TemplateColumn Title="Details">
-            <FluentButton Appearance="Appearance.Accent" @onclick="@(() => OpenPanelRightAsync(context))">>>></FluentButton>
-        </TemplateColumn>
--->
 </FluentDataGrid>
 
-<FluentPaginator State="@pagination" />
-
-<p><strong>@message</strong></p>
+<FluentPaginator State="@_pagination" />
 
 @code{
     private RenderFragment template = @<span />;

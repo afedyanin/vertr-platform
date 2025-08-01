@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts;
 using Vertr.TinvestGateway.Application.Proxy;
@@ -44,7 +43,7 @@ public class TinvestGatewayMarketDataTests
     public async Task CanGetInstrumentById(string instrumentId)
     {
         var gateway = new TinvestGatewayMarketData(_client);
-        var instrument = await gateway.GetInstrument(Guid.Parse(instrumentId));
+        var instrument = await gateway.GetInstrumentById(Guid.Parse(instrumentId));
 
         Console.WriteLine(instrument);
 
@@ -56,7 +55,7 @@ public class TinvestGatewayMarketDataTests
     {
         var gateway = new TinvestGatewayMarketData(_client);
         var symbol = new Symbol(classCode, ticker);
-        var instrument = await gateway.GetInstrument(symbol);
+        var instrument = await gateway.GetInstrumentBySymbol(symbol);
 
         Console.WriteLine(instrument);
 

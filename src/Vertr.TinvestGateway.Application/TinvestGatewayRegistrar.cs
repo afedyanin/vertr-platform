@@ -12,21 +12,21 @@ namespace Vertr.TinvestGateway.Application;
 
 public static class TinvestGatewayRegistrar
 {
-    public static IServiceCollection AddTinvestGateway(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddTinvestGateways(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOptions<TinvestSettings>().BindConfiguration(nameof(TinvestSettings));
         services.AddInvestApiClient((_, settings) => configuration.Bind($"{nameof(TinvestSettings)}:{nameof(InvestApiSettings)}", settings));
 
         services.AddTransient<IMarketDataGateway, TinvestGatewayMarketData>();
         services.AddTransient<IPortfolioGateway, TinvestGatewayPortfolio>();
-        services.AddHostedService<MarketDataStreamService>();
+        services.AddTransient<IOrderExecutionGateway, TinvestGatewayOrders>();
 
         return services;
     }
 
-    public static IServiceCollection AddTinvestOrders(this IServiceCollection services)
+    public static IServiceCollection AddTinvestStreams(this IServiceCollection services)
     {
-        services.AddTransient<IOrderExecutionGateway, TinvestGatewayOrders>();
+        services.AddHostedService<MarketDataStreamService>();
         services.AddHostedService<OrderTradesStreamService>();
         services.AddHostedService<OrderStateStreamService>();
 

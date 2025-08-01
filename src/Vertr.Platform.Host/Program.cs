@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Platform.Host.Components;
+using Vertr.TinvestGateway.Application;
 
 namespace Vertr.Platform.Host;
 
@@ -11,12 +12,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        /*
         builder.Services
             .AddControllers()
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-        */
 
         // Add services to the container.
         builder.Services.AddRazorComponents()
@@ -24,7 +23,6 @@ public class Program
 
         builder.Services.AddFluentUIComponents();
 
-        /*
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
@@ -32,10 +30,12 @@ public class Program
         var connectionString = configuration.GetConnectionString(_connStringName);
 
         // Add modules
-        builder.Services.AddTinvestGateway(configuration);
-        builder.Services.AddTinvestOrders();
+        builder.Services.AddTinvestGateways(configuration);
 
-        builder.Services.AddMarketData();
+        //builder.Services.AddTinvestOrders();
+
+        //builder.Services.AddMarketData();
+        /*
         builder.Services.AddOrderExecution();
         builder.Services.AddOrderExecutionDataAccess(connectionString!);
         builder.Services.AddPortfolioManager();
@@ -45,8 +45,8 @@ public class Program
 
         if (app.Environment.IsDevelopment())
         {
-            // app.UseSwagger();
-            // app.UseSwaggerUI();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
         else
         {
@@ -63,9 +63,9 @@ public class Program
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
 
-        //app.UseAuthorization();
+        app.UseAuthorization();
 
-        // app.MapControllers();
+        app.MapControllers();
 
         app.Run();
     }

@@ -26,7 +26,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         return instruments;
     }
 
-    public async Task<Instrument?> GetInstrument(Guid instrumentId)
+    public async Task<Instrument?> GetInstrumentById(Guid instrumentId)
     {
         var request = new Tinkoff.InvestApi.V1.InstrumentRequest
         {
@@ -46,7 +46,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         return instrument;
     }
 
-    public async Task<Instrument?> GetInstrument(Symbol symbol)
+    public async Task<Instrument?> GetInstrumentBySymbol(Symbol symbol)
     {
         var request = new Tinkoff.InvestApi.V1.InstrumentRequest
         {
@@ -74,7 +74,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         DateTime to,
         int? limit)
     {
-        var instrument = await GetInstrument(symbol);
+        var instrument = await GetInstrumentBySymbol(symbol);
 
         if (instrument == null)
         {

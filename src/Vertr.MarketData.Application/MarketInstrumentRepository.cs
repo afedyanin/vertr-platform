@@ -4,7 +4,7 @@ using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.MarketData.Application;
-internal class StaticMarketDataProvider : IMarketInstrumentRepository
+internal class MarketInstrumentRepository : IMarketInstrumentRepository
 {
     private readonly MarketDataSettings _settings;
     private readonly IMarketDataGateway _gateway;
@@ -12,7 +12,7 @@ internal class StaticMarketDataProvider : IMarketInstrumentRepository
     private readonly Dictionary<Guid, Instrument> _instrumentsById = [];
     private readonly Dictionary<Symbol, Instrument> _instruments = [];
 
-    public StaticMarketDataProvider(
+    public MarketInstrumentRepository(
         IOptions<MarketDataSettings> options,
         IMarketDataGateway gateway)
     {
@@ -42,7 +42,7 @@ internal class StaticMarketDataProvider : IMarketInstrumentRepository
 
         foreach (var item in _settings.Currencies.Values)
         {
-            var instrument = await _gateway.GetInstrument(item);
+            var instrument = await _gateway.GetInstrumentById(item);
             if (instrument != null)
             {
                 _instrumentsById[instrument.Id] = instrument;
@@ -52,7 +52,7 @@ internal class StaticMarketDataProvider : IMarketInstrumentRepository
 
         foreach (var instrumentId in _settings.Instruments)
         {
-            var instrument = await _gateway.GetInstrument(instrumentId);
+            var instrument = await _gateway.GetInstrumentById(instrumentId);
             if (instrument != null)
             {
                 _instrumentsById[instrument.Id] = instrument;

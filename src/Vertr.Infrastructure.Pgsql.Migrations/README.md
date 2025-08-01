@@ -20,7 +20,11 @@ dotnet ef migrations add MarketDataTables --context MarketDataDbContext
 dotnet ef database update --context MarketDataDbContext
 ```
 
-### 
+###  Cleanup
+``` sql
+DELETE FROM public.instruments;
+```
+
 
 
 ## Run OrderExecution tablse migration 

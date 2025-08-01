@@ -11,7 +11,6 @@ internal static class InstrumentConverter
             Symbol = new Symbol(instrument.ClassCode, instrument.Ticker),
             InstrumentType = instrument.InstrumentType,
             Name = instrument.Name,
-            InstrumentKind = instrument.InstrumentKind.ToString(),
         };
 
 public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.Instrument instrument)
@@ -21,7 +20,6 @@ public static Instrument ToInstrument(this Tinkoff.InvestApi.V1.Instrument instr
             Symbol = new Symbol(instrument.ClassCode, instrument.Ticker),
             InstrumentType = instrument.InstrumentType,
             Name = instrument.Name,
-            InstrumentKind = instrument.InstrumentKind.ToString(),
             Currency = instrument.Currency,
             LotSize = instrument.Lot
         };

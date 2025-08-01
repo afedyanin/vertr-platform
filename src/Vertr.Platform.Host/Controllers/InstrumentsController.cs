@@ -16,14 +16,14 @@ public class InstrumentsController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> GetInstruments()
+    public async Task<IActionResult> GetAll()
     {
         var instruments = await _instrumentRepository.GetAll();
         return Ok(instruments);
     }
 
     [HttpGet("{instrumentId}")]
-    public async Task<IActionResult> GetInstrumentById(Guid instrumentId)
+    public async Task<IActionResult> GetById(Guid instrumentId)
     {
         var instrument = await _instrumentRepository.GetById(instrumentId);
 
@@ -36,7 +36,7 @@ public class InstrumentsController : ControllerBase
     }
 
     [HttpPost()]
-    public async Task<IActionResult> SaveInstrument([FromBody] Instrument instrument)
+    public async Task<IActionResult> Save([FromBody] Instrument instrument)
     {
         var saved = await _instrumentRepository.Save(instrument);
         if (!saved)
@@ -46,8 +46,19 @@ public class InstrumentsController : ControllerBase
         return Ok(instrument.Id);
     }
 
+    [HttpPost("import")]
+    public async Task<IActionResult> Import([FromBody] Instrument[] instruments)
+    {
+        foreach (var instrument in instruments)
+        {
+            _ = await _instrumentRepository.Save(instrument);
+        }
+
+        return Ok();
+    }
+
     [HttpDelete("{instrumentId}")]
-    public async Task<IActionResult> DeleteInstrument(Guid instrumentId)
+    public async Task<IActionResult> Delete(Guid instrumentId)
     {
         var deletedCount = await _instrumentRepository.Delete(instrumentId);
         return Ok();

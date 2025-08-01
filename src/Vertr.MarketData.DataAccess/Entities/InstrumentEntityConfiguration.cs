@@ -28,9 +28,6 @@ internal class InstrumentEntityConfiguration : IEntityTypeConfiguration<Instrume
             .HasColumnName("name")
             .IsRequired();
 
-        builder.Property(e => e.InstrumentKind)
-            .HasColumnName("instrument_kind");
-
         builder.Property(e => e.Currency)
             .HasColumnName("currency");
 

@@ -48,7 +48,6 @@ internal class MarketDataInstrumentRepository : RepositoryBase, IMarketDataInstr
         if (existing != null)
         {
             existing.Currency = instrument.Currency;
-            existing.InstrumentKind = instrument.InstrumentKind;
             existing.InstrumentType = instrument.InstrumentType;
             existing.LotSize = instrument.LotSize;
             existing.Name = instrument.Name;

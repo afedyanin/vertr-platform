@@ -6,7 +6,6 @@ public record class Instrument
     public required Symbol Symbol { get; set; }
     public string? InstrumentType { get; set; }
     public string? Name { get; set; }
-    public string? InstrumentKind { get; set; }
     public string? Currency { get; set; }
     public decimal? LotSize { get; set; }
 }

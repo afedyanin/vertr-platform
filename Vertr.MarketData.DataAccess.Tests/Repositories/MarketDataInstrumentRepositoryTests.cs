@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Vertr.MarketData.Contracts;
 
 namespace Vertr.MarketData.DataAccess.Tests.Repositories;
@@ -5,6 +6,12 @@ namespace Vertr.MarketData.DataAccess.Tests.Repositories;
 [TestFixture(Category = "Database", Explicit = true)]
 public class MarketDataInstrumentRepositoryTests : RepositoryTestBase
 {
+    private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+    {
+        WriteIndented = true,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
     [Test]
     public async Task CanGetInstruments()
     {
@@ -63,7 +70,6 @@ public class MarketDataInstrumentRepositoryTests : RepositoryTestBase
         };
 
         var saved = await InstrumentsRepo.Save(newItem);
-
         Assert.That(saved, Is.True);
     }
 
@@ -73,5 +79,18 @@ public class MarketDataInstrumentRepositoryTests : RepositoryTestBase
         var guid = Guid.Parse(instrumentId);
         var deleted = await InstrumentsRepo.Delete(guid);
         Assert.That(deleted, Is.EqualTo(1));
+    }
+
+    [TestCase("sample_data\\instruments.json")]
+    public async Task CanImportInstruments(string filePath)
+    {
+        var json = await File.ReadAllTextAsync(filePath);
+        var instruments = JsonSerializer.Deserialize<Instrument[]>(json, _jsonOptions) ?? [];
+
+        foreach (var instr in instruments)
+        {
+            var saved = await InstrumentsRepo.Save(instr);
+            Assert.That(saved, Is.True);
+        }
     }
 }

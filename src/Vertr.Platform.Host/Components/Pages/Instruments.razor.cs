@@ -27,7 +27,10 @@ public partial class Instruments
 
     private async Task HandleRowClick(FluentDataGridRow<Instrument> row)
     {
-        await OpenPanelRightAsync(row.Item);
+        if (row.Item != null)
+        {
+            await OpenPanelRightAsync(row.Item);
+        }
         //DemoLogger.WriteLine($"Row clicked: {row.RowIndex}");
     }
 

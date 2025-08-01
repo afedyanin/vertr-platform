@@ -29,7 +29,7 @@ public class MarketDataStreamService : StreamServiceBase
         CancellationToken stoppingToken = default)
     {
         using var scope = ServiceProvider.CreateScope();
-        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IMarketInstrumentRepository>();
+        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IMarketDataInstrumentRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
         var marketDataProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<Candle>>();
         var marketDataRepository = scope.ServiceProvider.GetRequiredService<IMarketDataRepository>();

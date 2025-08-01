@@ -6,12 +6,12 @@ namespace Vertr.OrderExecution.Application.CommandHandlers;
 
 internal abstract class OrderHandlerBase
 {
-    private readonly IMarketInstrumentRepository _marketDataProvider;
+    private readonly IMarketDataInstrumentRepository _marketDataProvider;
     private readonly IPortfolioRepository _portfolioRepository;
 
     protected OrderHandlerBase(
         IPortfolioRepository portfolioRepository,
-        IMarketInstrumentRepository marketDataProvider
+        IMarketDataInstrumentRepository marketDataProvider
         )
     {
         _portfolioRepository = portfolioRepository;
@@ -36,7 +36,7 @@ internal abstract class OrderHandlerBase
             return 0L;
         }
 
-        var instrument = await _marketDataProvider.GetInstrumentById(instrumentId);
+        var instrument = await _marketDataProvider.GetById(instrumentId);
 
         if (instrument == null)
         {

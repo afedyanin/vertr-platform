@@ -34,7 +34,7 @@ internal class StrategyMetadataRepository : RepositoryBase, IStrategyMetadataRep
     public async Task<bool> Save(StrategyMetadata metadata)
     {
         using var context = await GetDbContext();
-        await context.Strategies.AddAsync(metadata);
+        context.Strategies.Add(metadata);
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;

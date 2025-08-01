@@ -32,7 +32,7 @@ internal class TradingSignalRepository : RepositoryBase, ITradingSignalRepositor
     public async Task<bool> Save(TradingSignal signal)
     {
         using var context = await GetDbContext();
-        await context.TradingSignals.AddAsync(signal);
+        context.TradingSignals.Add(signal);
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;

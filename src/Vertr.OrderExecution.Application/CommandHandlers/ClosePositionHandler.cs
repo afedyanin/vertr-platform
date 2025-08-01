@@ -13,7 +13,7 @@ internal class ClosePositionHandler : OrderHandlerBase, ICommandHandler<ClosePos
     public ClosePositionHandler(
         ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> executeOrderHandler,
         IPortfolioRepository portfolioRepository,
-        IMarketInstrumentRepository staticMarketDataProvider
+        IMarketDataInstrumentRepository staticMarketDataProvider
         ) : base(portfolioRepository, staticMarketDataProvider)
     {
         _executeOrderHandler = executeOrderHandler;

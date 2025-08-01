@@ -6,6 +6,23 @@
 dotnet tool install --global dotnet-ef
 ```
 
+## Run MarketData tables migration
+
+### Create migration
+
+```shell
+dotnet ef migrations add MarketDataTables --context MarketDataDbContext
+```
+
+### Run migration
+
+```shell
+dotnet ef database update --context MarketDataDbContext
+```
+
+### 
+
+
 ## Run OrderExecution tablse migration 
 
 ### Create migration
@@ -32,6 +49,23 @@ dotnet ef migrations add PortfolioTables --context PortfolioDbContext
 
 ```shell
 dotnet ef database update --context PortfolioDbContext
+```
+
+### 
+
+
+## Run MarketData tables migration
+
+### Create migration
+
+```shell
+dotnet ef migrations add MarketDataTables --context MarketDataDbContext
+```
+
+### Run migration
+
+```shell
+dotnet ef database update --context MarketDataDbContext
 ```
 
 ### 

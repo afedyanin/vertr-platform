@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host.Controllers;
@@ -8,17 +7,17 @@ namespace Vertr.Platform.Host.Controllers;
 
 public class MarketDataController : ControllerBase
 {
-    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
+    private readonly IMarketDataInstrumentRepository _instrumentRepository;
 
-    public MarketDataController(IMarketInstrumentRepository staticMarketDataProvider)
+    public MarketDataController(IMarketDataInstrumentRepository instrumentRepository)
     {
-        _staticMarketDataProvider = staticMarketDataProvider;
+        _instrumentRepository = instrumentRepository;
     }
 
     [HttpGet("instruments")]
     public async Task<IActionResult> GetInstruments()
     {
-        var instruments = await _staticMarketDataProvider.GetInstruments();
+        var instruments = await _instrumentRepository.GetAll();
         return Ok(instruments);
     }
 

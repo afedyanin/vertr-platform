@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Backtest.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.TinvestGateway.Application.Tests", "tests\Vertr.TinvestGateway.Application.Tests\Vertr.TinvestGateway.Application.Tests.csproj", "{9AF71B61-ABDA-4A29-BB9E-8F609874C79B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.MarketData.DataAccess", "src\Vertr.MarketData.DataAccess\Vertr.MarketData.DataAccess.csproj", "{09A05A36-78DD-4344-9904-A18A97ECAC59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -152,6 +154,10 @@ Global
 		{9AF71B61-ABDA-4A29-BB9E-8F609874C79B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AF71B61-ABDA-4A29-BB9E-8F609874C79B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AF71B61-ABDA-4A29-BB9E-8F609874C79B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09A05A36-78DD-4344-9904-A18A97ECAC59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09A05A36-78DD-4344-9904-A18A97ECAC59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09A05A36-78DD-4344-9904-A18A97ECAC59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09A05A36-78DD-4344-9904-A18A97ECAC59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -183,6 +189,7 @@ Global
 		{34422F11-CBAB-42DA-B338-47292C5D9D90} = {CCFDFF5A-0B78-46E5-B0BA-5C80256609A2}
 		{9E793D5A-8BBD-4E5B-9AE5-ADF97835A5C7} = {CCFDFF5A-0B78-46E5-B0BA-5C80256609A2}
 		{9AF71B61-ABDA-4A29-BB9E-8F609874C79B} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
+		{09A05A36-78DD-4344-9904-A18A97ECAC59} = {00C85C0F-89D2-4D0B-B93D-C172A3CEE3C2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

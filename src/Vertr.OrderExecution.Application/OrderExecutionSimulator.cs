@@ -9,11 +9,11 @@ namespace Vertr.OrderExecution.Application;
 
 internal class OrderExecutionSimulator : IOrderExecutionGateway
 {
-    private readonly IMarketInstrumentRepository _staticMarketDataProvider;
+    private readonly IMarketDataInstrumentRepository _staticMarketDataProvider;
     private readonly IDataProducer<OrderTrades> _orderTradesProducer;
 
     public OrderExecutionSimulator(
-        IMarketInstrumentRepository staticMarketDataProvider,
+        IMarketDataInstrumentRepository staticMarketDataProvider,
         IDataProducer<OrderTrades> orderTradesProducer)
     {
         _staticMarketDataProvider = staticMarketDataProvider;
@@ -22,7 +22,7 @@ internal class OrderExecutionSimulator : IOrderExecutionGateway
 
     public async Task<PostOrderResponse?> PostOrder(PostOrderRequest request)
     {
-        var instrument = await _staticMarketDataProvider.GetInstrumentById(request.InstrumentId);
+        var instrument = await _staticMarketDataProvider.GetById(request.InstrumentId);
 
         if (instrument == null)
         {

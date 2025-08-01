@@ -1,6 +1,6 @@
 using Microsoft.FluentUI.AspNetCore.Components;
+using Vertr.MarketData.Contracts;
 using Vertr.Platform.Host.Components.Common;
-using Vertr.Platform.Host.Components.Models;
 
 namespace Vertr.Platform.Host.Components.Pages;
 
@@ -13,55 +13,86 @@ public partial class Instruments
 
     private PaginationState pagination = new PaginationState() { ItemsPerPage = 2 };
 
-    private IQueryable<SimplePerson> people = new[]
+    private IQueryable<Instrument> instruments = new[]
     {
-        new SimplePerson(10895, "Jean", "Martin", 41),
-        new SimplePerson(10944, "António", "Langa", 24),
-        new SimplePerson(11203, "Julie", "Smith", 36),
-        new SimplePerson(11205, "Nur", "Sari", 54),
-        new SimplePerson(11898, "Jose", "Hernandez", 32),
-        new SimplePerson(12130, "Kenji", "Sato", 18),
+        new Instrument
+        {
+            Id = Guid.NewGuid(),
+            Symbol = new Symbol("CCC", "TTT"),
+            Currency = "rub",
+            Name = "Test instrument",
+            LotSize = 1,
+        },
+        new Instrument
+        {
+            Id = Guid.NewGuid(),
+            Symbol = new Symbol("AAA", "LLL"),
+            Currency = "rub",
+            Name = "Test instrument",
+            LotSize = 1,
+        },
+        new Instrument
+        {
+            Id = Guid.NewGuid(),
+            Symbol = new Symbol("CCC", "RRRR"),
+            Currency = "rub",
+            Name = "Test instrument",
+            LotSize = 1,
+        },
+        new Instrument
+        {
+            Id = Guid.NewGuid(),
+            Symbol = new Symbol("BBB", "REW"),
+            Currency = "rub",
+            Name = "Test instrument",
+            LotSize = 1,
+        },
+        new Instrument
+        {
+            Id = Guid.NewGuid(),
+            Symbol = new Symbol("EEE", "TTT"),
+            Currency = "rub",
+            Name = "Test instrument",
+            LotSize = 1,
+        },
+
     }.AsQueryable();
 
     private IDialogReference? _dialog;
 
-    private void Bonus(SimplePerson p) => message = $"You want to give {p.FirstName} {p.LastName} a regular bonus";
-
-    private void DoubleBonus(SimplePerson p) => message = $"You want to give {p.FirstName} {p.LastName} a double bonus";
-
-    private async Task HandleRowClick(FluentDataGridRow<SimplePerson> row)
+    private async Task HandleRowClick(FluentDataGridRow<Instrument> row)
     {
-        // await OpenPanelRightAsync(row.Item);
-        DemoLogger.WriteLine($"Row clicked: {row.RowIndex}");
+        await OpenPanelRightAsync(row.Item);
+        //DemoLogger.WriteLine($"Row clicked: {row.RowIndex}");
     }
 
-    private void HandleRowFocus(FluentDataGridRow<SimplePerson> row)
+    private void HandleRowFocus(FluentDataGridRow<Instrument> row)
     {
-        DemoLogger.WriteLine($"Row focused: {row.RowIndex}");
+        //DemoLogger.WriteLine($"Row focused: {row.RowIndex}");
     }
 
-    private void HandleCellClick(FluentDataGridCell<SimplePerson> cell)
+    private void HandleCellClick(FluentDataGridCell<Instrument> cell)
     {
-        DemoLogger.WriteLine($"Cell clicked: {cell.GridColumn}");
+        //DemoLogger.WriteLine($"Cell clicked: {cell.GridColumn}");
     }
 
-    private void HandleCellFocus(FluentDataGridCell<SimplePerson> cell)
+    private void HandleCellFocus(FluentDataGridCell<Instrument> cell)
     {
-        DemoLogger.WriteLine($"Cell focused : {cell.GridColumn}");
+        //DemoLogger.WriteLine($"Cell focused : {cell.GridColumn}");
     }
 
-    private async Task OpenPanelRightAsync(SimplePerson person)
+    private async Task OpenPanelRightAsync(Instrument instrument)
     {
         DemoLogger.WriteLine($"Open right panel");
 
-        _dialog = await DialogService.ShowPanelAsync<SimplePanel>(person, new DialogParameters<SimplePerson>()
+        _dialog = await DialogService.ShowPanelAsync<InstrumentPanel>(instrument, new DialogParameters<Instrument>()
         {
-            Content = person,
+            Content = instrument,
             Alignment = HorizontalAlignment.Right,
-            Title = $"Hello {person.FirstName}",
+            Title = $"{instrument.Name}",
             PrimaryAction = "Close",
             SecondaryAction = null,
-            Width = "500px"
+            Width = "400px",
         });
         DialogResult result = await _dialog.Result;
         HandlePanel(result);
@@ -76,8 +107,8 @@ public partial class Instruments
 
         if (result.Data is not null)
         {
-            var simplePerson = result.Data as SimplePerson;
-            DemoLogger.WriteLine($"Panel closed by {simplePerson?.FirstName} {simplePerson?.LastName} ({simplePerson?.Age})");
+            var instrument = result.Data as Instrument;
+            DemoLogger.WriteLine($"Panel closed by {instrument?.Name}");
             return;
         }
     }
@@ -86,7 +117,7 @@ public partial class Instruments
     {
         DemoLogger.WriteLine($"Open dialog centered");
 
-        var simplePerson = people.First();
+        var selected = instruments.First();
 
         DialogParameters parameters = new()
         {
@@ -99,14 +130,14 @@ public partial class Instruments
             PreventScroll = true
         };
 
-        IDialogReference dialog = await DialogService.ShowDialogAsync<InstrumentScreener>(simplePerson, parameters);
+        IDialogReference dialog = await DialogService.ShowDialogAsync<InstrumentScreener>(selected, parameters);
         DialogResult? result = await dialog.Result;
 
 
         if (result.Data is not null)
         {
-            simplePerson = result.Data as SimplePerson;
-            DemoLogger.WriteLine($"Dialog closed by {simplePerson?.FirstName} {simplePerson?.LastName} ({simplePerson?.Age}) - Canceled: {result.Cancelled}");
+            selected = result.Data as Instrument;
+            DemoLogger.WriteLine($"Dialog closed by {selected?.Name} Canceled: {result.Cancelled}");
         }
         else
         {

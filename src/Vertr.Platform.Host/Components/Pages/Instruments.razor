@@ -1,6 +1,7 @@
 @page "/instruments"
+
 @using Vertr.Platform.Host.Components.Common
-@using Vertr.Platform.Host.Components.Models
+@using Vertr.MarketData.Contracts
 
 @inject IDialogService DialogService
 
@@ -15,23 +16,28 @@
     <FluentPaginator State="@pagination" SummaryTemplate="@template" />
 </FluentStack>
 
-<FluentDataGrid TGridItem=SimplePerson
+<FluentDataGrid TGridItem=Instrument
     OnRowClick="HandleRowClick"
     OnRowFocus="HandleRowFocus"
     OnCellClick="HandleCellClick"
     OnCellFocus="HandleCellFocus"
-    Items="@people"
+    Items="@instruments"
     Pagination="@pagination"
     ShowHover=true
     DisplayMode="DataGridDisplayMode.Table"
     RowSize="@DataGridRowSize.Medium">
-    <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.FirstName)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.LastName)" Sortable="true" />
-    <PropertyColumn Property="@(p => p.Age)" Sortable="true" />
-    <TemplateColumn Title="Details">
-        <FluentButton Appearance="Appearance.Accent" @onclick="@(() => OpenPanelRightAsync(context))">>>></FluentButton>
-    </TemplateColumn>
+    <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Symbol.ClassCode)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Symbol.Ticker)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.InstrumentType)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Currency)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.LotSize)" Sortable="true" />
+<!--
+        <TemplateColumn Title="Details">
+            <FluentButton Appearance="Appearance.Accent" @onclick="@(() => OpenPanelRightAsync(context))">>>></FluentButton>
+        </TemplateColumn>
+-->
 </FluentDataGrid>
 
 <FluentPaginator State="@pagination" />

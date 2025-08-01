@@ -4,7 +4,7 @@ using Vertr.TinvestGateway.Proxy;
 
 namespace Vertr.TinvestGateway.Tests;
 
-[TestFixture(Category = "System", Explicit = true)]
+[TestFixture(Category = "Gateway", Explicit = true)]
 public class TinvestGatewayMarketDataTests
 {
     private static readonly InvestApiSettings _settings = new InvestApiSettings()

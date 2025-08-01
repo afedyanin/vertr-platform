@@ -11,4 +11,8 @@
     <ProjectReference Include="..\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Vertr.MarketData.DataAccess.Tests" />
+  </ItemGroup>
+
 </Project>

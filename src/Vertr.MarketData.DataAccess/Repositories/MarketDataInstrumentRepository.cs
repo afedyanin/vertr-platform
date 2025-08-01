@@ -40,7 +40,25 @@ internal class MarketDataInstrumentRepository : RepositoryBase, IMarketDataInstr
     public async Task<bool> Save(Instrument instrument)
     {
         using var context = await GetDbContext();
-        context.Instruments.Add(instrument);
+
+        var existing = await context
+            .Instruments
+            .FirstOrDefaultAsync(p => p.Id == instrument.Id);
+
+        if (existing != null)
+        {
+            existing.Currency = instrument.Currency;
+            existing.InstrumentKind = instrument.InstrumentKind;
+            existing.InstrumentType = instrument.InstrumentType;
+            existing.LotSize = instrument.LotSize;
+            existing.Name = instrument.Name;
+            existing.Symbol = instrument.Symbol;
+        }
+        else
+        {
+            context.Instruments.Add(instrument);
+        }
+
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;

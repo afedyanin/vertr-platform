@@ -22,8 +22,7 @@ internal class InstrumentEntityConfiguration : IEntityTypeConfiguration<Instrume
         symbol.Property(e => e.Ticker).HasColumnName("symbol_ticker");
 
         builder.Property(e => e.InstrumentType)
-            .HasColumnName("instrument_type")
-            .IsRequired();
+            .HasColumnName("instrument_type");
 
         builder.Property(e => e.Name)
             .HasColumnName("name")

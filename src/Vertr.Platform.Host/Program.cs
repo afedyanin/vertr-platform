@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Platform.Host.Components;
 using Vertr.TinvestGateway;
+using Vertr.MarketData.DataAccess;
 
 namespace Vertr.Platform.Host;
 
@@ -31,10 +32,10 @@ public class Program
 
         // Add modules
         builder.Services.AddTinvestGateways(configuration);
+        builder.Services.AddMarketDataAccess(connectionString!);
 
         //builder.Services.AddTinvestOrders();
 
-        //builder.Services.AddMarketData();
         /*
         builder.Services.AddOrderExecution();
         builder.Services.AddOrderExecutionDataAccess(connectionString!);

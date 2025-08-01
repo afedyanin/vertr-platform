@@ -4,7 +4,7 @@ using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host.Controllers;
 
-[Route("tinvest")]
+[Route("api/tinvest")]
 [ApiController]
 public class TinvestGatewayController : ControllerBase
 {

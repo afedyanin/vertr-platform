@@ -9,20 +9,20 @@ public partial class Instruments
 {
     private IDialogReference? _dialog;
 
-    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 2 };
+    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
 
     private IQueryable<Instrument> _instrumentList { get; set; }
 
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
+    private FluentDataGrid<Instrument> dataGrid;
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-        var items = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments");
-        _instrumentList = items?.AsQueryable() ?? Array.Empty<Instrument>().AsQueryable();
+        _instrumentList = await InitInstruments();
     }
 
     private async Task HandleRowClick(FluentDataGridRow<Instrument> row)
@@ -80,11 +80,12 @@ public partial class Instruments
 
     private async Task OpenDialogAsync()
     {
-        // DemoLogger.WriteLine($"Open dialog centered");
+        var dummyInstrument = new Instrument
+        {
+            Symbol = new Symbol("", "")
+        };
 
-        var selected = _instrumentList.First();
-
-        DialogParameters parameters = new()
+        var parameters = new DialogParameters()
         {
             Title = "Search instrument",
             PrimaryAction = "Select",
@@ -95,18 +96,46 @@ public partial class Instruments
             PreventScroll = true
         };
 
-        IDialogReference dialog = await DialogService.ShowDialogAsync<InstrumentScreener>(selected, parameters);
-        DialogResult? result = await dialog.Result;
-
+        var dialog = await DialogService.ShowDialogAsync<InstrumentScreener>(dummyInstrument, parameters);
+        var result = await dialog.Result;
 
         if (result.Data is not null)
         {
-            selected = result.Data as Instrument;
-            //DemoLogger.WriteLine($"Dialog closed by {selected?.Name} Canceled: {result.Cancelled}");
+            var selectedInstrument = result.Data as Instrument;
+            var instrumentId = selectedInstrument?.Id;
+
+            if (instrumentId != null)
+            {
+                DemoLogger.WriteLine($"Selected instrumentId={instrumentId}");
+                await AddInstrument(instrumentId.Value);
+                // TODO: Refresh grid
+            }
         }
         else
         {
-            //DemoLogger.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
+            // DemoLogger.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
         }
+    }
+
+    private async Task<IQueryable<Instrument>> InitInstruments()
+    {
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        var items = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments");
+        var res = items?.AsQueryable() ?? Array.Empty<Instrument>().AsQueryable();
+        return res;
+    }
+
+    private async Task AddInstrument(Guid instrumentId)
+    {
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        var item = await apiClient.GetFromJsonAsync<Instrument>($"api/tinvest/instrument-by-id/{instrumentId}");
+
+        if (item == null)
+        {
+            return;
+        }
+        var content = JsonContent.Create(item);
+        await apiClient.PostAsync("api/instruments", content);
+        _instrumentList = await InitInstruments();
     }
 }

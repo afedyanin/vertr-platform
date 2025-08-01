@@ -1,8 +1,5 @@
 @using Vertr.MarketData.Contracts
-
 @implements IDialogContentComponent<Instrument>
-
-<FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
 
 <FluentDialogBody>
     <FluentTextField Value="@Content.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
@@ -17,4 +14,8 @@
 @code {
     [Parameter]
     public Instrument Content { get; set; } = default!;
+
+    [CascadingParameter]
+    public FluentDialog? Dialog { get; set; }
 }
+

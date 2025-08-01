@@ -1,30 +1,27 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Vertr.Platform.Host.Components.Models;
+using Vertr.MarketData.Contracts;
 
 namespace Vertr.Platform.Host.Components.Common;
 
 public partial class InstrumentScreener
 {
     [Parameter]
-    public SimplePerson Content { get; set; } = default!;
+    public Instrument Content { get; set; } = default!;
 
     [CascadingParameter]
     public FluentDialog? Dialog { get; set; }
 
-    private FluentSearch? searchTest;
+    [Inject]
+    private IHttpClientFactory _httpClientFactory { get; set; }
 
     private string? searchValue = string.Empty;
 
-    private List<string> searchResults = defaultResults();
+    private List<Instrument> searchResults = defaultResults();
 
-    private static string defaultResultsText = "no results";
-    private static List<string> defaultResults()
-    {
-        return new() { defaultResultsText };
-    }
+    private static List<Instrument> defaultResults() => [];
 
-    private void HandleSearchInput()
+    private async Task HandleSearchInput()
     {
         if (string.IsNullOrWhiteSpace(searchValue))
         {
@@ -37,67 +34,23 @@ public partial class InstrumentScreener
 
             if (searchTerm.Length > 0)
             {
-                List<string> temp = searchData.Where(str => str.ToLower().Contains(searchTerm)).Select(str => str).ToList();
-                if (temp.Count() > 0)
+                using var apiClient = _httpClientFactory.CreateClient("backend");
+                var items = await apiClient.GetFromJsonAsync<Instrument[]>($"api/tinvest/instrument-find/{searchTerm}");
+
+                if (items != null && items.Count() > 0)
                 {
-                    searchResults = temp;
+                    searchResults = [.. items.Take(10)];
+                }
+                else
+                {
+                    searchResults = defaultResults();
                 }
             }
         }
     }
-
-    private List<string> searchData = new()
+    private void HandleOptionChanged(Instrument item)
     {
-        "Alabama",
-        "Alaska",
-        "Arizona",
-        "Arkansas",
-        "California",
-        "Colorado",
-        "Connecticut",
-        "Delaware",
-        "Florida",
-        "Georgia",
-        "Hawaii",
-        "Idaho",
-        "Illinois",
-        "Indiana",
-        "Iowa",
-        "Kansas",
-        "Kentucky",
-        "Louisiana",
-        "Maine",
-        "Maryland",
-        "Massachussets",
-        "Michigain",
-        "Minnesota",
-        "Mississippi",
-        "Missouri",
-        "Montana",
-        "Nebraska",
-        "Nevada",
-        "New Hampshire",
-        "New Jersey",
-        "New Mexico",
-        "New York",
-        "North Carolina",
-        "North Dakota",
-        "Ohio",
-        "Oklahoma",
-        "Oregon",
-        "Pennsylvania",
-        "Rhode Island",
-        "South Carolina",
-        "South Dakota",
-        "Texas",
-        "Tennessee",
-        "Utah",
-        "Vermont",
-        "Virginia",
-        "Washington",
-        "Wisconsin",
-        "West Virginia",
-        "Wyoming"
-    };
-
+        Content.Id = item.Id;
+        Content.Name = item.Name;
+    }
 }

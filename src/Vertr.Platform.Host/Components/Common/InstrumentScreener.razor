@@ -1,15 +1,22 @@
-@using Vertr.Platform.Host.Components.Models
+@using Vertr.MarketData.Contracts
 
-@implements IDialogContentComponent<SimplePerson>
+@implements IDialogContentComponent<Instrument>
 
-<FluentSearch @ref=searchTest
-              @bind-Value="@searchValue"
+<FluentKeyCode PreventDefaultOnly="[KeyCode.Escape]">
+
+<FluentSearch @bind-Value="@searchValue"
               @bind-Value:after=HandleSearchInput
-              Placeholder="Search for State" />
+              Placeholder="name or ticker" />
 <br />
-<FluentListbox aria-label="search results" Items=@searchResults TOption="string" SelectedOptionChanged="@(e => searchValue = (e != defaultResultsText ? e : string.Empty))" />
+<FluentListbox aria-label="search results"
+    Items=@searchResults
+    TOption="Instrument"
+    OptionText="@(p => $"{p.Symbol.ClassCode}.{p.Symbol.Ticker} ({p.Name})")"
+    SelectedOptionChanged=HandleOptionChanged
+/>
 
 <p>
-    You searched for: @searchValue
+    Selected: @Content?.Name
 </p>
 
+</FluentKeyCode>

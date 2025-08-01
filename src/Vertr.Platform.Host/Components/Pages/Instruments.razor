@@ -16,7 +16,9 @@
     <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
 </FluentStack>
 
-<FluentDataGrid TGridItem=Instrument
+<FluentDataGrid
+    @ref=dataGrid
+    TGridItem=Instrument
     OnRowClick="HandleRowClick"
     OnRowFocus="HandleRowFocus"
     OnCellClick="HandleCellClick"

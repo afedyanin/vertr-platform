@@ -108,7 +108,7 @@ public partial class Instruments
             {
                 DemoLogger.WriteLine($"Selected instrumentId={instrumentId}");
                 await AddInstrument(instrumentId.Value);
-                // TODO: Refresh grid
+                await dataGrid.RefreshDataAsync(force: true);
             }
         }
         else

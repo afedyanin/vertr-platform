@@ -16,6 +16,8 @@
     <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
 </FluentStack>
 
+<div style="display: table; table-layout: fixed; width: 100%;">
+    <div style="overflow-x: auto;">
 <FluentDataGrid
     @ref=dataGrid
     TGridItem=Instrument
@@ -36,6 +38,8 @@
     <PropertyColumn Property="@(p => p.Currency)" Sortable="true" />
     <PropertyColumn Property="@(p => p.LotSize)" Sortable="true" />
 </FluentDataGrid>
+
+</div></div>
 
 <FluentPaginator State="@_pagination" />
 

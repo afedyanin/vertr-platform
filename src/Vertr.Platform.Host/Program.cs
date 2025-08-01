@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Platform.Host.Components;
-using Vertr.TinvestGateway.Application;
+using Vertr.TinvestGateway;
 
 namespace Vertr.Platform.Host;
 

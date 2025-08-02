@@ -12,13 +12,6 @@
     <FluentTextField Value="@Content.InstrumentType" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Type:</FluentTextField>
     <FluentTextField Value="@Content.Currency" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Currency:</FluentTextField>
     <FluentTextField Value="@Content.LotSize.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Lot Size:</FluentTextField>
-
-    <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
-        style="width: 20%;"
-        Appearance=Appearance.Lightweight
-        Title="Delete"
-        OnClick="@(() => DemoLogger.WriteLine("Button clicked"))" />
-
 </FluentDialogBody>
 
 

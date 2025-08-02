@@ -36,6 +36,12 @@
     <PropertyColumn Property="@(p => p.InstrumentType)" Sortable="true" />
     <PropertyColumn Property="@(p => p.Currency)" Sortable="true" />
     <PropertyColumn Property="@(p => p.LotSize)" Sortable="true" />
+    <TemplateColumn Title="">
+         <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
+            Appearance=Appearance.Lightweight
+            Title="Delete"
+            @onclick="@(async () => await HandleDeleteAction(context))" />
+    </TemplateColumn>
 </FluentDataGrid>
 
 </div></div>

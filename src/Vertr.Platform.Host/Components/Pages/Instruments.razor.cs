@@ -27,10 +27,6 @@ public partial class Instruments
 
     private async Task HandleRowClick(FluentDataGridRow<Instrument> row)
     {
-        if (row.Item != null)
-        {
-            await OpenPanelRightAsync(row.Item);
-        }
         //DemoLogger.WriteLine($"Row clicked: {row.RowIndex}");
     }
 
@@ -39,8 +35,13 @@ public partial class Instruments
         //DemoLogger.WriteLine($"Row focused: {row.RowIndex}");
     }
 
-    private void HandleCellClick(FluentDataGridCell<Instrument> cell)
+    private async Task HandleCellClick(FluentDataGridCell<Instrument> cell)
     {
+        if (cell.Item != null && cell.GridColumn <= 6)
+        {
+            await OpenPanelRightAsync(cell.Item);
+        }
+
         //DemoLogger.WriteLine($"Cell clicked: {cell.GridColumn}");
     }
 
@@ -102,22 +103,21 @@ public partial class Instruments
         var dialog = await DialogService.ShowDialogAsync<InstrumentScreener>(dummyInstrument, parameters);
         var result = await dialog.Result;
 
-        if (result.Data is not null)
+        if (result.Data is null)
         {
-            var selectedInstrument = result.Data as Instrument;
-            var instrumentId = selectedInstrument?.Id;
+            return;
+        }
 
-            if (instrumentId != null)
-            {
-                DemoLogger.WriteLine($"Selected instrumentId={instrumentId}");
-                await AddInstrument(instrumentId.Value);
-                await dataGrid.RefreshDataAsync(force: true);
-            }
-        }
-        else
+        var selectedInstrument = result.Data as Instrument;
+        var instrumentId = selectedInstrument?.Id;
+
+        if (instrumentId == null)
         {
-            // DemoLogger.WriteLine($"Dialog closed - Canceled: {result.Cancelled}");
+            return;
         }
+
+        await AddInstrument(instrumentId.Value);
+        await dataGrid.RefreshDataAsync(force: true);
     }
 
     private async Task<IQueryable<Instrument>> InitInstruments()
@@ -131,14 +131,39 @@ public partial class Instruments
     private async Task AddInstrument(Guid instrumentId)
     {
         using var apiClient = _httpClientFactory.CreateClient("backend");
-        var item = await apiClient.GetFromJsonAsync<Instrument>($"api/tinvest/instrument-by-id/{instrumentId}");
+        var instrument = await apiClient.GetFromJsonAsync<Instrument>($"api/tinvest/instrument-by-id/{instrumentId}");
 
-        if (item == null)
+        if (instrument == null)
         {
             return;
         }
-        var content = JsonContent.Create(item);
+
+        DemoLogger.WriteLine($"Adding instrument: {instrument.Symbol.ClassCode}.{instrument.Symbol.Ticker} ({instrument.Name})");
+
+        var content = JsonContent.Create(instrument);
         await apiClient.PostAsync("api/instruments", content);
         _instrumentList = await InitInstruments();
+    }
+    private async Task HandleDeleteAction(Instrument instrument)
+    {
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            $"Delete instrument: {instrument.Name}?",
+            "Yes",
+            "No",
+            $"Deleteing {instrument.Symbol.ClassCode}.{instrument.Symbol.Ticker}");
+
+        var result = await confirmation.Result;
+
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        DemoLogger.WriteLine($"Deleting instrument: {instrument.Symbol.ClassCode}.{instrument.Symbol.Ticker} ({instrument.Name})");
+
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        await apiClient.DeleteAsync($"api/instruments/{instrument.Id}");
+        _instrumentList = await InitInstruments();
+        await dataGrid.RefreshDataAsync(force: true);
     }
 }

@@ -70,7 +70,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.TinvestGateway", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.TinvestGateway.Tests", "tests\Vertr.TinvestGateway.Tests\Vertr.TinvestGateway.Tests.csproj", "{3C52BF5B-4873-AE4C-A860-26F52C14143C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.MarketData.DataAccess.Tests", "Vertr.MarketData.DataAccess.Tests\Vertr.MarketData.DataAccess.Tests.csproj", "{28166922-0096-4EDD-92D1-513F8BE98FA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.MarketData.DataAccess.Tests", "tests\Vertr.MarketData.DataAccess.Tests\Vertr.MarketData.DataAccess.Tests.csproj", "{4B18CB8A-5B72-2616-45E0-F10A3C5467FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,10 +162,10 @@ Global
 		{3C52BF5B-4873-AE4C-A860-26F52C14143C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C52BF5B-4873-AE4C-A860-26F52C14143C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C52BF5B-4873-AE4C-A860-26F52C14143C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28166922-0096-4EDD-92D1-513F8BE98FA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28166922-0096-4EDD-92D1-513F8BE98FA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28166922-0096-4EDD-92D1-513F8BE98FA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28166922-0096-4EDD-92D1-513F8BE98FA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B18CB8A-5B72-2616-45E0-F10A3C5467FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B18CB8A-5B72-2616-45E0-F10A3C5467FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B18CB8A-5B72-2616-45E0-F10A3C5467FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B18CB8A-5B72-2616-45E0-F10A3C5467FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -199,7 +199,7 @@ Global
 		{DD5EBFFE-A6B3-413B-9F9C-95A9555734FD} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{1E39C24F-854A-7AC7-75FD-B424B3E24273} = {DD5EBFFE-A6B3-413B-9F9C-95A9555734FD}
 		{3C52BF5B-4873-AE4C-A860-26F52C14143C} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
-		{28166922-0096-4EDD-92D1-513F8BE98FA2} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
+		{4B18CB8A-5B72-2616-45E0-F10A3C5467FB} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

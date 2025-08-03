@@ -61,4 +61,20 @@ public class TinvestGatewayMarketDataTests
 
         Assert.Pass();
     }
+
+    [TestCase("e6123145-9665-43e0-8413-cd61b8aa9b13")]
+    public async Task CanGetCandles(string instrumentId)
+    {
+        var from = new DateTime(2025, 07, 29, 20, 0, 0);
+        var to = new DateTime(2025, 07, 31);
+        var gateway = new TinvestGatewayMarketData(_client);
+        var candles = await gateway.GetCandles(Guid.Parse(instrumentId), CandleInterval.Min_1, from, to, 100);
+
+        foreach (var candle in candles)
+        {
+            Console.WriteLine(candle);
+        }
+
+        Assert.Pass();
+    }
 }

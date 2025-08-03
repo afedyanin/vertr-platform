@@ -68,24 +68,17 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
     }
 
     public async Task<Candle[]?> GetCandles(
-        Symbol symbol,
+        Guid instrumentId,
         CandleInterval interval,
         DateTime from,
         DateTime to,
         int? limit)
     {
-        var instrument = await GetInstrumentBySymbol(symbol);
-
-        if (instrument == null)
-        {
-            return [];
-        }
-
         var request = new Tinkoff.InvestApi.V1.GetCandlesRequest
         {
             From = Timestamp.FromDateTime(from.ToUniversalTime()),
             To = Timestamp.FromDateTime(to.ToUniversalTime()),
-            InstrumentId = instrument.Id.ToString(),
+            InstrumentId = instrumentId.ToString(),
             Interval = interval.Convert(),
         };
 
@@ -95,7 +88,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         }
 
         var response = await InvestApiClient.MarketData.GetCandlesAsync(request);
-        var candles = response.Candles.ToArray().Convert(instrument.Id);
+        var candles = response.Candles.ToArray().Convert(instrumentId);
 
         return candles;
     }

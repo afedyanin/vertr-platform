@@ -66,7 +66,8 @@ public class TinvestGatewayMarketDataTests
     public async Task CanGetCandles(string instrumentId)
     {
         var gateway = new TinvestGatewayMarketData(_client);
-        var day = new DateOnly(2025, 07, 30);
+        //var day = new DateOnly(2025, 07, 30);
+        var day = DateOnly.FromDateTime(DateTime.UtcNow);
 
         var candles = await gateway.GetCandles(Guid.Parse(instrumentId), day);
 

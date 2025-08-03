@@ -8,9 +8,9 @@ namespace Vertr.Platform.Host.Controllers;
 
 public class InstrumentsController : ControllerBase
 {
-    private readonly IMarketDataInstrumentRepository _instrumentRepository;
+    private readonly IInstrumentsRepository _instrumentRepository;
 
-    public InstrumentsController(IMarketDataInstrumentRepository instrumentRepository)
+    public InstrumentsController(IInstrumentsRepository instrumentRepository)
     {
         _instrumentRepository = instrumentRepository;
     }

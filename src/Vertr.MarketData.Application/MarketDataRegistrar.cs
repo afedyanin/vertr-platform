@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Vertr.MarketData.Application.Repositories;
 using Vertr.MarketData.Application.Services;
 using Vertr.MarketData.Contracts;
-using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.MarketData.Contracts.Interfaces.old;
 using Vertr.Platform.Common.Channels;
 
 namespace Vertr.MarketData.Application;

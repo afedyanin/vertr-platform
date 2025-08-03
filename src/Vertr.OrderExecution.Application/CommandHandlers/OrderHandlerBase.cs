@@ -6,12 +6,12 @@ namespace Vertr.OrderExecution.Application.CommandHandlers;
 
 internal abstract class OrderHandlerBase
 {
-    private readonly IMarketDataInstrumentRepository _marketDataProvider;
+    private readonly IInstrumentsRepository _marketDataProvider;
     private readonly IPortfolioRepository _portfolioRepository;
 
     protected OrderHandlerBase(
         IPortfolioRepository portfolioRepository,
-        IMarketDataInstrumentRepository marketDataProvider
+        IInstrumentsRepository marketDataProvider
         )
     {
         _portfolioRepository = portfolioRepository;

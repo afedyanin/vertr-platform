@@ -1,4 +1,4 @@
-namespace Vertr.MarketData.Contracts.Interfaces;
+namespace Vertr.MarketData.Contracts.Interfaces.old;
 
 public interface ICurrencyRepository
 {

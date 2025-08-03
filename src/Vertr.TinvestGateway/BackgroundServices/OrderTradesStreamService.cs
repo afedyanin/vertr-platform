@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
-using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.MarketData.Contracts.Interfaces.old;
 using Vertr.OrderExecution.Contracts;
 using Vertr.Platform.Common.Channels;
 using Vertr.PortfolioManager.Contracts.Interfaces;

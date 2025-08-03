@@ -1,6 +1,6 @@
 namespace Vertr.MarketData.Contracts.Interfaces;
 
-public interface IMarketDataInstrumentRepository
+public interface IInstrumentsRepository
 {
     public Task<Instrument[]> GetAll();
 

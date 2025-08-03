@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.MarketData.Contracts;
-using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.MarketData.Contracts.Interfaces.old;
 using Vertr.Platform.Common.Channels;
 using Vertr.Strategies.Contracts;
 using Vertr.Strategies.Contracts.Interfaces;

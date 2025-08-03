@@ -1,5 +1,5 @@
 using Vertr.MarketData.Contracts;
-using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.MarketData.Contracts.Interfaces.old;
 
 namespace Vertr.MarketData.Application.Repositories;
 

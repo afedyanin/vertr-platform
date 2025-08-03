@@ -29,10 +29,11 @@ public class MarketDataStreamService : StreamServiceBase
         CancellationToken stoppingToken = default)
     {
         using var scope = ServiceProvider.CreateScope();
-        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IMarketDataInstrumentRepository>();
+        var staticMarketDataProvider = scope.ServiceProvider.GetRequiredService<IInstrumentsRepository>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
         var marketDataProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<Candle>>();
-        var marketDataRepository = scope.ServiceProvider.GetRequiredService<IMarketDataRepository>();
+        var candlesRepository = scope.ServiceProvider.GetRequiredService<ICandlesRepository>();
+        var subscriptionsRepository = scope.ServiceProvider.GetRequiredService<ISubscriptionsRepository>();
 
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {
@@ -40,19 +41,22 @@ public class MarketDataStreamService : StreamServiceBase
             WaitingClose = TinvestSettings.WaitCandleClose,
         };
 
-        // TODO: Implement this
-        /*
-        var subscriptions = await staticMarketDataProvider.GetSubscriptions();
+        var subscriptions = await subscriptionsRepository.GetAll();
 
         foreach (var sub in subscriptions)
         {
+            if (sub.Disabled)
+            {
+                continue;
+            }
+
             candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
             {
                 InstrumentId = sub.InstrumentId.ToString(),
                 Interval = sub.Interval.ConvertToSubscriptionInterval()
             });
         }
-        */
+
         var request = new Tinkoff.InvestApi.V1.MarketDataServerSideStreamRequest()
         {
             SubscribeCandlesRequest = candleRequest,
@@ -67,7 +71,7 @@ public class MarketDataStreamService : StreamServiceBase
                 var instrumentId = response.Candle.InstrumentUid;
                 var candle = response.Candle.Convert(Guid.Parse(instrumentId));
 
-                marketDataRepository.Add(candle);
+                await candlesRepository.Upsert([candle]);
                 await marketDataProducer.Produce(candle, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)

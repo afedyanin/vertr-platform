@@ -12,7 +12,7 @@ internal class OpenPositionHandler : OrderHandlerBase, ICommandHandler<OpenPosit
     public OpenPositionHandler(
         ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> executeOrderHandler,
         IPortfolioRepository portfolioRepository,
-        IMarketDataInstrumentRepository staticMarketDataProvider
+        IInstrumentsRepository staticMarketDataProvider
         ) : base( portfolioRepository, staticMarketDataProvider)
     {
         _executeOrderHandler = executeOrderHandler;

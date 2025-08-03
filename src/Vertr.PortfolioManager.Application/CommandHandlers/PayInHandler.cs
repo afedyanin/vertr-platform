@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.MarketData.Contracts.Interfaces.old;
 using Vertr.Platform.Common.Channels;
 using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;

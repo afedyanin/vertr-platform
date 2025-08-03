@@ -65,16 +65,17 @@ public class TinvestGatewayMarketDataTests
     [TestCase("e6123145-9665-43e0-8413-cd61b8aa9b13")]
     public async Task CanGetCandles(string instrumentId)
     {
-        var from = new DateTime(2025, 07, 29, 20, 0, 0);
-        var to = new DateTime(2025, 07, 31);
         var gateway = new TinvestGatewayMarketData(_client);
-        var candles = await gateway.GetCandles(Guid.Parse(instrumentId), CandleInterval.Min_1, from, to, 100);
+        var day = new DateOnly(2025, 07, 30);
 
-        foreach (var candle in candles)
-        {
-            Console.WriteLine(candle);
-        }
+        var candles = await gateway.GetCandles(Guid.Parse(instrumentId), day);
 
+        Assert.That(candles, Is.Not.Null);
+
+        var first = candles.First();
+        var last = candles.Last();
+
+        Console.WriteLine($"Count={candles.Length} From={first.TimeUtc:O} To={last.TimeUtc:O}");
         Assert.Pass();
     }
 }

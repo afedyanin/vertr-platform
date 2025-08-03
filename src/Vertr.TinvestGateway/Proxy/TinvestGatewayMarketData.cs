@@ -69,11 +69,12 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
 
     public async Task<Candle[]?> GetCandles(
         Guid instrumentId,
-        CandleInterval interval,
-        DateTime from,
-        DateTime to,
-        int? limit)
+        DateOnly date,
+        CandleInterval interval = CandleInterval.Min_1)
     {
+        var from = date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var to = date.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+
         var request = new Tinkoff.InvestApi.V1.GetCandlesRequest
         {
             From = Timestamp.FromDateTime(from.ToUniversalTime()),
@@ -81,11 +82,6 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
             InstrumentId = instrumentId.ToString(),
             Interval = interval.Convert(),
         };
-
-        if (limit.HasValue)
-        {
-            request.Limit = limit.Value;
-        }
 
         var response = await InvestApiClient.MarketData.GetCandlesAsync(request);
         var candles = response.Candles.ToArray().Convert(instrumentId);

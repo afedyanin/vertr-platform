@@ -15,4 +15,8 @@
     <InternalsVisibleTo Include="Vertr.MarketData.DataAccess.Tests" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
+  </ItemGroup>
+
 </Project>

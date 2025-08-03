@@ -4,14 +4,8 @@ using Vertr.MarketData.Contracts;
 namespace Vertr.MarketData.DataAccess.Tests.Repositories;
 
 [TestFixture(Category = "Database", Explicit = true)]
-public class MarketDataInstrumentRepositoryTests : RepositoryTestBase
+public class InstrumentsRepositoryTests : RepositoryTestBase
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
-    {
-        WriteIndented = true,
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-    };
-
     [Test]
     public async Task CanGetInstruments()
     {
@@ -85,7 +79,7 @@ public class MarketDataInstrumentRepositoryTests : RepositoryTestBase
     public async Task CanImportInstruments(string filePath)
     {
         var json = await File.ReadAllTextAsync(filePath);
-        var instruments = JsonSerializer.Deserialize<Instrument[]>(json, _jsonOptions) ?? [];
+        var instruments = JsonSerializer.Deserialize<Instrument[]>(json, JsonOptions.DefaultOptions) ?? [];
 
         foreach (var instr in instruments)
         {

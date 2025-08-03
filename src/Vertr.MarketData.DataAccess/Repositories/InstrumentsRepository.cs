@@ -4,9 +4,9 @@ using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.MarketData.DataAccess.Repositories;
 
-internal class MarketDataInstrumentRepository : RepositoryBase, IMarketDataInstrumentRepository
+internal class InstrumentsRepository : RepositoryBase, IMarketDataInstrumentRepository
 {
-    public MarketDataInstrumentRepository(IDbContextFactory<MarketDataDbContext> contextFactory) : base(contextFactory)
+    public InstrumentsRepository(IDbContextFactory<MarketDataDbContext> contextFactory) : base(contextFactory)
     {
     }
 

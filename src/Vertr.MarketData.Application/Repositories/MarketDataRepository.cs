@@ -17,10 +17,10 @@ internal class MarketDataRepository : IMarketDataRepository
     public void Add(Candle candle)
     {
 
-        if (!_repoDict.TryGetValue(candle.instrumentId, out var repo))
+        if (!_repoDict.TryGetValue(candle.InstrumentId, out var repo))
         {
             repo = new CandleRepository(_maxCandlesCapacity);
-            _repoDict[candle.instrumentId] = repo;
+            _repoDict[candle.InstrumentId] = repo;
         }
 
         repo.Add(candle);
@@ -28,7 +28,7 @@ internal class MarketDataRepository : IMarketDataRepository
 
     public void AddRange(Candle[] candles)
     {
-        var gropued = candles.GroupBy(c => c.instrumentId);
+        var gropued = candles.GroupBy(c => c.InstrumentId);
 
         foreach (var group in gropued)
         {

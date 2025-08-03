@@ -11,6 +11,7 @@ public abstract class RepositoryTestBase
     protected IDbContextFactory<MarketDataDbContext> DbContextFactory => _serviceProvider.GetRequiredService<IDbContextFactory<MarketDataDbContext>>();
 
     protected IMarketDataInstrumentRepository InstrumentsRepo => _serviceProvider.GetRequiredService<IMarketDataInstrumentRepository>();
+    protected ICandlesRepository CandlesRepo => _serviceProvider.GetRequiredService<ICandlesRepository>();
 
     protected RepositoryTestBase()
     {

@@ -21,7 +21,7 @@ internal class CandlesConsumerService : DataConsumerServiceBase<Candle>
 
         foreach (var strategy in activeStrategies)
         {
-            if (strategy.InstrumentId != data.instrumentId)
+            if (strategy.InstrumentId != data.InstrumentId)
             {
                 continue;
             }

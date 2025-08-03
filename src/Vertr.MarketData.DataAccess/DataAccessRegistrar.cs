@@ -12,9 +12,9 @@ public static class DataAccessRegistrar
         services.AddSingleton<IDbConnectionFactory>(sp => new DbConnectionFactory(connectionString!));
         services.AddDbContextFactory<MarketDataDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<IMarketDataInstrumentRepository, MarketDataInstrumentRepository>();
+        services.AddScoped<IMarketDataInstrumentRepository, InstrumentsRepository>();
+        services.AddScoped<ICandlesRepository, CandlesRepository>();
 
         return services;
     }
-
 }

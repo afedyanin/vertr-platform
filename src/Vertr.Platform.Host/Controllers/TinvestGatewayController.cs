@@ -36,4 +36,11 @@ public class TinvestGatewayController : ControllerBase
         var instruments = await _marketDataGayeway.FindInstrument(query);
         return Ok(instruments);
     }
+
+    [HttpGet("candles/{instrumentId}")]
+    public async Task<IActionResult> GetCandles(Guid instrumentId, DateOnly? date = null)
+    {
+        var candles = await _marketDataGayeway.GetCandles(instrumentId, date);
+        return Ok(candles);
+    }
 }

@@ -8,6 +8,8 @@ public class MarketDataDbContext : DbContext
 {
     public DbSet<Instrument> Instruments { get; set; }
 
+    public DbSet<Candle> Candles { get; set; }
+
     public MarketDataDbContext(DbContextOptions<MarketDataDbContext> options) : base(options)
     {
     }
@@ -15,6 +17,6 @@ public class MarketDataDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         new InstrumentEntityConfiguration().Configure(modelBuilder.Entity<Instrument>());
+        new CandleEntityConfiguration().Configure(modelBuilder.Entity<Candle>());
     }
-
 }

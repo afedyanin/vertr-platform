@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Vertr.MarketData.Contracts;
+using Vertr.Platform.Common.Utils;
 
 namespace Vertr.MarketData.DataAccess.Tests.Repositories;
 

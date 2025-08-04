@@ -15,7 +15,7 @@ public class Program
 
         builder.Services
             .AddControllers()
-            .AddJsonOptions(options =>
+            .AddJsonOptions(options => 
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         // Add services to the container.

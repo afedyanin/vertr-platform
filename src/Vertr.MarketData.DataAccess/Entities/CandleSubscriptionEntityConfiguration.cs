@@ -36,5 +36,14 @@ internal class CandleSubscriptionEntityConfiguration : IEntityTypeConfiguration<
 
         builder.Property(e => e.LoadHistory)
             .HasColumnName("load_history");
+
+        builder
+            .HasIndex(e => new
+            {
+                e.InstrumentId,
+                e.Interval,
+            })
+            .IsUnique()
+            .HasDatabaseName("candle_subscriptions_unique");
     }
 }

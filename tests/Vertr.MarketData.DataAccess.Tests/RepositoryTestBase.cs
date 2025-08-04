@@ -12,6 +12,7 @@ public abstract class RepositoryTestBase
 
     protected IInstrumentsRepository InstrumentsRepo => _serviceProvider.GetRequiredService<IInstrumentsRepository>();
     protected ICandlesRepository CandlesRepo => _serviceProvider.GetRequiredService<ICandlesRepository>();
+    protected ISubscriptionsRepository SubscriptionsRepo => _serviceProvider.GetRequiredService<ISubscriptionsRepository>();
 
     protected RepositoryTestBase()
     {

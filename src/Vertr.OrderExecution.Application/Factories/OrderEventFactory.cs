@@ -1,17 +1,13 @@
 using System.Diagnostics;
 using System.Text.Json;
 using Vertr.OrderExecution.Contracts;
+using Vertr.Platform.Common.Utils;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
 internal static class OrderEventFactory
 {
-    private static readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
-    {
-        WriteIndented = true,
-    };
-
     public static OrderEvent CreateEvent(
         this PostOrderRequest request,
         Guid instrumentId,
@@ -28,7 +24,7 @@ internal static class OrderEventFactory
             InstrumentId = instrumentId,
             RequestId = request.RequestId,
             JsonDataType = request.GetType().FullName,
-            JsonData = JsonSerializer.Serialize(request, _jsonOptions),
+            JsonData = JsonSerializer.Serialize(request, JsonOptions.DefaultOptions),
         };
     }
 
@@ -48,7 +44,7 @@ internal static class OrderEventFactory
             RequestId = Guid.Parse(response.OrderRequestId),
             OrderId = response.OrderId,
             JsonDataType = response.GetType().FullName,
-            JsonData = JsonSerializer.Serialize(response, _jsonOptions),
+            JsonData = JsonSerializer.Serialize(response, JsonOptions.DefaultOptions),
         };
     }
 
@@ -66,7 +62,7 @@ internal static class OrderEventFactory
             InstrumentId = instrumentId,
             OrderId = trades.OrderId,
             JsonDataType = trades.GetType().FullName,
-            JsonData = JsonSerializer.Serialize(trades, _jsonOptions)
+            JsonData = JsonSerializer.Serialize(trades, JsonOptions.DefaultOptions)
         };
     }
 
@@ -84,7 +80,7 @@ internal static class OrderEventFactory
             RequestId = Guid.Parse(state.OrderRequestId),
             OrderId = state.OrderId,
             JsonDataType = state.GetType().FullName,
-            JsonData = JsonSerializer.Serialize(state, _jsonOptions)
+            JsonData = JsonSerializer.Serialize(state, JsonOptions.DefaultOptions)
         };
     }
 }

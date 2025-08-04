@@ -77,15 +77,39 @@ public class MarketDataStreamService : StreamServiceBase
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {
                 var subs = response.SubscribeCandlesResponse;
-                var all = subs.CandlesSubscriptions.ToArray()
-                    .Select(s => $"Id={s.SubscriptionId} Status={s.SubscriptionStatus} Instrument={s.InstrumentUid} Inverval={s.Interval}").ToArray();
+                var all = subs.CandlesSubscriptions.ToArray();
+                await UpdateSubscriptions(subscriptionsRepository, all);
 
-                logger.LogInformation($"Candle subscriptions received: TrackingId={subs.TrackingId} Statuses={string.Join(',', all)}");
+                logger.LogInformation($"Candle subscriptions received: TrackingId={subs.TrackingId} Statuses={string.Join(',',
+                    [.. all.Select(s => $"Id={s.SubscriptionId} Status={s.SubscriptionStatus} Instrument={s.InstrumentUid} Inverval={s.Interval}")])}");
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Ping)
             {
                 logger.LogDebug($"Candle ping received: {response.Ping}");
             }
+        }
+    }
+
+    private async Task UpdateSubscriptions(ISubscriptionsRepository repo, Tinkoff.InvestApi.V1.CandleSubscription[] subscriptions)
+    {
+        foreach (var subscription in subscriptions)
+        {
+            if (subscription == null)
+            {
+                continue;
+            }
+
+            var found = await repo.Find(Guid.Parse(subscription.InstrumentUid), subscription.Interval.Convert());
+
+            if (found == null)
+            {
+                continue;
+            }
+
+            found.ExternalSubscriptionId = subscription.SubscriptionId;
+            found.ExternalStatus = subscription.SubscriptionStatus.ToString();
+
+            await repo.Save(found);
         }
     }
 }

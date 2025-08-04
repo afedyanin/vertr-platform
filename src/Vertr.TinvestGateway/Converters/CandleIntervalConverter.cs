@@ -27,4 +27,17 @@ internal static class CandleIntervalConverter
             CandleInterval.Day => Tinkoff.InvestApi.V1.SubscriptionInterval.OneDay,
             _ => throw new NotImplementedException(),
         };
+
+    public static CandleInterval Convert(this Tinkoff.InvestApi.V1.SubscriptionInterval source)
+        => source switch
+        {
+            Tinkoff.InvestApi.V1.SubscriptionInterval.Unspecified => CandleInterval.Unspecified,
+            Tinkoff.InvestApi.V1.SubscriptionInterval.OneMinute => CandleInterval.Min_1,
+            Tinkoff.InvestApi.V1.SubscriptionInterval.FiveMinutes => CandleInterval.Min_5,
+            Tinkoff.InvestApi.V1.SubscriptionInterval._10Min => CandleInterval.Min_10,
+            Tinkoff.InvestApi.V1.SubscriptionInterval.OneHour => CandleInterval.Hour,
+            Tinkoff.InvestApi.V1.SubscriptionInterval.OneDay => CandleInterval.Day,
+            _ => throw new NotImplementedException(),
+        };
+
 }

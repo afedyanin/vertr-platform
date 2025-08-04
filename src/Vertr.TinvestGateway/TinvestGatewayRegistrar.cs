@@ -27,8 +27,8 @@ public static class TinvestGatewayRegistrar
     public static IServiceCollection AddTinvestStreams(this IServiceCollection services)
     {
         services.AddHostedService<MarketDataStreamService>();
-        services.AddHostedService<OrderTradesStreamService>();
-        services.AddHostedService<OrderStateStreamService>();
+        //services.AddHostedService<OrderTradesStreamService>();
+        //services.AddHostedService<OrderStateStreamService>();
 
         return services;
     }

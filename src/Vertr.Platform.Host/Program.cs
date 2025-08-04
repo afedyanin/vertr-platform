@@ -34,6 +34,7 @@ public class Program
 
         // Add modules
         builder.Services.AddTinvestGateways(configuration);
+        builder.Services.AddTinvestStreams();
         builder.Services.AddMarketDataAccess(connectionString!);
 
         //builder.Services.AddTinvestOrders();

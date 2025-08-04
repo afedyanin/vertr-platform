@@ -64,4 +64,14 @@ internal class SubscriptionsRepository : RepositoryBase, ISubscriptionsRepositor
             .ExecuteDeleteAsync();
     }
 
+    public async Task<CandleSubscription?> Find(Guid instrumentId, CandleInterval interval)
+    {
+        using var context = await GetDbContext();
+
+        return await context
+            .CandleSubscriptions
+            .SingleOrDefaultAsync(x =>
+                x.InstrumentId == instrumentId &&
+                x.Interval == interval);
+    }
 }

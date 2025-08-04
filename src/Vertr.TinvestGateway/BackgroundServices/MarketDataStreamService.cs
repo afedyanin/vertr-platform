@@ -50,11 +50,15 @@ public class MarketDataStreamService : StreamServiceBase
                 continue;
             }
 
+            logger.LogInformation($"Adding candle subscription: Id={sub.Id} InstrumentId={sub.InstrumentId}");
+
             candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
             {
                 InstrumentId = sub.InstrumentId.ToString(),
                 Interval = sub.Interval.ConvertToSubscriptionInterval()
             });
+
+
         }
 
         var request = new Tinkoff.InvestApi.V1.MarketDataServerSideStreamRequest()
@@ -72,7 +76,7 @@ public class MarketDataStreamService : StreamServiceBase
                 var candle = response.Candle.Convert(Guid.Parse(instrumentId));
 
                 await candlesRepository.Upsert([candle]);
-                await marketDataProducer.Produce(candle, stoppingToken);
+                // await marketDataProducer.Produce(candle, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {
@@ -80,7 +84,7 @@ public class MarketDataStreamService : StreamServiceBase
                 var all = subs.CandlesSubscriptions.ToArray();
                 await UpdateSubscriptions(subscriptionsRepository, all);
 
-                logger.LogInformation($"Candle subscriptions received: TrackingId={subs.TrackingId} Statuses={string.Join(',',
+                logger.LogInformation($"Candle subscriptions received: TrackingId={subs.TrackingId} Details={string.Join(',',
                     [.. all.Select(s => $"Id={s.SubscriptionId} Status={s.SubscriptionStatus} Instrument={s.InstrumentUid} Inverval={s.Interval}")])}");
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Ping)

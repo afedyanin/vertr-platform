@@ -3,6 +3,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Platform.Host.Components;
 using Vertr.TinvestGateway;
 using Vertr.MarketData.DataAccess;
+using Vertr.MarketData.Application;
 
 namespace Vertr.Platform.Host;
 
@@ -35,6 +36,8 @@ public class Program
         // Add modules
         builder.Services.AddTinvestGateways(configuration);
         builder.Services.AddTinvestStreams();
+
+        builder.Services.AddMarketData();
         builder.Services.AddMarketDataAccess(connectionString!);
 
         //builder.Services.AddTinvestOrders();

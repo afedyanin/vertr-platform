@@ -37,57 +37,75 @@ public partial class Subscriptions
             await OpenPanelRightAsync(cell.Item);
         }
     }
-
-    private async Task OpenPanelRightAsync(SubscriptionModel subscriptionModel)
-    {/*
-        _dialog = await DialogService.ShowPanelAsync<InstrumentPanel>(instrument, new DialogParameters<Instrument>()
+    private async Task AddSubscriptionAsync()
+    {
+        var instrument = _instruments.Values.First();
+        var model = new SubscriptionModel()
         {
-            Content = instrument,
-            Alignment = HorizontalAlignment.Right,
-            Title = $"{instrument.Name}",
-            PrimaryAction = "Close",
-            SecondaryAction = null,
-            Width = "400px",
-        });
-        DialogResult result = await _dialog.Result;
-        */
+            Instrument = instrument,
+            Subscription = new CandleSubscription
+            {
+                Id = Guid.NewGuid(),
+                InstrumentId = instrument.Id,
+                Interval = CandleInterval.Min_1,
+                Disabled = false,
+                LoadHistory = true,
+                ExternalStatus = null,
+                ExternalSubscriptionId = null
+            }
+        };
+
+        await OpenPanelRightAsync(model);
     }
 
-    private async Task OpenDialogAsync()
+
+    private async Task OpenPanelRightAsync(SubscriptionModel subscriptionModel)
     {
-        var dummyInstrument = new Instrument
+        _dialog = await DialogService.ShowPanelAsync<SubscriptionPanel>(subscriptionModel, new DialogParameters<SubscriptionModel>()
         {
-            Symbol = new Symbol("", "")
-        };
+            Content = subscriptionModel,
+            Alignment = HorizontalAlignment.Right,
+            Title = $"{subscriptionModel.InstrumentName}",
+            PrimaryAction = "Save",
+            SecondaryAction = "Cancel",
+            Width = "400px",
+        });
 
-        var parameters = new DialogParameters()
+        var result = await _dialog.Result;
+
+        if (result.Cancelled)
         {
-            Title = "Search instrument",
-            PrimaryAction = "Select",
-            SecondaryAction = null,
-            Width = "500px",
-            TrapFocus = true,
-            Modal = true,
-            PreventScroll = true
-        };
-
-        var dialog = await DialogService.ShowDialogAsync<InstrumentScreener>(dummyInstrument, parameters);
-        var result = await dialog.Result;
+            // TODO: implement discard changes
+            _subscriptions = await InitSubscriptions();
+            await dataGrid.RefreshDataAsync(force: true);
+            return;
+        }
 
         if (result.Data is null)
         {
             return;
         }
 
-        var selectedInstrument = result.Data as Instrument;
-        var instrumentId = selectedInstrument?.Id;
+        var model = result.Data as SubscriptionModel;
 
-        if (instrumentId == null)
+        if (model == null)
         {
             return;
         }
 
-        //await AddInstrument(instrumentId.Value);
+
+        model.Subscription.InstrumentId = model.Instrument.Id;
+        var saved = await SaveSubscription(model.Subscription);
+        if (saved)
+        {
+            DemoLogger.WriteLine($"Subscription for {model.InstrumentName} ({model.Subscription.Interval}) saved.");
+        }
+        else
+        {
+            DemoLogger.WriteLine($"Saving subscription {model.InstrumentName} ({model.Subscription.Interval}) FAILED!");
+        }
+
+        _subscriptions = await InitSubscriptions();
         await dataGrid.RefreshDataAsync(force: true);
     }
 
@@ -122,14 +140,14 @@ public partial class Subscriptions
 
         var modelItems = new List<SubscriptionModel>();
 
-        foreach(var sub in subscriptions)
+        foreach (var sub in subscriptions)
         {
             if (_instruments.TryGetValue(sub.InstrumentId, out var instrument))
             {
                 var item = new SubscriptionModel
                 {
                     Subscription = sub,
-                    InstrumentName = $"{instrument.Symbol.ClassCode}.{instrument.Symbol.Ticker} ({instrument.Name})",
+                    Instrument = instrument,
                 };
 
                 modelItems.Add(item);
@@ -140,24 +158,23 @@ public partial class Subscriptions
         return res;
     }
 
-    /*
-    private async Task AddSubscription(Guid instrumentId)
+    private async Task<bool> SaveSubscription(CandleSubscription subscription)
     {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-        var instrument = await apiClient.GetFromJsonAsync<Instrument>($"api/tinvest/instrument-by-id/{instrumentId}");
-
-        if (instrument == null)
+        try
         {
-            return;
+            using var apiClient = _httpClientFactory.CreateClient("backend");
+            var content = JsonContent.Create(subscription);
+            var message = await apiClient.PostAsync("api/subscriptions", content);
+            message.EnsureSuccessStatusCode();
+            return true;
         }
-
-        var content = JsonContent.Create(instrument);
-        await apiClient.PostAsync("api/instruments", content);
-        _instrumentList = await InitInstruments();
-
-        DemoLogger.WriteLine($"{instrument.Symbol.ClassCode}.{instrument.Symbol.Ticker} ({instrument.Name}) added.");
+        catch
+        {
+            // TODO: Use toast service
+            return false;
+        }
     }
-    */
+
     private async Task HandleDeleteAction(SubscriptionModel model)
     {
         var confirmation = await DialogService.ShowConfirmationAsync(
@@ -173,13 +190,13 @@ public partial class Subscriptions
             return;
         }
 
-        /*
         using var apiClient = _httpClientFactory.CreateClient("backend");
-        await apiClient.DeleteAsync($"api/instruments/{instrument.Id}");
-        _instrumentList = await InitInstruments();
+        var message = await apiClient.DeleteAsync($"api/subscriptions/{model.Subscription.Id}");
+        message.EnsureSuccessStatusCode();
+
+        _subscriptions = await InitSubscriptions();
         await dataGrid.RefreshDataAsync(force: true);
 
-        DemoLogger.WriteLine($"{instrument.Symbol.ClassCode}.{instrument.Symbol.Ticker} ({instrument.Name}) deleted.");
-        */
+        DemoLogger.WriteLine($"Subscription for {model.InstrumentName} ({model.Subscription.Interval}) is deleted.");
     }
 }

@@ -43,6 +43,7 @@ public class SubscriptionsController : ControllerBase
         {
             return BadRequest($"Cannot save subscription. Id={subscription.Id}");
         }
+
         return Ok(subscription.Id);
     }
 

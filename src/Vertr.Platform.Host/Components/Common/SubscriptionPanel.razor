@@ -1,0 +1,32 @@
+@using Vertr.MarketData.Contracts
+@using Vertr.Platform.Host.Components.Models
+
+@implements IDialogContentComponent<SubscriptionModel>
+
+<FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
+
+<FluentDialogBody>
+    <FluentTextField Value="@Content.Subscription.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
+
+    <FluentSelect TOption="Instrument"
+        Label="Instrument"
+        Items="@AllInstruments"
+        OptionValue="@(p => p.Id.ToString())"
+        OptionText="@(p => $"{p.Symbol.ClassCode}.{p.Symbol.Ticker} ({p.Name})")"
+        @bind-SelectedOption="@Content.Instrument" />
+
+    <FluentSelect
+        Items="@(Enum.GetValues<CandleInterval>())"
+        @bind-SelectedOption="@Content.Subscription.Interval"
+        Label="Interval:"
+        style="width: 100%;"
+        Disabled />
+
+    <FluentTextField Value="@Content.Subscription.ExternalStatus" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">External Status:</FluentTextField>
+    <FluentTextField @bind-Value="@Content.Subscription.ExternalSubscriptionId" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">External Id:</FluentTextField>
+
+    <FluentCheckbox @bind-Value="@Content.Subscription.Disabled">Disabled</FluentCheckbox>
+    <FluentCheckbox @bind-Value="@Content.Subscription.LoadHistory">LoadHistory</FluentCheckbox>
+</FluentDialogBody>
+
+

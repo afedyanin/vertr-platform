@@ -6,5 +6,7 @@ public record SubscriptionModel
 {
     public required CandleSubscription Subscription { get; init; }
 
-    public required string InstrumentName { get; init; }
+    public string InstrumentName => $"{Instrument.Symbol.ClassCode}.{Instrument.Symbol.Ticker} ({Instrument.Name})";
+
+    public required Instrument Instrument { get; set; }
 }

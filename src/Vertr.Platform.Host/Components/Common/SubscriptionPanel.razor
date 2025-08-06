@@ -24,9 +24,8 @@
 
     <FluentTextField Value="@Content.Subscription.ExternalStatus" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">External Status:</FluentTextField>
     <FluentTextField @bind-Value="@Content.Subscription.ExternalSubscriptionId" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">External Id:</FluentTextField>
-
-    <FluentSwitch @bind-Value="@Content.Subscription.Disabled">Disable Intraday Stream</FluentSwitch>
-    <FluentSwitch @bind-Value="@Content.Subscription.LoadHistory">Load History Data</FluentSwitch>
+    <FluentCheckbox @bind-Value="@Content.Subscription.Disabled" Label="Disable Subscription"></FluentCheckbox>
+    <FluentCheckbox @bind-Value="@Content.Subscription.LoadHistory" Label="Load History Data"></FluentCheckbox>
 </FluentDialogBody>
 
 

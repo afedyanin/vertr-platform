@@ -1,0 +1,72 @@
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+
+namespace Vertr.Platform.Host.Components.Common;
+
+public partial class CandlesGrid
+{
+    private IJSObjectReference? _jsModule;
+
+    private ElementReference perspectiveViewer;
+
+    [Parameter]
+    public string TableName { get; set; } = "Table";
+
+    [Parameter]
+    public string Height { get; set; } = "800px";
+
+    [Parameter]
+    public bool UseWebSocket { get; set; }
+
+    [Parameter]
+    public string SchemaEndpoint { get; set; } = string.Empty;
+
+    [Parameter]
+    public string DataEndpoint { get; set; } = string.Empty;
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+
+    [Inject]
+    private IHttpClientFactory _httpClientFactory { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            using var apiClient = _httpClientFactory.CreateClient("backend");
+            var candles = await apiClient.GetFromJsonAsync<Dictionary<string, object>[]>("api/candles/e6123145-9665-43e0-8413-cd61b8aa9b13"); // SBER
+            var schema = GetJsonSchema();
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Common/CandlesGrid.razor.js");
+            await _jsModule.InvokeVoidAsync("loadJson", schema, candles, perspectiveViewer);
+        }
+    }
+
+    private Dictionary<string, string> GetJsonSchema()
+        => new Dictionary<string, string>
+        {
+            {  "timeUtc", "datetime" },
+            {  "open", "float" },
+            {  "low", "float" },
+            {  "high", "float" },
+            {  "close", "float" },
+            {  "volume", "float" },
+        };
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            if (_jsModule != null)
+            {
+                // await _jsModule.InvokeVoidAsync("dispose");
+                await _jsModule.DisposeAsync();
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+            // Client disconnected.
+        }
+    }
+
+}

@@ -39,7 +39,7 @@ public class TinvestGatewayMarketDataTests
         Assert.Pass();
     }
 
-    [TestCase("a92e2e25-a698-45cc-a781-167cf465257c")]
+    [TestCase("a92e2e25-a698-45cc-a781-167cf465257c")] // RUB
     public async Task CanGetInstrumentById(string instrumentId)
     {
         var gateway = new TinvestGatewayMarketData(_client);
@@ -62,7 +62,7 @@ public class TinvestGatewayMarketDataTests
         Assert.Pass();
     }
 
-    [TestCase("e6123145-9665-43e0-8413-cd61b8aa9b13")]
+    [TestCase("e6123145-9665-43e0-8413-cd61b8aa9b13")] // SBER
     public async Task CanGetCandles(string instrumentId)
     {
         var gateway = new TinvestGatewayMarketData(_client);

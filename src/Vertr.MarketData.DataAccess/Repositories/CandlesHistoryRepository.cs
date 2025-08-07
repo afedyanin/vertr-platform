@@ -20,9 +20,6 @@ internal class CandlesHistoryRepository : RepositoryBase, ICandlesHistoryReposit
 
     public async Task<CandlesHistoryItem[]> Get(Guid instrumentId)
     {
-
-        var sqlWhere = $@" WHERE instrument_id=@instrumentId";
-
         var sql = @$"
         SELECT
             id,
@@ -31,7 +28,7 @@ internal class CandlesHistoryRepository : RepositoryBase, ICandlesHistoryReposit
             day,
             count
         FROM {CandleHistoryEntityConfiguration.CandlesHistoryTableName}
-        {sqlWhere}";
+        WHERE instrument_id=@instrumentId";
 
         using var connection = _connectionFactory.GetConnection();
         connection.Open();

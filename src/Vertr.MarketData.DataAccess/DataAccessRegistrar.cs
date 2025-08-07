@@ -20,6 +20,7 @@ public static class DataAccessRegistrar
         services.AddScoped<ICandlesHistoryRepository, CandlesHistoryRepository>();
 
         SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+        DefaultTypeMap.MatchNamesWithUnderscores = true;
 
         return services;
     }

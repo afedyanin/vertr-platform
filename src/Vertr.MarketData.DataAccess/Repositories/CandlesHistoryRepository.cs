@@ -18,23 +18,32 @@ internal class CandlesHistoryRepository : RepositoryBase, ICandlesHistoryReposit
         _connectionFactory = connectionFactory;
     }
 
-    public async Task<CandlesHistoryItem[]> Get(Guid instrumentId, DateOnly? from = null, DateOnly? to = null)
+    public async Task<CandlesHistoryItem[]> Get(Guid instrumentId)
     {
-        using var context = await GetDbContext();
 
-        var query = context.CandlesHistory.Where(x => x.Id == instrumentId);
+        var sqlWhere = $@" WHERE instrument_id=@instrumentId";
 
-        if (from != null)
+        var sql = @$"
+        SELECT
+            id,
+            instrument_id,
+            interval,
+            day,
+            count
+        FROM {CandleHistoryEntityConfiguration.CandlesHistoryTableName}
+        {sqlWhere}";
+
+        using var connection = _connectionFactory.GetConnection();
+        connection.Open();
+
+        var param = new
         {
-            query = query.Where(x => x.Day >= from);
-        }
+            instrumentId,
+        };
 
-        if (to != null)
-        {
-            query = query.Where(x => x.Day <= to);
-        }
+        var res = await connection.QueryAsync<CandlesHistoryItem>(sql, param);
 
-        return await query.ToArrayAsync();
+        return [.. res];
     }
 
     public async Task<CandlesHistoryItem?> GetById(Guid id)

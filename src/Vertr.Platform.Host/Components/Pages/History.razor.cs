@@ -6,14 +6,14 @@ using Vertr.Platform.Host.Components.Common;
 
 namespace Vertr.Platform.Host.Components.Pages;
 
-public partial class Intraday
+public partial class History
 {
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
-    private IQueryable<Candle> _candles { get; set; }
+    private IQueryable<CandlesHistoryItem> _candles { get; set; }
 
-    private FluentDataGrid<Candle> _dataGrid;
+    private FluentDataGrid<CandlesHistoryItem> _dataGrid;
 
     private Instrument? _selectedInstrument;
 
@@ -24,7 +24,7 @@ public partial class Intraday
         await base.OnInitializedAsync();
         _instruments = await InitInstruments();
         _selectedInstrument = _instruments.Length > 0 ? _instruments[0] : null;
-        _candles = await InitCandles();
+        _candles = await InitCandlesHistory();
     }
 
     private async Task<Instrument[]> InitInstruments()
@@ -49,16 +49,16 @@ public partial class Intraday
         return res ?? [];
     }
 
-    private async Task<IQueryable<Candle>> InitCandles()
+    private async Task<IQueryable<CandlesHistoryItem>> InitCandlesHistory()
     {
         if (_selectedInstrument == null)
         {
-            return Array.Empty<Candle>().AsQueryable();
+            return Array.Empty<CandlesHistoryItem>().AsQueryable();
         }
 
         using var apiClient = _httpClientFactory.CreateClient("backend");
-        var items = await apiClient.GetFromJsonAsync<Candle[]>($"api/candles/{_selectedInstrument.Id}", JsonOptions.DefaultOptions);
-        var res = items?.AsQueryable() ?? Array.Empty<Candle>().AsQueryable();
+        var items = await apiClient.GetFromJsonAsync<CandlesHistoryItem[]>($"api/candles-history/{_selectedInstrument.Id}", JsonOptions.DefaultOptions);
+        var res = items?.AsQueryable() ?? Array.Empty<CandlesHistoryItem>().AsQueryable();
         return res;
     }
 
@@ -67,7 +67,8 @@ public partial class Intraday
         DemoLogger.WriteLine($"OnSelectedOptionChanged to {selected?.Name}");
 
         _selectedInstrument = selected;
-        _candles = await InitCandles();
+        _candles = await InitCandlesHistory();
         await _dataGrid.RefreshDataAsync();
     }
+
 }

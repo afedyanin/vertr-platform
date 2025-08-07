@@ -1,7 +1,27 @@
 @page "/history"
 
-<h3>History</h3>
+@using Vertr.MarketData.Contracts
 
-@code {
+<h3>Candles History</h3>
 
-}
+<FluentSelect TOption="Instrument"
+              Items="@_instruments"
+              OptionValue="@(p => p.Id.ToString())"
+              OptionText="@(p => $"{p.Symbol.ClassCode}.{p.Symbol.Ticker} ({p.Name})")"
+              SelectedOptionChanged="OnSelectedOptionChanged" />
+
+
+<div style="height: 1000px; max-width: 1000px; overflow-y: scroll;">
+    <FluentDataGrid @ref=_dataGrid
+                    TGridItem=CandlesHistoryItem
+                    Items="@_candles"
+                    Virtualize="true"
+                    ShowHover=true
+                    Style="width: 100%;"
+                    GenerateHeader="@GenerateHeaderOption.Sticky"
+                    DisplayMode="DataGridDisplayMode.Table"
+                    RowSize="@DataGridRowSize.Small">
+        <PropertyColumn Property="@(p => p.Day)" Sortable="true" />
+        <PropertyColumn Property="@(p => p.Count)" Sortable="true" />
+    </FluentDataGrid>
+</div>

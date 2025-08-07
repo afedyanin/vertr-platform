@@ -2,7 +2,7 @@ namespace Vertr.MarketData.Contracts.Interfaces;
 
 public interface ICandlesHistoryRepository
 {
-    public Task<CandlesHistoryItem[]> Get(Guid instrumentId, DateOnly? from = null, DateOnly? to = null);
+    public Task<CandlesHistoryItem[]> Get(Guid instrumentId);
 
     public Task<CandlesHistoryItem?> GetById(Guid id);
 

@@ -4,8 +4,15 @@
 
 <h3>Intraday</h3>
 
+<FluentSelect TOption="Instrument"
+              Items="@_instruments"
+              OptionValue="@(p => p.Id.ToString())"
+              OptionText="@(p => $"{p.Symbol.ClassCode}.{p.Symbol.Ticker} ({p.Name})")"
+              SelectedOptionChanged="OnSelectedOptionChanged"/>
+
+
 <div style="height: 1000px; max-width: 1000px; overflow-y: scroll;">
-    <FluentDataGrid @ref=dataGrid
+    <FluentDataGrid @ref=_dataGrid
                     TGridItem=Candle
                     Items="@_candles"
                     Virtualize="true"

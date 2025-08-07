@@ -15,15 +15,6 @@ public partial class CandlesGrid
     [Parameter]
     public string Height { get; set; } = "800px";
 
-    [Parameter]
-    public bool UseWebSocket { get; set; }
-
-    [Parameter]
-    public string SchemaEndpoint { get; set; } = string.Empty;
-
-    [Parameter]
-    public string DataEndpoint { get; set; } = string.Empty;
-
     [Inject]
     private IJSRuntime JSRuntime { get; set; } = default!;
 

@@ -15,6 +15,9 @@ public partial class CandlesGrid
     [Parameter]
     public string Height { get; set; } = "800px";
 
+    [Parameter]
+    public Guid? InstrumentId { get; set; }
+
     [Inject]
     private IJSRuntime JSRuntime { get; set; } = default!;
 
@@ -23,14 +26,23 @@ public partial class CandlesGrid
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        var schema = GetJsonSchema();
+        var candles = await GetCandles();
+        _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Common/CandlesGrid.razor.js");
+        await _jsModule.InvokeVoidAsync("loadJson", schema, candles, perspectiveViewer);
+    }
+
+    private async Task<Dictionary<string, object>[]> GetCandles()
+    {
+        if (!InstrumentId.HasValue)
         {
-            using var apiClient = _httpClientFactory.CreateClient("backend");
-            var candles = await apiClient.GetFromJsonAsync<Dictionary<string, object>[]>("api/candles/e6123145-9665-43e0-8413-cd61b8aa9b13"); // SBER
-            var schema = GetJsonSchema();
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Common/CandlesGrid.razor.js");
-            await _jsModule.InvokeVoidAsync("loadJson", schema, candles, perspectiveViewer);
+            return [];
         }
+
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        var candles = await apiClient.GetFromJsonAsync<Dictionary<string, object>[]>($"api/candles/{InstrumentId.Value}");
+
+        return candles ?? [];
     }
 
     private Dictionary<string, string> GetJsonSchema()
@@ -59,5 +71,4 @@ public partial class CandlesGrid
             // Client disconnected.
         }
     }
-
 }

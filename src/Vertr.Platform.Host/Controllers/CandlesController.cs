@@ -15,7 +15,7 @@ public class CandlesController : ControllerBase
     }
 
     [HttpGet("{instrumentId}")]
-    public async Task<IActionResult> GetById(Guid instrumentId, int limit = 1000)
+    public async Task<IActionResult> GetById(Guid instrumentId, int limit = 500)
     {
         var candles = await _candlesRepository.Get(instrumentId, limit);
 

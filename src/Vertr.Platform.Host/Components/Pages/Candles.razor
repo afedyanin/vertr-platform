@@ -1,7 +1,18 @@
 @page "/candles"
+
 @using Vertr.Platform.Host.Components.Common
+@using Vertr.MarketData.Contracts
 
 <h3>Candles</h3>
 
-<CandlesGrid Height="800px" TableName="Intraday Candles" />
+<FluentSelect TOption="Instrument"
+              Items="@_instruments"
+              OptionValue="@(p => p.Id.ToString())"
+              OptionText="@(p => $"{p.Symbol.ClassCode}.{p.Symbol.Ticker} ({p.Name})")"
+              SelectedOptionChanged="@(p => _selectedInstrument = p)" />
+
+<CandlesGrid
+    Height="800px"
+    TableName="Intraday Candles"
+    InstrumentId="@_selectedInstrument?.Id"/>
 

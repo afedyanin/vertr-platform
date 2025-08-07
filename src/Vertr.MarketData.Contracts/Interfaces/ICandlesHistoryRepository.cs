@@ -10,5 +10,5 @@ public interface ICandlesHistoryRepository
 
     public Task<int> Delete(Guid Id);
 
-    public Task<int> DeleteAll(Guid instrumentId);
+    public Task<int> DeleteAll(Guid instrumentId, DateOnly dayBefore);
 }

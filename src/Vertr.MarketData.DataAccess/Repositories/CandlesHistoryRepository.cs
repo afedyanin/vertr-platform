@@ -1,13 +1,21 @@
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using Vertr.Infrastructure.Pgsql;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.MarketData.DataAccess.Entities;
 
 namespace Vertr.MarketData.DataAccess.Repositories;
 
 internal class CandlesHistoryRepository : RepositoryBase, ICandlesHistoryRepository
 {
-    public CandlesHistoryRepository(IDbContextFactory<MarketDataDbContext> contextFactory) : base(contextFactory)
+    private readonly IDbConnectionFactory _connectionFactory;
+
+    public CandlesHistoryRepository(
+        IDbContextFactory<MarketDataDbContext> contextFactory,
+        IDbConnectionFactory connectionFactory) : base(contextFactory)
     {
+        _connectionFactory = connectionFactory;
     }
 
     public async Task<CandlesHistoryItem[]> Get(Guid instrumentId, DateOnly? from = null, DateOnly? to = null)
@@ -40,28 +48,52 @@ internal class CandlesHistoryRepository : RepositoryBase, ICandlesHistoryReposit
 
     public async Task<bool> Save(CandlesHistoryItem item)
     {
-        using var context = await GetDbContext();
+        var sql = @$"INSERT INTO {CandleHistoryEntityConfiguration.CandlesHistoryTableName} (
+        id,
+        instrument_id,
+        interval,
+        day,
+        data,
+        count
+        ) VALUES (
+        @Id,
+        @InstrumentId,
+        @Interval,
+        @day,
+        @Data,
+        @Count
+        ) ON CONFLICT (instrument_id, interval, day) DO UPDATE SET
+        data = EXCLUDED.data,
+        count = EXCLUDED.count";
 
-        var existing = await context
-            .CandlesHistory
-            .FirstOrDefaultAsync(p => p.Id == item.Id);
+        using var connection = _connectionFactory.GetConnection();
+        connection.Open();
+        var txn = connection.BeginTransaction();
 
-        if (existing != null)
+        try
         {
-            existing.InstrumentId = item.InstrumentId;
-            existing.Interval = item.Interval;
-            existing.Day = item.Day;
-            existing.Data = item.Data;
-            existing.Count = item.Count;
+            var day = item.Day.ToDateTime(TimeOnly.MinValue);
+            var param = new
+            {
+                item.Id,
+                item.InstrumentId,
+                item.Interval,
+                day,
+                item.Data,
+                item.Count
+            };
+
+            _ = await connection.ExecuteAsync(sql, param, txn);
+
+            txn.Commit();
+            return true;
         }
-        else
+        catch
         {
-            context.CandlesHistory.Add(item);
+            txn.Rollback();
+            //throw;
+            return false;
         }
-
-        var savedRecords = await context.SaveChangesAsync();
-
-        return savedRecords > 0;
     }
 
     public async Task<int> Delete(Guid Id)
@@ -73,12 +105,23 @@ internal class CandlesHistoryRepository : RepositoryBase, ICandlesHistoryReposit
             .ExecuteDeleteAsync();
     }
 
-    public async Task<int> DeleteAll(Guid instrumentId)
+    public async Task<int> DeleteAll(Guid instrumentId, DateOnly dayBefore)
     {
         using var context = await GetDbContext();
 
-        return await context.CandlesHistory
-            .Where(s => s.InstrumentId == instrumentId)
-            .ExecuteDeleteAsync();
+        var sql = @$"DELETE FROM {CandleHistoryEntityConfiguration.CandlesHistoryTableName}
+        WHERE instrument_id = @instrumentId
+        AND day < @timeBefore";
+
+        var param = new
+        {
+            instrumentId,
+            dayBefore
+        };
+
+        using var connection = _connectionFactory.GetConnection();
+        var res = await connection.ExecuteAsync(sql, param);
+
+        return res;
     }
 }

@@ -115,9 +115,7 @@ internal class CandlesRepository : RepositoryBase, ICandlesRepository
         return rowCount;
     }
 
-    public async Task<int> Delete(
-        Guid instrumentId,
-        DateTime timeBefore)
+    public async Task<int> Delete(Guid instrumentId, DateTime timeBefore)
     {
         var sql = @$"DELETE FROM {CandleEntityConfiguration.CandlesTableName}
         WHERE instrument_id = @instrumentId

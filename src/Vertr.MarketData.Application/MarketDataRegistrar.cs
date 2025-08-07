@@ -29,6 +29,14 @@ public static class MarketDataRegistrar
               .ForJob(LoadIntradayCandlesJobKeys.Key)
               .StartAt(DateTime.UtcNow.AddMinutes(1)));
 
+        options.AddJob<LoadHistoryCandlesJob>(LoadHistoryCandlesJobKeys.Key, j => j
+               .WithDescription("Load candles history from market data gateway"));
+
+        options.AddTrigger(t => t
+              .WithIdentity("Load candles history cron trigger")
+              .ForJob(LoadHistoryCandlesJobKeys.Key)
+              .StartAt(DateTime.UtcNow.AddMinutes(2)));
+
         options.AddJob<CleanIntradayCandlesJob>(CleanIntradayCandlesJobKeys.Key, j => j
                .WithDescription("Clean old intraday candles"));
 

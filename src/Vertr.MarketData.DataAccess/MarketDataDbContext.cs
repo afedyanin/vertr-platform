@@ -12,6 +12,8 @@ public class MarketDataDbContext : DbContext
 
     public DbSet<CandleSubscription> CandleSubscriptions { get; set; }
 
+    public DbSet<CandlesHistoryItem> CandlesHistory { get; set; }
+
     public MarketDataDbContext(DbContextOptions<MarketDataDbContext> options) : base(options)
     {
     }
@@ -21,5 +23,6 @@ public class MarketDataDbContext : DbContext
         new InstrumentEntityConfiguration().Configure(modelBuilder.Entity<Instrument>());
         new CandleEntityConfiguration().Configure(modelBuilder.Entity<Candle>());
         new CandleSubscriptionEntityConfiguration().Configure(modelBuilder.Entity<CandleSubscription>());
+        new CandleHistoryEntityConfiguration().Configure(modelBuilder.Entity<CandlesHistoryItem>());
     }
 }

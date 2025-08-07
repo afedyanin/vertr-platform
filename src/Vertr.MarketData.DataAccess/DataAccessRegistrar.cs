@@ -15,6 +15,7 @@ public static class DataAccessRegistrar
         services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
         services.AddScoped<ICandlesRepository, CandlesRepository>();
         services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
+        services.AddScoped<ICandlesHistoryRepository, CandlesHistoryRepository>();
 
         return services;
     }

@@ -17,20 +17,20 @@ public class TradingSignalsController : ControllerBase
     [HttpGet("by-strategy/{strategyId:guid}")]
     public async Task<IActionResult> GetByStrategy(Guid strategyId)
     {
-        var instruments = await _repository.GetByStrategyId(strategyId);
-        return Ok(instruments);
+        var signals = await _repository.GetByStrategyId(strategyId);
+        return Ok(signals);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var instrument = await _repository.GetById(id);
+        var signal = await _repository.GetById(id);
 
-        if (instrument == null)
+        if (signal == null)
         {
             return NotFound();
         }
 
-        return Ok(instrument);
+        return Ok(signal);
     }
 }

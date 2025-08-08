@@ -1,15 +1,13 @@
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.Platform.Common.Channels;
 using Vertr.Strategies.Application.Services;
-using Vertr.Strategies.Contracts;
+using Vertr.Strategies.Contracts.Interfaces;
 
 namespace Vertr.Strategies.Application;
 public static class StrategiesRegistrar
 {
     public static IServiceCollection AddStrategies(this IServiceCollection services)
     {
-        services.RegisterDataChannel<StrategyMetadata>();
-        services.AddHostedService<StrategyHostingService>();
+        services.AddSingleton<IStrategyRepository, StrategyRepository>(sp => new StrategyRepository(sp));
         services.AddHostedService<CandlesConsumerService>();
 
         return services;

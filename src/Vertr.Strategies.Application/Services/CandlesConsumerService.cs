@@ -8,14 +8,14 @@ namespace Vertr.Strategies.Application.Services;
 
 internal class CandlesConsumerService : DataConsumerServiceBase<Candle>
 {
-    private readonly IStrategyHostingService _strategyHostingService;
+    private readonly IStrategyRepository _strategyRepository;
     private readonly ILogger<CandlesConsumerService> _logger;
 
     public CandlesConsumerService(
         IServiceProvider serviceProvider,
         ILogger<CandlesConsumerService> logger) : base(serviceProvider)
     {
-        _strategyHostingService = serviceProvider.GetRequiredService<IStrategyHostingService>();
+        _strategyRepository = serviceProvider.GetRequiredService<IStrategyRepository>();
         _logger = logger;
     }
 
@@ -23,7 +23,7 @@ internal class CandlesConsumerService : DataConsumerServiceBase<Candle>
     {
         _logger.LogInformation($"New Candle received: InstrumentId={data.InstrumentId}");
 
-        var activeStrategies = await _strategyHostingService.GetActiveStrategies();
+        var activeStrategies = await _strategyRepository.GetActiveStrategies();
 
         foreach (var strategy in activeStrategies)
         {

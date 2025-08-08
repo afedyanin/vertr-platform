@@ -15,4 +15,9 @@
     <ProjectReference Include="..\Vertr.Strategies.Contracts\Vertr.Strategies.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Vertr.Strategies.DataAccess.Tests" />
+  </ItemGroup>
+
+
 </Project>

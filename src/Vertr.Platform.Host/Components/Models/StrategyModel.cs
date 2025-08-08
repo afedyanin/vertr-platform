@@ -1,10 +1,11 @@
 using Vertr.MarketData.Contracts;
+using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.Host.Components.Models;
 
-public record SubscriptionModel
+public class StrategyModel
 {
-    public required CandleSubscription Subscription { get; init; }
+    public required StrategyMetadata Strategy { get; init; }
 
     public required Instrument Instrument { get; set; }
 }

@@ -1,7 +1,53 @@
 @page "/strategies"
 
+@using Vertr.Platform.Host.Components.Common
+@using Vertr.Platform.Host.Components.Models
+
+@using Vertr.MarketData.Contracts
+
+@inject IDialogService DialogService
+
 <h3>Strategies</h3>
 
-@code {
+<FluentStack>
+    <FluentButton @onclick="AddStrategyAsync" Appearance="Appearance.Accent">
+        Add
+    </FluentButton>
+    <FluentSpacer />
+    <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
+</FluentStack>
 
+<div style="display: table; table-layout: fixed; width: 100%;">
+    <div style="overflow-x: auto;">
+        <FluentDataGrid @ref=dataGrid
+            TGridItem=StrategyModel
+            OnCellClick="HandleCellClick"
+            Items="@_strategies"
+            Pagination="@_pagination"
+            ShowHover=true
+            DisplayMode="DataGridDisplayMode.Table"
+            RowSize="@DataGridRowSize.Medium">
+            <PropertyColumn Property="@(p => p.Strategy.CreatedAt)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Strategy.Type)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Strategy.Name)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Strategy.AccountId)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Strategy.SubAccountId)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Strategy.QtyLots)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Strategy.IsActive)" Sortable="true" />
+            <TemplateColumn Title="">
+                <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
+                              Appearance=Appearance.Lightweight
+                              Title="Delete"
+                              @onclick="@(async () => await HandleDeleteAction(context))" />
+            </TemplateColumn>
+        </FluentDataGrid>
+
+    </div>
+</div>
+
+<FluentPaginator State="@_pagination" />
+
+@code {
+    private RenderFragment template = @<span />;
 }

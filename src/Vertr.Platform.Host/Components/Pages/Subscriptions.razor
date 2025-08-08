@@ -28,7 +28,7 @@
                         ShowHover=true
                         DisplayMode="DataGridDisplayMode.Table"
                         RowSize="@DataGridRowSize.Medium">
-            <PropertyColumn Property="@(p => p.InstrumentName)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true" />
             <PropertyColumn Property="@(p => p.Subscription.Interval)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Subscription.Disabled)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Subscription.LoadHistory)" Sortable="true" />

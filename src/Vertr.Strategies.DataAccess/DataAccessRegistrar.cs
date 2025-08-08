@@ -12,8 +12,8 @@ public static class DataAccessRegistrar
         services.AddSingleton<IDbConnectionFactory>(sp => new DbConnectionFactory(connectionString!));
         services.AddDbContextFactory<StrategiesDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<IStrategyMetadataRepository, StrategyMetadataRepository>();
-        services.AddScoped<ITradingSignalRepository, TradingSignalRepository>();
+        services.AddTransient<IStrategyMetadataRepository, StrategyMetadataRepository>();
+        services.AddTransient<ITradingSignalRepository, TradingSignalRepository>();
 
         return services;
     }

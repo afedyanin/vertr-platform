@@ -4,18 +4,20 @@ using Vertr.MarketData.Contracts;
 using Vertr.Platform.Common.Utils;
 using Vertr.Platform.Host.Components.Common;
 using Vertr.Platform.Host.Components.Models;
+using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.Host.Components.Pages;
 
-public partial class Subscriptions
+public partial class Strategies
 {
     private IDialogReference? _dialog;
 
     private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
 
-    private FluentDataGrid<SubscriptionModel> dataGrid;
+    private FluentDataGrid<StrategyModel> dataGrid;
 
-    private IQueryable<SubscriptionModel> _subscriptions { get; set; }
+    private IQueryable<StrategyModel> _strategies { get; set; }
+
 
     private IDictionary<Guid, Instrument> _instruments { get; set; }
 
@@ -27,18 +29,26 @@ public partial class Subscriptions
         await base.OnInitializedAsync();
 
         _instruments = await InitInstruments();
-        _subscriptions = await InitSubscriptions();
+        _strategies = await InitStrategies();
     }
 
-    private async Task HandleCellClick(FluentDataGridCell<SubscriptionModel> cell)
+    private Task HandleCellClick(FluentDataGridCell<StrategyModel> cell)
     {
         if (cell.Item != null && cell.GridColumn <= 6)
         {
-            await OpenPanelRightAsync(cell.Item);
+            //await OpenPanelRightAsync(cell.Item);
+            DemoLogger.WriteLine($"Strategy {cell.Item.Strategy.Name} is selected.");
         }
+
+        return Task.CompletedTask;
     }
-    private async Task AddSubscriptionAsync()
+
+    private Task AddStrategyAsync()
     {
+        DemoLogger.WriteLine("AddStrategyAsync");
+        return Task.CompletedTask;
+
+        /*
         var instrument = _instruments.Values.First();
         var model = new SubscriptionModel()
         {
@@ -56,16 +66,17 @@ public partial class Subscriptions
         };
 
         await OpenPanelRightAsync(model);
+        */
     }
 
-
+    /*
     private async Task OpenPanelRightAsync(SubscriptionModel subscriptionModel)
     {
         _dialog = await DialogService.ShowPanelAsync<SubscriptionPanel>(subscriptionModel, new DialogParameters<SubscriptionModel>()
         {
             Content = subscriptionModel,
             Alignment = HorizontalAlignment.Right,
-            Title = $"{subscriptionModel.Instrument.GetFullName()}",
+            Title = $"{subscriptionModel.InstrumentName}",
             PrimaryAction = "Save",
             SecondaryAction = "Cancel",
             Width = "400px",
@@ -98,16 +109,17 @@ public partial class Subscriptions
         var saved = await SaveSubscription(model.Subscription);
         if (saved)
         {
-            DemoLogger.WriteLine($"Subscription for {model.Instrument.GetFullName()} ({model.Subscription.Interval}) saved.");
+            DemoLogger.WriteLine($"Subscription for {model.InstrumentName} ({model.Subscription.Interval}) saved.");
         }
         else
         {
-            DemoLogger.WriteLine($"Saving subscription {model.Instrument.GetFullName()} ({model.Subscription.Interval}) FAILED!");
+            DemoLogger.WriteLine($"Saving subscription {model.InstrumentName} ({model.Subscription.Interval}) FAILED!");
         }
 
         _subscriptions = await InitSubscriptions();
         await dataGrid.RefreshDataAsync(force: true);
     }
+    */
 
     private async Task<IDictionary<Guid, Instrument>> InitInstruments()
     {
@@ -128,25 +140,25 @@ public partial class Subscriptions
         return res;
     }
 
-    private async Task<IQueryable<SubscriptionModel>> InitSubscriptions()
+    private async Task<IQueryable<StrategyModel>> InitStrategies()
     {
         using var apiClient = _httpClientFactory.CreateClient("backend");
-        var subscriptions = await apiClient.GetFromJsonAsync<CandleSubscription[]>("api/subscriptions", JsonOptions.DefaultOptions);
+        var strategies = await apiClient.GetFromJsonAsync<StrategyMetadata[]>("api/strategies", JsonOptions.DefaultOptions);
 
-        if (subscriptions == null)
+        if (strategies == null)
         {
-            return Array.Empty<SubscriptionModel>().AsQueryable();
+            return Array.Empty<StrategyModel>().AsQueryable();
         }
 
-        var modelItems = new List<SubscriptionModel>();
+        var modelItems = new List<StrategyModel>();
 
-        foreach (var sub in subscriptions)
+        foreach (var strategy in strategies)
         {
-            if (_instruments.TryGetValue(sub.InstrumentId, out var instrument))
+            if (_instruments.TryGetValue(strategy.InstrumentId, out var instrument))
             {
-                var item = new SubscriptionModel
+                var item = new StrategyModel
                 {
-                    Subscription = sub,
+                    Strategy = strategy,
                     Instrument = instrument,
                 };
 
@@ -154,7 +166,7 @@ public partial class Subscriptions
             }
         }
 
-        var res = modelItems?.AsQueryable() ?? Array.Empty<SubscriptionModel>().AsQueryable();
+        var res = modelItems?.AsQueryable() ?? Array.Empty<StrategyModel>().AsQueryable();
         return res;
     }
 
@@ -175,13 +187,13 @@ public partial class Subscriptions
         }
     }
 
-    private async Task HandleDeleteAction(SubscriptionModel model)
+    private async Task HandleDeleteAction(StrategyModel model)
     {
         var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Delete subscription: {model.Instrument.GetFullName()}?",
+            $"Delete subscription: {model.Strategy.Name}?",
             "Yes",
             "No",
-            $"Deleting {model.Instrument.GetFullName()} Interval={model.Subscription.Interval}");
+            $"Deleting {model.Strategy.Name}");
 
         var result = await confirmation.Result;
 
@@ -190,6 +202,10 @@ public partial class Subscriptions
             return;
         }
 
+        DemoLogger.WriteLine($"Strategy {model.Strategy.Name} is deleted.");
+        return;
+
+        /*
         using var apiClient = _httpClientFactory.CreateClient("backend");
         var message = await apiClient.DeleteAsync($"api/subscriptions/{model.Subscription.Id}");
         message.EnsureSuccessStatusCode();
@@ -197,6 +213,6 @@ public partial class Subscriptions
         _subscriptions = await InitSubscriptions();
         await dataGrid.RefreshDataAsync(force: true);
 
-        DemoLogger.WriteLine($"Subscription for {model.Instrument.GetFullName()} ({model.Subscription.Interval}) is deleted.");
+        */
     }
 }

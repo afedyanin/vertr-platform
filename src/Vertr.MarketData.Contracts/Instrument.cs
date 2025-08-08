@@ -8,5 +8,7 @@ public record class Instrument
     public string? Name { get; set; }
     public string? Currency { get; set; }
     public decimal? LotSize { get; set; }
+
+    public string GetFullName() => $"{Symbol.ClassCode}.{Symbol.Ticker} ({Name})";
 }
 

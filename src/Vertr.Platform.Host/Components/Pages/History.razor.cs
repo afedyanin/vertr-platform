@@ -58,17 +58,42 @@ public partial class History
 
         using var apiClient = _httpClientFactory.CreateClient("backend");
         var items = await apiClient.GetFromJsonAsync<CandlesHistoryItem[]>($"api/candles-history/{_selectedInstrument.Id}", JsonOptions.DefaultOptions);
-        var res = items?.AsQueryable() ?? Array.Empty<CandlesHistoryItem>().AsQueryable();
+        var res = items?.OrderByDescending(t => t.Day).AsQueryable() ?? Array.Empty<CandlesHistoryItem>().AsQueryable();
         return res;
     }
 
     private async Task OnSelectedOptionChanged(Instrument? selected)
     {
-        DemoLogger.WriteLine($"OnSelectedOptionChanged to {selected?.Name}");
-
         _selectedInstrument = selected;
         _candles = await InitCandlesHistory();
         await _dataGrid.RefreshDataAsync();
     }
 
+    private async Task HandleRowClick(FluentDataGridRow<CandlesHistoryItem> row)
+    {
+        var item = row.Item;
+        if (item != null)
+        {
+            await OpenDialogAsync(item);
+        }
+    }
+
+    private async Task OpenDialogAsync(CandlesHistoryItem item)
+    {
+        var instrument = _instruments?.FirstOrDefault(i => i.Id == item.InstrumentId);
+        var title = instrument == null ? "" : instrument.GetFullName();
+
+        var parameters = new DialogParameters()
+        {
+            Title = title,
+            PrimaryAction = null,
+            SecondaryAction = null,
+            Width = "1500px",
+            Height = "800px",
+            TrapFocus = true,
+            Modal = true,
+        };
+
+        await DialogService.ShowDialogAsync<CandlesHistoryDialog>(item, parameters);
+    }
 }

@@ -17,14 +17,14 @@ public class CandlesHistoryController : ControllerBase
         _candlesRepository = candlesRepository;
     }
 
-    [HttpGet("{instrumentId}")]
+    [HttpGet("{instrumentId:guid}")]
     public async Task<IActionResult> Get(Guid instrumentId)
     {
         var history = await _candlesRepository.Get(instrumentId);
         return Ok(history);
     }
 
-    [HttpGet("details/{id}")]
+    [HttpGet("details/{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var item = await _candlesRepository.GetById(id);

@@ -21,11 +21,9 @@ internal class StrategyEntityConfiguration : IEntityTypeConfiguration<StrategyMe
             .HasColumnName("name")
             .IsRequired();
 
-        builder.Property(e => e.Description)
-            .HasColumnName("description");
-
         builder.Property(e => e.Type)
             .HasColumnName("type")
+            .HasColumnType("integer")
             .IsRequired();
 
         builder.Property(e => e.InstrumentId)
@@ -52,8 +50,8 @@ internal class StrategyEntityConfiguration : IEntityTypeConfiguration<StrategyMe
             .HasColumnName("params_json")
             .HasColumnType("json");
 
-        builder.Property(e => e.UpdatedAt)
-            .HasColumnName("updated_at")
+        builder.Property(e => e.CreatedAt)
+            .HasColumnName("created_at")
             .IsRequired();
     }
 }

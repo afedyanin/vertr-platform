@@ -7,7 +7,7 @@ namespace Vertr.Strategies.Application.Services;
 
 internal class StrategyHostingService : DataConsumerServiceBase<StrategyMetadata>, IStrategyHostingService
 {
-    private List<IStrategy> _strategies;
+    private Dictionary<Guid, IStrategy> _strategies;
 
     private readonly IStrategyMetadataRepository _repository;
 
@@ -17,7 +17,7 @@ internal class StrategyHostingService : DataConsumerServiceBase<StrategyMetadata
     }
 
     public Task<IStrategy[]> GetActiveStrategies()
-        => Task.FromResult(_strategies.ToArray());
+        => Task.FromResult(_strategies.Values.ToArray());
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -28,12 +28,12 @@ internal class StrategyHostingService : DataConsumerServiceBase<StrategyMetadata
     protected override Task Handle(StrategyMetadata data, CancellationToken cancellationToken = default)
     {
         // TODO: Update strategies list
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
-    private async Task<List<IStrategy>> InitStrategies()
+    private async Task<Dictionary<Guid, IStrategy>> InitStrategies()
     {
-        var res = new List<IStrategy>();
+        var res = new Dictionary<Guid, IStrategy>();
 
         var strategiesMeta = await _repository.GetAll();
 
@@ -45,7 +45,7 @@ internal class StrategyHostingService : DataConsumerServiceBase<StrategyMetadata
             }
 
             var strategy = StrategyFactory.Create(metadata, ServiceProvider);
-            res.Add(strategy);
+            res[strategy.Id] = strategy;
         }
 
         return res;

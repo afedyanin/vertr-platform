@@ -23,7 +23,7 @@ public class TinvestGatewayController : ControllerBase
         return Ok(instrument);
     }
 
-    [HttpGet("instrument-by-id/{instrumentId}")]
+    [HttpGet("instrument-by-id/{instrumentId:guid}")]
     public async Task<IActionResult> GetInstrumentById(Guid instrumentId)
     {
         var instrument = await _marketDataGayeway.GetInstrumentById(instrumentId);

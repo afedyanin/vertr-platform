@@ -2,7 +2,7 @@ namespace Vertr.Strategies.Contracts.Interfaces;
 
 public interface ITradingSignalRepository
 {
-    public Task<TradingSignal[]> GetAll();
+    public Task<TradingSignal[]> GetByStrategyId(Guid strategyId);
 
     public Task<TradingSignal?> GetById(Guid id);
 

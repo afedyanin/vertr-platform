@@ -35,6 +35,11 @@ internal class CleanIntradayCandlesJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
+        if (_marketDataSettings.DisableBootstrapJobs)
+        {
+            return;
+        }
+
         _logger.LogInformation($"{CleanIntradayCandlesJobKeys.Name} starting.");
 
         var subscriptions = await _subscriptionsRepository.GetAll();

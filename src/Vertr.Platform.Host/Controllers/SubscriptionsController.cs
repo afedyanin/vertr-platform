@@ -22,7 +22,7 @@ public class SubscriptionsController : ControllerBase
         return Ok(instruments);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var instrument = await _subscriptionsRepository.GetById(id);
@@ -47,7 +47,7 @@ public class SubscriptionsController : ControllerBase
         return Ok(subscription.Id);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var deletedCount = await _subscriptionsRepository.Delete(id);

@@ -10,6 +10,7 @@ public static class StrategiesRegistrar
     {
         services.RegisterDataChannel<StrategyMetadata>();
         services.AddHostedService<StrategyHostingService>();
+        services.AddHostedService<CandlesConsumerService>();
 
         return services;
     }

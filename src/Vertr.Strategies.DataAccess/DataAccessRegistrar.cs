@@ -7,12 +7,13 @@ using Vertr.Strategies.DataAccess.Repositories;
 namespace Vertr.Strategies.DataAccess;
 public static class DataAccessRegistrar
 {
-    public static IServiceCollection AddPortfolioManagerDataAccess(this IServiceCollection services, string connectionString)
+    public static IServiceCollection AddStrategiesDataAccess(this IServiceCollection services, string connectionString)
     {
         services.AddSingleton<IDbConnectionFactory>(sp => new DbConnectionFactory(connectionString!));
         services.AddDbContextFactory<StrategiesDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddScoped<IStrategyMetadataRepository, StrategyMetadataRepository>();
+        services.AddScoped<ITradingSignalRepository, TradingSignalRepository>();
 
         return services;
     }

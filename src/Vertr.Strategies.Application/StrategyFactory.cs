@@ -10,7 +10,7 @@ internal static class StrategyFactory
     {
         ArgumentNullException.ThrowIfNull(strategyMetadata);
 
-        if (strategyMetadata.Type == nameof(RandomWalkStrategy))
+        if (strategyMetadata.Type == StrategyType.RandomWalk)
         {
             return new RandomWalkStrategy(serviceProvider)
             {
@@ -22,7 +22,7 @@ internal static class StrategyFactory
             };
         }
 
-        if (strategyMetadata.Type == nameof(TrendFollowStrategy))
+        if (strategyMetadata.Type == StrategyType.TrendFollow)
         {
             return new TrendFollowStrategy(serviceProvider)
             {

@@ -18,7 +18,7 @@ internal class StrategyMetadataRepository : RepositoryBase, IStrategyMetadataRep
 
         return await context
             .Strategies
-            .OrderByDescending(x => x.UpdatedAt)
+            .OrderByDescending(x => x.CreatedAt)
             .ToArrayAsync();
     }
 
@@ -34,11 +34,33 @@ internal class StrategyMetadataRepository : RepositoryBase, IStrategyMetadataRep
     public async Task<bool> Save(StrategyMetadata metadata)
     {
         using var context = await GetDbContext();
-        context.Strategies.Add(metadata);
+
+        var existing = await context
+            .Strategies
+            .FirstOrDefaultAsync(p => p.Id == metadata.Id);
+
+        if (existing != null)
+        {
+            existing.Name = metadata.Name;
+            existing.Type = metadata.Type;
+            existing.InstrumentId = metadata.InstrumentId;
+            existing.AccountId = metadata.AccountId;
+            existing.SubAccountId = metadata.SubAccountId;
+            existing.QtyLots = metadata.QtyLots;
+            existing.IsActive = metadata.IsActive;
+            existing.ParamsJson = metadata.ParamsJson;
+            existing.CreatedAt = metadata.CreatedAt;
+        }
+        else
+        {
+            context.Strategies.Add(metadata);
+        }
+
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;
     }
+
     public async Task<int> Delete(Guid Id)
     {
         using var context = await GetDbContext();

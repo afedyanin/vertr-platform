@@ -20,6 +20,9 @@
     <ProjectReference Include="..\Vertr.MarketData.DataAccess\Vertr.MarketData.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.Strategies.Application\Vertr.Strategies.Application.csproj" />
+    <ProjectReference Include="..\Vertr.Strategies.Contracts\Vertr.Strategies.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.Strategies.DataAccess\Vertr.Strategies.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.TinvestGateway\Vertr.TinvestGateway.csproj" />
   </ItemGroup>
 

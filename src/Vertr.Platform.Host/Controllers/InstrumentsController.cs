@@ -22,7 +22,7 @@ public class InstrumentsController : ControllerBase
         return Ok(instruments);
     }
 
-    [HttpGet("{instrumentId}")]
+    [HttpGet("{instrumentId:guid}")]
     public async Task<IActionResult> GetById(Guid instrumentId)
     {
         var instrument = await _instrumentRepository.GetById(instrumentId);
@@ -57,7 +57,7 @@ public class InstrumentsController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("{instrumentId}")]
+    [HttpDelete("{instrumentId:guid}")]
     public async Task<IActionResult> Delete(Guid instrumentId)
     {
         var deletedCount = await _instrumentRepository.Delete(instrumentId);

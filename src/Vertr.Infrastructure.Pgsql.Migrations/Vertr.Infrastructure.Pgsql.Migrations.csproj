@@ -27,6 +27,7 @@
   
   <ItemGroup>
     <Folder Include="Migrations\PortfolioDb\" />
+    <Folder Include="Migrations\StrategiesDb\" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,8 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Quartz;
 using Vertr.MarketData.Application;
 using Vertr.MarketData.DataAccess;
+using Vertr.Strategies.Application;
+using Vertr.Strategies.DataAccess;
 using Vertr.Platform.Host.Components;
 using Vertr.TinvestGateway;
 
@@ -40,6 +42,9 @@ public class Program
 
         builder.Services.AddMarketData();
         builder.Services.AddMarketDataAccess(connectionString!);
+
+        builder.Services.AddStrategies();
+        builder.Services.AddStrategiesDataAccess(connectionString!);
 
         // Add quatrz jobs
 

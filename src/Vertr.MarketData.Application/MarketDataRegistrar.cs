@@ -11,9 +11,7 @@ public static class MarketDataRegistrar
     public static IServiceCollection AddMarketData(this IServiceCollection services)
     {
         services.AddOptions<MarketDataSettings>().BindConfiguration(nameof(MarketDataSettings));
-
         services.RegisterDataChannel<Candle>();
-        //services.AddHostedService<CandlesConsumerService>();
 
         return services;
     }
@@ -44,7 +42,6 @@ public static class MarketDataRegistrar
               .WithIdentity("Clean intraday candles cron trigger")
               .ForJob(CleanIntradayCandlesJobKeys.Key)
               .StartAt(DateTime.UtcNow.AddMinutes(3)));
-
         // https://www.freeformatter.com/cron-expression-generator-quartz.html
         //.WithCronSchedule("5 1/10,5/10,9/10 3-23 ? * MON-FRI"));
 

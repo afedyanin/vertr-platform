@@ -8,7 +8,7 @@ using Vertr.Strategies.Contracts.Interfaces;
 namespace Vertr.Strategies.Application.StrategiesImpl;
 internal abstract class StrategyBase : IStrategy
 {
-    private readonly IDataProducer<TradingSignal> _tradingSignalProducer;
+    //private readonly IDataProducer<TradingSignal> _tradingSignalProducer;
     private readonly ITradingSignalRepository _tradingSignalRepository;
 
     protected IServiceProvider ServiceProvider { get; private set; }
@@ -30,7 +30,7 @@ internal abstract class StrategyBase : IStrategy
     {
         ServiceProvider = serviceProvider;
         MarketDataRepository = ServiceProvider.GetRequiredService<IMarketDataRepository>();
-        _tradingSignalProducer = ServiceProvider.GetRequiredService<IDataProducer<TradingSignal>>();
+        //_tradingSignalProducer = ServiceProvider.GetRequiredService<IDataProducer<TradingSignal>>();
         _tradingSignalRepository = ServiceProvider.GetRequiredService<ITradingSignalRepository>();
     }
 
@@ -40,7 +40,7 @@ internal abstract class StrategyBase : IStrategy
 
         // TODO: Replace with WhenAll?
         await _tradingSignalRepository.Save(tradingSignal);
-        await _tradingSignalProducer.Produce(tradingSignal, cancellationToken);
+        //await _tradingSignalProducer.Produce(tradingSignal, cancellationToken);
     }
 
     public abstract TradingSignal CreateTradingSignal(Candle candle);

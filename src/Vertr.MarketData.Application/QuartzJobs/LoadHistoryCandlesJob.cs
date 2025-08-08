@@ -42,6 +42,11 @@ internal class LoadHistoryCandlesJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
+        if (_marketDataSettings.DisableBootstrapJobs)
+        {
+            return;
+        }
+
         _logger.LogInformation($"{LoadHistoryCandlesJobKeys.Name} starting.");
 
         var subscriptions = await _subscriptionsRepository.GetAll();

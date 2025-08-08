@@ -6,21 +6,19 @@ public class StrategyMetadata
 
     public required string Name { get; set; }
 
-    public string? Description { get; set; }
+    public required StrategyType Type { get; set; }
 
-    public required string Type { get; set; }
+    public Guid InstrumentId { get; set; }
 
-    public Guid InstrumentId { get; init; }
+    public required string AccountId { get; set; }
 
-    public required string AccountId { get; init; }
+    public Guid SubAccountId { get; set; }
 
-    public Guid SubAccountId { get; init; }
+    public long QtyLots { get; set; }
 
-    public long QtyLots { get; init; }
+    public bool IsActive { get; set; }
 
-    public bool IsActive { get; init; }
+    public string? ParamsJson { get; set; }
 
-    public string? ParamsJson { get; init; }
-
-    public DateTime UpdatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

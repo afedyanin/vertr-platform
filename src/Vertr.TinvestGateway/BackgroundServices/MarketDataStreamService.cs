@@ -57,8 +57,6 @@ public class MarketDataStreamService : StreamServiceBase
                 InstrumentId = sub.InstrumentId.ToString(),
                 Interval = sub.Interval.ConvertToSubscriptionInterval()
             });
-
-
         }
 
         var request = new Tinkoff.InvestApi.V1.MarketDataServerSideStreamRequest()
@@ -76,7 +74,7 @@ public class MarketDataStreamService : StreamServiceBase
                 var candle = response.Candle.Convert(Guid.Parse(instrumentId));
 
                 await candlesRepository.Upsert([candle]);
-                // await marketDataProducer.Produce(candle, stoppingToken);
+                await marketDataProducer.Produce(candle, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {

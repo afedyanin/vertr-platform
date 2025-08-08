@@ -1,3 +1,5 @@
+using System.Net.Http;
+using System.Net.Http.Headers;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts;
 using Vertr.TinvestGateway.Proxy;
@@ -78,5 +80,28 @@ public class TinvestGatewayMarketDataTests
 
         Console.WriteLine($"Count={candles.Length} From={first.TimeUtc:O} To={last.TimeUtc:O}");
         Assert.Pass();
+    }
+
+    [TestCase("BBG004730N88", 2025, "sber_2025.zip")] // SBER
+    public async Task CanLoadAllHistory(string figi, int year, string filePath)
+    {
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _settings.AccessToken);
+        httpClient.BaseAddress = new Uri("https://invest-public-api.tinkoff.ru");
+
+        var response = await httpClient.GetAsync($"/history-data?figi={figi}&year={year}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(content);
+        }
+
+        response.EnsureSuccessStatusCode();
+
+        using var fileStream = new FileStream(filePath, FileMode.Create);
+        using var stream = await response.Content.ReadAsStreamAsync();
+
+        await stream.CopyToAsync(fileStream);
     }
 }

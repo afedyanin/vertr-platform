@@ -10,12 +10,13 @@ internal class TradingSignalRepository : RepositoryBase, ITradingSignalRepositor
     {
     }
 
-    public async Task<TradingSignal[]> GetAll()
+    public async Task<TradingSignal[]> GetByStrategyId(Guid strategyId)
     {
         using var context = await GetDbContext();
 
         return await context
             .TradingSignals
+            .Where(s => s.StrategyId == strategyId)
             .OrderByDescending(x => x.CreatedAt)
             .ToArrayAsync();
     }

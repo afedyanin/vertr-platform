@@ -32,11 +32,6 @@ internal class LoadIntradayCandlesHandler : IRequestHandler<LoadIntradayCandlesR
 
     public async Task Handle(LoadIntradayCandlesRequest request, CancellationToken cancellationToken)
     {
-        if (_marketDataSettings.DisableBootstrapJobs)
-        {
-            return;
-        }
-
         _logger.LogInformation($"{nameof(LoadIntradayCandlesHandler)} starting.");
 
         var subscriptions = await _subscriptionsRepository.GetAll();

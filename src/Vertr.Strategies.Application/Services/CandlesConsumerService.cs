@@ -21,7 +21,7 @@ internal class CandlesConsumerService : DataConsumerServiceBase<Candle>
 
     protected override async Task Handle(Candle data, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation($"New Candle received: InstrumentId={data.InstrumentId}");
+        _logger.LogDebug($"New Candle received: InstrumentId={data.InstrumentId}");
 
         var activeStrategies = await _strategyRepository.GetActiveStrategies();
 

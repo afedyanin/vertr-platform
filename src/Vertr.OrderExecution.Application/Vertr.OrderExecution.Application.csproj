@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Vertr.Infrastructure.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Vertr.Infrastructure.Common\Vertr.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.Contracts\Vertr.OrderExecution.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.Platform.Common\Vertr.Platform.Common.csproj" />

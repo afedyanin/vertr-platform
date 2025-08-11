@@ -76,6 +76,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Strategies.DataAccess
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Infrastructure.Common", "src\Vertr.Infrastructure.Common\Vertr.Infrastructure.Common.csproj", "{F421986E-C3D9-42E8-83F6-54CB4C2A015E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Infrastructure.Common.Tests", "tests\Vertr.Infrastructure.Common.Tests\Vertr.Infrastructure.Common.Tests.csproj", "{A45F855A-6E03-4B68-8293-61FBE9B4A0B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,10 @@ Global
 		{F421986E-C3D9-42E8-83F6-54CB4C2A015E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F421986E-C3D9-42E8-83F6-54CB4C2A015E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F421986E-C3D9-42E8-83F6-54CB4C2A015E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A45F855A-6E03-4B68-8293-61FBE9B4A0B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A45F855A-6E03-4B68-8293-61FBE9B4A0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A45F855A-6E03-4B68-8293-61FBE9B4A0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A45F855A-6E03-4B68-8293-61FBE9B4A0B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,6 +220,7 @@ Global
 		{4B18CB8A-5B72-2616-45E0-F10A3C5467FB} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 		{79450545-5F77-4845-B492-F2967B5A5E0B} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 		{F421986E-C3D9-42E8-83F6-54CB4C2A015E} = {7AA0956D-5929-4B12-9D07-970EB5BEA207}
+		{A45F855A-6E03-4B68-8293-61FBE9B4A0B6} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

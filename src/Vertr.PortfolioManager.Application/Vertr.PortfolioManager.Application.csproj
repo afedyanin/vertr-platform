@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Vertr.Infrastructure.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Vertr.Infrastructure.Common\Vertr.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.Contracts\Vertr.PortfolioManager.Contracts.csproj" />
   </ItemGroup>

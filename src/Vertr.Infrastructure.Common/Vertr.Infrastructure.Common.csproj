@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Vertr.Platform.Common\Vertr.Platform.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Vertr.Infrastructure.Common.Tests"/>
+  </ItemGroup>
+
 </Project>

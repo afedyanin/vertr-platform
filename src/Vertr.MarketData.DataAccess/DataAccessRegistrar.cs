@@ -14,10 +14,10 @@ public static class DataAccessRegistrar
         services.AddSingleton<IDbConnectionFactory>(sp => new DbConnectionFactory(connectionString!));
         services.AddDbContextFactory<MarketDataDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<IInstrumentsRepository, InstrumentsRepository>();
-        services.AddScoped<ICandlesRepository, CandlesRepository>();
-        services.AddScoped<ISubscriptionsRepository, SubscriptionsRepository>();
-        services.AddScoped<ICandlesHistoryRepository, CandlesHistoryRepository>();
+        services.AddTransient<IInstrumentsRepository, InstrumentsRepository>();
+        services.AddTransient<ICandlesRepository, CandlesRepository>();
+        services.AddTransient<ISubscriptionsRepository, SubscriptionsRepository>();
+        services.AddTransient<ICandlesHistoryRepository, CandlesHistoryRepository>();
 
         SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
         DefaultTypeMap.MatchNamesWithUnderscores = true;

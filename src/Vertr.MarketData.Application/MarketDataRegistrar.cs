@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.MarketData.Contracts;
 using Vertr.Infrastructure.Common.Channels;
-using Vertr.Platform.Common.Mediator;
-using Vertr.MarketData.Contracts.Commands;
 using Vertr.MarketData.Application.CommandHandlers;
+using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Commands;
+using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.MarketData.Application;
 

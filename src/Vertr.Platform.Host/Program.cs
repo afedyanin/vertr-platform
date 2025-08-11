@@ -14,6 +14,7 @@ namespace Vertr.Platform.Host;
 public class Program
 {
     private const string _connStringName = "VertrDbConnection";
+    private const string _hangfireConnStringName = "HangfireConnection";
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -47,9 +48,9 @@ public class Program
         builder.Services.AddStrategies();
         builder.Services.AddStrategiesDataAccess(connectionString!);
 
-
         // Hangfire
-        builder.Services.AddHangfire(builder.Configuration.GetConnectionString("HangfireConnection")!);
+        var hfConnectionString = configuration.GetConnectionString(_hangfireConnStringName);
+        builder.Services.AddHangfire(hfConnectionString!);
 
         // Mediator
         builder.Services.AddMediator();

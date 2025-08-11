@@ -1,8 +1,8 @@
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Commands;
 using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.MarketData.Application.CommandHandlers;
 

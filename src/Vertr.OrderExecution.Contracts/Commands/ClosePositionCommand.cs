@@ -1,4 +1,4 @@
-using MediatR;
+using Vertr.Platform.Common.Mediator;
 using Vertr.OrderExecution.Contracts.Commands;
 
 namespace Vertr.OrderExecution.Contracts.Requests;

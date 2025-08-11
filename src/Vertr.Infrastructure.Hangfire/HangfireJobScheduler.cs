@@ -1,5 +1,5 @@
 using Hangfire;
-using MediatR;
+using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Common.Jobs;
 
 namespace Vertr.Infrastructure.Hangfire;

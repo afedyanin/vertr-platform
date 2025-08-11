@@ -1,11 +1,11 @@
 using System.Text;
 using System.Text.Json;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Commands;
 using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Common.Utils;
 
 namespace Vertr.MarketData.Application.CommandHandlers;

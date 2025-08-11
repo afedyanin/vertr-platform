@@ -1,4 +1,4 @@
-using MediatR;
+using Vertr.Platform.Common.Mediator;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Commands;

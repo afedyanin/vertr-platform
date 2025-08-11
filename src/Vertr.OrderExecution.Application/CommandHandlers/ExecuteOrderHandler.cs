@@ -1,4 +1,4 @@
-using MediatR;
+using Vertr.Platform.Common.Mediator;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;

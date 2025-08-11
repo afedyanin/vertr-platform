@@ -1,4 +1,4 @@
-using MediatR;
+using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.PortfolioManager.Contracts.Commands;
 

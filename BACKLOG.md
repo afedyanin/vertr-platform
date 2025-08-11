@@ -1,3 +1,15 @@
+# 2025-08-11
+
+## Scrutor
+
+- [Adding decorated classes to the ASP.NET](https://andrewlock.net/adding-decorated-classes-to-the-asp.net-core-di-container-using-scrutor/)
+- [Using Scrutor to automatically register your services with the ASP.NET](https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/)
+- [Improving ASP.NET Core Dependency Injection With Scrutor](https://www.milanjovanovic.tech/blog/improving-aspnetcore-dependency-injection-with-scrutor)
+- [Introduction to Scrutor Library in .NET](https://code-maze.com/dotnet-dependency-injection-with-scrutor/)
+- 
+
+
+
 # 2025-07-26
 
 - Дописать движок по бэктестам + DAL

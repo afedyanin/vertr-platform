@@ -1,24 +1,18 @@
+using MediatR;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
-using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class TradingSignalHandler : OrderHandlerBase, ICommandHandler<TradingSignalCommand, ExecuteOrderResponse>
+internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingSignalCommand, ExecuteOrderResponse>
 {
-    private readonly ICommandHandler<OpenPositionCommand, ExecuteOrderResponse> _openPositionHandler;
-    private readonly ICommandHandler<ReversePositionCommand, ExecuteOrderResponse> _reversePositionHandler;
-
     public TradingSignalHandler(
-        ICommandHandler<OpenPositionCommand, ExecuteOrderResponse> openPositionHandler,
-        ICommandHandler<ReversePositionCommand, ExecuteOrderResponse> reversePositionHandler,
+        IMediator mediator,
         IPortfolioRepository portfolioRepository,
         IInstrumentsRepository staticMarketDataProvider
-        ) : base(portfolioRepository, staticMarketDataProvider)
+        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
     {
-        _openPositionHandler = openPositionHandler;
-        _reversePositionHandler = reversePositionHandler;
     }
 
     public async Task<ExecuteOrderResponse> Handle(
@@ -45,7 +39,7 @@ internal class TradingSignalHandler : OrderHandlerBase, ICommandHandler<TradingS
                 QtyLots = request.QtyLots,
             };
 
-            var openResponse = await _openPositionHandler.Handle(openRequest, cancellationToken);
+            var openResponse = await Mediator.Send(openRequest, cancellationToken);
 
             return new ExecuteOrderResponse()
             {
@@ -72,7 +66,7 @@ internal class TradingSignalHandler : OrderHandlerBase, ICommandHandler<TradingS
             InstrumentId = request.InstrumentId,
         };
 
-        var reverseResponse = await _reversePositionHandler.Handle(reverseRequest, cancellationToken);
+        var reverseResponse = await Mediator.Send(reverseRequest, cancellationToken);
 
         return new ExecuteOrderResponse()
         {

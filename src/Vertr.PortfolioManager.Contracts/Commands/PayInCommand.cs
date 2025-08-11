@@ -1,8 +1,8 @@
-using Vertr.Platform.Common.Mediator;
+using MediatR;
 
 namespace Vertr.PortfolioManager.Contracts.Commands;
 
-public class PayInCommand : ICommand
+public class PayInCommand : IRequest
 {
     public required string AccountId { get; init; }
 

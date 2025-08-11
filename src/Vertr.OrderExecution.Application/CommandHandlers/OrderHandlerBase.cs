@@ -1,3 +1,4 @@
+using MediatR;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
@@ -9,11 +10,15 @@ internal abstract class OrderHandlerBase
     private readonly IInstrumentsRepository _marketDataProvider;
     private readonly IPortfolioRepository _portfolioRepository;
 
+    protected IMediator Mediator { get; private set; }
+
     protected OrderHandlerBase(
+        IMediator mediator,
         IPortfolioRepository portfolioRepository,
         IInstrumentsRepository marketDataProvider
         )
     {
+        Mediator = mediator;
         _portfolioRepository = portfolioRepository;
         _marketDataProvider = marketDataProvider;
     }

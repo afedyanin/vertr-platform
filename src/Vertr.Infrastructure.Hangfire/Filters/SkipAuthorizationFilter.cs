@@ -1,9 +1,9 @@
 using Hangfire.Annotations;
 using Hangfire.Dashboard;
 
-namespace Vertr.Platform.Host.Filters;
+namespace Vertr.Infrastructure.Hangfire.Filters;
 
-public class SkipAuthorizationFilter : IDashboardAuthorizationFilter
+internal class SkipAuthorizationFilter : IDashboardAuthorizationFilter
 {
     public bool Authorize([NotNull] DashboardContext context)
     {

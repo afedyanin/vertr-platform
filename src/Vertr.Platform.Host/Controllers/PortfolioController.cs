@@ -4,10 +4,8 @@ using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.PortfolioManager.Application.Repositories;
 using Microsoft.Extensions.Options;
-using Vertr.PortfolioManager.Application.Services;
-using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts.Commands;
-using Vertr.Platform.Common.Mediator;
+using MediatR;
 
 namespace Vertr.Platform.Host.Controllers;
 
@@ -15,27 +13,20 @@ namespace Vertr.Platform.Host.Controllers;
 [ApiController]
 public class PortfolioController : ControllerBase
 {
+    private readonly IMediator _mediator;
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
-    private readonly IInstrumentsRepository _staticMarketDataProvider;
     private readonly ILogger<PortfolioController> _logger;
 
-    private readonly ICommandHandler<PayInCommand> _payInHandler;
-    private readonly ICommandHandler<OverridePositionsCommand> _overridePositionHandler;
-
     public PortfolioController(
-        ICommandHandler<PayInCommand> payInHandler,
-        ICommandHandler<OverridePositionsCommand> overridePositionHandler,
+        IMediator mediator,
         IPortfolioGateway portfolioGateway,
         IPortfolioRepository portfolioRepository,
-        IInstrumentsRepository staticMarketDataProvider,
         ILogger<PortfolioController> logger)
     {
+        _mediator = mediator;
         _portfolioGateway = portfolioGateway;
         _portfolioRepository = portfolioRepository;
-        _staticMarketDataProvider = staticMarketDataProvider;
-        _payInHandler = payInHandler;
-        _overridePositionHandler = overridePositionHandler;
         _logger = logger;
     }
 
@@ -86,7 +77,7 @@ public class PortfolioController : ControllerBase
             Amount = money,
         };
 
-        await _payInHandler.Handle(request);
+        await _mediator.Send(request);
 
         return Ok(balance);
     }
@@ -147,7 +138,7 @@ public class PortfolioController : ControllerBase
             Overrides = overrides
         };
 
-        await _overridePositionHandler.Handle(req);
+        await _mediator.Send(req);
 
         return Ok();
     }

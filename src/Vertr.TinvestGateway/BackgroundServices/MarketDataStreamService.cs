@@ -4,8 +4,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Commands;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.Platform.Common.Channels;
+using Vertr.Platform.Common.Jobs;
 using Vertr.TinvestGateway.Converters;
 using Vertr.TinvestGateway.Settings;
 
@@ -34,6 +36,7 @@ public class MarketDataStreamService : StreamServiceBase
         var marketDataProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<Candle>>();
         var candlesRepository = scope.ServiceProvider.GetRequiredService<ICandlesRepository>();
         var subscriptionsRepository = scope.ServiceProvider.GetRequiredService<ISubscriptionsRepository>();
+        var jobScheduler = scope.ServiceProvider.GetRequiredService<IJobScheduler>();
 
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {
@@ -65,6 +68,8 @@ public class MarketDataStreamService : StreamServiceBase
         };
 
         using var stream = investApiClient.MarketDataStream.MarketDataServerSideStream(request, headers: null, deadline, stoppingToken);
+
+        EnqueueMarketDataJobs(jobScheduler, stoppingToken);
 
         await foreach (var response in stream.ResponseStream.ReadAllAsync(stoppingToken))
         {
@@ -113,5 +118,12 @@ public class MarketDataStreamService : StreamServiceBase
 
             await repo.Save(found);
         }
+    }
+
+    private void EnqueueMarketDataJobs(IJobScheduler jobScheduler, CancellationToken token)
+    {
+        _ = jobScheduler.Schedule(new LoadIntradayCandlesRequest(), TimeSpan.FromSeconds(30), token);
+        _ = jobScheduler.Schedule(new LoadHistoryCandlesRequest(), TimeSpan.FromMinutes(1), token);
+        _ = jobScheduler.Schedule(new CleanIntradayCandlesRequest(), TimeSpan.FromMinutes(1), token);
     }
 }

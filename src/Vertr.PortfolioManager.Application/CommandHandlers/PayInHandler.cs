@@ -1,13 +1,13 @@
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.MarketData.Contracts.Interfaces.old;
 using Vertr.Platform.Common.Channels;
-using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Commands;
 
 namespace Vertr.PortfolioManager.Application.CommandHandlers;
 
-internal class PayInHandler : ICommandHandler<PayInCommand>
+internal class PayInHandler : IRequestHandler<PayInCommand>
 {
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
 

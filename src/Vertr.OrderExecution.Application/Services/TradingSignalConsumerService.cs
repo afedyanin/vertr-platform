@@ -1,7 +1,7 @@
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common.Channels;
-using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.Strategies.Contracts;
 
@@ -9,10 +9,11 @@ namespace Vertr.OrderExecution.Application.Services;
 
 internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSignal>
 {
-    private readonly ICommandHandler<TradingSignalCommand, ExecuteOrderResponse> _tradingSignalHandler;
+    private readonly IMediator _mediator;
+
     public TradingSignalConsumerService(IServiceProvider serviceProvider) : base(serviceProvider)
     {
-        _tradingSignalHandler = serviceProvider.GetRequiredService<ICommandHandler<TradingSignalCommand, ExecuteOrderResponse>>();
+        _mediator = serviceProvider.GetRequiredService<IMediator>();
     }
 
     protected override async Task Handle(TradingSignal data, CancellationToken cancellationToken = default)
@@ -26,6 +27,6 @@ internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSig
             PortfolioIdentity = new PortfolioIdentity("data.AccountId", data.SubAccountId),
         };
 
-        _ = await _tradingSignalHandler.Handle(command, cancellationToken);
+        _ = await _mediator.Send(command, cancellationToken);
     }
 }

@@ -1,7 +1,7 @@
-using Vertr.Platform.Common.Mediator;
+using MediatR;
 
 namespace Vertr.OrderExecution.Contracts.Commands;
 
-public class ReversePositionCommand : OrderCommandBase, ICommand<ExecuteOrderResponse>
+public class ReversePositionCommand : OrderCommandBase, IRequest<ExecuteOrderResponse>
 {
 }

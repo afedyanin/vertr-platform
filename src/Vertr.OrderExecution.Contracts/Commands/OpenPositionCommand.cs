@@ -1,8 +1,8 @@
-using Vertr.Platform.Common.Mediator;
+using MediatR;
 
 namespace Vertr.OrderExecution.Contracts.Commands;
 
-public class OpenPositionCommand : OrderCommandBase, ICommand<ExecuteOrderResponse>
+public class OpenPositionCommand : OrderCommandBase, IRequest<ExecuteOrderResponse>
 {
     public long QtyLots { get; init; }
 }

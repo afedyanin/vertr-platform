@@ -1,9 +1,9 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Requests;
-using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Host.Requests;
 using Vertr.PortfolioManager.Contracts;
 
@@ -13,27 +13,14 @@ namespace Vertr.Platform.Host.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IOrderExecutionGateway _orderExecutionGateway;
-    private readonly ICommandHandler<ClosePositionCommand, ExecuteOrderResponse> _closePositionHandler;
-    private readonly ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> _executeOrderHandler;
-    private readonly ICommandHandler<OpenPositionCommand, ExecuteOrderResponse> _openPositionHandler;
-    private readonly ICommandHandler<ReversePositionCommand, ExecuteOrderResponse> _reversePositionHandler;
-    private readonly ICommandHandler<TradingSignalCommand, ExecuteOrderResponse> _tradingSignalHandler;
 
+    private readonly IMediator _mediator;
     public OrdersController(
-        ICommandHandler<ClosePositionCommand, ExecuteOrderResponse> closePositionHandler,
-        ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> executeOrderHandler,
-        ICommandHandler<OpenPositionCommand, ExecuteOrderResponse> openPositionHandler,
-        ICommandHandler<ReversePositionCommand, ExecuteOrderResponse> reversePositionHandler,
-        ICommandHandler<TradingSignalCommand, ExecuteOrderResponse> tradingSignalHandler,
+        IMediator mediator,
         IOrderExecutionGateway orderExecutionGateway)
     {
+        _mediator = mediator;
         _orderExecutionGateway = orderExecutionGateway;
-
-        _closePositionHandler = closePositionHandler;
-        _executeOrderHandler = executeOrderHandler;
-        _openPositionHandler = openPositionHandler;
-        _reversePositionHandler = reversePositionHandler;
-        _tradingSignalHandler = tradingSignalHandler;
     }
 
     [HttpPost("order")]
@@ -68,7 +55,7 @@ public class OrdersController : ControllerBase
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _executeOrderHandler.Handle(command);
+        var response = await _mediator.Send(command);
 
         return Ok(response);
     }
@@ -84,7 +71,7 @@ public class OrdersController : ControllerBase
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _openPositionHandler.Handle(command);
+        var response = await _mediator.Send(command);
         return Ok(response);
     }
 
@@ -98,7 +85,7 @@ public class OrdersController : ControllerBase
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _closePositionHandler.Handle(command);
+        var response = await _mediator.Send (command);
         return Ok(response);
     }
 
@@ -112,7 +99,7 @@ public class OrdersController : ControllerBase
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _reversePositionHandler.Handle(command);
+        var response = await _mediator.Send(command);
         return Ok(response);
     }
 
@@ -127,7 +114,7 @@ public class OrdersController : ControllerBase
             RequestId = Guid.NewGuid(),
         };
 
-        var response = await _tradingSignalHandler.Handle(command);
+        var response = await _mediator.Send(command);
         return Ok(response);
     }
 }

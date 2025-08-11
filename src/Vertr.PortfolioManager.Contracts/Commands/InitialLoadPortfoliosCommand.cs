@@ -1,7 +1,7 @@
-using Vertr.Platform.Common.Mediator;
+using MediatR;
 
 namespace Vertr.PortfolioManager.Contracts.Commands;
 
-public class InitialLoadPortfoliosCommand : ICommand
+public class InitialLoadPortfoliosCommand : IRequest
 {
 }

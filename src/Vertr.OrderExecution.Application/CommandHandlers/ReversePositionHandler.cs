@@ -1,21 +1,18 @@
+using MediatR;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
-using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class ReversePositionHandler : OrderHandlerBase, ICommandHandler<ReversePositionCommand, ExecuteOrderResponse>
+internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<ReversePositionCommand, ExecuteOrderResponse>
 {
-    private readonly ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> _executeOrderHandler;
-
     public ReversePositionHandler(
-        ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> executeOrderHandler,
+        IMediator mediator,
         IPortfolioRepository portfolioRepository,
         IInstrumentsRepository staticMarketDataProvider
-        ) : base(portfolioRepository, staticMarketDataProvider)
+        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
     {
-        _executeOrderHandler = executeOrderHandler;
     }
 
     public async Task<ExecuteOrderResponse> Handle(
@@ -42,7 +39,7 @@ internal class ReversePositionHandler : OrderHandlerBase, ICommandHandler<Revers
             QtyLots = lotsToRevert,
         };
 
-        var response = await _executeOrderHandler.Handle(orderRequest, cancellationToken);
+        var response = await Mediator.Send(orderRequest, cancellationToken);
 
         var result = new ExecuteOrderResponse
         {

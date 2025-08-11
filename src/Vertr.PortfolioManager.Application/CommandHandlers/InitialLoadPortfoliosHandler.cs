@@ -1,12 +1,12 @@
+using MediatR;
 using Vertr.Platform.Common.Channels;
-using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Commands;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.Application.CommandHandlers;
 
-internal class InitialLoadPortfoliosHandler : ICommandHandler<InitialLoadPortfoliosCommand>
+internal class InitialLoadPortfoliosHandler : IRequestHandler<InitialLoadPortfoliosCommand>
 {
     private readonly ITradeOperationRepository _tradeOperationRepository;
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;

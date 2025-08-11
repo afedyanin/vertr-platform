@@ -1,11 +1,9 @@
 using System.Text.Json.Serialization;
-using Hangfire;
-using Hangfire.PostgreSql;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Vertr.Infrastructure.Hangfire;
 using Vertr.MarketData.Application;
 using Vertr.MarketData.DataAccess;
 using Vertr.Platform.Host.Components;
-using Vertr.Platform.Host.Filters;
 using Vertr.Strategies.Application;
 using Vertr.Strategies.DataAccess;
 using Vertr.TinvestGateway;
@@ -48,64 +46,9 @@ public class Program
         builder.Services.AddStrategies();
         builder.Services.AddStrategiesDataAccess(connectionString!);
 
+
         // Hangfire
-        builder.Services.AddHangfire(config => config
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UsePostgreSqlStorage(
-                c => c.UseNpgsqlConnection(builder.Configuration.GetConnectionString("HangfireConnection"))
-                    , new PostgreSqlStorageOptions
-                    {
-                        PrepareSchemaIfNecessary = true,
-                        QueuePollInterval = TimeSpan.FromSeconds(5),
-                        InvisibilityTimeout = TimeSpan.FromHours(24),
-                        JobExpirationCheckInterval = TimeSpan.FromHours(24),
-                    }
-        ));
-
-        builder.Services.AddHangfireServer(options =>
-        {
-            options.WorkerCount = 3;
-            options.SchedulePollingInterval = TimeSpan.FromSeconds(5);
-            options.HeartbeatInterval = TimeSpan.FromSeconds(10);
-            options.StopTimeout = TimeSpan.FromSeconds(15);
-            options.ServerTimeout = TimeSpan.FromMinutes(15);
-            options.ShutdownTimeout = TimeSpan.FromSeconds(30);
-        });
-
-
-        // Add quatrz jobs
-
-        // base configuration from appsettings.json
-        /*
-        builder.Services.Configure<QuartzOptions>(configuration.GetSection("Quartz"));
-
-        builder.Services.Configure<QuartzOptions>(options =>
-        {
-            options.Scheduling.IgnoreDuplicates = false; // default: false
-            options.Scheduling.OverWriteExistingData = true; // default: true
-        });
-
-        builder.Services.AddQuartz(options =>
-        {
-            options.UseSimpleTypeLoader();
-            options.UseInMemoryStore();
-            options.UseDefaultThreadPool(tp =>
-            {
-                tp.MaxConcurrency = 10;
-            });
-
-            builder.Services.AddmarketDataQuartzJobs(options);
-        });
-
-        builder.Services.AddQuartzHostedService(options =>
-        {
-            options.WaitForJobsToComplete = true;
-        });
-        */
-
-
+        builder.Services.AddHangfire(builder.Configuration.GetConnectionString("HangfireConnection")!);
 
 
         //builder.Services.AddTinvestOrders();
@@ -141,10 +84,7 @@ public class Program
 
         app.MapControllers();
 
-        app.UseHangfireDashboard(options: new DashboardOptions
-        {
-            Authorization = [new SkipAuthorizationFilter()]
-        });
+        app.UseHangfireDashboard();
 
         app.Run();
     }

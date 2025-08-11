@@ -74,6 +74,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.MarketData.DataAccess
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Strategies.DataAccess.Tests", "tests\Vertr.Strategies.DataAccess.Tests\Vertr.Strategies.DataAccess.Tests.csproj", "{79450545-5F77-4845-B492-F2967B5A5E0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Infrastructure.Hangfire", "src\Vertr.Infrastructure.Hangfire\Vertr.Infrastructure.Hangfire.csproj", "{72164E63-B94B-4E3D-91EB-B5D79090CE21}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -172,6 +174,10 @@ Global
 		{79450545-5F77-4845-B492-F2967B5A5E0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79450545-5F77-4845-B492-F2967B5A5E0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79450545-5F77-4845-B492-F2967B5A5E0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72164E63-B94B-4E3D-91EB-B5D79090CE21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72164E63-B94B-4E3D-91EB-B5D79090CE21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72164E63-B94B-4E3D-91EB-B5D79090CE21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72164E63-B94B-4E3D-91EB-B5D79090CE21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -207,6 +213,7 @@ Global
 		{3C52BF5B-4873-AE4C-A860-26F52C14143C} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 		{4B18CB8A-5B72-2616-45E0-F10A3C5467FB} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 		{79450545-5F77-4845-B492-F2967B5A5E0B} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
+		{72164E63-B94B-4E3D-91EB-B5D79090CE21} = {7AA0956D-5929-4B12-9D07-970EB5BEA207}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

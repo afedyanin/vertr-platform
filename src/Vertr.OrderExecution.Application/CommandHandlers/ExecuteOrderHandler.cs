@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
@@ -5,12 +6,11 @@ using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.Platform.Common.Channels;
-using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
 
-internal class ExecuteOrderHandler : ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse>
+internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderCommand, ExecuteOrderResponse>
 {
     private readonly IOrderExecutionGateway _tinvestGateway;
     private readonly IOrderEventRepository _orderEventRepository;

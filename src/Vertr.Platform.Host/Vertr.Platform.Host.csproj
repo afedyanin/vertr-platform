@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,12 +12,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.*-*" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
-    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.*-*" />
-    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.20" />
-    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.12" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vertr.Infrastructure.Hangfire\Vertr.Infrastructure.Hangfire.csproj" />
     <ProjectReference Include="..\Vertr.MarketData.Application\Vertr.MarketData.Application.csproj" />
     <ProjectReference Include="..\Vertr.MarketData.DataAccess\Vertr.MarketData.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />

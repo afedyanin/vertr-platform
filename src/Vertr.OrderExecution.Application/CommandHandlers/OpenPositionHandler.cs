@@ -1,21 +1,18 @@
+using MediatR;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
-using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class OpenPositionHandler : OrderHandlerBase, ICommandHandler<OpenPositionCommand, ExecuteOrderResponse>
+internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPositionCommand, ExecuteOrderResponse>
 {
-    private readonly ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> _executeOrderHandler;
-
     public OpenPositionHandler(
-        ICommandHandler<ExecuteOrderCommand, ExecuteOrderResponse> executeOrderHandler,
+        IMediator mediator,
         IPortfolioRepository portfolioRepository,
         IInstrumentsRepository staticMarketDataProvider
-        ) : base( portfolioRepository, staticMarketDataProvider)
+        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
     {
-        _executeOrderHandler = executeOrderHandler;
     }
 
     public async Task<ExecuteOrderResponse> Handle(OpenPositionCommand request, CancellationToken cancellationToken)
@@ -38,7 +35,7 @@ internal class OpenPositionHandler : OrderHandlerBase, ICommandHandler<OpenPosit
             QtyLots = request.QtyLots,
         };
 
-        var response = await _executeOrderHandler.Handle(orderRequest, cancellationToken);
+        var response = await Mediator.Send(orderRequest, cancellationToken);
 
         var result = new ExecuteOrderResponse
         {

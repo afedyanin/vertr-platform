@@ -30,13 +30,12 @@ internal class StrategyEntityConfiguration : IEntityTypeConfiguration<StrategyMe
             .HasColumnName("instrument_id")
             .IsRequired();
 
-        builder.Property(e => e.AccountId)
-            .HasColumnName("account_id")
-            .IsRequired();
-
         builder.Property(e => e.SubAccountId)
             .HasColumnName("sub_account_id")
             .IsRequired();
+
+        builder.Property(e => e.BacktestId)
+            .HasColumnName("backtest_id");
 
         builder.Property(e => e.QtyLots)
             .HasColumnName("qty_lots")

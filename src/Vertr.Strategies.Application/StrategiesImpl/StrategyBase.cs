@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces.old;
-using Vertr.Platform.Common.Channels;
 using Vertr.Strategies.Contracts;
 using Vertr.Strategies.Contracts.Interfaces;
 
@@ -22,7 +21,7 @@ internal abstract class StrategyBase : IStrategy
 
     public long QtyLots { get; init; }
 
-    public string AccountId { get; init; }
+    public Guid? BacktestId { get; init; }
 
     public Guid SubAccountId { get; init; }
 

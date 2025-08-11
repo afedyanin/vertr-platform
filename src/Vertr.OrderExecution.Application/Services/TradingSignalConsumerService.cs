@@ -22,7 +22,8 @@ internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSig
             RequestId = data.Id,
             InstrumentId = data.InstrumentId,
             QtyLots = data.QtyLots,
-            PortfolioIdentity = new PortfolioIdentity(data.AccountId, data.SubAccountId),
+            // TODO: Fix it
+            PortfolioIdentity = new PortfolioIdentity("data.AccountId", data.SubAccountId),
         };
 
         _ = await _tradingSignalHandler.Handle(command, cancellationToken);

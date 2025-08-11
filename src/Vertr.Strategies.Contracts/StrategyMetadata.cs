@@ -10,9 +10,9 @@ public class StrategyMetadata
 
     public Guid InstrumentId { get; set; }
 
-    public required string AccountId { get; set; }
-
     public Guid SubAccountId { get; set; }
+
+    public Guid? BacktestId { get; set; }
 
     public long QtyLots { get; set; }
 

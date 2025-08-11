@@ -22,10 +22,6 @@ internal class TradingSignalEntityConfiguration : IEntityTypeConfiguration<Tradi
             .HasColumnName("strategy_id")
             .IsRequired();
 
-        builder.Property(e => e.AccountId)
-            .HasColumnName("account_id")
-            .IsRequired();
-
         builder.Property(e => e.SubAccountId)
             .HasColumnName("sub_account_id")
             .IsRequired();
@@ -33,6 +29,9 @@ internal class TradingSignalEntityConfiguration : IEntityTypeConfiguration<Tradi
         builder.Property(e => e.InstrumentId)
             .HasColumnName("instrument_id")
             .IsRequired();
+
+        builder.Property(e => e.BacktestId)
+            .HasColumnName("backtest_id");
 
         builder.Property(e => e.QtyLots)
             .HasColumnName("qty_lots")

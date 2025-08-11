@@ -8,7 +8,7 @@ public interface IStrategy
 
     public Guid InstrumentId { get; }
 
-    public string AccountId { get; }
+    public Guid? BacktestId { get; init; }
 
     public Guid SubAccountId { get; }
 

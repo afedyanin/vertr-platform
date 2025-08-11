@@ -44,8 +44,8 @@ internal class StrategyMetadataRepository : RepositoryBase, IStrategyMetadataRep
             existing.Name = metadata.Name;
             existing.Type = metadata.Type;
             existing.InstrumentId = metadata.InstrumentId;
-            existing.AccountId = metadata.AccountId;
             existing.SubAccountId = metadata.SubAccountId;
+            existing.BacktestId = metadata.BacktestId;
             existing.QtyLots = metadata.QtyLots;
             existing.IsActive = metadata.IsActive;
             existing.ParamsJson = metadata.ParamsJson;

@@ -1,11 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Infrastructure.Common.Channels;
-using Vertr.Platform.Common.Mediator;
-using Vertr.PortfolioManager.Application.CommandHandlers;
+using Vertr.Infrastructure.Common.Mediator;
 using Vertr.PortfolioManager.Application.Repositories;
 using Vertr.PortfolioManager.Application.Services;
 using Vertr.PortfolioManager.Contracts;
-using Vertr.PortfolioManager.Contracts.Commands;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.Application;
@@ -19,10 +17,7 @@ public static class PortfolioManagerRegistrar
 
         services.RegisterDataChannel<TradeOperation>();
         services.AddHostedService<TradeOperationConsumerService>();
-
-        services.AddTransient<IRequestHandler<InitialLoadPortfoliosRequest>, InitialLoadPortfoliosHandler>();
-        services.AddTransient<IRequestHandler<OverridePositionsRequest>, OverridePositionsHandler>();
-        services.AddTransient<IRequestHandler<PayInRequest>, PayInHandler>();
+        services.AddMediatorHandlers(typeof(PortfolioManagerRegistrar).Assembly);
 
         return services;
     }

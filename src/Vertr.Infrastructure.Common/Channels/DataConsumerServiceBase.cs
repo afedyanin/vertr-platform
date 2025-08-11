@@ -1,7 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Vertr.Platform.Common.Channels;
 
-namespace Vertr.Platform.Common.Channels;
+namespace Vertr.Infrastructure.Common.Channels;
 public abstract class DataConsumerServiceBase<T> : BackgroundService where T : class
 {
     protected IServiceProvider ServiceProvider { get; private set; }

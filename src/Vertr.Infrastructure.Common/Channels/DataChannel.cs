@@ -1,6 +1,7 @@
 using System.Threading.Channels;
+using Vertr.Platform.Common.Channels;
 
-namespace Vertr.Platform.Common.Channels;
+namespace Vertr.Infrastructure.Common.Channels;
 
 internal class DataChannel<T> : IDataProducer<T>, IDataConsumer<T> where T : class
 {

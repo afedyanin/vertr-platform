@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Vertr.Infrastructure.Common.Channels;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Interfaces;
-using Vertr.Platform.Common.Channels;
 
 namespace Vertr.OrderExecution.Application.Services;
 internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>

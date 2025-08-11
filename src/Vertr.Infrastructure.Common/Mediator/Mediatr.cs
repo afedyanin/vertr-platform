@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using Vertr.Platform.Common.Mediator;
 
-namespace Vertr.Platform.Common.Mediator;
+namespace Vertr.Infrastructure.Common.Mediator;
 
 public class Mediatr : IMediator
 {

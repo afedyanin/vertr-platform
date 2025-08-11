@@ -1,7 +1,7 @@
 using Hangfire.Annotations;
 using Hangfire.Dashboard;
 
-namespace Vertr.Infrastructure.Hangfire.Filters;
+namespace Vertr.Infrastructure.Common.Jobs.Filters;
 
 internal class SkipAuthorizationFilter : IDashboardAuthorizationFilter
 {

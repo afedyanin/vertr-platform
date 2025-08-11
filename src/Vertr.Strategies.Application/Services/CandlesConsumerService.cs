@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Vertr.Infrastructure.Common.Channels;
 using Vertr.MarketData.Contracts;
-using Vertr.Platform.Common.Channels;
 using Vertr.Strategies.Contracts.Interfaces;
 
 namespace Vertr.Strategies.Application.Services;

@@ -2,7 +2,7 @@ using Hangfire;
 using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Common.Jobs;
 
-namespace Vertr.Infrastructure.Hangfire;
+namespace Vertr.Infrastructure.Common.Jobs;
 
 internal class HangfireJobScheduler : IJobScheduler
 {

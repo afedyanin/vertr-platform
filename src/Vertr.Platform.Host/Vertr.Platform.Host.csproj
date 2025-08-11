@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.Infrastructure.Hangfire\Vertr.Infrastructure.Hangfire.csproj" />
     <ProjectReference Include="..\Vertr.MarketData.Application\Vertr.MarketData.Application.csproj" />
     <ProjectReference Include="..\Vertr.MarketData.DataAccess\Vertr.MarketData.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />

@@ -2,10 +2,10 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Vertr.Infrastructure.Hangfire.Filters;
+using Vertr.Infrastructure.Common.Jobs.Filters;
 using Vertr.Platform.Common.Jobs;
 
-namespace Vertr.Infrastructure.Hangfire;
+namespace Vertr.Infrastructure.Common.Jobs;
 
 public static class HangfireRegistrar
 {

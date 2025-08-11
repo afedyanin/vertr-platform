@@ -6,7 +6,8 @@
 - [Using Scrutor to automatically register your services with the ASP.NET](https://andrewlock.net/using-scrutor-to-automatically-register-your-services-with-the-asp-net-core-di-container/)
 - [Improving ASP.NET Core Dependency Injection With Scrutor](https://www.milanjovanovic.tech/blog/improving-aspnetcore-dependency-injection-with-scrutor)
 - [Introduction to Scrutor Library in .NET](https://code-maze.com/dotnet-dependency-injection-with-scrutor/)
-- 
+- [Building Your Own Lightweight Mediator in .NET (Goodbye MediatR?)](https://medium.com/@cihanelibol99/building-your-own-lightweight-mediator-in-net-goodbye-mediatr-3ef19feb7576)
+- https://github.com/zachsaw/SwitchMediator
 
 
 

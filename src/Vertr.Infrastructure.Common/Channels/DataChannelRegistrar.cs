@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
+using Vertr.Platform.Common.Channels;
 
-namespace Vertr.Platform.Common.Channels;
+namespace Vertr.Infrastructure.Common.Channels;
 
 public static class DataChannelRegistrar
 {

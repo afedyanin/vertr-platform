@@ -7,7 +7,7 @@ using Vertr.PortfolioManager.Contracts.Commands;
 
 namespace Vertr.PortfolioManager.Application.CommandHandlers;
 
-internal class PayInHandler : IRequestHandler<PayInCommand>
+internal class PayInHandler : IRequestHandler<PayInRequest>
 {
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
 
@@ -24,7 +24,7 @@ internal class PayInHandler : IRequestHandler<PayInCommand>
         _logger = logger;
     }
 
-    public async Task Handle(PayInCommand request, CancellationToken cancellationToken)
+    public async Task Handle(PayInRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Pay in operation received.");
 

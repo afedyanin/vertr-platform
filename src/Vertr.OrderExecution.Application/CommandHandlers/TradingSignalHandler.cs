@@ -5,7 +5,7 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingSignalCommand, ExecuteOrderResponse>
+internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingSignalRequest, ExecuteOrderResponse>
 {
     public TradingSignalHandler(
         IMediator mediator,
@@ -16,7 +16,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
     }
 
     public async Task<ExecuteOrderResponse> Handle(
-        TradingSignalCommand request,
+        TradingSignalRequest request,
         CancellationToken cancellationToken)
     {
         if (request.QtyLots == 0L)
@@ -31,7 +31,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
 
         if (currentLots == 0L)
         {
-            var openRequest = new OpenPositionCommand
+            var openRequest = new OpenPositionRequest
             {
                 RequestId = request.RequestId,
                 PortfolioIdentity = request.PortfolioIdentity,
@@ -59,7 +59,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
             };
         }
 
-        var reverseRequest = new ReversePositionCommand
+        var reverseRequest = new ReversePositionRequest
         {
             RequestId = request.RequestId,
             PortfolioIdentity = request.PortfolioIdentity,

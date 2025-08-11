@@ -18,7 +18,7 @@ internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSig
 
     protected override async Task Handle(TradingSignal data, CancellationToken cancellationToken = default)
     {
-        var command = new TradingSignalCommand
+        var command = new TradingSignalRequest
         {
             RequestId = data.Id,
             InstrumentId = data.InstrumentId,

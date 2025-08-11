@@ -10,7 +10,7 @@ using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
 
-internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderCommand, ExecuteOrderResponse>
+internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOrderResponse>
 {
     private readonly IOrderExecutionGateway _tinvestGateway;
     private readonly IOrderEventRepository _orderEventRepository;
@@ -29,7 +29,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderCommand, Execut
         _logger = logger;
     }
 
-    public async Task<ExecuteOrderResponse> Handle(ExecuteOrderCommand request, CancellationToken cancellationToken)
+    public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Posting new market order for PortfolioId={request.PortfolioIdentity}");
 

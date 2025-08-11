@@ -4,7 +4,7 @@ namespace Vertr.PortfolioManager.Contracts.Commands;
 
 public record class PositionOverride(Guid InstrumentId, decimal Balance);
 
-public class OverridePositionsCommand : IRequest
+public class OverridePositionsRequest : IRequest
 {
     public required string AccountId { get; init; }
 

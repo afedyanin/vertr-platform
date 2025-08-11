@@ -2,7 +2,7 @@ using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.OrderExecution.Contracts.Commands;
 
-public class OpenPositionCommand : OrderCommandBase, IRequest<ExecuteOrderResponse>
+public class TradingSignalRequest : OrderCommandBase, IRequest<ExecuteOrderResponse>
 {
     public long QtyLots { get; init; }
 }

@@ -5,7 +5,7 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.PortfolioManager.Application.Repositories;
 using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Contracts.Commands;
-using MediatR;
+using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.Platform.Host.Controllers;
 
@@ -70,7 +70,7 @@ public class PortfolioController : ControllerBase
             return BadRequest("Balance is empty");
         }
 
-        var request = new PayInCommand
+        var request = new PayInRequest
         {
             AccountId = accountId,
             SubAccountId = subAccountId,
@@ -131,7 +131,7 @@ public class PortfolioController : ControllerBase
     [HttpPut("position-overrides/{accountId}/{subAccountId}")]
     public async Task<IActionResult> OverridePositions(string accountId, Guid subAccountId, PositionOverride[] overrides)
     {
-        var req = new OverridePositionsCommand
+        var req = new OverridePositionsRequest
         {
             AccountId = accountId,
             SubAccountId = subAccountId,

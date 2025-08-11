@@ -6,7 +6,7 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.PortfolioManager.Application.CommandHandlers;
 
-internal class InitialLoadPortfoliosHandler : IRequestHandler<InitialLoadPortfoliosCommand>
+internal class InitialLoadPortfoliosHandler : IRequestHandler<InitialLoadPortfoliosRequest>
 {
     private readonly ITradeOperationRepository _tradeOperationRepository;
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
@@ -19,7 +19,7 @@ internal class InitialLoadPortfoliosHandler : IRequestHandler<InitialLoadPortfol
         _tradeOperationsProducer = tradeOperationsProducer;
     }
 
-    public async Task Handle(InitialLoadPortfoliosCommand request, CancellationToken cancellationToken)
+    public async Task Handle(InitialLoadPortfoliosRequest request, CancellationToken cancellationToken)
     {
         var allOperations = await _tradeOperationRepository.GetAll();
 

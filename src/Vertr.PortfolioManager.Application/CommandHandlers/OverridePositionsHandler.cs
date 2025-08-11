@@ -6,7 +6,7 @@ using Vertr.PortfolioManager.Contracts.Commands;
 
 namespace Vertr.PortfolioManager.Application.CommandHandlers;
 
-internal class OverridePositionsHandler : IRequestHandler<OverridePositionsCommand>
+internal class OverridePositionsHandler : IRequestHandler<OverridePositionsRequest>
 {
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
     private readonly ICurrencyRepository _currencyRepository;
@@ -19,7 +19,7 @@ internal class OverridePositionsHandler : IRequestHandler<OverridePositionsComma
         _currencyRepository = currencyRepository;
     }
 
-    public async Task Handle(OverridePositionsCommand request, CancellationToken cancellationToken)
+    public async Task Handle(OverridePositionsRequest request, CancellationToken cancellationToken)
     {
         var operations = await CreateOperations(request);
 
@@ -29,7 +29,7 @@ internal class OverridePositionsHandler : IRequestHandler<OverridePositionsComma
         }
     }
 
-    private async Task<TradeOperation[]> CreateOperations(OverridePositionsCommand request)
+    private async Task<TradeOperation[]> CreateOperations(OverridePositionsRequest request)
     {
         var operations = new List<TradeOperation>();
 

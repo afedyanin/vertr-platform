@@ -1,9 +1,8 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Interfaces;
-using Vertr.OrderExecution.Contracts.Requests;
+using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Host.Requests;
 using Vertr.PortfolioManager.Contracts;
 
@@ -47,7 +46,7 @@ public class OrdersController : ControllerBase
     [HttpPost("execute")]
     public async Task<IActionResult> ExecuteOrder(ExecuteRequest request)
     {
-        var command = new ExecuteOrderCommand
+        var command = new ExecuteOrderRequest
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -63,7 +62,7 @@ public class OrdersController : ControllerBase
     [HttpPost("open")]
     public async Task<IActionResult> OpenPosition(OpenRequest request)
     {
-        var command = new OpenPositionCommand
+        var command = new OpenPositionRequest
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -78,7 +77,7 @@ public class OrdersController : ControllerBase
     [HttpPost("close")]
     public async Task<IActionResult> ClosePosition(CloseRequest request)
     {
-        var command = new ClosePositionCommand
+        var command = new ClosePositionRequest
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -92,7 +91,7 @@ public class OrdersController : ControllerBase
     [HttpPost("reverse")]
     public async Task<IActionResult> RevertPosition(ReverseRequest request)
     {
-        var command = new ReversePositionCommand
+        var command = new ReversePositionRequest
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
@@ -106,7 +105,7 @@ public class OrdersController : ControllerBase
     [HttpPost("signal")]
     public async Task<IActionResult> PorocessSignal(SignalRequest request)
     {
-        var command = new TradingSignalCommand
+        var command = new TradingSignalRequest
         {
             InstrumentId = request.InstrumentId,
             PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),

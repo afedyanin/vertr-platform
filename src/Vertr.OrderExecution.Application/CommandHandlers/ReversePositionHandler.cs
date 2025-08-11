@@ -5,7 +5,7 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<ReversePositionCommand, ExecuteOrderResponse>
+internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<ReversePositionRequest, ExecuteOrderResponse>
 {
     public ReversePositionHandler(
         IMediator mediator,
@@ -16,7 +16,7 @@ internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<Revers
     }
 
     public async Task<ExecuteOrderResponse> Handle(
-        ReversePositionCommand request,
+        ReversePositionRequest request,
         CancellationToken cancellationToken)
     {
         var currentLots = await GetCurrentPositionInLots(request.PortfolioIdentity, request.InstrumentId);
@@ -31,7 +31,7 @@ internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<Revers
 
         var lotsToRevert = currentLots * -2L;
 
-        var orderRequest = new ExecuteOrderCommand
+        var orderRequest = new ExecuteOrderRequest
         {
             RequestId = request.RequestId,
             PortfolioIdentity = request.PortfolioIdentity,

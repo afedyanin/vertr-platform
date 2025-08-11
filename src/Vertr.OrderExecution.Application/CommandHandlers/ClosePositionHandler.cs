@@ -1,12 +1,11 @@
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
-using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePositionCommand, ExecuteOrderResponse>
+internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePositionRequest, ExecuteOrderResponse>
 {
     public ClosePositionHandler(
         IMediator mediator,
@@ -17,7 +16,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
     }
 
     public async Task<ExecuteOrderResponse> Handle(
-        ClosePositionCommand request,
+        ClosePositionRequest request,
         CancellationToken cancellationToken)
     {
         var currentLots = await GetCurrentPositionInLots(request.PortfolioIdentity, request.InstrumentId);
@@ -32,7 +31,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
 
         var lotsToClose = currentLots * -1L;
 
-        var orderRequest = new ExecuteOrderCommand
+        var orderRequest = new ExecuteOrderRequest
         {
             RequestId = request.RequestId,
             PortfolioIdentity = request.PortfolioIdentity,

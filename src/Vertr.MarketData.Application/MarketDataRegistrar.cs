@@ -1,6 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.MarketData.Contracts;
-using Vertr.Platform.Common.Channels;
+using Vertr.Infrastructure.Common.Channels;
+using Vertr.Platform.Common.Mediator;
+using Vertr.MarketData.Contracts.Commands;
+using Vertr.MarketData.Application.CommandHandlers;
 
 namespace Vertr.MarketData.Application;
 
@@ -10,7 +13,10 @@ public static class MarketDataRegistrar
     {
         services.AddOptions<MarketDataSettings>().BindConfiguration(nameof(MarketDataSettings));
         services.RegisterDataChannel<Candle>();
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MarketDataRegistrar).Assembly));
+
+        services.AddTransient<IRequestHandler<CleanIntradayCandlesRequest>, CleanIntradayCandlesHandler>();
+        services.AddTransient<IRequestHandler<LoadHistoryCandlesRequest>, LoadHistoryCandlesHandler>();
+        services.AddTransient<IRequestHandler<LoadIntradayCandlesRequest>, LoadIntradayCandlesHandler>();
 
         return services;
     }

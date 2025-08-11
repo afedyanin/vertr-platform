@@ -2,7 +2,7 @@ using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.PortfolioManager.Contracts.Commands;
 
-public class PayInCommand : IRequest
+public class PayInRequest : IRequest
 {
     public required string AccountId { get; init; }
 

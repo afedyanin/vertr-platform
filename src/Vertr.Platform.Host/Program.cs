@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Vertr.Infrastructure.Hangfire;
+using Vertr.Infrastructure.Common.Jobs;
+using Vertr.Infrastructure.Common.Mediator;
 using Vertr.MarketData.Application;
 using Vertr.MarketData.DataAccess;
 using Vertr.Platform.Host.Components;
@@ -50,6 +51,8 @@ public class Program
         // Hangfire
         builder.Services.AddHangfire(builder.Configuration.GetConnectionString("HangfireConnection")!);
 
+        // Mediator
+        builder.Services.AddMediator();
 
         //builder.Services.AddTinvestOrders();
 

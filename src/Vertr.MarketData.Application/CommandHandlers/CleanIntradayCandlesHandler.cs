@@ -1,31 +1,24 @@
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Quartz;
+using Vertr.MarketData.Contracts.Commands;
 using Vertr.MarketData.Contracts.Interfaces;
 
-namespace Vertr.MarketData.Application.QuartzJobs;
+namespace Vertr.MarketData.Application.CommandHandlers;
 
-internal static class CleanIntradayCandlesJobKeys
-{
-    public const string Name = "Clean intraday candles job";
-    public const string Group = "Market Data";
-
-    public static readonly JobKey Key = new JobKey(Name, Group);
-}
-
-internal class CleanIntradayCandlesJob : IJob
+internal class CleanIntradayCandlesHandler : IRequestHandler<CleanIntradayCandlesRequest>
 {
     private readonly ISubscriptionsRepository _subscriptionsRepository;
     private readonly ICandlesRepository _candlesRepository;
     private readonly MarketDataSettings _marketDataSettings;
 
-    private readonly ILogger<CleanIntradayCandlesJob> _logger;
+    private readonly ILogger<CleanIntradayCandlesHandler> _logger;
 
-    public CleanIntradayCandlesJob(
+    public CleanIntradayCandlesHandler(
         ISubscriptionsRepository subscriptionsRepository,
         ICandlesRepository candlesRepository,
         IOptions<MarketDataSettings> marketDataSettings,
-        ILogger<CleanIntradayCandlesJob> logger)
+        ILogger<CleanIntradayCandlesHandler> logger)
     {
         _logger = logger;
         _subscriptionsRepository = subscriptionsRepository;
@@ -33,14 +26,14 @@ internal class CleanIntradayCandlesJob : IJob
         _marketDataSettings = marketDataSettings.Value;
     }
 
-    public async Task Execute(IJobExecutionContext context)
+    public async Task Handle(CleanIntradayCandlesRequest request, CancellationToken cancellationToken)
     {
         if (_marketDataSettings.DisableBootstrapJobs)
         {
             return;
         }
 
-        _logger.LogInformation($"{CleanIntradayCandlesJobKeys.Name} starting.");
+        _logger.LogInformation($"{nameof(CleanIntradayCandlesHandler)} starting.");
 
         var subscriptions = await _subscriptionsRepository.GetAll();
 
@@ -60,6 +53,6 @@ internal class CleanIntradayCandlesJob : IJob
             _logger.LogInformation($"{removed} candles deleted for InstrumentId={subscription.InstrumentId}");
         }
 
-        _logger.LogInformation($"{CleanIntradayCandlesJobKeys.Name} completed.");
+        _logger.LogInformation($"{nameof(CleanIntradayCandlesHandler)} completed.");
     }
 }

@@ -1,19 +1,12 @@
+using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Quartz;
+using Vertr.MarketData.Contracts.Commands;
 using Vertr.MarketData.Contracts.Interfaces;
 
-namespace Vertr.MarketData.Application.QuartzJobs;
+namespace Vertr.MarketData.Application.CommandHandlers;
 
-internal static class LoadIntradayCandlesJobKeys
-{
-    public const string Name = "Load intraday candles job";
-    public const string Group = "Market Data";
-
-    public static readonly JobKey Key = new JobKey(Name, Group);
-}
-
-internal class LoadIntradayCandlesJob : IJob
+internal class LoadIntradayCandlesHandler : IRequestHandler<LoadIntradayCandlesRequest>
 {
     private readonly IMarketDataGateway _marketDataGateway;
     private readonly ISubscriptionsRepository _subscriptionsRepository;
@@ -21,14 +14,14 @@ internal class LoadIntradayCandlesJob : IJob
     private readonly MarketDataSettings _marketDataSettings;
 
 
-    private readonly ILogger<LoadIntradayCandlesJob> _logger;
+    private readonly ILogger<LoadIntradayCandlesHandler> _logger;
 
-    public LoadIntradayCandlesJob(
+    public LoadIntradayCandlesHandler(
         IMarketDataGateway marketDataGateway,
         ISubscriptionsRepository subscriptionsRepository,
         ICandlesRepository candlesRepository,
         IOptions<MarketDataSettings> marketDataSettings,
-        ILogger<LoadIntradayCandlesJob> logger)
+        ILogger<LoadIntradayCandlesHandler> logger)
     {
         _logger = logger;
         _marketDataGateway = marketDataGateway;
@@ -37,14 +30,14 @@ internal class LoadIntradayCandlesJob : IJob
         _marketDataSettings = marketDataSettings.Value;
     }
 
-    public async Task Execute(IJobExecutionContext context)
+    public async Task Handle(LoadIntradayCandlesRequest request, CancellationToken cancellationToken)
     {
         if (_marketDataSettings.DisableBootstrapJobs)
         {
             return;
         }
 
-        _logger.LogInformation($"{LoadIntradayCandlesJobKeys.Name} starting.");
+        _logger.LogInformation($"{nameof(LoadIntradayCandlesHandler)} starting.");
 
         var subscriptions = await _subscriptionsRepository.GetAll();
 
@@ -66,7 +59,7 @@ internal class LoadIntradayCandlesJob : IJob
             _logger.LogInformation($"{count} candles loaded for Day={day}");
         }
 
-        _logger.LogInformation($"{LoadIntradayCandlesJobKeys.Name} completed.");
+        _logger.LogInformation($"{nameof(LoadIntradayCandlesHandler)} completed.");
     }
 
     private async Task<int> LoadCandlesForDay(Guid instrumentId, DateOnly day)

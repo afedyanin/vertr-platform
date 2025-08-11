@@ -1,6 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Quartz;
-using Vertr.MarketData.Application.QuartzJobs;
 using Vertr.MarketData.Contracts;
 using Vertr.Platform.Common.Channels;
 
@@ -12,14 +10,15 @@ public static class MarketDataRegistrar
     {
         services.AddOptions<MarketDataSettings>().BindConfiguration(nameof(MarketDataSettings));
         services.RegisterDataChannel<Candle>();
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MarketDataRegistrar).Assembly));
 
         return services;
     }
-
+    /*
     public static IServiceCollection AddmarketDataQuartzJobs(this IServiceCollection services,
         IServiceCollectionQuartzConfigurator options)
     {
-        options.AddJob<LoadIntradayCandlesJob>(LoadIntradayCandlesJobKeys.Key, j => j
+        options.AddJob<LoadIntradayCandlesHandler>(LoadIntradayCandlesJobKeys.Key, j => j
                .WithDescription("Load latest candles from market data gateway"));
 
         options.AddTrigger(t => t
@@ -27,7 +26,7 @@ public static class MarketDataRegistrar
               .ForJob(LoadIntradayCandlesJobKeys.Key)
               .StartAt(DateTime.UtcNow.AddMinutes(1)));
 
-        options.AddJob<LoadHistoryCandlesJob>(LoadHistoryCandlesJobKeys.Key, j => j
+        options.AddJob<LoadHistoryCandlesHandler>(LoadHistoryCandlesJobKeys.Key, j => j
                .WithDescription("Load candles history from market data gateway"));
 
         options.AddTrigger(t => t
@@ -47,4 +46,5 @@ public static class MarketDataRegistrar
 
         return services;
     }
+    */
 }

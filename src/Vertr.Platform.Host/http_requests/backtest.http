@@ -4,7 +4,7 @@
 @subAccountId = 93cda594-5555-44ca-8005-1c893e8d3142
 @sberInstrumentId = e6123145-9665-43e0-8413-cd61b8aa9b13
 @strategyId = 6b838b7b-fb76-4621-a8db-347f70a7ace5
-@backtestId = c470b47c-cb1e-4230-b3f3-b7c4e784eb5e
+@backtestId = 71ca9077-7846-4445-8d69-4b92fd7b482f
 
 ### All backtests
 GET {{baseAddress}}

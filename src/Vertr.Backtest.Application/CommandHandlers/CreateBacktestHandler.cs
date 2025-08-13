@@ -35,7 +35,7 @@ internal class CreateBacktestHandler : IRequestHandler<CreateBacktestRequest, Cr
             CreatedAt = DateTime.UtcNow,
             Description = request.Description,
             StrategyId = request.StrategyId,
-            InsrumentId = request.InsrumentId,
+            InstrumentId = request.InstrumentId,
             SubAccountId = request.SubAccountId,
             ExecutionState = ExecutionState.Created,
         };

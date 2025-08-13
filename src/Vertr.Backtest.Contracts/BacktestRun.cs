@@ -8,19 +8,19 @@ public class BacktestRun
 
     public DateTime To { get; set; }
 
-    public DateTime CreatedAt { get; set; }
-
     public string? Description { get; set; }
 
     public Guid StrategyId { get; set; }
 
-    public Guid InsrumentId { get; set; }
+    public Guid InstrumentId { get; set; }
 
     public Guid SubAccountId { get; set; }
 
     public ExecutionState ExecutionState { get; set; }
 
-    public DateTime? ProgressTime { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
 
     public string? ProgressMessage { get; set; }
 

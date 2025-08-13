@@ -43,10 +43,10 @@ internal class BacktestRepository : RepositoryBase, IBacktestRepository
             existing.CreatedAt = backtest.CreatedAt;
             existing.Description = backtest.Description;
             existing.StrategyId = backtest.StrategyId;
-            existing.InsrumentId = backtest.InsrumentId;
+            existing.InstrumentId = backtest.InstrumentId;
             existing.SubAccountId = backtest.SubAccountId;
             existing.ExecutionState = backtest.ExecutionState;
-            existing.ProgressTime = backtest.ProgressTime;
+            existing.UpdatedAt = backtest.UpdatedAt;
             existing.ProgressMessage = backtest.ProgressMessage;
             existing.IsCancellationRequested = backtest.IsCancellationRequested;
         }
@@ -55,6 +55,25 @@ internal class BacktestRepository : RepositoryBase, IBacktestRepository
             context.Backtests.Add(backtest);
         }
 
+        var savedRecords = await context.SaveChangesAsync();
+
+        return savedRecords > 0;
+    }
+
+    public async Task<bool> Cancel(Guid id)
+    {
+        using var context = await GetDbContext();
+
+        var existing = await context
+            .Backtests
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (existing == null)
+        {
+            return false;
+        }
+
+        existing.IsCancellationRequested = true;
         var savedRecords = await context.SaveChangesAsync();
 
         return savedRecords > 0;

@@ -26,21 +26,21 @@ public class BacktestController : ControllerBase
     [HttpGet()]
     public async Task<IActionResult> GetAll()
     {
-        var instruments = await _backtestRepository.GetAll();
-        return Ok(instruments);
+        var backtests = await _backtestRepository.GetAll();
+        return Ok(backtests);
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        var instrument = await _backtestRepository.GetById(id);
+        var backtest = await _backtestRepository.GetById(id);
 
-        if (instrument == null)
+        if (backtest == null)
         {
             return NotFound();
         }
 
-        return Ok(instrument);
+        return Ok(backtest);
     }
 
     [HttpPost()]
@@ -51,8 +51,8 @@ public class BacktestController : ControllerBase
         return Ok(response.BacktestId);
     }
 
-    [HttpPost("{id:guid}")]
-    public IActionResult Run(Guid id)
+    [HttpPut("start/{id:guid}")]
+    public IActionResult Start(Guid id)
     {
         var request = new RunBacktestJobRequest
         {
@@ -61,6 +61,13 @@ public class BacktestController : ControllerBase
 
         var jobId = _jobScheduler.Enqueue(request);
         return Ok(jobId);
+    }
+
+    [HttpPut("cancel/{id:guid}")]
+    public async Task<IActionResult> Cancel(Guid id)
+    {
+        var cancelled = await _backtestRepository.Cancel(id);
+        return Ok(cancelled);
     }
 
     [HttpDelete("{id:guid}")]

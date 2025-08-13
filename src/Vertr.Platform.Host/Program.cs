@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Vertr.Backtest.Application;
+using Vertr.Backtest.DataAccess;
 using Vertr.Infrastructure.Common.Jobs;
 using Vertr.Infrastructure.Common.Mediator;
 using Vertr.MarketData.Application;
@@ -47,6 +49,9 @@ public class Program
 
         builder.Services.AddStrategies();
         builder.Services.AddStrategiesDataAccess(connectionString!);
+
+        builder.Services.AddBacktests();
+        builder.Services.AddBacktestDataAccess(connectionString!);
 
         // Hangfire
         var hfConnectionString = configuration.GetConnectionString(_hangfireConnStringName);

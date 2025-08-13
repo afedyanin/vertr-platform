@@ -6,7 +6,6 @@ using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.Backtest.Application.CommandHandlers;
 
-
 internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
 {
     private readonly IBacktestRepository _backtestRepository;
@@ -36,9 +35,6 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
             return;
         }
 
-        bt.ExecutionState = ExecutionState.InProgress;
-        await _backtestRepository.Save(bt);
-
         // TODO: Implement backtest logic:
         // - load market data into intraday repo
         // - init strategy
@@ -49,29 +45,50 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
             // - iterate md candles
             //      - call strategy handler
             //      - update backtest status and save it 
+            await Task.Delay(1000);
 
             bt = await _backtestRepository.GetById(bt.Id);
             if (bt == null)
             {
-                throw new InvalidOperationException($"Cannot find backtest with id={bt.Id}");
+                throw new InvalidOperationException($"Cannot find backtest with id={request.BacktestId}");
             }
 
             if (bt.IsCancellationRequested)
             {
-                bt.ExecutionState = ExecutionState.Cancelled;
-                await _backtestRepository.Save(bt);
+                await SetCancelled(bt);
                 break;
             }
 
-            await Task.Delay(1000);
-            bt.ProgressMessage = $"Processing step #{i + 1}";
-            bt.ProgressTime = DateTime.UtcNow;
-            await _backtestRepository.Save(bt);
+            await SetProgress(bt, $"Processing step #{i + 1}");
         }
 
-        bt.ProgressMessage = $"Backtest completed!";
-        bt.ExecutionState = ExecutionState.Completed;
-        bt.ProgressTime = DateTime.UtcNow;
-        await _backtestRepository.Save(bt);
+        if (bt.ExecutionState == ExecutionState.InProgress)
+        {
+            await SetCompleted(bt);
+        }
+    }
+
+    private async Task SetProgress(BacktestRun backtest, string message)
+    {
+        backtest.ExecutionState = ExecutionState.InProgress;
+        backtest.ProgressMessage = message;
+        backtest.UpdatedAt = DateTime.UtcNow;
+        await _backtestRepository.Save(backtest);
+    }
+
+    private async Task SetCancelled(BacktestRun backtest)
+    {
+        backtest.ExecutionState = ExecutionState.Cancelled;
+        backtest.ProgressMessage = "Backtest cancelled.";
+        backtest.UpdatedAt = DateTime.UtcNow;
+        await _backtestRepository.Save(backtest);
+    }
+
+    private async Task SetCompleted(BacktestRun backtest)
+    {
+        backtest.ExecutionState = ExecutionState.Completed;
+        backtest.ProgressMessage = "Backtest completed.";
+        backtest.UpdatedAt = DateTime.UtcNow;
+        await _backtestRepository.Save(backtest);
     }
 }

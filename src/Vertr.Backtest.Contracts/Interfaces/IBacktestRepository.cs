@@ -8,6 +8,8 @@ public interface IBacktestRepository
 
     public Task<bool> Save(BacktestRun backtest);
 
+    public Task<bool> Cancel(Guid id);
+
     public Task<int> Delete(Guid Id);
 
 }

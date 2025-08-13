@@ -40,6 +40,8 @@ public static class HangfireRegistrar
             options.CancellationCheckInterval = TimeSpan.FromSeconds(3);
         });
 
+        GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 0 });
+
         return services;
     }
 

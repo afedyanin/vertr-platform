@@ -25,10 +25,6 @@ internal class BacktestRunEntityConfiguration : IEntityTypeConfiguration<Backtes
             .HasColumnName("to")
             .IsRequired();
 
-        builder.Property(e => e.CreatedAt)
-            .HasColumnName("created_at")
-            .IsRequired();
-
         builder.Property(e => e.Description)
             .HasColumnName("description");
 
@@ -36,7 +32,7 @@ internal class BacktestRunEntityConfiguration : IEntityTypeConfiguration<Backtes
             .HasColumnName("strategy_id")
             .IsRequired();
 
-        builder.Property(e => e.InsrumentId)
+        builder.Property(e => e.InstrumentId)
             .HasColumnName("instrument_id")
             .IsRequired();
 
@@ -48,8 +44,12 @@ internal class BacktestRunEntityConfiguration : IEntityTypeConfiguration<Backtes
             .HasColumnName("execution_state")
             .IsRequired();
 
-        builder.Property(e => e.ProgressTime)
-            .HasColumnName("progress_time");
+        builder.Property(e => e.CreatedAt)
+            .HasColumnName("created_at")
+            .IsRequired();
+
+        builder.Property(e => e.UpdatedAt)
+            .HasColumnName("updated_time");
 
         builder.Property(e => e.ProgressMessage)
             .HasColumnName("progress_message");

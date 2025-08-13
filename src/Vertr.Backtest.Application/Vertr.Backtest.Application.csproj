@@ -12,7 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Vertr.Infrastructure.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Vertr.Backtest.Contracts\Vertr.Backtest.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.Infrastructure.Common\Vertr.Infrastructure.Common.csproj" />
   </ItemGroup>
 
 </Project>

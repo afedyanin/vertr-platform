@@ -15,5 +15,4 @@ internal class StrategiesDbContextFactory : IDesignTimeDbContextFactory<Strategi
 
         return new StrategiesDbContext(optionsBuilder.Options);
     }
-
 }

@@ -14,7 +14,6 @@ public class StrategyMetadataRepositoryTests : RepositoryTestBase
             InstrumentId = Guid.Parse(instrumentId),
             Name = "Test Strategy",
             SubAccountId = Guid.Empty,
-            BacktestId = Guid.Empty,
             IsActive = false,
             CreatedAt = DateTime.UtcNow,
             ParamsJson = null,

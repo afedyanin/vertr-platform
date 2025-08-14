@@ -5,8 +5,8 @@ namespace Vertr.Backtest.DataAccess.Tests.Repositories;
 [TestFixture(Category = "Database", Explicit = true)]
 public class BacktestRepositoryTests : RepositoryTestBase
 {
-    [TestCase("e6123145-9665-43e0-8413-cd61b8aa9b13")]
-    public async Task CanCreateBacktest(string instrumentId)
+    [Test]
+    public async Task CanCreateBacktest()
     {
         var backtest = new BacktestRun
         {
@@ -15,7 +15,6 @@ public class BacktestRepositoryTests : RepositoryTestBase
             To = new DateTime(2025, 8, 11, 0, 0, 0, DateTimeKind.Utc),
             Description = "Test backtest",
             StrategyId = Guid.NewGuid(),
-            InstrumentId = Guid.Parse(instrumentId),
             SubAccountId = Guid.Empty,
             ExecutionState = ExecutionState.Created,
             CreatedAt = DateTime.UtcNow,

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Vertr.Backtest.DataAccess;
@@ -11,9 +12,11 @@ using Vertr.Backtest.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.BacktestDb
 {
     [DbContext(typeof(BacktestDbContext))]
-    partial class BacktestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250814135138_BacktestTables3")]
+    partial class BacktestTables3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,6 +47,10 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.BacktestDb
                     b.Property<DateTime>("From")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("from");
+
+                    b.Property<Guid>("InstrumentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("instrument_id");
 
                     b.Property<bool>("IsCancellationRequested")
                         .HasColumnType("boolean")

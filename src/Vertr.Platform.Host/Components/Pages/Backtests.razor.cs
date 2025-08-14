@@ -5,6 +5,7 @@ using Vertr.MarketData.Contracts;
 using Vertr.Platform.Common.Utils;
 using Vertr.Platform.Host.Components.Common;
 using Vertr.Platform.Host.Components.Models;
+using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.Host.Components.Pages;
 
@@ -154,16 +155,15 @@ public partial class Backtests
 
         foreach (var backtest in backtests)
         {
-            if (_instruments.TryGetValue(backtest.InstrumentId, out var instrument))
+            var item = new BacktestModel
             {
-                var item = new BacktestModel
-                {
-                    Backtest = backtest,
-                    Instrument = instrument,
-                };
+                Backtest = backtest,
+                //Instrument = instrument,
+                // TODO: Fix it
+                Strategy = new StrategyMetadata() { Name = "Test", Type = StrategyType.Undefined},
+            };
 
-                modelItems.Add(item);
-            }
+            modelItems.Add(item);
         }
 
         var res = modelItems?.AsQueryable() ?? Array.Empty<BacktestModel>().AsQueryable();

@@ -12,8 +12,6 @@ public class BacktestRun
 
     public Guid StrategyId { get; set; }
 
-    public Guid InstrumentId { get; set; }
-
     public Guid SubAccountId { get; set; }
 
     public ExecutionState ExecutionState { get; set; }

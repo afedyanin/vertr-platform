@@ -11,8 +11,6 @@ public class CreateBacktestRequest : IRequest<CreateBacktestResponse>
 
     public Guid StrategyId { get; init; }
 
-    public Guid InstrumentId { get; init; }
-
     public Guid SubAccountId { get; init; }
 
     public bool StartImmediately { get; init; }

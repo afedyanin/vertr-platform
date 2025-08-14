@@ -34,9 +34,6 @@ internal class StrategyEntityConfiguration : IEntityTypeConfiguration<StrategyMe
             .HasColumnName("sub_account_id")
             .IsRequired();
 
-        builder.Property(e => e.BacktestId)
-            .HasColumnName("backtest_id");
-
         builder.Property(e => e.QtyLots)
             .HasColumnName("qty_lots")
             .IsRequired();

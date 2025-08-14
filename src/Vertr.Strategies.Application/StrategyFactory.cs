@@ -6,7 +6,7 @@ namespace Vertr.Strategies.Application;
 
 internal static class StrategyFactory
 {
-    public static IStrategy Create(StrategyMetadata strategyMetadata, IServiceProvider serviceProvider)
+    public static IStrategy Create(StrategyMetadata strategyMetadata, IServiceProvider serviceProvider, Guid? backtestId = null)
     {
         ArgumentNullException.ThrowIfNull(strategyMetadata);
 
@@ -15,7 +15,7 @@ internal static class StrategyFactory
             return new RandomWalkStrategy(serviceProvider)
             {
                 Id = strategyMetadata.Id,
-                BacktestId = strategyMetadata.BacktestId,
+                BacktestId = backtestId,
                 SubAccountId = strategyMetadata.SubAccountId,
                 InstrumentId = strategyMetadata.InstrumentId,
                 QtyLots = strategyMetadata.QtyLots,
@@ -27,7 +27,7 @@ internal static class StrategyFactory
             return new TrendFollowStrategy(serviceProvider)
             {
                 Id = strategyMetadata.Id,
-                BacktestId= strategyMetadata.BacktestId,
+                BacktestId= backtestId,
                 SubAccountId = strategyMetadata.SubAccountId,
                 InstrumentId = strategyMetadata.InstrumentId,
                 QtyLots = strategyMetadata.QtyLots,

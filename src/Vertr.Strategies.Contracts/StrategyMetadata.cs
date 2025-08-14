@@ -12,8 +12,6 @@ public class StrategyMetadata
 
     public Guid SubAccountId { get; set; }
 
-    public Guid? BacktestId { get; set; }
-
     public long QtyLots { get; set; }
 
     public bool IsActive { get; set; }

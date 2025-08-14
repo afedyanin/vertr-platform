@@ -8,7 +8,7 @@ internal class BacktestRunEntityConfiguration : IEntityTypeConfiguration<Backtes
 {
     public void Configure(EntityTypeBuilder<BacktestRun> builder)
     {
-        builder.ToTable("backtest");
+        builder.ToTable("backtests");
 
         builder.HasKey(e => e.Id)
             .HasName("backtest_pkey");
@@ -30,10 +30,6 @@ internal class BacktestRunEntityConfiguration : IEntityTypeConfiguration<Backtes
 
         builder.Property(e => e.StrategyId)
             .HasColumnName("strategy_id")
-            .IsRequired();
-
-        builder.Property(e => e.InstrumentId)
-            .HasColumnName("instrument_id")
             .IsRequired();
 
         builder.Property(e => e.SubAccountId)

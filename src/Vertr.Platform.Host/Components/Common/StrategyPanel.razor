@@ -1,4 +1,6 @@
+@using Vertr.MarketData.Contracts
 @using Vertr.Platform.Host.Components.Models
+@using Vertr.Strategies.Contracts
 
 @implements IDialogContentComponent<StrategyModel>
 
@@ -6,17 +8,24 @@
 
 <FluentDialogBody>
     <FluentTextField Value="@Content.Strategy.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
-    <FluentDatePicker Value="@Content.Strategy.CreatedAt" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Created At:</FluentDatePicker>
-    <FluentTextField Value="@Content.Strategy.Type.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Type:</FluentTextField>
-    <FluentTextField Value="@Content.Strategy.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
-    <FluentTextField Value="@Content.Instrument.GetFullName()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Instrument:</FluentTextField>
-    <FluentTextField Value="@Content.Strategy.QtyLots.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Qty lots:</FluentTextField>
+    <FluentTextField Value="@Content.Strategy.CreatedAt.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Created At:</FluentTextField>
+    <FluentTextField @bind-Value="@Content.Strategy.Name" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
+
+    <FluentSelect Items="@(Enum.GetValues<StrategyType>())"
+                  @bind-SelectedOption="@Content.Strategy.Type"
+                  Label="Type:"
+                  style="width: 100%;" />
+
+    <FluentSelect TOption="Instrument"
+                  Label="Instrument"
+                  Items="@AllInstruments"
+                  OptionValue="@(p => p.Id.ToString())"
+                  OptionText="@(p => $"{p.GetFullName()})")"
+                  @bind-SelectedOption="@Content.Instrument" />
+
+    <FluentNumberField @bind-Value="@Content.Strategy.QtyLots" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Qty lots:</FluentNumberField>
     <FluentTextField Value="@Content.Strategy.SubAccountId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">SubAccount Id:</FluentTextField>
-    <FluentTextField Value="@Content.Strategy.IsActive.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Is Active:</FluentTextField>
+    <FluentCheckbox @bind-Value="@Content.Strategy.IsActive" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Is Active"></FluentCheckbox>
+
 </FluentDialogBody>
 
-
-@code {
-    [Parameter]
-    public StrategyModel Content { get; set; } = default!;
-}

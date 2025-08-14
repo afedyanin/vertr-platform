@@ -40,30 +40,27 @@ public partial class Strategies
         }
     }
 
-    private Task AddStrategyAsync()
+    private async Task AddStrategyAsync()
     {
-        DemoLogger.WriteLine("AddStrategyAsync");
-        return Task.CompletedTask;
-
-        /*
         var instrument = _instruments.Values.First();
-        var model = new SubscriptionModel()
+
+        var model = new StrategyModel()
         {
             Instrument = instrument,
-            Subscription = new CandleSubscription
+            Strategy = new StrategyMetadata
             {
                 Id = Guid.NewGuid(),
+                SubAccountId = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
                 InstrumentId = instrument.Id,
-                Interval = CandleInterval.Min_1,
-                Disabled = false,
-                LoadHistory = true,
-                ExternalStatus = null,
-                ExternalSubscriptionId = null
+                Type = StrategyType.RandomWalk,
+                Name = "Test Strategy",
+                IsActive = false,
+                QtyLots = 10
             }
         };
 
         await OpenPanelRightAsync(model);
-        */
     }
 
     private async Task OpenPanelRightAsync(StrategyModel strategyModel)
@@ -195,17 +192,14 @@ public partial class Strategies
             return;
         }
 
-        DemoLogger.WriteLine($"Strategy {model.Strategy.Name} is deleted.");
-        return;
-
-        /*
         using var apiClient = _httpClientFactory.CreateClient("backend");
-        var message = await apiClient.DeleteAsync($"api/subscriptions/{model.Subscription.Id}");
+        var message = await apiClient.DeleteAsync($"api/strategies/{model.Strategy.Id}");
         message.EnsureSuccessStatusCode();
 
-        _subscriptions = await InitSubscriptions();
+        _strategies = await InitStrategies();
         await dataGrid.RefreshDataAsync(force: true);
 
-        */
+        DemoLogger.WriteLine($"Strategy {model.Strategy.Name} is deleted.");
+        return;
     }
 }

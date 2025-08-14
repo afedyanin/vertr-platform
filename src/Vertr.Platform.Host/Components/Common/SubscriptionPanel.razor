@@ -12,7 +12,7 @@
         Label="Instrument"
         Items="@AllInstruments"
         OptionValue="@(p => p.Id.ToString())"
-        OptionText="@(p => $"{p.Symbol.ClassCode}.{p.Symbol.Ticker} ({p.Name})")"
+        OptionText="@(p => $"{p.GetFullName()})")"
         @bind-SelectedOption="@Content.Instrument" />
 
     <FluentSelect

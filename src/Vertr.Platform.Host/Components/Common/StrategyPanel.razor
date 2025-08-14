@@ -1,0 +1,22 @@
+@using Vertr.Platform.Host.Components.Models
+
+@implements IDialogContentComponent<StrategyModel>
+
+<FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
+
+<FluentDialogBody>
+    <FluentTextField Value="@Content.Strategy.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
+    <FluentDatePicker Value="@Content.Strategy.CreatedAt" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Created At:</FluentDatePicker>
+    <FluentTextField Value="@Content.Strategy.Type.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Type:</FluentTextField>
+    <FluentTextField Value="@Content.Strategy.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
+    <FluentTextField Value="@Content.Instrument.GetFullName()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Instrument:</FluentTextField>
+    <FluentTextField Value="@Content.Strategy.QtyLots.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Qty lots:</FluentTextField>
+    <FluentTextField Value="@Content.Strategy.SubAccountId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">SubAccount Id:</FluentTextField>
+    <FluentTextField Value="@Content.Strategy.IsActive.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Is Active:</FluentTextField>
+</FluentDialogBody>
+
+
+@code {
+    [Parameter]
+    public StrategyModel Content { get; set; } = default!;
+}

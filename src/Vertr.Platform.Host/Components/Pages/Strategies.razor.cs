@@ -32,15 +32,12 @@ public partial class Strategies
         _strategies = await InitStrategies();
     }
 
-    private Task HandleCellClick(FluentDataGridCell<StrategyModel> cell)
+    private async Task HandleCellClick(FluentDataGridCell<StrategyModel> cell)
     {
         if (cell.Item != null && cell.GridColumn <= 6)
         {
-            //await OpenPanelRightAsync(cell.Item);
-            DemoLogger.WriteLine($"Strategy {cell.Item.Strategy.Name} is selected.");
+            await OpenPanelRightAsync(cell.Item);
         }
-
-        return Task.CompletedTask;
     }
 
     private Task AddStrategyAsync()
@@ -69,14 +66,13 @@ public partial class Strategies
         */
     }
 
-    /*
-    private async Task OpenPanelRightAsync(SubscriptionModel subscriptionModel)
+    private async Task OpenPanelRightAsync(StrategyModel strategyModel)
     {
-        _dialog = await DialogService.ShowPanelAsync<SubscriptionPanel>(subscriptionModel, new DialogParameters<SubscriptionModel>()
+        _dialog = await DialogService.ShowPanelAsync<StrategyPanel>(strategyModel, new DialogParameters<StrategyModel>()
         {
-            Content = subscriptionModel,
+            Content = strategyModel,
             Alignment = HorizontalAlignment.Right,
-            Title = $"{subscriptionModel.InstrumentName}",
+            Title = $"{strategyModel.Strategy.Name}",
             PrimaryAction = "Save",
             SecondaryAction = "Cancel",
             Width = "400px",
@@ -87,7 +83,7 @@ public partial class Strategies
         if (result.Cancelled)
         {
             // TODO: implement discard changes
-            _subscriptions = await InitSubscriptions();
+            _strategies = await InitStrategies();
             await dataGrid.RefreshDataAsync(force: true);
             return;
         }
@@ -97,29 +93,26 @@ public partial class Strategies
             return;
         }
 
-        var model = result.Data as SubscriptionModel;
 
-        if (model == null)
+        if (result.Data is not StrategyModel model)
         {
             return;
         }
 
-
-        model.Subscription.InstrumentId = model.Instrument.Id;
-        var saved = await SaveSubscription(model.Subscription);
+        model.Strategy.InstrumentId = model.Instrument.Id;
+        var saved = await SaveStrategy(model.Strategy);
         if (saved)
         {
-            DemoLogger.WriteLine($"Subscription for {model.InstrumentName} ({model.Subscription.Interval}) saved.");
+            DemoLogger.WriteLine($"Strategy {model.Strategy.Name} saved.");
         }
         else
         {
-            DemoLogger.WriteLine($"Saving subscription {model.InstrumentName} ({model.Subscription.Interval}) FAILED!");
+            DemoLogger.WriteLine($"Saving strategy {model.Strategy.Name} FAILED!");
         }
 
-        _subscriptions = await InitSubscriptions();
+        _strategies = await InitStrategies();
         await dataGrid.RefreshDataAsync(force: true);
     }
-    */
 
     private async Task<IDictionary<Guid, Instrument>> InitInstruments()
     {
@@ -170,13 +163,13 @@ public partial class Strategies
         return res;
     }
 
-    private async Task<bool> SaveSubscription(CandleSubscription subscription)
+    private async Task<bool> SaveStrategy(StrategyMetadata metadata)
     {
         try
         {
             using var apiClient = _httpClientFactory.CreateClient("backend");
-            var content = JsonContent.Create(subscription);
-            var message = await apiClient.PostAsync("api/subscriptions", content);
+            var content = JsonContent.Create(metadata);
+            var message = await apiClient.PostAsync("api/strategies", content);
             message.EnsureSuccessStatusCode();
             return true;
         }
@@ -190,7 +183,7 @@ public partial class Strategies
     private async Task HandleDeleteAction(StrategyModel model)
     {
         var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Delete subscription: {model.Strategy.Name}?",
+            $"Delete strategy: {model.Strategy.Name}?",
             "Yes",
             "No",
             $"Deleting {model.Strategy.Name}");

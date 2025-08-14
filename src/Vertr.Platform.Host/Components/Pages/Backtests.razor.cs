@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Backtest.Contracts;
-using Vertr.MarketData.Contracts;
 using Vertr.Platform.Common.Utils;
 using Vertr.Platform.Host.Components.Common;
 using Vertr.Platform.Host.Components.Models;
@@ -19,8 +18,7 @@ public partial class Backtests
 
     private IQueryable<BacktestModel> _backtests { get; set; }
 
-
-    private IDictionary<Guid, Instrument> _instruments { get; set; }
+    private IDictionary<Guid, StrategyMetadata> _strategies { get; set; }
 
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
@@ -28,56 +26,49 @@ public partial class Backtests
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        _instruments = await InitInstruments();
+        _strategies = await InitStrategies();
         _backtests = await InitBacktests();
     }
 
-    private Task HandleCellClick(FluentDataGridCell<BacktestModel> cell)
+    private async Task HandleCellClick(FluentDataGridCell<BacktestModel> cell)
     {
         if (cell.Item != null && cell.GridColumn <= 6)
         {
-            //await OpenPanelRightAsync(cell.Item);
-            DemoLogger.WriteLine($"Backtest {cell.Item.Backtest.Description} is selected.");
+            await OpenPanelRightAsync(cell.Item);
         }
-
-        return Task.CompletedTask;
     }
 
-    private Task AddBacktestAsync()
+    private async Task AddBacktestAsync()
     {
-        DemoLogger.WriteLine("AddBacktestAsync");
-        return Task.CompletedTask;
-
-        /*
-        var instrument = _instruments.Values.First();
-        var model = new SubscriptionModel()
+        var strategy = _strategies.Values.First();
+        var model = new BacktestModel()
         {
-            Instrument = instrument,
-            Subscription = new CandleSubscription
+            Strategy = strategy,
+            Backtest = new BacktestRun
             {
                 Id = Guid.NewGuid(),
-                InstrumentId = instrument.Id,
-                Interval = CandleInterval.Min_1,
-                Disabled = false,
-                LoadHistory = true,
-                ExternalStatus = null,
-                ExternalSubscriptionId = null
+                From = DateTime.UtcNow.AddDays(-10),
+                To = DateTime.UtcNow,
+                Description = "Some Test",
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                ExecutionState = ExecutionState.Created,
+                IsCancellationRequested = false,
+                SubAccountId = Guid.NewGuid(),
+                ProgressMessage = string.Empty,
             }
         };
 
         await OpenPanelRightAsync(model);
-        */
     }
 
-    /*
-    private async Task OpenPanelRightAsync(SubscriptionModel subscriptionModel)
+    private async Task OpenPanelRightAsync(BacktestModel backtestModel)
     {
-        _dialog = await DialogService.ShowPanelAsync<SubscriptionPanel>(subscriptionModel, new DialogParameters<SubscriptionModel>()
+        _dialog = await DialogService.ShowPanelAsync<BacktestPanel>(backtestModel, new DialogParameters<BacktestModel>()
         {
-            Content = subscriptionModel,
+            Content = backtestModel,
             Alignment = HorizontalAlignment.Right,
-            Title = $"{subscriptionModel.InstrumentName}",
+            Title = $"{backtestModel.Backtest.Description}",
             PrimaryAction = "Save",
             SecondaryAction = "Cancel",
             Width = "400px",
@@ -87,8 +78,7 @@ public partial class Backtests
 
         if (result.Cancelled)
         {
-            // TODO: implement discard changes
-            _subscriptions = await InitSubscriptions();
+            _backtests = await InitBacktests();
             await dataGrid.RefreshDataAsync(force: true);
             return;
         }
@@ -98,47 +88,26 @@ public partial class Backtests
             return;
         }
 
-        var model = result.Data as SubscriptionModel;
 
-        if (model == null)
+        if (result.Data is not BacktestModel model)
         {
             return;
         }
 
+        model.Backtest.StrategyId = model.Strategy.Id;
+        var saved = await SaveBacktest(model.Backtest);
 
-        model.Subscription.InstrumentId = model.Instrument.Id;
-        var saved = await SaveSubscription(model.Subscription);
         if (saved)
         {
-            DemoLogger.WriteLine($"Subscription for {model.InstrumentName} ({model.Subscription.Interval}) saved.");
+            DemoLogger.WriteLine($"Backtest {model.Backtest.Description} saved.");
         }
         else
         {
-            DemoLogger.WriteLine($"Saving subscription {model.InstrumentName} ({model.Subscription.Interval}) FAILED!");
+            DemoLogger.WriteLine($"Saving backtest {model.Backtest.Description} FAILED!");
         }
 
-        _subscriptions = await InitSubscriptions();
+        _backtests = await InitBacktests();
         await dataGrid.RefreshDataAsync(force: true);
-    }
-    */
-
-    private async Task<IDictionary<Guid, Instrument>> InitInstruments()
-    {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-        var instruments = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments", JsonOptions.DefaultOptions);
-        var res = new Dictionary<Guid, Instrument>();
-
-        if (instruments == null)
-        {
-            return res;
-        }
-
-        foreach (var instrument in instruments)
-        {
-            res[instrument.Id] = instrument;
-        }
-
-        return res;
     }
 
     private async Task<IQueryable<BacktestModel>> InitBacktests()
@@ -155,28 +124,48 @@ public partial class Backtests
 
         foreach (var backtest in backtests)
         {
-            var item = new BacktestModel
+            if (_strategies.TryGetValue(backtest.StrategyId, out var strategy))
             {
-                Backtest = backtest,
-                //Instrument = instrument,
-                // TODO: Fix it
-                Strategy = new StrategyMetadata() { Name = "Test", Type = StrategyType.Undefined},
-            };
+                var item = new BacktestModel
+                {
+                    Backtest = backtest,
+                    Strategy = strategy,
+                };
 
-            modelItems.Add(item);
+                modelItems.Add(item);
+            }
         }
 
         var res = modelItems?.AsQueryable() ?? Array.Empty<BacktestModel>().AsQueryable();
         return res;
     }
 
-    private async Task<bool> SaveSubscription(CandleSubscription subscription)
+    private async Task<IDictionary<Guid, StrategyMetadata>> InitStrategies()
+    {
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        var strategies = await apiClient.GetFromJsonAsync<StrategyMetadata[]>("api/strategies", JsonOptions.DefaultOptions);
+        var res = new Dictionary<Guid, StrategyMetadata>();
+
+        if (strategies == null)
+        {
+            return res;
+        }
+
+        foreach (var strategy in strategies)
+        {
+            res[strategy.Id] = strategy;
+        }
+
+        return res;
+    }
+
+    private async Task<bool> SaveBacktest(BacktestRun backtest)
     {
         try
         {
             using var apiClient = _httpClientFactory.CreateClient("backend");
-            var content = JsonContent.Create(subscription);
-            var message = await apiClient.PostAsync("api/subscriptions", content);
+            var content = JsonContent.Create(backtest);
+            var message = await apiClient.PostAsync("api/backtests", content);
             message.EnsureSuccessStatusCode();
             return true;
         }
@@ -190,7 +179,7 @@ public partial class Backtests
     private async Task HandleDeleteAction(BacktestModel model)
     {
         var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Delete subscription: {model.Backtest.Description}?",
+            $"Delete backtest: {model.Backtest.Description}?",
             "Yes",
             "No",
             $"Deleting backtest {model.Backtest.Description}");
@@ -202,17 +191,14 @@ public partial class Backtests
             return;
         }
 
-        DemoLogger.WriteLine($"Backtest {model.Backtest.Description} is deleted.");
-        return;
-
-        /*
         using var apiClient = _httpClientFactory.CreateClient("backend");
-        var message = await apiClient.DeleteAsync($"api/subscriptions/{model.Subscription.Id}");
+        var message = await apiClient.DeleteAsync($"api/backtests/{model.Backtest.Id}");
         message.EnsureSuccessStatusCode();
 
-        _subscriptions = await InitSubscriptions();
+        _backtests = await InitBacktests();
         await dataGrid.RefreshDataAsync(force: true);
 
-        */
+        DemoLogger.WriteLine($"Backtest {model.Backtest.Description} is deleted.");
+        return;
     }
 }

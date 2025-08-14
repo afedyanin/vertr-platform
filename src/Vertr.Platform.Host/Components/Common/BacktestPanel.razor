@@ -1,0 +1,26 @@
+@using Vertr.MarketData.Contracts
+@using Vertr.Platform.Host.Components.Models
+@using Vertr.Strategies.Contracts
+
+@implements IDialogContentComponent<BacktestModel>
+
+<FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
+
+<FluentDialogBody>
+    <FluentTextField Value="@Content.Backtest.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
+    <FluentTextField Value="@Content.Backtest.From.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">From:</FluentTextField>
+    <FluentTextField Value="@Content.Backtest.To.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">To:</FluentTextField>
+    <FluentTextField @bind-Value="@Content.Backtest.Description" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Description:</FluentTextField>
+
+    <FluentSelect TOption="StrategyMetadata"
+                  Label="Strategy"
+                  Items="@AllStrategies"
+                  OptionValue="@(p => p.Id.ToString())"
+                  OptionText="@(p => p.Name)"
+                  @bind-SelectedOption="@Content.Strategy" />
+
+    <FluentTextField Value="@Content.Backtest.SubAccountId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">SubAccount Id:</FluentTextField>
+    <FluentTextField Value="@Content.Backtest.ExecutionState.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">State:</FluentTextField>
+    <FluentTextField Value="@Content.Backtest.ProgressMessage?.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Message:</FluentTextField>
+</FluentDialogBody>
+

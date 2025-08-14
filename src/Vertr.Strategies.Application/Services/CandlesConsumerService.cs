@@ -25,6 +25,7 @@ internal class CandlesConsumerService : DataConsumerServiceBase<Candle>
 
         var activeStrategies = await _strategyRepository.GetActiveStrategies();
 
+        // TODO: Use parallel foreach
         foreach (var strategy in activeStrategies)
         {
             if (strategy.InstrumentId != data.InstrumentId)

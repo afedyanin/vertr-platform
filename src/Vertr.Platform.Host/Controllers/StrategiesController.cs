@@ -25,13 +25,6 @@ public class StrategiesController : ControllerBase
         return Ok(strategy);
     }
 
-    [HttpGet("active-only")]
-    public async Task<IActionResult> GetActive()
-    {
-        var strategies = await _strategyRepository.GetActiveStrategies();
-        return Ok(strategies);
-    }
-
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {

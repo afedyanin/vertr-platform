@@ -7,43 +7,64 @@ namespace Vertr.Strategies.Application;
 internal class StrategyRepository : IStrategyRepository
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly IStrategyMetadataRepository _metadataRepository;
 
     private Dictionary<Guid, IStrategy> _strategies = [];
 
     public StrategyRepository(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
+        _metadataRepository = _serviceProvider.GetRequiredService<IStrategyMetadataRepository>();
     }
 
-    public async Task InitializeAsync()
+    public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
-        _strategies = await InitStrategies();
+        _strategies = await InitStrategies(cancellationToken);
     }
 
     public Task<IStrategy[]> GetActiveStrategies()
         => Task.FromResult(_strategies.Values.ToArray());
 
-    public Task Update(StrategyMetadata strategyMetadata)
+
+    public async Task Update(StrategyMetadata strategyMetadata, CancellationToken cancellationToken = default)
     {
-        // TODO: Use ConcurrentDictionary
-        return Task.CompletedTask;
+        await Delete(strategyMetadata.Id, cancellationToken);
+        await Add(strategyMetadata, cancellationToken);
     }
 
-    private async Task<Dictionary<Guid, IStrategy>> InitStrategies()
+    public async Task Delete(Guid strategyId, CancellationToken cancellationToken = default)
     {
+        if (!_strategies.TryGetValue(strategyId, out var existingStrategy))
+        {
+            return;
+        }
+
+        _strategies.Remove(strategyId);
+        await existingStrategy.OnStop(cancellationToken);
+        existingStrategy.Dispose();
+    }
+
+    private async Task Add(StrategyMetadata strategyMetadata, CancellationToken cancellationToken = default)
+    {
+        if (!strategyMetadata.IsActive)
+        {
+            return;
+        }
+
+        var strategy = StrategyFactory.Create(strategyMetadata, _serviceProvider);
+        _strategies[strategy.Id] = strategy;
+        await strategy.OnStart(cancellationToken);
+    }
+
+    private async Task<Dictionary<Guid, IStrategy>> InitStrategies(CancellationToken cancellationToken = default)
+    {
+        var strategiesMeta = await _metadataRepository.GetAll();
+
         var res = new Dictionary<Guid, IStrategy>();
-        var repository = _serviceProvider.GetRequiredService<IStrategyMetadataRepository>();
-        var strategiesMeta = await repository.GetAll();
 
         foreach (var metadata in strategiesMeta)
         {
-            if (!metadata.IsActive)
-            {
-                continue;
-            }
-
-            var strategy = StrategyFactory.Create(metadata, _serviceProvider);
-            res[strategy.Id] = strategy;
+            await Add(metadata, cancellationToken);
         }
 
         return res;

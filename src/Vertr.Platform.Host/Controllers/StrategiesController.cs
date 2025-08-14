@@ -25,7 +25,7 @@ public class StrategiesController : ControllerBase
         return Ok(strategy);
     }
 
-    [HttpGet("active")]
+    [HttpGet("active-only")]
     public async Task<IActionResult> GetActive()
     {
         var strategies = await _strategyRepository.GetActiveStrategies();
@@ -60,10 +60,16 @@ public class StrategiesController : ControllerBase
         return Ok(metadata.Id);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var deletedCount = await _metadataRepository.Delete(id);
+
+        if (deletedCount > 0)
+        {
+            await _strategyRepository.Delete(id);
+        }
+
         return Ok();
     }
 }

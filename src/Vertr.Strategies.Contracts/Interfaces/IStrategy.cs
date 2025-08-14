@@ -2,7 +2,7 @@ using Vertr.MarketData.Contracts;
 
 namespace Vertr.Strategies.Contracts.Interfaces;
 
-public interface IStrategy
+public interface IStrategy : IDisposable
 {
     public Guid Id { get; }
 
@@ -15,4 +15,8 @@ public interface IStrategy
     public long QtyLots { get; }
 
     public Task HandleMarketData(Candle candle, CancellationToken cancellationToken = default);
+
+    public Task OnStart(CancellationToken cancellationToken = default);
+
+    public Task OnStop(CancellationToken cancellationToken = default);
 }

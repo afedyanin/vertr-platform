@@ -43,4 +43,18 @@ internal abstract class StrategyBase : IStrategy
     }
 
     public abstract TradingSignal CreateTradingSignal(Candle candle);
+
+    public virtual Task OnStart(CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+
+    public virtual Task OnStop(CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+
+    public virtual void Dispose()
+    {
+    }
 }

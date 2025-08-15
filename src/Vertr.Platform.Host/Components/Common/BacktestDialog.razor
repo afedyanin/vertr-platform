@@ -1,0 +1,26 @@
+@using Vertr.MarketData.Contracts
+@using Vertr.Platform.Host.Components.Models
+@using Vertr.Strategies.Contracts
+
+@implements IDialogContentComponent<BacktestModel>
+
+<FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
+
+<FluentDialogBody>
+    <FluentDatePicker Label="From" @bind-Value="@Content.SelectedDateFrom" /><FluentTimePicker @bind-Value="@Content.SelectedTimeFrom" />
+    <FluentDatePicker Label="To" @bind-Value="@Content.SelectedDateTo" /><FluentTimePicker @bind-Value="@Content.SelectedTimeTo" />
+    <FluentTextField @bind-Value="@Content.Backtest.Description" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Description:</FluentTextField>
+
+    <FluentSelect TOption="StrategyMetadata"
+                  Label="Strategy"
+                  Items="@AllStrategies"
+                  OptionValue="@(p => p.Id.ToString())"
+                  OptionText="@(p => p.Name)"
+                  @bind-SelectedOption="@Content.Strategy" />
+
+    <FluentTextField Value="@Content.Backtest.SubAccountId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">SubAccount Id:</FluentTextField>
+    <FluentCheckbox @bind-Value="@Content.StartImmediately" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Start Immediately"></FluentCheckbox>
+
+</FluentDialogBody>
+
+

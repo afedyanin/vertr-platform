@@ -10,8 +10,11 @@
 <h3>Backtests</h3>
 
 <FluentStack>
-    <FluentButton @onclick="AddBacktestAsync" Appearance="Appearance.Accent">
+    <FluentButton @onclick="OpenDialogAsync" Appearance="Appearance.Accent">
         Add
+    </FluentButton>
+    <FluentButton @onclick="RefreshAsync" Appearance="Appearance.Accent">
+        Refresh
     </FluentButton>
     <FluentSpacer />
     <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
@@ -27,12 +30,13 @@
                         ShowHover=true
                         DisplayMode="DataGridDisplayMode.Table"
                         RowSize="@DataGridRowSize.Medium">
-            <PropertyColumn Property="@(p => p.Backtest.From)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Backtest.To)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Backtest.From.ToString(ModelConsts.DateTimeFormat))" Title="From" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Backtest.To.ToString(ModelConsts.DateTimeFormat))" Title="To" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Strategy.Name)" Title="Strategy" Sortable="true" />
             <PropertyColumn Property="@(p => p.Backtest.Description)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Backtest.ExecutionState)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Backtest.CreatedAt)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Backtest.ProgressMessage)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Backtest.CreatedAt.ToString(ModelConsts.DateTimeFormat))" Title="Created At" Sortable="true" />
             <TemplateColumn Title="">
                 <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
                               Appearance=Appearance.Lightweight

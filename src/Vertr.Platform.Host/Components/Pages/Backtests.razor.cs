@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Backtest.Contracts;
+using Vertr.Backtest.Contracts.Commands;
 using Vertr.Platform.Common.Utils;
 using Vertr.Platform.Host.Components.Common;
 using Vertr.Platform.Host.Components.Models;
@@ -10,8 +11,6 @@ namespace Vertr.Platform.Host.Components.Pages;
 
 public partial class Backtests
 {
-    private IDialogReference? _dialog;
-
     private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
 
     private FluentDataGrid<BacktestModel> dataGrid;
@@ -38,10 +37,16 @@ public partial class Backtests
         }
     }
 
-    private async Task AddBacktestAsync()
+    private async Task RefreshAsync()
+    {
+        _backtests = await InitBacktests();
+        await dataGrid.RefreshDataAsync(force: true);
+    }
+
+    private async Task OpenDialogAsync()
     {
         var strategy = _strategies.Values.First();
-        var model = new BacktestModel()
+        var initialModel = new BacktestModel()
         {
             Strategy = strategy,
             Backtest = new BacktestRun
@@ -59,27 +64,23 @@ public partial class Backtests
             }
         };
 
-        await OpenPanelRightAsync(model);
-    }
-
-    private async Task OpenPanelRightAsync(BacktestModel backtestModel)
-    {
-        _dialog = await DialogService.ShowPanelAsync<BacktestPanel>(backtestModel, new DialogParameters<BacktestModel>()
+        var parameters = new DialogParameters()
         {
-            Content = backtestModel,
             Alignment = HorizontalAlignment.Right,
-            Title = $"{backtestModel.Backtest.Description}",
+            Title = "Create new backtest",
             PrimaryAction = "Save",
             SecondaryAction = "Cancel",
-            Width = "400px",
-        });
+            Width = "500px",
+            TrapFocus = true,
+            Modal = true,
+            PreventScroll = true
+        };
 
-        var result = await _dialog.Result;
+        var dialog = await DialogService.ShowDialogAsync<BacktestDialog>(initialModel, parameters);
+        var result = await dialog.Result;
 
         if (result.Cancelled)
         {
-            _backtests = await InitBacktests();
-            await dataGrid.RefreshDataAsync(force: true);
             return;
         }
 
@@ -88,14 +89,12 @@ public partial class Backtests
             return;
         }
 
-
         if (result.Data is not BacktestModel model)
         {
             return;
         }
 
-        model.Backtest.StrategyId = model.Strategy.Id;
-        var saved = await SaveBacktest(model.Backtest);
+        var saved = await SaveBacktest(model);
 
         if (saved)
         {
@@ -106,8 +105,21 @@ public partial class Backtests
             DemoLogger.WriteLine($"Saving backtest {model.Backtest.Description} FAILED!");
         }
 
-        _backtests = await InitBacktests();
-        await dataGrid.RefreshDataAsync(force: true);
+        await RefreshAsync();
+    }
+
+
+    private async Task OpenPanelRightAsync(BacktestModel backtestModel)
+    {
+        var dialog = await DialogService.ShowPanelAsync<BacktestPanel>(backtestModel, new DialogParameters<BacktestModel>()
+        {
+            Content = backtestModel,
+            Alignment = HorizontalAlignment.Right,
+            Title = $"{backtestModel.Backtest.Description}",
+            PrimaryAction = "Close",
+            SecondaryAction = null,
+            Width = "400px",
+        });
     }
 
     private async Task<IQueryable<BacktestModel>> InitBacktests()
@@ -159,12 +171,22 @@ public partial class Backtests
         return res;
     }
 
-    private async Task<bool> SaveBacktest(BacktestRun backtest)
+    private async Task<bool> SaveBacktest(BacktestModel backtestModel)
     {
         try
         {
+            var request = new CreateBacktestRequest
+            {
+                Description = backtestModel.Backtest.Description,
+                From = backtestModel.ComposeDateFrom(),
+                To = backtestModel.ComposeDateTo(),
+                StrategyId = backtestModel.Strategy.Id,
+                SubAccountId = backtestModel.Backtest.SubAccountId,
+                StartImmediately = backtestModel.StartImmediately,
+            };
+
             using var apiClient = _httpClientFactory.CreateClient("backend");
-            var content = JsonContent.Create(backtest);
+            var content = JsonContent.Create(request);
             var message = await apiClient.PostAsync("api/backtests", content);
             message.EnsureSuccessStatusCode();
             return true;
@@ -195,8 +217,7 @@ public partial class Backtests
         var message = await apiClient.DeleteAsync($"api/backtests/{model.Backtest.Id}");
         message.EnsureSuccessStatusCode();
 
-        _backtests = await InitBacktests();
-        await dataGrid.RefreshDataAsync(force: true);
+        await RefreshAsync();
 
         DemoLogger.WriteLine($"Backtest {model.Backtest.Description} is deleted.");
         return;

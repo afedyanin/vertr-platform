@@ -19,6 +19,9 @@ public class BacktestModel
 
     public DateTime? SelectedTimeTo { get; set; }
 
+    public bool DoStart { get; set; }
+
+    public bool DoCancel { get; set; }
 
     public DateTime ComposeDateFrom()
     {

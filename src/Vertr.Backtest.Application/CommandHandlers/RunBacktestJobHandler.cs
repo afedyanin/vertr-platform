@@ -55,6 +55,7 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
 
             if (bt.IsCancellationRequested)
             {
+                _logger.LogWarning($"Backtest with Id={request.BacktestId} cancellation requested! State={bt.ExecutionState}");
                 await SetCancelled(bt);
                 break;
             }

@@ -31,7 +31,7 @@ public partial class Backtests
 
     private async Task HandleCellClick(FluentDataGridCell<BacktestModel> cell)
     {
-        if (cell.Item != null && cell.GridColumn <= 6)
+        if (cell.Item != null && cell.GridColumn <= 7)
         {
             await OpenPanelRightAsync(cell.Item);
         }
@@ -98,11 +98,11 @@ public partial class Backtests
 
         if (saved)
         {
-            DemoLogger.WriteLine($"Backtest {model.Backtest.Description} saved.");
+            ToastService.ShowSuccess($"Backtest {model.Backtest.Description} created.");
         }
         else
         {
-            DemoLogger.WriteLine($"Saving backtest {model.Backtest.Description} FAILED!");
+            ToastService.ShowError($"Saving backtest {model.Backtest.Description} failed.");
         }
 
         await RefreshAsync();
@@ -120,6 +120,53 @@ public partial class Backtests
             SecondaryAction = null,
             Width = "400px",
         });
+
+        var result = await dialog.Result;
+
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        if (result.Data is null)
+        {
+            return;
+        }
+
+        if (result.Data is not BacktestModel model)
+        {
+            return;
+        }
+
+        if (model.DoCancel)
+        {
+            var cancelled = await CancelBacktest(model.Backtest.Id);
+
+            if (cancelled)
+            {
+                await RefreshAsync();
+                ToastService.ShowWarning($"Backtest {model.Backtest.Description} requested to cancel.");
+            }
+            else
+            {
+                ToastService.ShowError($"Backtest {model.Backtest.Description} failed to cancel.");
+            }
+        }
+
+        if (model.DoStart)
+        {
+            var started = await StartBacktest(model.Backtest.Id);
+
+            if (started)
+            {
+                await RefreshAsync();
+                ToastService.ShowSuccess($"Backtest {model.Backtest.Description} enqueued to start.");
+            }
+            else
+            {
+                ToastService.ShowError($"Backtest {model.Backtest.Description} failed to start.");
+            }
+        }
     }
 
     private async Task<IQueryable<BacktestModel>> InitBacktests()
@@ -171,6 +218,36 @@ public partial class Backtests
         return res;
     }
 
+    private async Task<bool> StartBacktest(Guid backtestId)
+    {
+        try
+        {
+            using var apiClient = _httpClientFactory.CreateClient("backend");
+            var message = await apiClient.PutAsync($"api/backtests/start/{backtestId}", null);
+            message.EnsureSuccessStatusCode();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private async Task<bool> CancelBacktest(Guid backtestId)
+    {
+        try
+        {
+            using var apiClient = _httpClientFactory.CreateClient("backend");
+            var message = await apiClient.PutAsync($"api/backtests/cancel/{backtestId}", null);
+            message.EnsureSuccessStatusCode();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     private async Task<bool> SaveBacktest(BacktestModel backtestModel)
     {
         try
@@ -193,7 +270,6 @@ public partial class Backtests
         }
         catch
         {
-            // TODO: Use toast service
             return false;
         }
     }
@@ -218,8 +294,6 @@ public partial class Backtests
         message.EnsureSuccessStatusCode();
 
         await RefreshAsync();
-
-        DemoLogger.WriteLine($"Backtest {model.Backtest.Description} is deleted.");
-        return;
+        ToastService.ShowWarning($"Backtest {model.Backtest.Description} is deleted.");
     }
 }

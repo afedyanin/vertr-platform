@@ -16,5 +16,9 @@
     <FluentTextField Value="@Content.Backtest.ExecutionState.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">State:</FluentTextField>
     <FluentTextField Value="@Content.Backtest.ProgressMessage?.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Message:</FluentTextField>
     <FluentTextField Value="@Content.Backtest.IsCancellationRequested.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Cancel requested:</FluentTextField>
+    <br />
+    <br />
+    <FluentButton OnClick="OnStartAsync" Appearance="Appearance.Accent" Disabled="StartDiasbled">Start</FluentButton>
+    <FluentButton OnClick="OnCancelAsync" Appearance="Appearance.Accent" Disabled="CancelDiasbled">Cancel</FluentButton>
 </FluentDialogBody>
 

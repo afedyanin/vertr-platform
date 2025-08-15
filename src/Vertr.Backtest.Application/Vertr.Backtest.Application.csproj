@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Backtest.Contracts\Vertr.Backtest.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.Infrastructure.Common\Vertr.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\Vertr.Strategies.Contracts\Vertr.Strategies.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -8,6 +8,7 @@ public static class StrategiesRegistrar
     public static IServiceCollection AddStrategies(this IServiceCollection services)
     {
         services.AddSingleton<IStrategyRepository, StrategyRepository>(sp => new StrategyRepository(sp));
+        services.AddSingleton<IStrategyFactory, StrategyFactory>();
         services.AddHostedService<CandlesConsumerService>();
 
         return services;

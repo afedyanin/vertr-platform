@@ -8,6 +8,7 @@ internal class StrategyRepository : IStrategyRepository
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IStrategyMetadataRepository _metadataRepository;
+    private readonly IStrategyFactory _strategyFactory;
 
     private Dictionary<Guid, IStrategy> _strategies = [];
 
@@ -15,6 +16,7 @@ internal class StrategyRepository : IStrategyRepository
     {
         _serviceProvider = serviceProvider;
         _metadataRepository = _serviceProvider.GetRequiredService<IStrategyMetadataRepository>();
+        _strategyFactory = _serviceProvider.GetRequiredService<IStrategyFactory>();
     }
 
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
@@ -51,7 +53,7 @@ internal class StrategyRepository : IStrategyRepository
             return;
         }
 
-        var strategy = StrategyFactory.Create(strategyMetadata, _serviceProvider);
+        var strategy = _strategyFactory.Create(strategyMetadata, _serviceProvider);
         _strategies[strategy.Id] = strategy;
         await strategy.OnStart(cancellationToken);
     }

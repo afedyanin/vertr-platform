@@ -12,9 +12,6 @@ internal abstract class StrategyBase : IStrategy
 
     protected IServiceProvider ServiceProvider { get; private set; }
 
-    protected IMarketDataRepository MarketDataRepository { get; private set; }
-
-
     public Guid Id { get; init; }
 
     public Guid InstrumentId { get; init; }
@@ -28,7 +25,6 @@ internal abstract class StrategyBase : IStrategy
     protected StrategyBase(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
-        MarketDataRepository = ServiceProvider.GetRequiredService<IMarketDataRepository>();
         //_tradingSignalProducer = ServiceProvider.GetRequiredService<IDataProducer<TradingSignal>>();
         _tradingSignalRepository = ServiceProvider.GetRequiredService<ITradingSignalRepository>();
     }

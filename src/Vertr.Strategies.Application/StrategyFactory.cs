@@ -4,9 +4,9 @@ using Vertr.Strategies.Contracts.Interfaces;
 
 namespace Vertr.Strategies.Application;
 
-internal static class StrategyFactory
+internal class StrategyFactory : IStrategyFactory
 {
-    public static IStrategy Create(StrategyMetadata strategyMetadata, IServiceProvider serviceProvider, Guid? backtestId = null)
+    public IStrategy Create(StrategyMetadata strategyMetadata, IServiceProvider serviceProvider, Guid? backtestId = null)
     {
         ArgumentNullException.ThrowIfNull(strategyMetadata);
 

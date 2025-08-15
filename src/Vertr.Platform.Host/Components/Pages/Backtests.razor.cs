@@ -37,11 +37,18 @@ public partial class Backtests
         }
     }
 
-    private async Task RefreshAsync()
+    private async Task RefreshAsync(TimeSpan? delay)
     {
+        if (delay.HasValue)
+        {
+            await Task.Delay(delay.Value);
+        }
+
         _backtests = await InitBacktests();
         await dataGrid.RefreshDataAsync(force: true);
     }
+
+    private Task RefreshAsync() => RefreshAsync(null);
 
     private async Task OpenDialogAsync()
     {
@@ -105,7 +112,14 @@ public partial class Backtests
             ToastService.ShowError($"Saving backtest {model.Backtest.Description} failed.");
         }
 
-        await RefreshAsync();
+        if (model.StartImmediately)
+        {
+            await RefreshAsync(TimeSpan.FromSeconds(5));
+        }
+        else
+        {
+            await RefreshAsync();
+        }
     }
 
 
@@ -144,13 +158,16 @@ public partial class Backtests
 
             if (cancelled)
             {
-                await RefreshAsync();
                 ToastService.ShowWarning($"Backtest {model.Backtest.Description} requested to cancel.");
             }
             else
             {
                 ToastService.ShowError($"Backtest {model.Backtest.Description} failed to cancel.");
             }
+
+            await RefreshAsync(TimeSpan.FromSeconds(1));
+
+            return;
         }
 
         if (model.DoStart)
@@ -159,13 +176,16 @@ public partial class Backtests
 
             if (started)
             {
-                await RefreshAsync();
                 ToastService.ShowSuccess($"Backtest {model.Backtest.Description} enqueued to start.");
             }
             else
             {
                 ToastService.ShowError($"Backtest {model.Backtest.Description} failed to start.");
             }
+
+            await RefreshAsync(TimeSpan.FromSeconds(5));
+
+            return;
         }
     }
 

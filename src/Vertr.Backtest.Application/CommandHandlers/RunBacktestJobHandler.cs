@@ -59,14 +59,12 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
             return;
         }
 
-        strategyMeta.SubAccountId = bt.SubAccountId;
-        var strategy = _strategyFactory.Create(strategyMeta, _serviceProvider, bt.Id);
-
         try
         {
             _logger.LogInformation($"Starting backtest Id={bt.Id}.");
 
-            await strategy.OnStart();
+            var strategy = _strategyFactory.Create(strategyMeta, _serviceProvider);
+            await strategy.OnStart(bt, cancellationToken);
 
             var day = DateOnly.FromDateTime(bt.From);
             var dayTo = DateOnly.FromDateTime(bt.To);
@@ -75,10 +73,8 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
             {
                 var canContinue = await DoBacktestDayStep(
                     strategy,
-                    bt.Id,
+                    bt,
                     day,
-                    bt.From,
-                    bt.To,
                     cancellationToken);
 
                 if (!canContinue)
@@ -100,31 +96,29 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
+            _logger.LogError(ex, $"Backtest Id={bt?.Id} failed. Error={ex.Message}");
             await SetFailed(bt, ex.Message);
         }
     }
 
     private async Task<bool> DoBacktestDayStep(
         IStrategy strategy,
-        Guid backtestId,
+        BacktestRun backtest,
         DateOnly day,
-        DateTime from,
-        DateTime to,
         CancellationToken cancellationToken = default)
     {
-        var bt = await _backtestRepository.GetById(backtestId);
+        var bt = await _backtestRepository.GetById(backtest.Id);
 
         if (bt == null)
         {
-            var message = $"Cannot find backtest with id={backtestId}";
+            var message = $"Cannot find backtest with id={backtest.Id}";
             _logger.LogError(message);
             return false;
         }
 
         if (bt.IsCancellationRequested)
         {
-            _logger.LogWarning($"Backtest with Id={backtestId} cancellation requested. State={bt.ExecutionState}");
+            _logger.LogWarning($"Backtest with Id={bt.Id} cancellation requested. State={bt.ExecutionState}");
             await SetCancelled(bt);
             return false;
         }
@@ -137,18 +131,13 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         var history = await _candlesHistoryLoader.GetCandlesHistory(
             strategy.InstrumentId,
             day,
-            force: shouldForce);
+            shouldForce);
 
-        if (history == null)
-        {
-            return true;
-        }
-
-        var candles = history.GetCandles();
+        var candles = history?.GetCandles() ?? [];
 
         foreach (var candle in candles)
         {
-            if (candle.TimeUtc < from || candle.TimeUtc > to)
+            if (candle.TimeUtc < bt.From || candle.TimeUtc > bt.To)
             {
                 continue;
             }

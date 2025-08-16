@@ -3,6 +3,5 @@ public interface IStrategyFactory
 {
     public IStrategy Create(
         StrategyMetadata strategyMetadata,
-        IServiceProvider serviceProvider,
-        Guid? backtestId = null);
+        IServiceProvider serviceProvider);
 }

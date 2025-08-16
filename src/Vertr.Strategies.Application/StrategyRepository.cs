@@ -55,7 +55,7 @@ internal class StrategyRepository : IStrategyRepository
 
         var strategy = _strategyFactory.Create(strategyMetadata, _serviceProvider);
         _strategies[strategy.Id] = strategy;
-        await strategy.OnStart(cancellationToken);
+        await strategy.OnStart(backtest: null, cancellationToken);
     }
 
     private async Task<Dictionary<Guid, IStrategy>> InitStrategies(CancellationToken cancellationToken = default)

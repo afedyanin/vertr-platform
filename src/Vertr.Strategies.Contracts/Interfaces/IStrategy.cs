@@ -1,3 +1,4 @@
+using Vertr.Backtest.Contracts;
 using Vertr.MarketData.Contracts;
 
 namespace Vertr.Strategies.Contracts.Interfaces;
@@ -8,7 +9,7 @@ public interface IStrategy : IDisposable
 
     public Guid InstrumentId { get; }
 
-    public Guid? BacktestId { get; init; }
+    public Guid? BacktestId { get; }
 
     public Guid SubAccountId { get; }
 
@@ -16,7 +17,7 @@ public interface IStrategy : IDisposable
 
     public Task HandleMarketData(Candle candle, CancellationToken cancellationToken = default);
 
-    public Task OnStart(CancellationToken cancellationToken = default);
+    public Task OnStart(BacktestRun? backtest = null, CancellationToken cancellationToken = default);
 
     public Task OnStop(CancellationToken cancellationToken = default);
 }

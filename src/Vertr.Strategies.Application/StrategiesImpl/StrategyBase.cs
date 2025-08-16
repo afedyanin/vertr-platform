@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using Vertr.Backtest.Contracts;
 using Vertr.MarketData.Contracts;
-using Vertr.MarketData.Contracts.Interfaces.old;
 using Vertr.Strategies.Contracts;
 using Vertr.Strategies.Contracts.Interfaces;
 
@@ -18,9 +18,9 @@ internal abstract class StrategyBase : IStrategy
 
     public long QtyLots { get; init; }
 
-    public Guid? BacktestId { get; init; }
+    public Guid? BacktestId { get; private set; }
 
-    public Guid SubAccountId { get; init; }
+    public Guid SubAccountId { get; set; }
 
     protected StrategyBase(IServiceProvider serviceProvider)
     {
@@ -40,8 +40,16 @@ internal abstract class StrategyBase : IStrategy
 
     public abstract TradingSignal CreateTradingSignal(Candle candle);
 
-    public virtual Task OnStart(CancellationToken cancellationToken = default)
+    public virtual Task OnStart(
+        BacktestRun? backtest = null,
+        CancellationToken cancellationToken = default)
     {
+        if (backtest != null)
+        {
+            BacktestId = backtest.Id;
+            SubAccountId = backtest.SubAccountId;
+        }
+
         return Task.CompletedTask;
     }
 

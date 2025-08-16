@@ -1,7 +1,5 @@
-using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host.Controllers;
@@ -34,8 +32,7 @@ public class CandlesHistoryController : ControllerBase
             return NotFound();
         }
 
-        var json = Encoding.UTF8.GetString(item.Data);
-        var candles = JsonSerializer.Deserialize<Candle[]>(json, Common.Utils.JsonOptions.DefaultOptions);
+        var candles = item.GetCandles();
         return Ok(candles);
     }
 }

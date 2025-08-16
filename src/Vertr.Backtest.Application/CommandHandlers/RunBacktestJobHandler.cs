@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Backtest.Contracts;
 using Vertr.Backtest.Contracts.Commands;
 using Vertr.Backtest.Contracts.Interfaces;
-using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.Platform.Common.Mediator;
 using Vertr.Strategies.Contracts.Interfaces;
@@ -15,22 +15,23 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
     private readonly IStrategyMetadataRepository _strategyMetadataRepository;
     private readonly IStrategyFactory _strategyFactory;
     private readonly IServiceProvider _serviceProvider;
-    private readonly ICandlesRepository _candlesRepository;
+    private readonly ICandlesHistoryLoader _candlesHistoryLoader;
+
     private readonly ILogger<RunBacktestJobHandler> _logger;
 
     public RunBacktestJobHandler(
         IBacktestRepository backtestRepository,
-        ICandlesRepository candlesRepository,
         IStrategyMetadataRepository strategyMetadataRepository,
         IStrategyFactory strategyFactory,
         IServiceProvider serviceProvider,
+        ICandlesHistoryLoader candlesHistoryLoader,
         ILogger<RunBacktestJobHandler> logger)
     {
-        _candlesRepository = candlesRepository;
         _backtestRepository = backtestRepository;
         _strategyMetadataRepository = strategyMetadataRepository;
         _strategyFactory = strategyFactory;
         _serviceProvider = serviceProvider;
+        _candlesHistoryLoader = candlesHistoryLoader;
         _logger = logger;
     }
 
@@ -61,40 +62,31 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         strategyMeta.SubAccountId = bt.SubAccountId;
         var strategy = _strategyFactory.Create(strategyMeta, _serviceProvider, bt.Id);
 
-        var candles = await GetCandles(strategy.InstrumentId, bt.From, bt.To);
-
-        var steps = 0;
-
         try
         {
-            _logger.LogInformation($"Starting backtest Id={bt.StrategyId}. Candles={candles.Length}");
+            _logger.LogInformation($"Starting backtest Id={bt.Id}.");
 
             await strategy.OnStart();
 
-            foreach (var candle in candles)
+            var day = DateOnly.FromDateTime(bt.From);
+            var dayTo = DateOnly.FromDateTime(bt.To);
+
+            while (day <= dayTo)
             {
-                await strategy.HandleMarketData(candle, cancellationToken);
-                steps++;
+                var canContinue = await DoBacktestDayStep(
+                    strategy,
+                    bt.Id,
+                    day,
+                    bt.From,
+                    bt.To,
+                    cancellationToken);
 
-                if (steps % 10 == 0)
+                if (!canContinue)
                 {
-                    bt = await _backtestRepository.GetById(bt.Id);
-                    if (bt == null)
-                    {
-                        var message = $"Cannot find backtest with id={request.BacktestId}";
-                        _logger.LogError(message);
-                        break;
-                    }
-
-                    if (bt.IsCancellationRequested)
-                    {
-                        _logger.LogWarning($"Backtest with Id={request.BacktestId} cancellation requested! State={bt.ExecutionState}");
-                        await SetCancelled(bt);
-                        break;
-                    }
-
-                    await SetProgress(bt, $"Processing step #{steps}");
+                    break;
                 }
+
+                day.AddDays(1);
             }
 
             await strategy.OnStop(cancellationToken);
@@ -104,7 +96,7 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
                 await SetCompleted(bt);
             }
 
-            _logger.LogInformation($"Backtest Id={bt?.StrategyId} completed.");
+            _logger.LogInformation($"Backtest Id={bt?.Id} completed.");
         }
         catch (Exception ex)
         {
@@ -113,11 +105,58 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         }
     }
 
-    private async Task<Candle[]> GetCandles(Guid instrumentId, DateTime from, DateTime to)
+    private async Task<bool> DoBacktestDayStep(
+        IStrategy strategy,
+        Guid backtestId,
+        DateOnly day,
+        DateTime from,
+        DateTime to,
+        CancellationToken cancellationToken = default)
     {
-        // TODO: Load history
-        var res = await _candlesRepository.Get(instrumentId);
-        return res?.ToArray() ?? [];
+        var bt = await _backtestRepository.GetById(backtestId);
+
+        if (bt == null)
+        {
+            var message = $"Cannot find backtest with id={backtestId}";
+            _logger.LogError(message);
+            return false;
+        }
+
+        if (bt.IsCancellationRequested)
+        {
+            _logger.LogWarning($"Backtest with Id={backtestId} cancellation requested. State={bt.ExecutionState}");
+            await SetCancelled(bt);
+            return false;
+        }
+
+        await SetProgress(bt, $"Processing day: {day:dd-MMM-yyy}.");
+
+        // force reload for intraday candles
+        var shouldForce = DateOnly.FromDateTime(DateTime.UtcNow) == day;
+
+        var history = await _candlesHistoryLoader.GetCandlesHistory(
+            strategy.InstrumentId,
+            day,
+            force: shouldForce);
+
+        if (history == null)
+        {
+            return true;
+        }
+
+        var candles = history.GetCandles();
+
+        foreach (var candle in candles)
+        {
+            if (candle.TimeUtc < from || candle.TimeUtc > to)
+            {
+                continue;
+            }
+
+            await strategy.HandleMarketData(candle, cancellationToken);
+        }
+
+        return true;
     }
 
     private async Task SetProgress(BacktestRun backtest, string message)

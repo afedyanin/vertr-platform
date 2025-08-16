@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Vertr.Infrastructure.Common.Channels;
 using Vertr.Infrastructure.Common.Mediator;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.MarketData.Application;
 
@@ -12,7 +13,7 @@ public static class MarketDataRegistrar
         services.AddOptions<MarketDataSettings>().BindConfiguration(nameof(MarketDataSettings));
         services.RegisterDataChannel<Candle>();
         services.AddMediatorHandlers(typeof(MarketDataRegistrar).Assembly);
-
+        services.AddSingleton<ICandlesHistoryLoader, CandlesHistoryLoader>();
         return services;
     }
 }

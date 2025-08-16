@@ -4,6 +4,8 @@ public interface ICandlesHistoryRepository
 {
     public Task<CandlesHistoryItem[]> Get(Guid instrumentId);
 
+    public Task<CandlesHistoryItem?> GetByDay(Guid instrumentId, DateOnly day);
+
     public Task<CandlesHistoryItem?> GetById(Guid id);
 
     public Task<bool> Save(CandlesHistoryItem item);

@@ -8,7 +8,7 @@ namespace Vertr.OrderExecution.Application.CommandHandlers;
 
 internal abstract class OrderHandlerBase
 {
-    private readonly IInstrumentsRepository _marketDataProvider;
+    private readonly IInstrumentsRepository _instrumentsRepository;
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly OrderExecutionSettings _orderExecutionSettings;
 
@@ -19,13 +19,13 @@ internal abstract class OrderHandlerBase
     protected OrderHandlerBase(
         IMediator mediator,
         IPortfolioRepository portfolioRepository,
-        IInstrumentsRepository marketDataProvider,
+        IInstrumentsRepository instrumentsRepository,
         IOptions<OrderExecutionSettings> options
         )
     {
         Mediator = mediator;
         _portfolioRepository = portfolioRepository;
-        _marketDataProvider = marketDataProvider;
+        _instrumentsRepository = instrumentsRepository;
         _orderExecutionSettings = options.Value;
     }
 
@@ -49,7 +49,7 @@ internal abstract class OrderHandlerBase
             return 0L;
         }
 
-        var instrument = await _marketDataProvider.GetById(instrumentId);
+        var instrument = await _instrumentsRepository.GetById(instrumentId);
 
         if (instrument == null)
         {

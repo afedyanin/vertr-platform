@@ -13,7 +13,8 @@ namespace Vertr.OrderExecution.Application.RequestHandlers;
 
 internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOrderResponse>
 {
-    private readonly IOrderExecutionGateway _tinvestGateway;
+    private readonly IOrderExecutionGateway _executionGateway;
+    private readonly IOrderExecutionSimulator _executionSimulator;
     private readonly IOrderEventRepository _orderEventRepository;
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
     private readonly ILogger<ExecuteOrderHandler> _logger;
@@ -21,12 +22,14 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
 
     public ExecuteOrderHandler(
         IDataProducer<TradeOperation> tradeOperationsProducer,
-        IOrderExecutionGateway tinvestGateway,
+        IOrderExecutionGateway executionGateway,
         IOrderEventRepository orderEventRepository,
+        IOrderExecutionSimulator executionSimulator,
         IOptions<OrderExecutionSettings> options,
         ILogger<ExecuteOrderHandler> logger)
     {
-        _tinvestGateway = tinvestGateway;
+        _executionGateway = executionGateway;
+        _executionSimulator = executionSimulator;
         _orderEventRepository = orderEventRepository;
         _tradeOperationsProducer = tradeOperationsProducer;
         _orderExecutionSettings = options.Value;
@@ -43,6 +46,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             request.SubAccountId,
             request.QtyLots,
             request.CreatedAt,
+            request.BacktestId,
             cancellationToken);
 
         var response = new ExecuteOrderResponse
@@ -59,6 +63,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         Guid subAccountId,
         long qtyLots,
         DateTime createdAt,
+        Guid? backtestId,
         CancellationToken cancellationToken)
     {
         var request = new PostOrderRequest
@@ -91,7 +96,17 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         }
 
         _logger.LogInformation($"Posting new market order. RequestId={requestId}");
-        var response = await _tinvestGateway.PostOrder(request);
+
+        PostOrderResponse? response = null;
+
+        if (_orderExecutionSettings.IsPaperTrading || backtestId.HasValue)
+        {
+            response = await _executionSimulator.PostOrder(request);
+        }
+        else
+        {
+            response = await _executionGateway.PostOrder(request);
+        }
 
         if (response == null)
         {

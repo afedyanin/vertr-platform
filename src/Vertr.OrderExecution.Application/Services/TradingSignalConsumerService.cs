@@ -2,7 +2,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Vertr.Infrastructure.Common.Channels;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common.Mediator;
-using Vertr.PortfolioManager.Contracts;
 using Vertr.Strategies.Contracts;
 
 namespace Vertr.OrderExecution.Application.Services;
@@ -24,6 +23,7 @@ internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSig
             InstrumentId = data.InstrumentId,
             QtyLots = data.QtyLots,
             SubAccountId = data.SubAccountId,
+            BacktestId = data.BacktestId,
         };
 
         _ = await _mediator.Send(command, cancellationToken);

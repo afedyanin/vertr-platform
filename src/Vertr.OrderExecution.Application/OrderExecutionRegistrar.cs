@@ -22,13 +22,8 @@ public static class OrderExecutionRegistrar
         services.AddOptions<OrderExecutionSettings>().BindConfiguration(nameof(OrderExecutionSettings));
 
         services.AddMediatorHandlers(typeof(OrderExecutionRegistrar).Assembly);
+        services.AddTransient<IOrderExecutionSimulator, OrderExecutionSimulator>();
 
-        return services;
-    }
-
-    public static IServiceCollection AddSimulatedOrders(this IServiceCollection services)
-    {
-        services.AddTransient<IOrderExecutionGateway, OrderExecutionSimulator>();
         return services;
     }
 }

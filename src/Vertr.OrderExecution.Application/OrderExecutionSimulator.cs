@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
@@ -7,17 +8,20 @@ using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application;
 
-internal class OrderExecutionSimulator : IOrderExecutionGateway
+internal class OrderExecutionSimulator : IOrderExecutionSimulator
 {
     private readonly IInstrumentsRepository _staticMarketDataProvider;
     private readonly IDataProducer<OrderTrades> _orderTradesProducer;
+    private readonly OrderExecutionSettings _orderExecutionSettings;
 
     public OrderExecutionSimulator(
         IInstrumentsRepository staticMarketDataProvider,
-        IDataProducer<OrderTrades> orderTradesProducer)
+        IDataProducer<OrderTrades> orderTradesProducer,
+        IOptions<OrderExecutionSettings> options)
     {
         _staticMarketDataProvider = staticMarketDataProvider;
         _orderTradesProducer = orderTradesProducer;
+        _orderExecutionSettings = options.Value;
     }
 
     public async Task<PostOrderResponse?> PostOrder(PostOrderRequest request)
@@ -37,8 +41,7 @@ internal class OrderExecutionSimulator : IOrderExecutionGateway
         var orderValue = request.Price * qty;
         var orderAmount = new Money(orderValue, currency);
 
-        // TODO: use comission from settings
-        var comissionValue = orderValue * 0.03m;
+        var comissionValue = orderValue * _orderExecutionSettings.Comission;
         var comissionAmount = new Money(comissionValue, currency);
 
         var response = new PostOrderResponse

@@ -10,23 +10,23 @@ namespace Vertr.OrderExecution.Application;
 
 internal class OrderExecutionSimulator : IOrderExecutionSimulator
 {
-    private readonly IInstrumentsRepository _staticMarketDataProvider;
+    private readonly IInstrumentsRepository _instrumentsRepository;
     private readonly IDataProducer<OrderTrades> _orderTradesProducer;
     private readonly OrderExecutionSettings _orderExecutionSettings;
 
     public OrderExecutionSimulator(
-        IInstrumentsRepository staticMarketDataProvider,
+        IInstrumentsRepository instrumentsRepository,
         IDataProducer<OrderTrades> orderTradesProducer,
         IOptions<OrderExecutionSettings> options)
     {
-        _staticMarketDataProvider = staticMarketDataProvider;
+        _instrumentsRepository = instrumentsRepository;
         _orderTradesProducer = orderTradesProducer;
         _orderExecutionSettings = options.Value;
     }
 
     public async Task<PostOrderResponse?> PostOrder(PostOrderRequest request)
     {
-        var instrument = await _staticMarketDataProvider.GetById(request.InstrumentId);
+        var instrument = await _instrumentsRepository.GetById(request.InstrumentId);
 
         if (instrument == null)
         {

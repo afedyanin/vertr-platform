@@ -19,6 +19,7 @@ public static class OrderExecutionRegistrar
         services.AddHostedService<OrderStateConsumerService>();
         services.AddHostedService<OrderTradesConsumerService>();
         services.AddHostedService<TradingSignalConsumerService>();
+        services.AddOptions<OrderExecutionSettings>().BindConfiguration(nameof(OrderExecutionSettings));
 
         services.AddMediatorHandlers(typeof(OrderExecutionRegistrar).Assembly);
 

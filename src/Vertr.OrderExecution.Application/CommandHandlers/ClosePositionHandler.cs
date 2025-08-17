@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common.Mediator;
@@ -10,8 +11,9 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
     public ClosePositionHandler(
         IMediator mediator,
         IPortfolioRepository portfolioRepository,
-        IInstrumentsRepository staticMarketDataProvider
-        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
+        IInstrumentsRepository staticMarketDataProvider,
+        IOptions<OrderExecutionSettings> options) :
+        base(mediator, portfolioRepository, staticMarketDataProvider, options)
     {
     }
 
@@ -19,7 +21,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
         ClosePositionRequest request,
         CancellationToken cancellationToken)
     {
-        var currentLots = await GetCurrentPositionInLots(request.PortfolioIdentity, request.InstrumentId);
+        var currentLots = await GetCurrentPositionInLots(request.SubAccountId, request.InstrumentId);
 
         if (currentLots == 0L)
         {
@@ -34,7 +36,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
         var orderRequest = new ExecuteOrderRequest
         {
             RequestId = request.RequestId,
-            PortfolioIdentity = request.PortfolioIdentity,
+            SubAccountId = request.SubAccountId,
             InstrumentId = request.InstrumentId,
             QtyLots = lotsToClose,
         };

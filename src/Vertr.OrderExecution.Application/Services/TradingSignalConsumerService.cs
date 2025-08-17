@@ -23,8 +23,7 @@ internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSig
             RequestId = data.Id,
             InstrumentId = data.InstrumentId,
             QtyLots = data.QtyLots,
-            // TODO: Fix it
-            PortfolioIdentity = new PortfolioIdentity("data.AccountId", data.SubAccountId),
+            SubAccountId = data.SubAccountId,
         };
 
         _ = await _mediator.Send(command, cancellationToken);

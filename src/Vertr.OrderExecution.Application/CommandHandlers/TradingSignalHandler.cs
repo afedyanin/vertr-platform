@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common.Mediator;
@@ -10,8 +11,9 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
     public TradingSignalHandler(
         IMediator mediator,
         IPortfolioRepository portfolioRepository,
-        IInstrumentsRepository staticMarketDataProvider
-        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
+        IInstrumentsRepository staticMarketDataProvider,
+        IOptions<OrderExecutionSettings> options) :
+        base(mediator, portfolioRepository, staticMarketDataProvider, options)
     {
     }
 
@@ -27,14 +29,14 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
             };
         }
 
-        var currentLots = await GetCurrentPositionInLots(request.PortfolioIdentity, request.InstrumentId);
+        var currentLots = await GetCurrentPositionInLots(request.SubAccountId, request.InstrumentId);
 
         if (currentLots == 0L)
         {
             var openRequest = new OpenPositionRequest
             {
                 RequestId = request.RequestId,
-                PortfolioIdentity = request.PortfolioIdentity,
+                SubAccountId = request.SubAccountId,
                 InstrumentId = request.InstrumentId,
                 QtyLots = request.QtyLots,
             };
@@ -62,7 +64,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
         var reverseRequest = new ReversePositionRequest
         {
             RequestId = request.RequestId,
-            PortfolioIdentity = request.PortfolioIdentity,
+            SubAccountId = request.SubAccountId,
             InstrumentId = request.InstrumentId,
         };
 

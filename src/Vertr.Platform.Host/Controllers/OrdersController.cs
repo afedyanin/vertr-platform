@@ -4,7 +4,6 @@ using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Host.Requests;
-using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.Platform.Host.Controllers;
 [Route("orders")]
@@ -49,7 +48,7 @@ public class OrdersController : ControllerBase
         var command = new ExecuteOrderRequest
         {
             InstrumentId = request.InstrumentId,
-            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
             RequestId = Guid.NewGuid(),
         };
@@ -65,7 +64,7 @@ public class OrdersController : ControllerBase
         var command = new OpenPositionRequest
         {
             InstrumentId = request.InstrumentId,
-            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
             RequestId = Guid.NewGuid(),
         };
@@ -80,7 +79,7 @@ public class OrdersController : ControllerBase
         var command = new ClosePositionRequest
         {
             InstrumentId = request.InstrumentId,
-            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            SubAccountId = request.SubAccountId,
             RequestId = Guid.NewGuid(),
         };
 
@@ -94,7 +93,7 @@ public class OrdersController : ControllerBase
         var command = new ReversePositionRequest
         {
             InstrumentId = request.InstrumentId,
-            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            SubAccountId = request.SubAccountId,
             RequestId = Guid.NewGuid(),
         };
 
@@ -108,7 +107,7 @@ public class OrdersController : ControllerBase
         var command = new TradingSignalRequest
         {
             InstrumentId = request.InstrumentId,
-            PortfolioIdentity = new PortfolioIdentity(request.AccountId, request.SubAccountId),
+            SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
             RequestId = Guid.NewGuid(),
         };

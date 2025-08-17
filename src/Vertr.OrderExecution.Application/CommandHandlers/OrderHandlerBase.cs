@@ -2,6 +2,7 @@ using Vertr.Platform.Common.Mediator;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
@@ -9,24 +10,31 @@ internal abstract class OrderHandlerBase
 {
     private readonly IInstrumentsRepository _marketDataProvider;
     private readonly IPortfolioRepository _portfolioRepository;
+    private readonly OrderExecutionSettings _orderExecutionSettings;
+
+    protected string AccountId => _orderExecutionSettings.AccountId;
 
     protected IMediator Mediator { get; private set; }
 
     protected OrderHandlerBase(
         IMediator mediator,
         IPortfolioRepository portfolioRepository,
-        IInstrumentsRepository marketDataProvider
+        IInstrumentsRepository marketDataProvider,
+        IOptions<OrderExecutionSettings> options
         )
     {
         Mediator = mediator;
         _portfolioRepository = portfolioRepository;
         _marketDataProvider = marketDataProvider;
+        _orderExecutionSettings = options.Value;
     }
 
     protected async Task<long> GetCurrentPositionInLots(
-        PortfolioIdentity portfolioIdentity,
+        Guid subAccountId,
         Guid instrumentId)
     {
+        var portfolioIdentity = new PortfolioIdentity(AccountId, subAccountId);
+
         var portfolio = _portfolioRepository.GetPortfolio(portfolioIdentity);
 
         if (portfolio == null)

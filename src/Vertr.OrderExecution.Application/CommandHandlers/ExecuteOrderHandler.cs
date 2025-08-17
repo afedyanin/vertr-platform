@@ -1,11 +1,12 @@
-using Vertr.Platform.Common.Mediator;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Enums;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.Platform.Common.Channels;
+using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.RequestHandlers;
@@ -16,27 +17,30 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
     private readonly IOrderEventRepository _orderEventRepository;
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
     private readonly ILogger<ExecuteOrderHandler> _logger;
+    private readonly OrderExecutionSettings _orderExecutionSettings;
 
     public ExecuteOrderHandler(
         IDataProducer<TradeOperation> tradeOperationsProducer,
         IOrderExecutionGateway tinvestGateway,
         IOrderEventRepository orderEventRepository,
+        IOptions<OrderExecutionSettings> options,
         ILogger<ExecuteOrderHandler> logger)
     {
         _tinvestGateway = tinvestGateway;
         _orderEventRepository = orderEventRepository;
         _tradeOperationsProducer = tradeOperationsProducer;
+        _orderExecutionSettings = options.Value;
         _logger = logger;
     }
 
     public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Posting new market order for PortfolioId={request.PortfolioIdentity}");
+        _logger.LogInformation($"Posting new market order for SubAccountId={request.SubAccountId}");
 
         var orderId = await PostMarketOrder(
             request.RequestId,
             request.InstrumentId,
-            request.PortfolioIdentity,
+            request.SubAccountId,
             request.QtyLots,
             request.CreatedAt,
             cancellationToken);
@@ -52,14 +56,14 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
     private async Task<string?> PostMarketOrder(
         Guid requestId,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity,
+        Guid subAccountId,
         long qtyLots,
         DateTime createdAt,
         CancellationToken cancellationToken)
     {
         var request = new PostOrderRequest
         {
-            AccountId = portfolioIdentity.AccountId,
+            AccountId = _orderExecutionSettings.AccountId,
             RequestId = requestId,
             InstrumentId = instrumentId,
             OrderDirection = qtyLots > 0 ? OrderDirection.Buy : OrderDirection.Sell,
@@ -70,6 +74,8 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             QuantityLots = Math.Abs(qtyLots),
             CreatedAt = createdAt,
         };
+
+        var portfolioIdentity = new PortfolioIdentity(_orderExecutionSettings.AccountId, subAccountId);
 
         var postOrderEvent = request.CreateEvent(
             instrumentId,

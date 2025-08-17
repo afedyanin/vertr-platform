@@ -1,6 +1,7 @@
-using Vertr.Platform.Common.Mediator;
+using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
+using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
@@ -10,14 +11,15 @@ internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPosit
     public OpenPositionHandler(
         IMediator mediator,
         IPortfolioRepository portfolioRepository,
-        IInstrumentsRepository staticMarketDataProvider
-        ) : base(mediator, portfolioRepository, staticMarketDataProvider)
+        IInstrumentsRepository staticMarketDataProvider,
+        IOptions<OrderExecutionSettings> options
+        ) : base(mediator, portfolioRepository, staticMarketDataProvider, options)
     {
     }
 
     public async Task<ExecuteOrderResponse> Handle(OpenPositionRequest request, CancellationToken cancellationToken)
     {
-        var currentLots = await GetCurrentPositionInLots(request.PortfolioIdentity, request.InstrumentId);
+        var currentLots = await GetCurrentPositionInLots(request.SubAccountId, request.InstrumentId);
 
         if (currentLots != 0L)
         {
@@ -30,7 +32,7 @@ internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPosit
         var orderRequest = new ExecuteOrderRequest
         {
             RequestId = request.RequestId,
-            PortfolioIdentity = request.PortfolioIdentity,
+            SubAccountId = request.SubAccountId,
             InstrumentId = request.InstrumentId,
             QtyLots = request.QtyLots,
         };

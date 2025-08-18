@@ -1,7 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tinkoff.InvestApi;
+using Vertr.Infrastructure.Common.Channels;
+using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.BackgroundServices;
@@ -26,9 +29,13 @@ public static class TinvestGatewayRegistrar
 
     public static IServiceCollection AddTinvestStreams(this IServiceCollection services)
     {
+        services.RegisterDataChannel<Candle>();
+        services.RegisterDataChannel<OrderState>();
+        services.RegisterDataChannel<OrderTrades>();
+
         services.AddHostedService<MarketDataStreamService>();
-        //services.AddHostedService<OrderTradesStreamService>();
-        //services.AddHostedService<OrderStateStreamService>();
+        services.AddHostedService<OrderTradesStreamService>();
+        services.AddHostedService<OrderStateStreamService>();
 
         return services;
     }

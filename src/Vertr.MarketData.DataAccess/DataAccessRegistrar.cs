@@ -15,6 +15,8 @@ public static class DataAccessRegistrar
         services.AddDbContextFactory<MarketDataDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddTransient<IInstrumentsRepository, InstrumentsRepository>();
+        services.AddTransient<ICurrencyRepository, InstrumentsRepository>();
+
         services.AddTransient<ICandlesRepository, CandlesRepository>();
         services.AddTransient<ISubscriptionsRepository, SubscriptionsRepository>();
         services.AddTransient<ICandlesHistoryRepository, CandlesHistoryRepository>();

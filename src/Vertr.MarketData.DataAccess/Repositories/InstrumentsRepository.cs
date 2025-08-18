@@ -4,7 +4,7 @@ using Vertr.MarketData.Contracts.Interfaces;
 
 namespace Vertr.MarketData.DataAccess.Repositories;
 
-internal class InstrumentsRepository : RepositoryBase, IInstrumentsRepository
+internal class InstrumentsRepository : RepositoryBase, IInstrumentsRepository, ICurrencyRepository
 {
     public InstrumentsRepository(IDbContextFactory<MarketDataDbContext> contextFactory) : base(contextFactory)
     {
@@ -70,6 +70,40 @@ internal class InstrumentsRepository : RepositoryBase, IInstrumentsRepository
         return await context.Instruments
             .Where(s => s.Id == Id)
             .ExecuteDeleteAsync();
+    }
+
+    public async Task<string?> GetInstrumentCurrency(Guid instrumentId)
+    {
+        var instrument = await GetById(instrumentId);
+
+        return instrument?.Currency;
+    }
+
+    public async Task<Guid?> GetCurrencyId(string currencyCode)
+    {
+        using var context = await GetDbContext();
+
+        var currency = context.Instruments
+            .Where(s =>
+                !string.IsNullOrEmpty(s.InstrumentType) &&
+                s.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase) &&
+                !string.IsNullOrEmpty(s.Currency) &&
+                s.Currency.Equals(currencyCode, StringComparison.OrdinalIgnoreCase))
+            .FirstOrDefault();
+
+        return currency?.Id;
+    }
+
+    public async Task<Guid?> GetInstrumentCurrencyId(Guid instrumentId)
+    {
+        var currencyCode = await GetInstrumentCurrency(instrumentId);
+
+        if (currencyCode == null)
+        {
+            return null;
+        }
+
+        return await GetCurrencyId(currencyCode);
     }
 }
 

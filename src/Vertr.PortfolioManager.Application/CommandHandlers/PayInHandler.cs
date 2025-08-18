@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Vertr.MarketData.Contracts.Interfaces.old;
+using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.Platform.Common.Channels;
 using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
@@ -28,7 +28,7 @@ internal class PayInHandler : IRequestHandler<PayInRequest>
     {
         _logger.LogInformation($"Pay in operation received.");
 
-        var instrumentId = _currencyRepository.GetCurrencyId(request.Amount.Currency);
+        var instrumentId = await _currencyRepository.GetCurrencyId(request.Amount.Currency);
 
         if (instrumentId == null)
         {

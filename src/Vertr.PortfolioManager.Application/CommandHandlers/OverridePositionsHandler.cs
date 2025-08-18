@@ -1,4 +1,4 @@
-using Vertr.MarketData.Contracts.Interfaces.old;
+using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.Platform.Common.Channels;
 using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;

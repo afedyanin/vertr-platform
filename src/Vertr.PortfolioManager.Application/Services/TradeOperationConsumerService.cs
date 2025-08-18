@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.Infrastructure.Common.Channels;
-using Vertr.MarketData.Contracts.Interfaces.old;
+using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
@@ -90,7 +90,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
 
     private async Task<Guid?> GetCurrrencyId(string currencyCode, Guid instrumentId)
     {
-        var currencyId = _currencyRepository.GetCurrencyId(currencyCode);
+        var currencyId = await _currencyRepository.GetCurrencyId(currencyCode);
 
         if (currencyId == null)
         {

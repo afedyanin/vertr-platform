@@ -6,8 +6,8 @@ namespace Vertr.OrderExecution.Application.Factories;
 
 internal static class TradeOperationsFactory
 {
-    public static TradeOperation[] CreateOperations(
-        this PostOrderResponse response,
+    public static TradeOperation[] CreateFromOrderResponse(
+        PostOrderResponse response,
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity,
         DateTime createdtAt)
@@ -33,8 +33,8 @@ internal static class TradeOperationsFactory
         return [opCommission];
     }
 
-    public static TradeOperation[] CreateOperations(
-        this OrderTrades trades,
+    public static TradeOperation[] CreateFromOrderTrades(
+        OrderTrades trades,
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
@@ -67,8 +67,8 @@ internal static class TradeOperationsFactory
         return [.. opTrades];
     }
 
-    public static TradeOperation[] CreateOperations(
-        this OrderState state,
+    public static TradeOperation[] CreateFromOrderState(
+        OrderState state,
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {

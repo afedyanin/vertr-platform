@@ -82,14 +82,15 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
 
         var portfolioIdentity = new PortfolioIdentity(_orderExecutionSettings.AccountId, subAccountId);
 
-        var postOrderEvent = request.CreateEvent(
+        var orderRequestEvent = OrderEventFactory.CreateEventFromOrderRequest(
+            request,
             instrumentId,
             portfolioIdentity
             );
 
-        var savedRequest = await _orderEventRepository.Save(postOrderEvent);
+        var savedRequestEvent = await _orderEventRepository.Save(orderRequestEvent);
 
-        if (!savedRequest)
+        if (!savedRequestEvent)
         {
             _logger.LogError($"Cannot save order request. RequestId={requestId}");
             return null;
@@ -114,19 +115,21 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             return null;
         }
 
-        var orderResponseEvent = response.CreateEvent(
+        var orderResponseEvent = OrderEventFactory.CreateEventFromOrderResponse(
+            response,
             instrumentId,
             portfolioIdentity,
             request.CreatedAt);
 
-        var savedResponse = await _orderEventRepository.Save(orderResponseEvent);
+        var savedResponseEvent = await _orderEventRepository.Save(orderResponseEvent);
 
-        if (!savedResponse)
+        if (!savedResponseEvent)
         {
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
 
-        var tradeOperations = response.CreateOperations(
+        var tradeOperations = TradeOperationsFactory.CreateFromOrderResponse(
+            response,
             instrumentId,
             portfolioIdentity,
             request.CreatedAt);

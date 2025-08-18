@@ -40,9 +40,11 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
             return;
         }
 
-        var orderEvent = data.CreateEvent(
+        var orderEvent = OrderEventFactory.CreateEventFromOrderTrades(
+            data,
             data.InstrumentId,
             portfolioIdentity);
+
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)
@@ -51,14 +53,16 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
             return;
         }
 
-        var operations = data.CreateOperations(data.InstrumentId, portfolioIdentity);
+        var operations = TradeOperationsFactory.CreateFromOrderTrades(
+            data,
+            data.InstrumentId,
+            portfolioIdentity);
 
         _logger.LogDebug($"Publish OrderTrades operations for OrderId={data.OrderId}");
 
         foreach (var operation in operations)
         {
             await _tradeOperationsProducer.Produce(operation, cancellationToken);
-
         }
     }
 }

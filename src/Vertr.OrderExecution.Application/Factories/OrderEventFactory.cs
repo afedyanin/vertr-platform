@@ -8,8 +8,8 @@ namespace Vertr.OrderExecution.Application.Factories;
 
 internal static class OrderEventFactory
 {
-    public static OrderEvent CreateEvent(
-        this PostOrderRequest request,
+    public static OrderEvent CreateEventFromOrderRequest(
+        PostOrderRequest request,
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
@@ -28,8 +28,8 @@ internal static class OrderEventFactory
         };
     }
 
-    public static OrderEvent CreateEvent(
-        this PostOrderResponse response,
+    public static OrderEvent CreateEventFromOrderResponse(
+        PostOrderResponse response,
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity,
         DateTime createdAt)
@@ -48,8 +48,8 @@ internal static class OrderEventFactory
         };
     }
 
-    public static OrderEvent CreateEvent(
-        this OrderTrades trades,
+    public static OrderEvent CreateEventFromOrderTrades(
+        OrderTrades trades,
         Guid instrumentId,
         PortfolioIdentity portfolioIdentity)
     {
@@ -66,8 +66,8 @@ internal static class OrderEventFactory
         };
     }
 
-    public static OrderEvent CreateEvent(
-        this OrderState state,
+    public static OrderEvent CreateEventFromOrderState(
+        OrderState state,
         PortfolioIdentity portfolioId)
     {
         return new OrderEvent

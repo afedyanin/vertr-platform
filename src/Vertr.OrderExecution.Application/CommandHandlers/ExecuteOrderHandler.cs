@@ -9,7 +9,7 @@ using Vertr.Platform.Common.Channels;
 using Vertr.Platform.Common.Mediator;
 using Vertr.PortfolioManager.Contracts;
 
-namespace Vertr.OrderExecution.Application.RequestHandlers;
+namespace Vertr.OrderExecution.Application.CommandHandlers;
 
 internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOrderResponse>
 {

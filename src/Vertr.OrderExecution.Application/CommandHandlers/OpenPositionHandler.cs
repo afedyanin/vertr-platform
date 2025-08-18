@@ -10,10 +10,10 @@ internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPosit
 {
     public OpenPositionHandler(
         IMediator mediator,
-        IPortfolioRepository portfolioRepository,
+        IPortfolioProvider portfolioProvider,
         IInstrumentsRepository staticMarketDataProvider,
         IOptions<OrderExecutionSettings> options
-        ) : base(mediator, portfolioRepository, staticMarketDataProvider, options)
+        ) : base(mediator, portfolioProvider, staticMarketDataProvider, options)
     {
     }
 

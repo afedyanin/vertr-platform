@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Infrastructure.Common.Channels;
 using Vertr.Infrastructure.Common.Mediator;
-using Vertr.PortfolioManager.Application.Repositories;
 using Vertr.PortfolioManager.Application.Services;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
@@ -13,7 +12,7 @@ public static class PortfolioManagerRegistrar
     public static IServiceCollection AddPortfolioManager(this IServiceCollection services)
     {
         services.AddOptions<PortfolioSettings>().BindConfiguration(nameof(PortfolioSettings));
-        services.AddSingleton<IPortfolioRepository, PortfolioRepository>();
+        services.AddSingleton<IPortfolioProvider, PortfolioProvider>();
 
         services.RegisterDataChannel<TradeOperation>();
         services.AddHostedService<TradeOperationConsumerService>();

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
-using Vertr.PortfolioManager.Application.Repositories;
 using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Contracts.Commands;
 using Vertr.Platform.Common.Mediator;
@@ -14,14 +13,14 @@ namespace Vertr.Platform.Host.Controllers;
 public class PortfolioController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IPortfolioRepository _portfolioRepository;
+    private readonly IPortfolioProvider _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
     private readonly ILogger<PortfolioController> _logger;
 
     public PortfolioController(
         IMediator mediator,
         IPortfolioGateway portfolioGateway,
-        IPortfolioRepository portfolioRepository,
+        IPortfolioProvider portfolioRepository,
         ILogger<PortfolioController> logger)
     {
         _mediator = mediator;
@@ -143,14 +142,14 @@ public class PortfolioController : ControllerBase
         return Ok();
     }
 
-    private static IPortfolioRepository CreateEmptyRepository(string accountId)
+    private static IPortfolioProvider CreateEmptyRepository(string accountId)
     {
         var settings = new PortfolioSettings()
         {
             Accounts = [accountId]
         };
 
-        var repo = new PortfolioRepository(Options.Create(settings));
+        var repo = new PortfolioProvider(Options.Create(settings));
         return repo;
     }
 }

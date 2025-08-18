@@ -9,7 +9,7 @@ namespace Vertr.OrderExecution.Application.CommandHandlers;
 internal abstract class OrderHandlerBase
 {
     private readonly IInstrumentsRepository _instrumentsRepository;
-    private readonly IPortfolioRepository _portfolioRepository;
+    private readonly IPortfolioProvider _portfolioProvider;
     private readonly OrderExecutionSettings _orderExecutionSettings;
 
     protected string AccountId => _orderExecutionSettings.AccountId;
@@ -18,13 +18,13 @@ internal abstract class OrderHandlerBase
 
     protected OrderHandlerBase(
         IMediator mediator,
-        IPortfolioRepository portfolioRepository,
+        IPortfolioProvider portfolioProvider,
         IInstrumentsRepository instrumentsRepository,
         IOptions<OrderExecutionSettings> options
         )
     {
         Mediator = mediator;
-        _portfolioRepository = portfolioRepository;
+        _portfolioProvider = portfolioProvider;
         _instrumentsRepository = instrumentsRepository;
         _orderExecutionSettings = options.Value;
     }
@@ -35,14 +35,7 @@ internal abstract class OrderHandlerBase
     {
         var portfolioIdentity = new PortfolioIdentity(AccountId, subAccountId);
 
-        var portfolio = _portfolioRepository.GetPortfolio(portfolioIdentity);
-
-        if (portfolio == null)
-        {
-            return 0L;
-        }
-
-        var position = portfolio.Positions.SingleOrDefault(p => p.InstrumentId == instrumentId);
+        var position = _portfolioProvider.GetPosition(portfolioIdentity, instrumentId);
 
         if (position == null)
         {

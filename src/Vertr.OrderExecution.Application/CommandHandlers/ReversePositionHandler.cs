@@ -10,10 +10,10 @@ internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<Revers
 {
     public ReversePositionHandler(
         IMediator mediator,
-        IPortfolioRepository portfolioRepository,
+        IPortfolioProvider portfolioProvider,
         IInstrumentsRepository staticMarketDataProvider,
         IOptions<OrderExecutionSettings> options) :
-        base(mediator, portfolioRepository, staticMarketDataProvider, options)
+        base(mediator, portfolioProvider, staticMarketDataProvider, options)
     {
     }
 

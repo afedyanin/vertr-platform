@@ -31,7 +31,7 @@ public class OrderTradesStreamService : StreamServiceBase
     {
 
         using var scope = ServiceProvider.CreateScope();
-        var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioRepository>();
+        var portfolioRepository = scope.ServiceProvider.GetRequiredService<IPortfolioProvider>();
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
         var currencyRepository = scope.ServiceProvider.GetRequiredService<ICurrencyRepository>();
         var orderTradesProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderTrades>>();

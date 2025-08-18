@@ -2,15 +2,15 @@ using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
-namespace Vertr.PortfolioManager.Application.Repositories;
+namespace Vertr.PortfolioManager.Application;
 
-internal class PortfolioRepository : IPortfolioRepository
+internal class PortfolioProvider : IPortfolioProvider
 {
     private readonly Dictionary<PortfolioIdentity, Portfolio> _portfolios = [];
 
     private readonly PortfolioSettings _portfolioSettings;
 
-    public PortfolioRepository(IOptions<PortfolioSettings> options)
+    public PortfolioProvider(IOptions<PortfolioSettings> options)
     {
         _portfolioSettings = options.Value;
     }
@@ -24,13 +24,27 @@ internal class PortfolioRepository : IPortfolioRepository
         _portfolios.TryGetValue(portfolioIdentity, out var portfolio);
         return portfolio;
     }
-    public void Save(Portfolio portfolio)
+    public void Update(Portfolio portfolio)
     {
         _portfolios[portfolio.Identity] = portfolio;
     }
 
-    public void Delete(PortfolioIdentity portfolioIdentity)
+    public void Remove(PortfolioIdentity portfolioIdentity)
     {
         _portfolios.Remove(portfolioIdentity);
+    }
+
+    public Position? GetPosition(PortfolioIdentity portfolioIdentity, Guid instrumentId)
+    {
+        var portfolio = GetPortfolio(portfolioIdentity);
+
+        if (portfolio == null)
+        {
+            return null;
+        }
+
+        var position = portfolio.Positions.SingleOrDefault(p => p.InstrumentId == instrumentId);
+
+        return position;
     }
 }

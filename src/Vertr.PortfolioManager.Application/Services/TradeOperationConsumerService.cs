@@ -9,7 +9,7 @@ namespace Vertr.PortfolioManager.Application.Services;
 
 internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOperation>
 {
-    private readonly IPortfolioRepository _portfolioRepository;
+    private readonly IPortfolioProvider _portfolioRepository;
     private readonly ITradeOperationRepository _tradeOperationRepository;
     private readonly ICurrencyRepository _currencyRepository;
     private readonly ILogger<TradeOperationConsumerService> _logger;
@@ -18,7 +18,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
         IServiceProvider serviceProvider,
         ILogger<TradeOperationConsumerService> logger) : base(serviceProvider)
     {
-        _portfolioRepository = serviceProvider.GetRequiredService<IPortfolioRepository>();
+        _portfolioRepository = serviceProvider.GetRequiredService<IPortfolioProvider>();
         _currencyRepository = serviceProvider.GetRequiredService<ICurrencyRepository>();
         _tradeOperationRepository = serviceProvider.GetRequiredService<ITradeOperationRepository>();
         _logger = logger;
@@ -73,7 +73,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
 #pragma warning restore IDE0010 // Add missing cases
 
         portfolio.UpdatedAt = operation.CreatedAt;
-        _portfolioRepository.Save(portfolio);
+        _portfolioRepository.Update(portfolio);
     }
 
     private async Task<Position> GetCurrencyPosition(Portfolio portfolio, TradeOperation operation)

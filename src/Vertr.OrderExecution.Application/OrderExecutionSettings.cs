@@ -5,5 +5,5 @@ public class OrderExecutionSettings
 
     public decimal Comission { get; set; } = 0.03m;
 
-    public bool IsPaperTrading { get; set; }
+    public bool SimulatedExecution { get; set; }
 }

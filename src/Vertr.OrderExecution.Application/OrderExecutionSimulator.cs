@@ -38,6 +38,8 @@ internal class OrderExecutionSimulator : IOrderExecutionSimulator
 
         var orderPrice = new Money(request.Price, currency);
 
+        // TODO: for Market Order request.Price == 0 
+        // use Market data service to fetch actual price
         var orderValue = request.Price * qty;
         var orderAmount = new Money(orderValue, currency);
 

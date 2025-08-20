@@ -98,7 +98,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
 
         PostOrderResponse? response = null;
 
-        if (_orderExecutionSettings.IsPaperTrading || backtestId.HasValue)
+        if (_orderExecutionSettings.SimulatedExecution || backtestId.HasValue)
         {
             response = await _executionSimulator.PostOrder(request);
         }

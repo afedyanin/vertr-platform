@@ -12,7 +12,7 @@ public static class DataAccessRegistrar
         services.AddSingleton<IDbConnectionFactory>(sp => new DbConnectionFactory(connectionString!));
         services.AddDbContextFactory<PortfolioDbContext>(options => options.UseNpgsql(connectionString));
 
-        services.AddScoped<ITradeOperationRepository, TradeOperationRepository>();
+        services.AddTransient<ITradeOperationRepository, TradeOperationRepository>();
 
         return services;
     }

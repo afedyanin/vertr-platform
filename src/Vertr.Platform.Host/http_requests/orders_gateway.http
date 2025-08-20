@@ -1,0 +1,28 @@
+@baseAddress = https://localhost:7085/api/tinvest
+
+@accountId = 93cda594-5556-44ca-8005-1c893e8d3142
+@subAccountId = 93cda594-5555-44ca-8005-1c893e8d3142
+@sberInstrumentId = e6123145-9665-43e0-8413-cd61b8aa9b13
+@orderId = ad407edb-a7ac-486e-a666-c5ae599d38ae
+
+### Post order
+POST {{baseAddress}}/orders
+Content-Type: application/json
+
+{
+  "accountId": "{{accountId}}",
+  "instrumentId": "{{sberInstrumentId}}",
+  "requestId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "orderDirection": "Buy",
+  "orderType": "Market",
+  "timeInForceType": "Unspecified",
+  "priceType": "Unspecified",
+  "price": 0,
+  "quantityLots": 10,
+  "createdAt": "2025-08-20T16:07:07.970Z"
+}
+
+### Get status
+GET {{baseAddress}}/order-state/{{orderId}}
+
+

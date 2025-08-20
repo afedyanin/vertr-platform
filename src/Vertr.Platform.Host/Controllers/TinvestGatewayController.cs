@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
+using Vertr.OrderExecution.Application;
+using Vertr.OrderExecution.Contracts;
+using Vertr.OrderExecution.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host.Controllers;
 
@@ -9,10 +13,17 @@ namespace Vertr.Platform.Host.Controllers;
 public class TinvestGatewayController : ControllerBase
 {
     private readonly IMarketDataGateway _marketDataGayeway;
+    private readonly IOrderExecutionGateway _orderExecutionGateway;
+    private readonly OrderExecutionSettings _orderExecutionSettings;
 
-    public TinvestGatewayController(IMarketDataGateway marketDataGayeway)
+    public TinvestGatewayController(
+        IMarketDataGateway marketDataGayeway,
+        IOptions<OrderExecutionSettings> options,
+        IOrderExecutionGateway orderExecutionGateway)
     {
         _marketDataGayeway = marketDataGayeway;
+        _orderExecutionGateway = orderExecutionGateway;
+        _orderExecutionSettings = options.Value;
     }
 
     [HttpGet("instrument-by-ticker/{classCode}/{ticker}")]
@@ -42,5 +53,28 @@ public class TinvestGatewayController : ControllerBase
     {
         var candles = await _marketDataGayeway.GetCandles(instrumentId, date);
         return Ok(candles);
+    }
+
+    [HttpPost("orders")]
+    public async Task<IActionResult> PostOrder(PostOrderRequest request)
+    {
+        var response = await _orderExecutionGateway.PostOrder(request);
+        return Ok(response);
+    }
+
+    [HttpGet("order-state/{orderId}")]
+    public async Task<IActionResult> GetOrderState(string orderId)
+    {
+        var accountId = _orderExecutionSettings.AccountId;
+        var orderState = await _orderExecutionGateway.GetOrderState(accountId, orderId);
+        return Ok(orderState);
+    }
+
+    [HttpDelete("order/{orderId}")]
+    public async Task<IActionResult> CancelOrder(string orderId)
+    {
+        var accountId = _orderExecutionSettings.AccountId;
+        var date = await _orderExecutionGateway.CancelOrder(accountId, orderId);
+        return Ok(date);
     }
 }

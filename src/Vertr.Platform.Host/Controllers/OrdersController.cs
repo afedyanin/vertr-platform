@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
-using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Host.Requests;
 
@@ -10,36 +8,10 @@ namespace Vertr.Platform.Host.Controllers;
 [ApiController]
 public class OrdersController : ControllerBase
 {
-    private readonly IOrderExecutionGateway _orderExecutionGateway;
-
     private readonly IMediator _mediator;
-    public OrdersController(
-        IMediator mediator,
-        IOrderExecutionGateway orderExecutionGateway)
+    public OrdersController(IMediator mediator)
     {
         _mediator = mediator;
-        _orderExecutionGateway = orderExecutionGateway;
-    }
-
-    [HttpPost("order")]
-    public async Task<IActionResult> PostOrder(PostOrderRequest request)
-    {
-        var response = await _orderExecutionGateway.PostOrder(request);
-        return Ok(response);
-    }
-
-    [HttpGet("order-state/{accountId}/{orderId}")]
-    public async Task<IActionResult> GetOrderState(string accountId, string orderId)
-    {
-        var orderState = await _orderExecutionGateway.GetOrderState(accountId, orderId);
-        return Ok(orderState);
-    }
-
-    [HttpDelete("order/{accountId}/{orderId}")]
-    public async Task<IActionResult> CancelOrder(string accountId, string orderId)
-    {
-        var date = await _orderExecutionGateway.CancelOrder(accountId, orderId);
-        return Ok(date);
     }
 
     [HttpPost("execute")]

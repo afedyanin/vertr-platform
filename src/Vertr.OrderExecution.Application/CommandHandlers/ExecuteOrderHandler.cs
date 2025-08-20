@@ -128,6 +128,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
 
+        /*
         var tradeOperations = TradeOperationsFactory.CreateFromOrderResponse(
             response,
             instrumentId,
@@ -140,7 +141,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         {
             await _tradeOperationsProducer.Produce(tradeOperation, cancellationToken);
         }
-
+        */
         return response.OrderId;
     }
 }

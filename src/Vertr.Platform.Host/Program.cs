@@ -12,7 +12,8 @@ using Vertr.Strategies.DataAccess;
 using Vertr.TinvestGateway;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.DataAccess;
-
+using Vertr.PortfolioManager.Application;
+using Vertr.PortfolioManager.DataAccess;
 
 namespace Vertr.Platform.Host;
 
@@ -59,6 +60,9 @@ public class Program
         builder.Services.AddOrderExecution();
         builder.Services.AddOrderExecutionDataAccess(connectionString!);
 
+        builder.Services.AddPortfolioManager();
+        builder.Services.AddPortfolioManagerDataAccess(connectionString!);
+
         // Hangfire
         var hfConnectionString = configuration.GetConnectionString(_hangfireConnStringName);
         builder.Services.AddHangfire(hfConnectionString!);
@@ -66,10 +70,6 @@ public class Program
         // Mediator
         builder.Services.AddMediator();
 
-        /*
-        builder.Services.AddPortfolioManager();
-        builder.Services.AddPortfolioManagerDataAccess(connectionString!);
-        */
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())

@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
-using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Contracts.Commands;
 using Vertr.Platform.Common.Mediator;
 
@@ -140,16 +138,5 @@ public class PortfolioController : ControllerBase
         await _mediator.Send(req);
 
         return Ok();
-    }
-
-    private static IPortfolioProvider CreateEmptyRepository(string accountId)
-    {
-        var settings = new PortfolioSettings()
-        {
-            Accounts = [accountId]
-        };
-
-        var repo = new PortfolioProvider(Options.Create(settings));
-        return repo;
     }
 }

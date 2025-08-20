@@ -4,17 +4,17 @@ using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Host.Requests;
 
 namespace Vertr.Platform.Host.Controllers;
-[Route("orders")]
+[Route("api/positions")]
 [ApiController]
-public class OrdersController : ControllerBase
+public class PositionsController : ControllerBase
 {
     private readonly IMediator _mediator;
-    public OrdersController(IMediator mediator)
+    public PositionsController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpPost("execute")]
+    [HttpPost("execute-order")]
     public async Task<IActionResult> ExecuteOrder(ExecuteRequest request)
     {
         var command = new ExecuteOrderRequest
@@ -23,6 +23,7 @@ public class OrdersController : ControllerBase
             SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
             RequestId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
         };
 
         var response = await _mediator.Send(command);
@@ -39,6 +40,7 @@ public class OrdersController : ControllerBase
             SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
             RequestId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
         };
 
         var response = await _mediator.Send(command);
@@ -53,6 +55,7 @@ public class OrdersController : ControllerBase
             InstrumentId = request.InstrumentId,
             SubAccountId = request.SubAccountId,
             RequestId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
         };
 
         var response = await _mediator.Send (command);
@@ -67,6 +70,7 @@ public class OrdersController : ControllerBase
             InstrumentId = request.InstrumentId,
             SubAccountId = request.SubAccountId,
             RequestId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
         };
 
         var response = await _mediator.Send(command);
@@ -82,6 +86,7 @@ public class OrdersController : ControllerBase
             SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
             RequestId = Guid.NewGuid(),
+            CreatedAt = DateTime.UtcNow,
         };
 
         var response = await _mediator.Send(command);

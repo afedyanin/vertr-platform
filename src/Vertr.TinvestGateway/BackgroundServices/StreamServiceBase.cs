@@ -2,7 +2,6 @@ using Grpc.Core;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 

@@ -9,7 +9,6 @@ using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.Platform.Common.Channels;
 using Vertr.Platform.Common.Jobs;
 using Vertr.TinvestGateway.Converters;
-using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 

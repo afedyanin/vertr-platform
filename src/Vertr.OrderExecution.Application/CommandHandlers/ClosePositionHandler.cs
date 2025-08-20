@@ -39,6 +39,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
             SubAccountId = request.SubAccountId,
             InstrumentId = request.InstrumentId,
             QtyLots = lotsToClose,
+            CreatedAt = request.CreatedAt,
         };
 
         var response = await Mediator.Send(orderRequest, cancellationToken);

@@ -35,6 +35,7 @@ internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPosit
             SubAccountId = request.SubAccountId,
             InstrumentId = request.InstrumentId,
             QtyLots = request.QtyLots,
+            CreatedAt = request.CreatedAt,
         };
 
         var response = await Mediator.Send(orderRequest, cancellationToken);

@@ -11,7 +11,6 @@ public static class PortfolioManagerRegistrar
 {
     public static IServiceCollection AddPortfolioManager(this IServiceCollection services)
     {
-        services.AddOptions<PortfolioSettings>().BindConfiguration(nameof(PortfolioSettings));
         services.AddSingleton<IPortfolioProvider, PortfolioProvider>();
 
         services.RegisterDataChannel<TradeOperation>();

@@ -12,8 +12,8 @@ using Vertr.OrderExecution.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     [DbContext(typeof(OrderExecutionDbContext))]
-    [Migration("20250701030902_OrderExecutionTables")]
-    partial class OrderExecutionTables
+    [Migration("20250820164213_OrderEvents")]
+    partial class OrderEvents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,9 +66,9 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                         .HasColumnName("sub_account_id");
 
                     b.HasKey("Id")
-                        .HasName("orders_pkey");
+                        .HasName("order_events_pkey");
 
-                    b.ToTable("orders", (string)null);
+                    b.ToTable("order_events", (string)null);
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,6 @@
 using Tinkoff.InvestApi;
 
-namespace Vertr.TinvestGateway.Settings;
+namespace Vertr.TinvestGateway;
 public class TinvestSettings
 {
     public InvestApiSettings? InvestApiSettings { get; set; }
@@ -12,4 +12,6 @@ public class TinvestSettings
     public bool MarketDataStreamEnabled { get; set; }
 
     public bool WaitCandleClose { get; set; }
+
+    public string AccountId { get; set; } = string.Empty;
 }

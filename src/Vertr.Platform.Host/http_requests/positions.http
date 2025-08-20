@@ -1,0 +1,14 @@
+@baseAddress = https://localhost:7085/api/positions
+
+@subAccountId = 3fa85f64-5717-4562-b3fc-2c963f66afa6
+@sberInstrumentId = e6123145-9665-43e0-8413-cd61b8aa9b13
+
+### Execute order
+POST {{baseAddress}}/execute-order
+Content-Type: application/json
+
+{
+  "instrumentId": "{{sberInstrumentId}}",
+  "subAccountId": "{{subAccountId}}",
+  "lots": -10
+}

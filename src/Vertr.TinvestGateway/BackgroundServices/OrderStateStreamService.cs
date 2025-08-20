@@ -7,7 +7,6 @@ using Vertr.OrderExecution.Contracts;
 using Vertr.Platform.Common.Channels;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Converters;
-using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 
@@ -33,9 +32,8 @@ public class OrderStateStreamService : StreamServiceBase
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
         var orderStateProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderState>>();
 
-        var accounts = portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.OrderStateStreamRequest();
-        request.Accounts.Add(accounts);
+        request.Accounts.Add(TinvestSettings.AccountId);
 
         using var stream = investApiClient.OrdersStream.OrderStateStream(request, headers: null, deadline, stoppingToken);
 

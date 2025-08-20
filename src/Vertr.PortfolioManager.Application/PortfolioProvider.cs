@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Options;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
@@ -7,15 +6,6 @@ namespace Vertr.PortfolioManager.Application;
 internal class PortfolioProvider : IPortfolioProvider
 {
     private readonly Dictionary<PortfolioIdentity, Portfolio> _portfolios = [];
-
-    private readonly PortfolioSettings _portfolioSettings;
-
-    public PortfolioProvider(IOptions<PortfolioSettings> options)
-    {
-        _portfolioSettings = options.Value;
-    }
-
-    public string[] GetActiveAccounts() => [.. _portfolioSettings.Accounts];
 
     public Portfolio[] GetAllPortfolios() => [.. _portfolios.Values];
 

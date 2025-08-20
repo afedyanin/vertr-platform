@@ -38,7 +38,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
 
     public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Posting new market order for SubAccountId={request.SubAccountId}");
+        _logger.LogInformation($"Handling ExecuteOrder request SubAccountId={request.SubAccountId}");
 
         var orderId = await PostMarketOrder(
             request.RequestId,
@@ -46,8 +46,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             request.SubAccountId,
             request.QtyLots,
             request.CreatedAt,
-            request.BacktestId,
-            cancellationToken);
+            request.BacktestId);
 
         var response = new ExecuteOrderResponse
         {
@@ -63,8 +62,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         Guid subAccountId,
         long qtyLots,
         DateTime createdAt,
-        Guid? backtestId,
-        CancellationToken cancellationToken)
+        Guid? backtestId)
     {
         var request = new PostOrderRequest
         {

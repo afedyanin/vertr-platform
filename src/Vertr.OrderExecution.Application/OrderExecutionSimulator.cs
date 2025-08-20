@@ -83,7 +83,7 @@ internal class OrderExecutionSimulator : IOrderExecutionSimulator
         };
 
         // Simulating order trades 
-        await _orderTradesProducer.Produce(trades);
+        //await _orderTradesProducer.Produce(trades);
 
         return response;
     }

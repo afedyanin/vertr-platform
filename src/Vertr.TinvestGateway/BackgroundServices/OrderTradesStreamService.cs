@@ -8,7 +8,6 @@ using Vertr.OrderExecution.Contracts;
 using Vertr.Platform.Common.Channels;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.Converters;
-using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway.BackgroundServices;
 
@@ -36,9 +35,8 @@ public class OrderTradesStreamService : StreamServiceBase
         var currencyRepository = scope.ServiceProvider.GetRequiredService<ICurrencyRepository>();
         var orderTradesProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderTrades>>();
 
-        var accounts = portfolioRepository.GetActiveAccounts();
         var request = new Tinkoff.InvestApi.V1.TradesStreamRequest();
-        request.Accounts.Add(accounts);
+        request.Accounts.Add(TinvestSettings.AccountId);
 
         using var stream = investApiClient.OrdersStream.TradesStream(request, headers: null, deadline, stoppingToken);
 

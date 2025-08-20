@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     /// <inheritdoc />
-    public partial class OrderExecutionTables : Migration
+    public partial class OrderEvents : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "orders",
+                name: "order_events",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -27,7 +27,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("orders_pkey", x => x.id);
+                    table.PrimaryKey("order_events_pkey", x => x.id);
                 });
         }
 
@@ -35,7 +35,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "orders");
+                name: "order_events");
         }
     }
 }

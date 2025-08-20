@@ -63,9 +63,9 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                         .HasColumnName("sub_account_id");
 
                     b.HasKey("Id")
-                        .HasName("orders_pkey");
+                        .HasName("order_events_pkey");
 
-                    b.ToTable("orders", (string)null);
+                    b.ToTable("order_events", (string)null);
                 });
 #pragma warning restore 612, 618
         }

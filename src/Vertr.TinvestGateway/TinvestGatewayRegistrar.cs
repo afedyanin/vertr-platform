@@ -9,7 +9,6 @@ using Vertr.OrderExecution.Contracts.Interfaces;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Vertr.TinvestGateway.BackgroundServices;
 using Vertr.TinvestGateway.Proxy;
-using Vertr.TinvestGateway.Settings;
 
 namespace Vertr.TinvestGateway;
 

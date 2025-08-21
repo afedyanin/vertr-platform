@@ -10,5 +10,6 @@ Content-Type: application/json
 {
   "instrumentId": "{{sberInstrumentId}}",
   "subAccountId": "{{subAccountId}}",
+  "price": 305.89,
   "lots": -10
 }

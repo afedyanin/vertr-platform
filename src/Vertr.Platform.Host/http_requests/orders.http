@@ -12,12 +12,12 @@ Content-Type: application/json
 {
   "accountId": "{{accountId}}",
   "instrumentId": "{{sberInstrumentId}}",
-  "requestId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "requestId": "3fa85f69-5717-4562-b3fc-2c963f66afa6",
   "orderDirection": "Buy",
   "orderType": "Market",
   "timeInForceType": "Unspecified",
   "priceType": "Unspecified",
-  "price": 0,
+  "price": 300,
   "quantityLots": 10,
   "createdAt": "2025-08-20T16:07:07.970Z"
 }

@@ -40,6 +40,7 @@ internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<Revers
             InstrumentId = request.InstrumentId,
             QtyLots = lotsToRevert,
             CreatedAt = request.CreatedAt,
+            Price = request.Price,
         };
 
         var response = await Mediator.Send(orderRequest, cancellationToken);

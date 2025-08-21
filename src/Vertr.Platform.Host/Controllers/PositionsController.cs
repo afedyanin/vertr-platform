@@ -22,6 +22,7 @@ public class PositionsController : ControllerBase
             InstrumentId = request.InstrumentId,
             SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
+            Price = request.Price,
             RequestId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
         };
@@ -39,6 +40,7 @@ public class PositionsController : ControllerBase
             InstrumentId = request.InstrumentId,
             SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
+            Price = request.Price,
             RequestId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
         };
@@ -54,6 +56,7 @@ public class PositionsController : ControllerBase
         {
             InstrumentId = request.InstrumentId,
             SubAccountId = request.SubAccountId,
+            Price = request.Price,
             RequestId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
         };
@@ -69,6 +72,7 @@ public class PositionsController : ControllerBase
         {
             InstrumentId = request.InstrumentId,
             SubAccountId = request.SubAccountId,
+            Price = request.Price,
             RequestId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
         };
@@ -85,6 +89,7 @@ public class PositionsController : ControllerBase
             InstrumentId = request.InstrumentId,
             SubAccountId = request.SubAccountId,
             QtyLots = request.Lots,
+            Price = request.Price,
             RequestId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
         };

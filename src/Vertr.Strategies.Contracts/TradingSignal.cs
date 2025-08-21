@@ -14,5 +14,7 @@ public record class TradingSignal
 
     public long QtyLots { get; init; }
 
+    public decimal Price { get; init; }
+
     public DateTime CreatedAt { get; init; }
 }

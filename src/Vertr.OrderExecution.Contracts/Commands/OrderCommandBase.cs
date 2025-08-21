@@ -11,4 +11,6 @@ public abstract class OrderCommandBase
     public DateTime CreatedAt { get; init; }
 
     public Guid? BacktestId { get; init; }
+
+    public decimal Price { get; init; }
 }

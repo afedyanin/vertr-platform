@@ -37,6 +37,9 @@ internal class TradingSignalEntityConfiguration : IEntityTypeConfiguration<Tradi
             .HasColumnName("qty_lots")
             .IsRequired();
 
+        builder.Property(e => e.Price)
+            .HasColumnName("price");
+
         builder.Property(e => e.CreatedAt)
             .HasColumnName("created_at")
             .IsRequired();

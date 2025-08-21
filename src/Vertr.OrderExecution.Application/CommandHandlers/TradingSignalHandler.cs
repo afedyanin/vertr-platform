@@ -40,6 +40,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
                 InstrumentId = request.InstrumentId,
                 QtyLots = request.QtyLots,
                 CreatedAt = request.CreatedAt,
+                Price = request.Price,
             };
 
             var openResponse = await Mediator.Send(openRequest, cancellationToken);
@@ -68,6 +69,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
             SubAccountId = request.SubAccountId,
             InstrumentId = request.InstrumentId,
             CreatedAt = request.CreatedAt,
+            Price = request.Price
         };
 
         var reverseResponse = await Mediator.Send(reverseRequest, cancellationToken);

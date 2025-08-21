@@ -45,6 +45,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             request.InstrumentId,
             request.SubAccountId,
             request.QtyLots,
+            request.Price,
             request.CreatedAt,
             request.BacktestId);
 
@@ -61,6 +62,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         Guid instrumentId,
         Guid subAccountId,
         long qtyLots,
+        decimal price,
         DateTime createdAt,
         Guid? backtestId)
     {
@@ -70,7 +72,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             RequestId = requestId,
             InstrumentId = instrumentId,
             OrderDirection = qtyLots > 0 ? OrderDirection.Buy : OrderDirection.Sell,
-            Price = decimal.Zero,
+            Price = price,
             OrderType = OrderType.Market,
             PriceType = PriceType.Unspecified,
             TimeInForceType = TimeInForceType.Unspecified,

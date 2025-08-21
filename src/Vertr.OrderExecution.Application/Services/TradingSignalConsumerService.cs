@@ -25,6 +25,7 @@ internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSig
             SubAccountId = data.SubAccountId,
             BacktestId = data.BacktestId,
             CreatedAt = data.CreatedAt,
+            Price = data.Price,
         };
 
         _ = await _mediator.Send(command, cancellationToken);

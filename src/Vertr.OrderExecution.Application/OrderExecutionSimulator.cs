@@ -37,9 +37,6 @@ internal class OrderExecutionSimulator : IOrderExecutionSimulator
         var currency = instrument.Currency ?? string.Empty;
 
         var orderPrice = new Money(request.Price, currency);
-
-        // TODO: for Market Order request.Price == 0 
-        // use Market data service to fetch actual price
         var orderValue = request.Price * qty;
         var orderAmount = new Money(orderValue, currency);
 
@@ -54,7 +51,7 @@ internal class OrderExecutionSimulator : IOrderExecutionSimulator
             LotsRequested = request.QuantityLots,
             LotsExecuted = request.QuantityLots,
             InitialOrderPrice = orderPrice,
-            ExecutedOrderPrice = orderPrice, // TODO: Use market price
+            ExecutedOrderPrice = orderPrice, // TODO: Use price spread from config
             TotalOrderAmount = orderAmount,
             InitialCommission = comissionAmount,
             ExecutedCommission = comissionAmount,

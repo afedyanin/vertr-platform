@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Text.Json;
 using Vertr.OrderExecution.Contracts;
 using Vertr.Platform.Common.Utils;
-using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Factories;
 
@@ -11,16 +10,17 @@ internal static class OrderEventFactory
     public static OrderEvent CreateEventFromOrderRequest(
         PostOrderRequest request,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity)
+        Guid portfolioId,
+        string accountId)
     {
-        Debug.Assert(request.AccountId == portfolioIdentity.AccountId);
+        Debug.Assert(request.AccountId == accountId);
 
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
             CreatedAt = request.CreatedAt,
-            AccountId = portfolioIdentity.AccountId,
-            SubAccountId = portfolioIdentity.SubAccountId,
+            AccountId = accountId,
+            PortfolioId = portfolioId,
             InstrumentId = instrumentId,
             RequestId = request.RequestId,
             JsonDataType = request.GetType().FullName,
@@ -31,15 +31,16 @@ internal static class OrderEventFactory
     public static OrderEvent CreateEventFromOrderResponse(
         PostOrderResponse response,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity,
+        Guid portfolioId,
+        string accountId,
         DateTime createdAt)
     {
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
             CreatedAt = createdAt,
-            AccountId = portfolioIdentity.AccountId,
-            SubAccountId = portfolioIdentity.SubAccountId,
+            AccountId = accountId,
+            PortfolioId = portfolioId,
             InstrumentId = instrumentId,
             RequestId = Guid.Parse(response.OrderRequestId),
             OrderId = response.OrderId,
@@ -51,14 +52,15 @@ internal static class OrderEventFactory
     public static OrderEvent CreateEventFromOrderTrades(
         OrderTrades trades,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity)
+        Guid portfolioId,
+        string accountId)
     {
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
             CreatedAt = trades.CreatedAt,
-            AccountId = portfolioIdentity.AccountId,
-            SubAccountId = portfolioIdentity.SubAccountId,
+            AccountId = accountId,
+            PortfolioId = portfolioId,
             InstrumentId = instrumentId,
             OrderId = trades.OrderId,
             JsonDataType = trades.GetType().FullName,
@@ -68,14 +70,14 @@ internal static class OrderEventFactory
 
     public static OrderEvent CreateEventFromOrderState(
         OrderState state,
-        PortfolioIdentity portfolioId)
+        Guid portfolioId)
     {
         return new OrderEvent
         {
             Id = Guid.NewGuid(),
             CreatedAt = state.CreatedAt,
-            AccountId = portfolioId.AccountId,
-            SubAccountId = portfolioId.SubAccountId,
+            AccountId = state.AccountId ?? string.Empty,
+            PortfolioId = portfolioId,
             InstrumentId = state.InstrumentId,
             RequestId = Guid.Parse(state.OrderRequestId),
             OrderId = state.OrderId,

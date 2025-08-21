@@ -38,12 +38,12 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
 
     public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Handling ExecuteOrder request SubAccountId={request.SubAccountId}");
+        _logger.LogInformation($"Handling ExecuteOrder request SubAccountId={request.PortfolioId}");
 
         var orderId = await PostMarketOrder(
             request.RequestId,
             request.InstrumentId,
-            request.SubAccountId,
+            request.PortfolioId,
             request.QtyLots,
             request.Price,
             request.CreatedAt,
@@ -61,7 +61,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
     private async Task<string?> PostMarketOrder(
         Guid requestId,
         Guid instrumentId,
-        Guid subAccountId,
+        Guid portfolioId,
         long qtyLots,
         decimal price,
         DateTime createdAt,
@@ -82,12 +82,13 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             CreatedAt = createdAt,
         };
 
-        var portfolioIdentity = new PortfolioIdentity(_orderExecutionSettings.AccountId, subAccountId);
+        var accountId = _orderExecutionSettings.AccountId;
 
         var orderRequestEvent = OrderEventFactory.CreateEventFromOrderRequest(
             request,
             instrumentId,
-            portfolioIdentity
+            portfolioId,
+            accountId
             );
 
         var savedRequestEvent = await _orderEventRepository.Save(orderRequestEvent);
@@ -120,7 +121,8 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         var orderResponseEvent = OrderEventFactory.CreateEventFromOrderResponse(
             response,
             instrumentId,
-            portfolioIdentity,
+            portfolioId,
+            accountId,
             request.CreatedAt);
 
         var savedResponseEvent = await _orderEventRepository.Save(orderResponseEvent);
@@ -133,7 +135,8 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         var tradeOperations = TradeOperationsFactory.CreateFromOrderResponse(
             response,
             instrumentId,
-            portfolioIdentity,
+            portfolioId,
+            accountId,
             request.CreatedAt);
 
         _logger.LogDebug($"Publish ExecuteOrder operations for OrderId={response.OrderId}");

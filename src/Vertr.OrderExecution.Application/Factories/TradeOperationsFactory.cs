@@ -9,7 +9,8 @@ internal static class TradeOperationsFactory
     public static TradeOperation[] CreateFromOrderResponse(
         PostOrderResponse response,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity,
+        Guid portfolioId,
+        string accountId,
         DateTime createdtAt)
     {
         if (response.ExecutedCommission == null)
@@ -21,8 +22,8 @@ internal static class TradeOperationsFactory
         {
             CreatedAt = createdtAt,
             OperationType = TradeOperationType.BrokerFee,
-            AccountId = portfolioIdentity.AccountId,
-            SubAccountId = portfolioIdentity.SubAccountId,
+            AccountId = accountId,
+            PortfolioId = portfolioId,
             OrderId = response.OrderId,
             Amount = response.ExecutedCommission,
             InstrumentId = instrumentId,
@@ -36,7 +37,8 @@ internal static class TradeOperationsFactory
     public static TradeOperation[] CreateFromOrderTrades(
         OrderTrades trades,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity)
+        Guid portfolioId,
+        string accountId)
     {
         var opTrades = new List<TradeOperation>();
 
@@ -51,8 +53,8 @@ internal static class TradeOperationsFactory
             {
                 CreatedAt = trades.CreatedAt,
                 OperationType = trades.Direction.ToOperationType(),
-                AccountId = portfolioIdentity.AccountId,
-                SubAccountId = portfolioIdentity.SubAccountId,
+                AccountId = accountId,
+                PortfolioId = portfolioId,
                 OrderId = trades.OrderId,
                 InstrumentId = instrumentId,
                 Price = trade.Price,
@@ -70,7 +72,8 @@ internal static class TradeOperationsFactory
     public static TradeOperation[] CreateFromOrderState(
         OrderState state,
         Guid instrumentId,
-        PortfolioIdentity portfolioIdentity)
+        Guid portfolioId,
+        string accountId)
     {
         var opTrades = new List<TradeOperation>();
 
@@ -85,8 +88,8 @@ internal static class TradeOperationsFactory
             {
                 CreatedAt = state.CreatedAt,
                 OperationType = state.Direction.ToOperationType(),
-                AccountId = portfolioIdentity.AccountId,
-                SubAccountId = portfolioIdentity.SubAccountId,
+                AccountId = accountId,
+                PortfolioId = portfolioId,
                 OrderId = state.OrderId,
                 InstrumentId = instrumentId,
                 Price = trade.Price,
@@ -104,8 +107,8 @@ internal static class TradeOperationsFactory
             {
                 CreatedAt = state.CreatedAt,
                 OperationType = TradeOperationType.BrokerFee,
-                SubAccountId = portfolioIdentity.SubAccountId,
-                AccountId = portfolioIdentity.AccountId,
+                PortfolioId = portfolioId,
+                AccountId = accountId,
                 OrderId = state.OrderId,
                 Amount = state.ExecutedCommission,
                 InstrumentId = instrumentId,

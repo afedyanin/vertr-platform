@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Vertr.Infrastructure.Common.Channels;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
@@ -13,6 +14,7 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
 {
     private readonly IOrderEventRepository _orderEventRepository;
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
+    private readonly OrderExecutionSettings _orderExecutionSettings;
 
     private readonly ILogger<OrderTradesConsumerService> _logger;
 
@@ -23,6 +25,7 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
         _logger = logger;
         _orderEventRepository = ServiceProvider.GetRequiredService<IOrderEventRepository>();
         _tradeOperationsProducer = ServiceProvider.GetRequiredService<IDataProducer<TradeOperation>>();
+        _orderExecutionSettings = ServiceProvider.GetRequiredService<IOptions<OrderExecutionSettings>>().Value;
     }
 
     protected override async Task Handle(OrderTrades data, CancellationToken cancellationToken = default)
@@ -31,9 +34,10 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
 
         // TODO: OrderTrades может прийти раньше, чем сохранится OrderResponse, поэтому может не найти портфолио !!!
         // TODO: Нужна общая очередь для обработки респонсов по ордерам
-        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderId(data.OrderId);
+        var portfolioId = await _orderEventRepository.ResolvePortfolioIdByOrderId(data.OrderId);
+        var accountId = _orderExecutionSettings.AccountId;
 
-        if (portfolioIdentity == null)
+        if (portfolioId == null)
         {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
             _logger.LogError($"Cannot get portfolio identity for OrderId={data.OrderId}.");
@@ -43,7 +47,8 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
         var orderEvent = OrderEventFactory.CreateEventFromOrderTrades(
             data,
             data.InstrumentId,
-            portfolioIdentity);
+            portfolioId.Value,
+            accountId);
 
         var saved = await _orderEventRepository.Save(orderEvent);
 
@@ -56,7 +61,8 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
         var operations = TradeOperationsFactory.CreateFromOrderTrades(
             data,
             data.InstrumentId,
-            portfolioIdentity);
+            portfolioId.Value,
+            accountId);
 
         _logger.LogDebug($"Publish OrderTrades operations for OrderId={data.OrderId}");
 

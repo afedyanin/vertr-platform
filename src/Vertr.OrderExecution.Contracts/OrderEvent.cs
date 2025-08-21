@@ -12,7 +12,7 @@ public class OrderEvent
 
     public required string AccountId { get; set; }
 
-    public Guid SubAccountId { get; set; }
+    public Guid PortfolioId { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

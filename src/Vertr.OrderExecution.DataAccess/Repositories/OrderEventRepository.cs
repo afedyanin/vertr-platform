@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Interfaces;
-using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.DataAccess.Repositories;
 internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
@@ -40,7 +39,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         using var context = await GetDbContext();
 
         var orderEvents = await context.OrderEvents
-            .Where(e => e.SubAccountId == subAccountId)
+            .Where(e => e.PortfolioId == subAccountId)
             .OrderByDescending(e => e.CreatedAt)
             .ThenBy(e => e.RequestId)
             .ToArrayAsync();
@@ -48,40 +47,28 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         return orderEvents;
     }
 
-    public async Task<PortfolioIdentity?> ResolvePortfolioByOrderId(string orderId)
+    public async Task<Guid?> ResolvePortfolioIdByOrderId(string orderId)
     {
         using var context = await GetDbContext();
 
         var orderEvents = context.OrderEvents
             .Where(e => e.OrderId != null && e.OrderId == orderId);
 
-        var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null)?.AccountId;
-        var subAccountId = orderEvents.FirstOrDefault(e => e.SubAccountId != Guid.Empty)?.SubAccountId;
+        var portfolioId = orderEvents.FirstOrDefault(e => e.PortfolioId != Guid.Empty)?.PortfolioId;
 
-        if (string.IsNullOrEmpty(accountId))
-        {
-            return null;
-        }
-
-        return new PortfolioIdentity(accountId, subAccountId);
+        return portfolioId;
     }
 
-    public async Task<PortfolioIdentity?> ResolvePortfolioByOrderRequestId(Guid orderRequestId)
+    public async Task<Guid?> ResolvePortfolioIdByOrderRequestId(Guid orderRequestId)
     {
         using var context = await GetDbContext();
 
         var orderEvents = context.OrderEvents
             .Where(e => e.RequestId != null && e.RequestId == orderRequestId);
 
-        var accountId = orderEvents.FirstOrDefault(e => e.AccountId != null)?.AccountId;
-        var subAccountId = orderEvents.FirstOrDefault(e => e.SubAccountId != Guid.Empty)?.SubAccountId;
+        var portfolioId = orderEvents.FirstOrDefault(e => e.PortfolioId != Guid.Empty)?.PortfolioId;
 
-        if (string.IsNullOrEmpty(accountId))
-        {
-            return null;
-        }
-
-        return new PortfolioIdentity(accountId, subAccountId);
+        return portfolioId;
     }
 
     public async Task<bool> Save(OrderEvent orderEvent)

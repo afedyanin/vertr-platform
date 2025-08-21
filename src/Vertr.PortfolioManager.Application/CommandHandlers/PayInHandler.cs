@@ -40,7 +40,7 @@ internal class PayInHandler : IRequestHandler<PayInRequest>
             CreatedAt = request.CreatedAt,
             OperationType = TradeOperationType.Input,
             AccountId = request.AccountId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.SubAccountId,
             OrderId = null,
             Amount = request.Amount,
             InstrumentId = instrumentId.Value,

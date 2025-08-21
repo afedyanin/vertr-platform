@@ -43,7 +43,7 @@ internal class OverridePositionsHandler : IRequestHandler<OverridePositionsReque
                 CreatedAt = request.CreatedAt,
                 OperationType = TradeOperationType.PositionOverride,
                 AccountId = request.AccountId,
-                SubAccountId = request.SubAccountId,
+                PortfolioId = request.SubAccountId,
                 Amount = balance,
                 InstrumentId = item.InstrumentId,
                 Price = balance,

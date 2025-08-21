@@ -16,7 +16,7 @@ internal class TrendFollowStrategy : StrategyBase
             StrategyId = Id,
             InstrumentId = InstrumentId,
             BacktestId = BacktestId,
-            SubAccountId = SubAccountId,
+            PortfolioId = PortfolioId,
             QtyLots = QtyLots * GetSign(candle),
             Price = candle.Close,
             CreatedAt = candle.TimeUtc,

@@ -36,16 +36,16 @@ internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>
 
         // TODO: Order State приходит раньше, чем сохраняется OrderResponse, поэтому не находит портфолио !!!
 
-        var portfolioIdentity = await _orderEventRepository.ResolvePortfolioByOrderRequestId(Guid.Parse(data.OrderRequestId));
+        var portfolioId = await _orderEventRepository.ResolvePortfolioIdByOrderRequestId(Guid.Parse(data.OrderRequestId));
 
-        if (portfolioIdentity == null)
+        if (portfolioId == null)
         {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
             _logger.LogError($"Cannot get portfolio identity for OrderId={data.OrderId}.");
             return;
         }
 
-        var orderEvent = OrderEventFactory.CreateEventFromOrderState(data, portfolioIdentity);
+        var orderEvent = OrderEventFactory.CreateEventFromOrderState(data, portfolioId.Value);
         var saved = await _orderEventRepository.Save(orderEvent);
 
         if (!saved)

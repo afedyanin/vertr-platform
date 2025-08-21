@@ -27,11 +27,10 @@ public class PortfolioController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("{accountId}")]
-    public Task<IActionResult> GetPortfolio(string accountId, Guid? subAccountId = null)
+    [HttpGet("{portfolioId:guid}")]
+    public Task<IActionResult> GetPortfolio(Guid portfolioId)
     {
-        var identity = new PortfolioIdentity(accountId, subAccountId);
-        var portfolio = _portfolioRepository.GetPortfolio(identity);
+        var portfolio = _portfolioRepository.GetPortfolio(portfolioId);
         return Task.FromResult<IActionResult>(Ok(portfolio));
     }
 

@@ -19,7 +19,7 @@ internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPosit
 
     public async Task<ExecuteOrderResponse> Handle(OpenPositionRequest request, CancellationToken cancellationToken)
     {
-        var currentLots = await GetCurrentPositionInLots(request.SubAccountId, request.InstrumentId);
+        var currentLots = await GetCurrentPositionInLots(request.PortfolioId, request.InstrumentId);
 
         if (currentLots != 0L)
         {
@@ -32,7 +32,7 @@ internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPosit
         var orderRequest = new ExecuteOrderRequest
         {
             RequestId = request.RequestId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
             QtyLots = request.QtyLots,
             CreatedAt = request.CreatedAt,

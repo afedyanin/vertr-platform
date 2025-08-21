@@ -16,7 +16,7 @@ internal class RandomWalkStrategy : StrategyBase
             StrategyId = Id,
             InstrumentId = InstrumentId,
             BacktestId = BacktestId,
-            SubAccountId = SubAccountId,
+            PortfolioId = PortfolioId,
             QtyLots = QtyLots * GetSign(),
             Price = candle.Close,
             CreatedAt = candle.TimeUtc,

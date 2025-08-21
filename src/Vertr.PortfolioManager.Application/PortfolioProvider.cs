@@ -5,28 +5,28 @@ namespace Vertr.PortfolioManager.Application;
 
 internal class PortfolioProvider : IPortfolioProvider
 {
-    private readonly Dictionary<PortfolioIdentity, Portfolio> _portfolios = [];
+    private readonly Dictionary<Guid, Portfolio> _portfolios = [];
 
     public Portfolio[] GetAllPortfolios() => [.. _portfolios.Values];
 
-    public Portfolio? GetPortfolio(PortfolioIdentity portfolioIdentity)
+    public Portfolio? GetPortfolio(Guid portfolioId)
     {
-        _portfolios.TryGetValue(portfolioIdentity, out var portfolio);
+        _portfolios.TryGetValue(portfolioId, out var portfolio);
         return portfolio;
     }
     public void Update(Portfolio portfolio)
     {
-        _portfolios[portfolio.Identity] = portfolio;
+        _portfolios[portfolio.Id] = portfolio;
     }
 
-    public void Remove(PortfolioIdentity portfolioIdentity)
+    public void Remove(Guid portfolioId)
     {
-        _portfolios.Remove(portfolioIdentity);
+        _portfolios.Remove(portfolioId);
     }
 
-    public Position? GetPosition(PortfolioIdentity portfolioIdentity, Guid instrumentId)
+    public Position? GetPosition(Guid portfolioId, Guid instrumentId)
     {
-        var portfolio = GetPortfolio(portfolioIdentity);
+        var portfolio = GetPortfolio(portfolioId);
 
         if (portfolio == null)
         {

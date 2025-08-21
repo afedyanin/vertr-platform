@@ -21,7 +21,7 @@ internal abstract class StrategyBase : IStrategy
 
     public Guid? BacktestId { get; private set; }
 
-    public Guid SubAccountId { get; set; }
+    public Guid PortfolioId { get; set; }
 
     protected StrategyBase(IServiceProvider serviceProvider)
     {
@@ -47,7 +47,7 @@ internal abstract class StrategyBase : IStrategy
         if (backtest != null)
         {
             BacktestId = backtest.Id;
-            SubAccountId = backtest.SubAccountId;
+            PortfolioId = backtest.SubAccountId;
         }
 
         return Task.CompletedTask;

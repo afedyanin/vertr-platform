@@ -15,7 +15,7 @@ internal class StrategyFactory : IStrategyFactory
             return new RandomWalkStrategy(serviceProvider)
             {
                 Id = strategyMetadata.Id,
-                SubAccountId = strategyMetadata.SubAccountId,
+                PortfolioId = strategyMetadata.SubAccountId,
                 InstrumentId = strategyMetadata.InstrumentId,
                 QtyLots = strategyMetadata.QtyLots,
             };
@@ -26,7 +26,7 @@ internal class StrategyFactory : IStrategyFactory
             return new TrendFollowStrategy(serviceProvider)
             {
                 Id = strategyMetadata.Id,
-                SubAccountId = strategyMetadata.SubAccountId,
+                PortfolioId = strategyMetadata.SubAccountId,
                 InstrumentId = strategyMetadata.InstrumentId,
                 QtyLots = strategyMetadata.QtyLots,
             };

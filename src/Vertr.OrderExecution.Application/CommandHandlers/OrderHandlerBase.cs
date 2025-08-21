@@ -1,6 +1,5 @@
 using Vertr.Platform.Common.Mediator;
 using Vertr.MarketData.Contracts.Interfaces;
-using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 using Microsoft.Extensions.Options;
 
@@ -30,12 +29,10 @@ internal abstract class OrderHandlerBase
     }
 
     protected async Task<long> GetCurrentPositionInLots(
-        Guid subAccountId,
+        Guid portfolioId,
         Guid instrumentId)
     {
-        var portfolioIdentity = new PortfolioIdentity(AccountId, subAccountId);
-
-        var position = _portfolioProvider.GetPosition(portfolioIdentity, instrumentId);
+        var position = _portfolioProvider.GetPosition(portfolioId, instrumentId);
 
         if (position == null)
         {

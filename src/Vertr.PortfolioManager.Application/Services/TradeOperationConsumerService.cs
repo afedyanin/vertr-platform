@@ -32,12 +32,11 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
 
     private async Task ApplyOperation(TradeOperation operation)
     {
-        var portfolioIdentity = new PortfolioIdentity(operation.AccountId, operation.SubAccountId);
-        var portfolio = _portfolioRepository.GetPortfolio(portfolioIdentity);
+        var portfolio = _portfolioRepository.GetPortfolio(operation.PortfolioId);
 
         portfolio ??= new Portfolio
         {
-            Identity = portfolioIdentity,
+            Id = operation.PortfolioId,
         };
 
         var currencyPosition = await GetCurrencyPosition(portfolio, operation);

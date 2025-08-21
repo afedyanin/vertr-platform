@@ -13,7 +13,7 @@ public record class TradeOperation
 
     public required string AccountId { get; init; }
 
-    public Guid SubAccountId { get; init; }
+    public Guid PortfolioId { get; init; }
 
     public Guid InstrumentId { get; init; }
 

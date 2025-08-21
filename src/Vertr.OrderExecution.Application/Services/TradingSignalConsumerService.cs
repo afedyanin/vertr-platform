@@ -22,7 +22,7 @@ internal class TradingSignalConsumerService : DataConsumerServiceBase<TradingSig
             RequestId = data.Id,
             InstrumentId = data.InstrumentId,
             QtyLots = data.QtyLots,
-            SubAccountId = data.SubAccountId,
+            PortfolioId = data.PortfolioId,
             BacktestId = data.BacktestId,
             CreatedAt = data.CreatedAt,
             Price = data.Price,

@@ -3,11 +3,11 @@ public interface IPortfolioProvider
 {
     public Portfolio[] GetAllPortfolios();
 
-    public Portfolio? GetPortfolio(PortfolioIdentity portfolioIdentity);
+    public Portfolio? GetPortfolio(Guid portfolioId);
 
-    public Position? GetPosition(PortfolioIdentity portfolioIdentity, Guid instrumentId);
+    public Position? GetPosition(Guid portfolioId, Guid instrumentId);
 
     public void Update(Portfolio portfolio);
 
-    public void Remove(PortfolioIdentity portfolioIdentity);
+    public void Remove(Guid portfolioId);
 }

@@ -15,8 +15,8 @@ internal static class PortfolioConverter
 
         var res = new Portfolio
         {
+            Id = Guid.NewGuid(),
             UpdatedAt = updatedAt,
-            Identity = new PortfolioIdentity(source.AccountId),
             Positions = source.Positions.ToArray().Convert()
         };
 

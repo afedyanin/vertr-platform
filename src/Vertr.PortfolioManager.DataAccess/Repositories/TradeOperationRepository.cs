@@ -20,15 +20,13 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
             .ToArrayAsync();
     }
 
-    public async Task<TradeOperation[]> GetByPortfolio(PortfolioIdentity portfolioIdentity)
+    public async Task<TradeOperation[]> GetByPortfolio(Guid portfolioId)
     {
         using var context = await GetDbContext();
 
         return await context
             .Operations
-            .Where(x =>
-                x.AccountId == portfolioIdentity.AccountId &&
-                x.SubAccountId == portfolioIdentity.SubAccountId)
+            .Where(x => x.PortfolioId == portfolioId)
             .OrderBy(x => x.CreatedAt)
             .ToArrayAsync();
     }
@@ -53,14 +51,12 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
         return savedRecords > 0;
     }
 
-    public async Task<int> Delete(PortfolioIdentity portfolioIdentity)
+    public async Task<int> Delete(Guid portfolioId)
     {
         using var context = await GetDbContext();
 
         return await context.Operations
-            .Where(s =>
-            s.AccountId == portfolioIdentity.AccountId &&
-            s.SubAccountId == portfolioIdentity.SubAccountId)
+            .Where(s => s.PortfolioId == portfolioId)
             .ExecuteDeleteAsync();
     }
 

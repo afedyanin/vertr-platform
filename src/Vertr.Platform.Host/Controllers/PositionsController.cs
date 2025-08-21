@@ -20,7 +20,7 @@ public class PositionsController : ControllerBase
         var command = new ExecuteOrderRequest
         {
             InstrumentId = request.InstrumentId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.PortfolioId,
             QtyLots = request.Lots,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
@@ -38,7 +38,7 @@ public class PositionsController : ControllerBase
         var command = new OpenPositionRequest
         {
             InstrumentId = request.InstrumentId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.PortfolioId,
             QtyLots = request.Lots,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
@@ -55,7 +55,7 @@ public class PositionsController : ControllerBase
         var command = new ClosePositionRequest
         {
             InstrumentId = request.InstrumentId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.PortfolioId,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
@@ -71,7 +71,7 @@ public class PositionsController : ControllerBase
         var command = new ReversePositionRequest
         {
             InstrumentId = request.InstrumentId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.PortfolioId,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
@@ -87,7 +87,7 @@ public class PositionsController : ControllerBase
         var command = new TradingSignalRequest
         {
             InstrumentId = request.InstrumentId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.PortfolioId,
             QtyLots = request.Lots,
             Price = request.Price,
             RequestId = Guid.NewGuid(),

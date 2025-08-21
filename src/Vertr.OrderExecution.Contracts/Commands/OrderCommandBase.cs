@@ -6,7 +6,7 @@ public abstract class OrderCommandBase
 
     public Guid InstrumentId { get; init; }
 
-    public Guid SubAccountId { get; init; }
+    public Guid PortfolioId { get; init; }
 
     public DateTime CreatedAt { get; init; }
 

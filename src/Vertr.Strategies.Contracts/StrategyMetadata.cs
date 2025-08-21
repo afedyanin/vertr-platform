@@ -10,7 +10,7 @@ public class StrategyMetadata
 
     public Guid InstrumentId { get; set; }
 
-    public Guid SubAccountId { get; set; }
+    public Guid PortfolioId { get; set; }
 
     public long QtyLots { get; set; }
 

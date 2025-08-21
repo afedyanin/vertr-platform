@@ -21,7 +21,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
         ClosePositionRequest request,
         CancellationToken cancellationToken)
     {
-        var currentLots = await GetCurrentPositionInLots(request.SubAccountId, request.InstrumentId);
+        var currentLots = await GetCurrentPositionInLots(request.PortfolioId, request.InstrumentId);
 
         if (currentLots == 0L)
         {
@@ -36,7 +36,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
         var orderRequest = new ExecuteOrderRequest
         {
             RequestId = request.RequestId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
             QtyLots = lotsToClose,
             CreatedAt = request.CreatedAt,

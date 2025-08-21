@@ -29,14 +29,14 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
             };
         }
 
-        var currentLots = await GetCurrentPositionInLots(request.SubAccountId, request.InstrumentId);
+        var currentLots = await GetCurrentPositionInLots(request.PortfolioId, request.InstrumentId);
 
         if (currentLots == 0L)
         {
             var openRequest = new OpenPositionRequest
             {
                 RequestId = request.RequestId,
-                SubAccountId = request.SubAccountId,
+                PortfolioId = request.PortfolioId,
                 InstrumentId = request.InstrumentId,
                 QtyLots = request.QtyLots,
                 CreatedAt = request.CreatedAt,
@@ -66,7 +66,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
         var reverseRequest = new ReversePositionRequest
         {
             RequestId = request.RequestId,
-            SubAccountId = request.SubAccountId,
+            PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
             CreatedAt = request.CreatedAt,
             Price = request.Price

@@ -11,7 +11,7 @@ public interface IStrategy : IDisposable
 
     public Guid? BacktestId { get; }
 
-    public Guid SubAccountId { get; }
+    public Guid PortfolioId { get; }
 
     public long QtyLots { get; }
 

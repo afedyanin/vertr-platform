@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Grpc.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -33,7 +34,8 @@ public class OrderStateStreamService : StreamServiceBase
         var orderStateProducer = scope.ServiceProvider.GetRequiredService<IDataProducer<OrderState>>();
 
         var request = new Tinkoff.InvestApi.V1.OrderStateStreamRequest();
-        request.Accounts.Add(TinvestSettings.AccountId);
+        var accountId = TinvestSettings.AccountId;
+        request.Accounts.Add(accountId);
 
         using var stream = investApiClient.OrdersStream.OrderStateStream(request, headers: null, deadline, stoppingToken);
 
@@ -41,10 +43,10 @@ public class OrderStateStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
             {
-                var orderState = response.OrderState.Convert(response.OrderState.AccountId);
+                var json = JsonSerializer.Serialize(response.OrderState);
+                logger.LogInformation($"New order state received for AccountId={accountId} State:{json}");
 
-                logger.LogInformation($"New order state received for AccountId={response.OrderState.AccountId}");
-
+                var orderState = response.OrderState.Convert(accountId);
                 await orderStateProducer.Produce(orderState, stoppingToken);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.Ping)

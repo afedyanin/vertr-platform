@@ -4,11 +4,15 @@ using Vertr.Infrastructure.Common.Channels;
 using Vertr.OrderExecution.Application.Factories;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Interfaces;
+using Vertr.Platform.Common.Channels;
+using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.Services;
 internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>
 {
     private readonly IOrderEventRepository _orderEventRepository;
+    private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
+
     private readonly ILogger<OrderStateConsumerService> _logger;
 
     public OrderStateConsumerService(
@@ -17,6 +21,7 @@ internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>
     {
         _logger = logger;
         _orderEventRepository = ServiceProvider.GetRequiredService<IOrderEventRepository>();
+        _tradeOperationsProducer = ServiceProvider.GetRequiredService<IDataProducer<TradeOperation>>();
     }
 
     protected override async Task Handle(OrderState data, CancellationToken cancellationToken = default)
@@ -51,16 +56,17 @@ internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>
 
         // TODO: Нужно обрабатывать комиссии по новым трейдам, если они появляются
 
-        /*
-        var operations = orderState.CreateOperations(portfolioId);
 
-        var tradeOperationsRequest = new TradeOperationsRequest
+        var operations = TradeOperationsFactory.CreateFromOrderState(
+            data,
+            data.InstrumentId,
+            portfolioIdentity);
+
+        _logger.LogDebug($"Publish OrderState operations for OrderId={data.OrderId}");
+
+        foreach (var operation in operations)
         {
-            Operations = operations,
-        };
-
-        _logger.LogDebug($"Publish OrderState operations for OrderId={orderState.OrderId}");
-        await _mediator.Send(tradeOperationsRequest, cancellationToken);
-        */
+            await _tradeOperationsProducer.Produce(operation, cancellationToken);
+        }
     }
 }

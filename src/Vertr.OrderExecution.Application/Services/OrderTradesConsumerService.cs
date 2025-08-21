@@ -52,7 +52,7 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
             _logger.LogWarning($"Cannot save OrderTrades event for OrderId={orderEvent.OrderId}");
             return;
         }
-        /*
+
         var operations = TradeOperationsFactory.CreateFromOrderTrades(
             data,
             data.InstrumentId,
@@ -64,6 +64,5 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
         {
             await _tradeOperationsProducer.Produce(operation, cancellationToken);
         }
-        */
     }
 }

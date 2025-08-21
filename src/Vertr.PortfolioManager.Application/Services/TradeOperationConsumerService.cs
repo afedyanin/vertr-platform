@@ -27,7 +27,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
     protected override async Task Handle(TradeOperation data, CancellationToken cancellationToken = default)
     {
         await SaveOperation(data);
-        await ApplyOperation(data);
+        //await ApplyOperation(data);
     }
 
     private async Task ApplyOperation(TradeOperation operation)

@@ -47,7 +47,8 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             request.QtyLots,
             request.Price,
             request.CreatedAt,
-            request.BacktestId);
+            request.BacktestId,
+            cancellationToken);
 
         var response = new ExecuteOrderResponse
         {
@@ -64,7 +65,8 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         long qtyLots,
         decimal price,
         DateTime createdAt,
-        Guid? backtestId)
+        Guid? backtestId,
+        CancellationToken cancellationToken)
     {
         var request = new PostOrderRequest
         {
@@ -128,7 +130,6 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             _logger.LogError($"Cannot save order response. RequestId={requestId}");
         }
 
-        /*
         var tradeOperations = TradeOperationsFactory.CreateFromOrderResponse(
             response,
             instrumentId,
@@ -141,7 +142,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         {
             await _tradeOperationsProducer.Produce(tradeOperation, cancellationToken);
         }
-        */
+
         return response.OrderId;
     }
 }

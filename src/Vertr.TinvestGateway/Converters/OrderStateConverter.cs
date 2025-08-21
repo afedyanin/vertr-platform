@@ -45,7 +45,7 @@ internal static class OrderStateConverter
             Currency = source.Currency,
             LotsRequested = source.LotsRequested,
             LotsExecuted = source.LotsExecuted,
-            OrderStages = source.Trades.ToArray().Convert(source.Currency),
+            OrderStages = source.Trades?.ToArray().Convert(source.Currency) ?? [],
             AccountId = accountId
         };
 }

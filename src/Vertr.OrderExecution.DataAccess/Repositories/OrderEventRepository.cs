@@ -12,6 +12,42 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
     {
     }
 
+    public async Task<OrderEvent[]> GetAll(int limit = 1000)
+    {
+        using var context = await GetDbContext();
+
+        var orderEvents = await context.OrderEvents
+            .OrderBy(e => e.CreatedAt)
+            .ThenBy(e => e.RequestId)
+            .Take(limit)
+            .ToArrayAsync();
+
+        return orderEvents;
+    }
+
+    public async Task<OrderEvent?> GetById(Guid id)
+    {
+        using var context = await GetDbContext();
+
+        var orderEvent = context.OrderEvents
+            .SingleOrDefault(e => e.Id == id);
+
+        return orderEvent;
+    }
+
+    public async Task<OrderEvent[]> GetBySubAccountId(Guid subAccountId)
+    {
+        using var context = await GetDbContext();
+
+        var orderEvents = await context.OrderEvents
+            .Where(e => e.SubAccountId == subAccountId)
+            .OrderBy(e => e.CreatedAt)
+            .ThenBy(e => e.RequestId)
+            .ToArrayAsync();
+
+        return orderEvents;
+    }
+
     public async Task<PortfolioIdentity?> ResolvePortfolioByOrderId(string orderId)
     {
         using var context = await GetDbContext();

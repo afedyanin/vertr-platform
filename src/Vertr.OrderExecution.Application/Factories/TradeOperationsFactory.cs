@@ -98,20 +98,23 @@ internal static class TradeOperationsFactory
             opTrades.Add(opTrade);
         }
 
-        var opCommission = new TradeOperation
+        if (state.ExecutedCommission != null)
         {
-            CreatedAt = state.CreatedAt,
-            OperationType = TradeOperationType.BrokerFee,
-            SubAccountId = portfolioIdentity.SubAccountId,
-            AccountId = portfolioIdentity.AccountId,
-            OrderId = state.OrderId,
-            Amount = state.ExecutedCommission,
-            InstrumentId = instrumentId,
-            Price = state.ExecutedCommission,
-            Quantity = 1
-        };
+            var opCommission = new TradeOperation
+            {
+                CreatedAt = state.CreatedAt,
+                OperationType = TradeOperationType.BrokerFee,
+                SubAccountId = portfolioIdentity.SubAccountId,
+                AccountId = portfolioIdentity.AccountId,
+                OrderId = state.OrderId,
+                Amount = state.ExecutedCommission,
+                InstrumentId = instrumentId,
+                Price = state.ExecutedCommission,
+                Quantity = 1
+            };
 
-        opTrades.Add(opCommission);
+            opTrades.Add(opCommission);
+        }
 
         return [.. opTrades];
     }

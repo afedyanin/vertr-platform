@@ -43,8 +43,9 @@ public class OrderStateStreamService : StreamServiceBase
         {
             if (response.PayloadCase == Tinkoff.InvestApi.V1.OrderStateStreamResponse.PayloadOneofCase.OrderState)
             {
-                var json = JsonSerializer.Serialize(response.OrderState);
-                logger.LogInformation($"New order state received for AccountId={accountId} State:{json}");
+                //var json = JsonSerializer.Serialize(response.OrderState);
+                //logger.LogInformation($"New order state received for AccountId={accountId} State:{json}");
+                logger.LogInformation($"New order state received for AccountId={accountId}");
 
                 var orderState = response.OrderState.Convert(accountId);
                 await orderStateProducer.Produce(orderState, stoppingToken);

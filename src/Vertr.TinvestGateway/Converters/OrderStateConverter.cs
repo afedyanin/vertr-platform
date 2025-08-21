@@ -35,7 +35,7 @@ internal static class OrderStateConverter
         {
             OrderId = source.OrderId,
             OrderRequestId = source.OrderRequestId,
-            CreatedAt = source.CreatedAt.ToDateTime(),
+            CreatedAt = source.CreatedAt?.ToDateTime() ?? DateTime.UtcNow,
             ExecutionReportStatus = source.ExecutionReportStatus.Convert(),
             InstrumentId = Guid.Parse(source.InstrumentUid),
             Direction = source.Direction.Convert(),

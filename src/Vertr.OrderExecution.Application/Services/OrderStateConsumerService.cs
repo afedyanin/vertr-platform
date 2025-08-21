@@ -56,7 +56,7 @@ internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>
 
         // TODO: Нужно обрабатывать комиссии по новым трейдам, если они появляются
 
-
+        /* Если раскомментить, приходят дубликаты трейдов. Нужно фильтровать
         var operations = TradeOperationsFactory.CreateFromOrderState(
             data,
             data.InstrumentId,
@@ -68,5 +68,6 @@ internal class OrderStateConsumerService : DataConsumerServiceBase<OrderState>
         {
             await _tradeOperationsProducer.Produce(operation, cancellationToken);
         }
+        */
     }
 }

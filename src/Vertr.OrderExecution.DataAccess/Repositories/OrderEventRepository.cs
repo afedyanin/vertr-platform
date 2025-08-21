@@ -17,7 +17,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         using var context = await GetDbContext();
 
         var orderEvents = await context.OrderEvents
-            .OrderBy(e => e.CreatedAt)
+            .OrderByDescending(e => e.CreatedAt)
             .ThenBy(e => e.RequestId)
             .Take(limit)
             .ToArrayAsync();
@@ -41,7 +41,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
 
         var orderEvents = await context.OrderEvents
             .Where(e => e.SubAccountId == subAccountId)
-            .OrderBy(e => e.CreatedAt)
+            .OrderByDescending(e => e.CreatedAt)
             .ThenBy(e => e.RequestId)
             .ToArrayAsync();
 

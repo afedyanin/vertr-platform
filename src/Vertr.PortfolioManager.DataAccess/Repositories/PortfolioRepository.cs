@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
@@ -37,11 +38,11 @@ internal class PortfolioRepository : RepositoryBase, IPortfolioRepository
         var existing = context
             .Portfolios
             .Include(p => p.Positions)
-            .Any(x => x.Id == portfolio.Id);
+            .SingleOrDefault(x => x.Id == portfolio.Id);
 
-        if (existing)
+        if (existing != null)
         {
-            context.Attach(portfolio);
+            Update(portfolio, existing);
         }
         else
         {
@@ -60,5 +61,15 @@ internal class PortfolioRepository : RepositoryBase, IPortfolioRepository
         return await context.Portfolios
             .Where(s => s.Id == portfolioId)
             .ExecuteDeleteAsync();
+    }
+
+    private static void Update(Portfolio source, Portfolio dest)
+    {
+        Debug.Assert(source.Id == dest.Id);
+
+        dest.Name = source.Name;
+        dest.UpdatedAt = source.UpdatedAt;
+        dest.IsBacktest = source.IsBacktest;
+        dest.Positions = source.Positions;
     }
 }

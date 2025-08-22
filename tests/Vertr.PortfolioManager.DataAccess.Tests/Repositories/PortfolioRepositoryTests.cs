@@ -20,6 +20,29 @@ public class PortfolioRepositoryTests : RepositoryTestBase
     }
 
     [Test]
+    public async Task CanCreatePortfolioWithPositions()
+    {
+        var portfolio = new Portfolio
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test Portfolio",
+        };
+
+        var pos = new Position
+        {
+            Id = Guid.NewGuid(),
+            PortfolioId = portfolio.Id,
+            InstrumentId = Guid.Empty,
+            Balance = 35.47m
+        };
+
+        portfolio.Positions.Add(pos);
+        var saved = await PortfolioRepo.Save(portfolio);
+
+        Assert.That(saved, Is.True);
+    }
+
+    [Test]
     public async Task CanUpdatePortfolio()
     {
         var portfolio = new Portfolio

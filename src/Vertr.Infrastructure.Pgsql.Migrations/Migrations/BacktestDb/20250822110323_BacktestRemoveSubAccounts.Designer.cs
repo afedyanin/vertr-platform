@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Vertr.Backtest.DataAccess;
@@ -11,9 +12,11 @@ using Vertr.Backtest.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.BacktestDb
 {
     [DbContext(typeof(BacktestDbContext))]
-    partial class BacktestDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250822110323_BacktestRemoveSubAccounts")]
+    partial class BacktestRemoveSubAccounts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,7 +54,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.BacktestDb
 
                     b.Property<Guid>("PortfolioId")
                         .HasColumnType("uuid")
-                        .HasColumnName("portfolio_id");
+                        .HasColumnName("sub_account_id");
 
                     b.Property<string>("ProgressMessage")
                         .HasColumnType("text")

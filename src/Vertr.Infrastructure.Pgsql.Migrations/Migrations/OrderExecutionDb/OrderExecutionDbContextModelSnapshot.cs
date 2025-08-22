@@ -54,13 +54,13 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                         .HasColumnType("text")
                         .HasColumnName("order_id");
 
+                    b.Property<Guid>("PortfolioId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("portfolio_id");
+
                     b.Property<Guid?>("RequestId")
                         .HasColumnType("uuid")
                         .HasColumnName("request_id");
-
-                    b.Property<Guid>("SubAccountId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("sub_account_id");
 
                     b.HasKey("Id")
                         .HasName("order_events_pkey");

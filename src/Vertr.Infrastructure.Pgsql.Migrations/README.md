@@ -49,7 +49,7 @@ DELETE FROM public.strategies;
 DELETE FROM public.trading_signals;
 ```
 
-## Run OrderExecution tablse migration 
+## Run OrderExecution tables migration 
 
 ### Create migration
 
@@ -77,7 +77,19 @@ dotnet ef migrations add PortfolioTables --context PortfolioDbContext
 dotnet ef database update --context PortfolioDbContext
 ```
 
-### 
+## Run Backtest tables migration 
+
+### Create migration
+
+```shell
+dotnet ef migrations add BacktestTables --context  BacktestDbContext
+```
+
+### Run migration
+
+```shell
+dotnet ef database update --context BacktestDbContext
+```
 
 
 

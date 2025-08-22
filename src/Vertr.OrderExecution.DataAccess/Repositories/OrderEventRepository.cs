@@ -34,12 +34,12 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         return orderEvent;
     }
 
-    public async Task<OrderEvent[]> GetBySubAccountId(Guid subAccountId)
+    public async Task<OrderEvent[]> GetByPortfolioId(Guid portfolioId)
     {
         using var context = await GetDbContext();
 
         var orderEvents = await context.OrderEvents
-            .Where(e => e.PortfolioId == subAccountId)
+            .Where(e => e.PortfolioId == portfolioId)
             .OrderByDescending(e => e.CreatedAt)
             .ThenBy(e => e.RequestId)
             .ToArrayAsync();

@@ -15,7 +15,7 @@ public class BacktestRepositoryTests : RepositoryTestBase
             To = new DateTime(2025, 8, 11, 0, 0, 0, DateTimeKind.Utc),
             Description = "Test backtest",
             StrategyId = Guid.NewGuid(),
-            SubAccountId = Guid.Empty,
+            PortfolioId = Guid.Empty,
             ExecutionState = ExecutionState.Created,
             CreatedAt = DateTime.UtcNow,
             ProgressMessage = "Backtest Created",

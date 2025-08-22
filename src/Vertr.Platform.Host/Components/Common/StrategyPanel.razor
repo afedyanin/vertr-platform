@@ -24,7 +24,7 @@
                   @bind-SelectedOption="@Content.Instrument" />
 
     <FluentNumberField @bind-Value="@Content.Strategy.QtyLots" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Qty lots:</FluentNumberField>
-    <FluentTextField Value="@Content.Strategy.SubAccountId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">SubAccount Id:</FluentTextField>
+    <FluentTextField Value="@Content.Strategy.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
     <FluentCheckbox @bind-Value="@Content.Strategy.IsActive" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Is Active"></FluentCheckbox>
 
 </FluentDialogBody>

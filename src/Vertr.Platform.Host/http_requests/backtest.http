@@ -1,9 +1,8 @@
 @baseAddress = https://localhost:7085/api/backtests
 
 @accountId = 93cda594-5556-44ca-8005-1c893e8d3142
-@subAccountId = 93cda594-5555-44ca-8005-1c893e8d3142
 @sberInstrumentId = e6123145-9665-43e0-8413-cd61b8aa9b13
-@strategyId = 6b838b7b-fb76-4621-a8db-347f70a7ace5
+@portfolioId = 6b838b7b-fb76-4621-a8db-347f70a7ace5
 @backtestId = 71ca9077-7846-4445-8d69-4b92fd7b482f
 
 ### All backtests
@@ -22,9 +21,8 @@ Content-Type: application/json
     "from": "2025-08-01T00:00:00Z",
     "to": "2025-08-11T00:00:00Z",
     "description": "Test backtest",
-    "strategyId": "{{strategyId}}",
+    "portfolioId": "{{portfolioId}}",
     "instrumentId": "{{sberInstrumentId}}",
-    "subAccountId": "{{subAccountId}}",
     "executionState": "Created",
     "startImmediately": false
   }

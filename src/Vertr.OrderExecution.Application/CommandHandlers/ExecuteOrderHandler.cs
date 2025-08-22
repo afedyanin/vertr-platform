@@ -38,7 +38,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
 
     public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Handling ExecuteOrder request SubAccountId={request.PortfolioId}");
+        _logger.LogInformation($"Handling ExecuteOrder request PortfolioId={request.PortfolioId}");
 
         var orderId = await PostMarketOrder(
             request.RequestId,

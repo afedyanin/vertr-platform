@@ -18,6 +18,6 @@
                   OptionText="@(p => p.Name)"
                   @bind-SelectedOption="@Content.Strategy" />
 
-    <FluentTextField Value="@Content.Backtest.SubAccountId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">SubAccount Id:</FluentTextField>
+    <FluentTextField Value="@Content.Backtest.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
     <FluentCheckbox @bind-Value="@Content.StartImmediately" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Start Immediately"></FluentCheckbox>
 </FluentDialogBody>

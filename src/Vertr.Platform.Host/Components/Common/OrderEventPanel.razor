@@ -12,7 +12,6 @@
     <FluentTextField Value="@Content.OrderEvent.RequestId.ToString()" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Request Id:</FluentTextField>
     <FluentTextField Value="@Content.OrderEvent.OrderId?.ToString()" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Order Id:</FluentTextField>
     <FluentTextField Value="@Content.Instrument.GetFullName()" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Instrument:</FluentTextField>
-    <FluentTextField Value="@Content.OrderEvent.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">SubAccount Id:</FluentTextField>
-    <FluentTextField Value="@Content.OrderEvent.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">SubAccount Id:</FluentTextField>
+    <FluentTextField Value="@Content.OrderEvent.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
     <FluentTextArea Value="@Content.OrderEvent.JsonData" ReadOnly Rows="30" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Resize="TextAreaResize.Vertical"></FluentTextArea>
 </FluentDialogBody>

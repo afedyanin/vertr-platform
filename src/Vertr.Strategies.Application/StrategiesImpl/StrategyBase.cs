@@ -47,7 +47,7 @@ internal abstract class StrategyBase : IStrategy
         if (backtest != null)
         {
             BacktestId = backtest.Id;
-            PortfolioId = backtest.SubAccountId;
+            PortfolioId = backtest.PortfolioId;
         }
 
         return Task.CompletedTask;

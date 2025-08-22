@@ -43,7 +43,7 @@ internal class BacktestRepository : RepositoryBase, IBacktestRepository
             existing.CreatedAt = backtest.CreatedAt;
             existing.Description = backtest.Description;
             existing.StrategyId = backtest.StrategyId;
-            existing.SubAccountId = backtest.SubAccountId;
+            existing.PortfolioId = backtest.PortfolioId;
             existing.ExecutionState = backtest.ExecutionState;
             existing.UpdatedAt = backtest.UpdatedAt;
             existing.ProgressMessage = backtest.ProgressMessage;

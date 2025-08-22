@@ -29,10 +29,10 @@ public class OrderEventsController : ControllerBase
         return Ok(res);
     }
 
-    [HttpGet("sub-account/{subAccountId:guid}")]
-    public async Task<IActionResult> GetOrderEventsBySubAccount(Guid subAccountId)
+    [HttpGet("portfolio/{portfolioId:guid}")]
+    public async Task<IActionResult> GetOrderEventsByPortfolio(Guid portfolioId)
     {
-        var res = await _orderEventRepository.GetBySubAccountId(subAccountId);
+        var res = await _orderEventRepository.GetByPortfolioId(portfolioId);
 
         return Ok(res);
     }

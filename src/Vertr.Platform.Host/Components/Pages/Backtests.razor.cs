@@ -66,7 +66,7 @@ public partial class Backtests
                 UpdatedAt = DateTime.UtcNow,
                 ExecutionState = ExecutionState.Created,
                 IsCancellationRequested = false,
-                SubAccountId = Guid.NewGuid(),
+                PortfolioId = Guid.NewGuid(),
                 ProgressMessage = string.Empty,
             }
         };
@@ -278,7 +278,7 @@ public partial class Backtests
                 From = backtestModel.ComposeDateFrom(),
                 To = backtestModel.ComposeDateTo(),
                 StrategyId = backtestModel.Strategy.Id,
-                SubAccountId = backtestModel.Backtest.SubAccountId,
+                PortfolioId = backtestModel.Backtest.PortfolioId,
                 StartImmediately = backtestModel.StartImmediately,
             };
 

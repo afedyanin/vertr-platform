@@ -6,7 +6,7 @@ public class PayInRequest : IRequest
 {
     public required string AccountId { get; init; }
 
-    public Guid SubAccountId { get; init; }
+    public Guid PortfolioId { get; init; }
 
     public required Money Amount { get; init; }
 

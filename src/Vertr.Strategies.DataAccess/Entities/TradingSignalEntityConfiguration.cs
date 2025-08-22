@@ -23,7 +23,7 @@ internal class TradingSignalEntityConfiguration : IEntityTypeConfiguration<Tradi
             .IsRequired();
 
         builder.Property(e => e.PortfolioId)
-            .HasColumnName("sub_account_id")
+            .HasColumnName("portfolio_id")
             .IsRequired();
 
         builder.Property(e => e.InstrumentId)

@@ -50,7 +50,7 @@ public partial class Strategies
             Strategy = new StrategyMetadata
             {
                 Id = Guid.NewGuid(),
-                SubAccountId = Guid.NewGuid(),
+                PortfolioId = Guid.NewGuid(),
                 CreatedAt = DateTime.UtcNow,
                 InstrumentId = instrument.Id,
                 Type = StrategyType.RandomWalk,

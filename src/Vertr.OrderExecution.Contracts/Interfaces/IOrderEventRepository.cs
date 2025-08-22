@@ -4,7 +4,7 @@ public interface IOrderEventRepository
 {
     public Task<OrderEvent[]> GetAll(int limit = 1000);
 
-    public Task<OrderEvent[]> GetBySubAccountId(Guid subAccountId);
+    public Task<OrderEvent[]> GetByPortfolioId(Guid portfolioId);
 
     public Task<OrderEvent?> GetById(Guid id);
 

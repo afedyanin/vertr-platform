@@ -32,7 +32,7 @@ internal class BacktestRunEntityConfiguration : IEntityTypeConfiguration<Backtes
             .HasColumnName("strategy_id")
             .IsRequired();
 
-        builder.Property(e => e.SubAccountId)
+        builder.Property(e => e.PortfolioId)
             .HasColumnName("sub_account_id")
             .IsRequired();
 

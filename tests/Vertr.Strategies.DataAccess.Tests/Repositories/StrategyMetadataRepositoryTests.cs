@@ -13,7 +13,7 @@ public class StrategyMetadataRepositoryTests : RepositoryTestBase
             Id = Guid.NewGuid(),
             InstrumentId = Guid.Parse(instrumentId),
             Name = "Test Strategy",
-            SubAccountId = Guid.Empty,
+            PortfolioId = Guid.Empty,
             IsActive = false,
             CreatedAt = DateTime.UtcNow,
             ParamsJson = null,

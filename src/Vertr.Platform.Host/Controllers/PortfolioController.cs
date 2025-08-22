@@ -56,7 +56,7 @@ public class PortfolioController : ControllerBase
     }
 
     [HttpPut("sandbox-account/{accountId}")]
-    public async Task<IActionResult> PayIn(string accountId, Guid subAccountId, decimal amount, string currency = "RUB")
+    public async Task<IActionResult> PayIn(string accountId, Guid portfolioId, decimal amount, string currency = "RUB")
     {
         var money = new Money(amount, currency);
         var balance = await _portfolioGateway.PayIn(accountId, money);
@@ -69,7 +69,7 @@ public class PortfolioController : ControllerBase
         var request = new PayInRequest
         {
             AccountId = accountId,
-            SubAccountId = subAccountId,
+            PortfolioId = portfolioId,
             Amount = money,
         };
 
@@ -124,13 +124,13 @@ public class PortfolioController : ControllerBase
     }
     */
 
-    [HttpPut("position-overrides/{accountId}/{subAccountId}")]
-    public async Task<IActionResult> OverridePositions(string accountId, Guid subAccountId, PositionOverride[] overrides)
+    [HttpPut("position-overrides/{accountId}/{portfolioId}")]
+    public async Task<IActionResult> OverridePositions(string accountId, Guid portfolioId, PositionOverride[] overrides)
     {
         var req = new OverridePositionsRequest
         {
             AccountId = accountId,
-            SubAccountId = subAccountId,
+            PortfolioId = portfolioId,
             Overrides = overrides
         };
 

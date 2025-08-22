@@ -8,7 +8,7 @@ public class OverridePositionsRequest : IRequest
 {
     public required string AccountId { get; init; }
 
-    public Guid SubAccountId { get; init; }
+    public Guid PortfolioId { get; init; }
 
     public PositionOverride[] Overrides { get; init; } = [];
 

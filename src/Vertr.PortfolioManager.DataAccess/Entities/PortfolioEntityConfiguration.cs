@@ -6,9 +6,11 @@ namespace Vertr.PortfolioManager.DataAccess.Entities;
 
 internal class PortfolioEntityConfiguration : IEntityTypeConfiguration<Portfolio>
 {
+    public static readonly string PortfoliosTableName = "portfolios";
+
     public void Configure(EntityTypeBuilder<Portfolio> builder)
     {
-        builder.ToTable("portfolios");
+        builder.ToTable(PortfoliosTableName);
 
         builder.HasKey(e => e.Id)
             .HasName("portfolios_pkey");

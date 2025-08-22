@@ -6,9 +6,11 @@ namespace Vertr.PortfolioManager.DataAccess.Entities;
 
 internal class PositionEntityConfiguration : IEntityTypeConfiguration<Position>
 {
+    public static readonly string PositionsTableName = "positions";
+
     public void Configure(EntityTypeBuilder<Position> builder)
     {
-        builder.ToTable("positions");
+        builder.ToTable(PositionsTableName);
 
         builder.HasKey(e => e.Id)
             .HasName("positions_pkey");

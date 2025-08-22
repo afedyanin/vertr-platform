@@ -1,7 +1,9 @@
-using System.Diagnostics;
+using System.Data;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
+using Vertr.PortfolioManager.DataAccess.Entities;
 
 namespace Vertr.PortfolioManager.DataAccess.Repositories;
 internal class PortfolioRepository : RepositoryBase, IPortfolioRepository
@@ -17,6 +19,7 @@ internal class PortfolioRepository : RepositoryBase, IPortfolioRepository
         return await context
             .Portfolios
             .Include(p => p.Positions)
+            .AsNoTracking()
             .OrderByDescending(x => x.UpdatedAt)
             .ToArrayAsync();
     }
@@ -28,30 +31,91 @@ internal class PortfolioRepository : RepositoryBase, IPortfolioRepository
         return context
             .Portfolios
             .Include(p => p.Positions)
+            .AsNoTracking()
             .SingleOrDefault(x => x.Id == portfolioId);
     }
 
     public async Task<bool> Save(Portfolio portfolio)
     {
+        var portfolioSql = @$"INSERT INTO {PortfolioEntityConfiguration.PortfoliosTableName} (
+        id,
+        name,
+        updated_at,
+        is_backtest
+        ) VALUES (
+        @Id,
+        @Name,
+        @UpdatedAt,
+        @IsBacktest
+        ) ON CONFLICT (id) DO UPDATE SET
+        name = EXCLUDED.name,
+        updated_at = EXCLUDED.updated_at,
+        is_backtest = EXCLUDED.is_backtest";
+
+        var positionSql = @$"INSERT INTO {PositionEntityConfiguration.PositionsTableName} (
+        id,
+        portfolio_id,
+        instrument_id,
+        balance
+        ) VALUES (
+        @Id,
+        @PortfolioId,
+        @InstrumentId,
+        @Balance
+        ) ON CONFLICT (id) DO UPDATE SET
+        portfolio_id = EXCLUDED.portfolio_id,
+        instrument_id = EXCLUDED.instrument_id,
+        balance = EXCLUDED.balance";
+
         using var context = await GetDbContext();
+        using var connection = context.Database.GetDbConnection();
 
-        var existing = context
-            .Portfolios
-            .Include(p => p.Positions)
-            .SingleOrDefault(x => x.Id == portfolio.Id);
+        await connection.OpenAsync();
+        var txn = await connection.BeginTransactionAsync();
+        await context.Database.UseTransactionAsync(txn);
 
-        if (existing != null)
+        var rowCount = 0;
+
+        try
         {
-            Update(portfolio, existing);
+            var param = new
+            {
+                portfolio.Id,
+                portfolio.Name,
+                portfolio.UpdatedAt,
+                portfolio.IsBacktest
+            };
+
+            var res = await connection.ExecuteAsync(portfolioSql, param, txn);
+            rowCount += res;
+
+            // upsert positions
+            foreach (var position in portfolio.Positions)
+            {
+                var posParam = new
+                {
+                    position.Id,
+                    position.PortfolioId,
+                    position.InstrumentId,
+                    position.Balance,
+                };
+
+                res = await connection.ExecuteAsync(positionSql, posParam, txn);
+                rowCount += res;
+            }
+
+            // delete positions
+            var deletedRows = await DeleteRemovedPositions(context, portfolio);
+
+            await txn.CommitAsync();
         }
-        else
+        catch
         {
-            context.Portfolios.Add(portfolio);
+            await txn.RollbackAsync();
+            throw;
         }
 
-        var savedRecords = await context.SaveChangesAsync();
-
-        return savedRecords > 0;
+        return rowCount > 0;
     }
 
     public async Task<int> Delete(Guid portfolioId)
@@ -63,13 +127,12 @@ internal class PortfolioRepository : RepositoryBase, IPortfolioRepository
             .ExecuteDeleteAsync();
     }
 
-    private static void Update(Portfolio source, Portfolio dest)
+    private async Task<int> DeleteRemovedPositions(PortfolioDbContext dbContext, Portfolio portfolio)
     {
-        Debug.Assert(source.Id == dest.Id);
+        var positionIds = portfolio.Positions.Select(s => s.Id).ToArray();
 
-        dest.Name = source.Name;
-        dest.UpdatedAt = source.UpdatedAt;
-        dest.IsBacktest = source.IsBacktest;
-        dest.Positions = source.Positions;
+        return await dbContext.Positions
+            .Where(p => p.PortfolioId == portfolio.Id && !positionIds.Contains(p.Id))
+            .ExecuteDeleteAsync();
     }
 }

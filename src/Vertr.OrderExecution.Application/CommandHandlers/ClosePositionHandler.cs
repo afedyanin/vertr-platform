@@ -10,7 +10,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
 {
     public ClosePositionHandler(
         IMediator mediator,
-        IPortfolioProvider portfolioProvider,
+        IPortfolioRepository portfolioProvider,
         IInstrumentsRepository staticMarketDataProvider,
         IOptions<OrderExecutionSettings> options) :
         base(mediator, portfolioProvider, staticMarketDataProvider, options)

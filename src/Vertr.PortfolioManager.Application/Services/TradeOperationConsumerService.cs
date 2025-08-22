@@ -9,7 +9,7 @@ namespace Vertr.PortfolioManager.Application.Services;
 
 internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOperation>
 {
-    private readonly IPortfolioProvider _portfolioRepository;
+    private readonly IPortfolioRepository _portfolioRepository;
     private readonly ITradeOperationRepository _tradeOperationRepository;
     private readonly ICurrencyRepository _currencyRepository;
     private readonly ILogger<TradeOperationConsumerService> _logger;
@@ -18,7 +18,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
         IServiceProvider serviceProvider,
         ILogger<TradeOperationConsumerService> logger) : base(serviceProvider)
     {
-        _portfolioRepository = serviceProvider.GetRequiredService<IPortfolioProvider>();
+        _portfolioRepository = serviceProvider.GetRequiredService<IPortfolioRepository>();
         _currencyRepository = serviceProvider.GetRequiredService<ICurrencyRepository>();
         _tradeOperationRepository = serviceProvider.GetRequiredService<ITradeOperationRepository>();
         _logger = logger;
@@ -29,7 +29,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
         await SaveOperation(data);
         //await ApplyOperation(data);
     }
-
+/*
     private async Task ApplyOperation(TradeOperation operation)
     {
         var portfolio = _portfolioRepository.GetPortfolio(operation.PortfolioId);
@@ -74,7 +74,7 @@ internal class TradeOperationConsumerService : DataConsumerServiceBase<TradeOper
         portfolio.UpdatedAt = operation.CreatedAt;
         _portfolioRepository.Update(portfolio);
     }
-
+*/
     private async Task<Position> GetCurrencyPosition(Portfolio portfolio, TradeOperation operation)
     {
         var currencyId = await GetCurrrencyId(operation.Amount.Currency, operation.InstrumentId);

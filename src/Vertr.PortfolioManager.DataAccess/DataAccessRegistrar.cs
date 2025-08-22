@@ -13,6 +13,7 @@ public static class DataAccessRegistrar
         services.AddDbContextFactory<PortfolioDbContext>(options => options.UseNpgsql(connectionString));
 
         services.AddTransient<ITradeOperationRepository, TradeOperationRepository>();
+        services.AddTransient<IPortfolioRepository, PortfolioRepository>();
 
         return services;
     }

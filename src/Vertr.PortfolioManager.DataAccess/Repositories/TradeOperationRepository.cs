@@ -16,7 +16,7 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
 
         return await context
             .Operations
-            .OrderBy(x => x.CreatedAt)
+            .OrderByDescending(x => x.CreatedAt)
             .ToArrayAsync();
     }
 
@@ -27,7 +27,7 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
         return await context
             .Operations
             .Where(x => x.PortfolioId == portfolioId)
-            .OrderBy(x => x.CreatedAt)
+            .OrderByDescending(x => x.CreatedAt)
             .ToArrayAsync();
     }
 
@@ -38,7 +38,7 @@ internal class TradeOperationRepository : RepositoryBase, ITradeOperationReposit
         return await context
             .Operations
             .Where(x => x.AccountId == accountId)
-            .OrderBy(x => x.CreatedAt)
+            .OrderByDescending(x => x.CreatedAt)
             .ToArrayAsync();
     }
 

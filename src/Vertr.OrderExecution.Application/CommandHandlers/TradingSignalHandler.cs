@@ -10,7 +10,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
 {
     public TradingSignalHandler(
         IMediator mediator,
-        IPortfolioProvider portfolioProvider,
+        IPortfolioRepository portfolioProvider,
         IInstrumentsRepository staticMarketDataProvider,
         IOptions<OrderExecutionSettings> options) :
         base(mediator, portfolioProvider, staticMarketDataProvider, options)

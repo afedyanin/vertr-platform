@@ -1,5 +1,6 @@
 namespace Vertr.PortfolioManager.Contracts.Interfaces;
 
+// TODO: Remove this?
 public interface IPortfolioGateway
 {
     public Task<Account[]?> GetAccounts();

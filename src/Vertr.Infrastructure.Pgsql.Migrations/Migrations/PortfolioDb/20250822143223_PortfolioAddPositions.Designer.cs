@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Vertr.PortfolioManager.DataAccess;
@@ -12,9 +13,11 @@ using Vertr.PortfolioManager.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.PortfolioDb
 {
     [DbContext(typeof(PortfolioDbContext))]
-    partial class PortfolioDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250822143223_PortfolioAddPositions")]
+    partial class PortfolioAddPositions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,9 +73,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.PortfolioDb
                     b.HasKey("Id")
                         .HasName("positions_pkey");
 
-                    b.HasIndex("PortfolioId", "InstrumentId")
-                        .IsUnique()
-                        .HasDatabaseName("positions_unique");
+                    b.HasIndex("PortfolioId");
 
                     b.ToTable("positions", (string)null);
                 });

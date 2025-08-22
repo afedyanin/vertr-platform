@@ -11,14 +11,14 @@ namespace Vertr.Platform.Host.Controllers;
 public class PortfolioController : ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IPortfolioProvider _portfolioRepository;
+    private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioGateway _portfolioGateway;
     private readonly ILogger<PortfolioController> _logger;
 
     public PortfolioController(
         IMediator mediator,
         IPortfolioGateway portfolioGateway,
-        IPortfolioProvider portfolioRepository,
+        IPortfolioRepository portfolioRepository,
         ILogger<PortfolioController> logger)
     {
         _mediator = mediator;
@@ -30,7 +30,7 @@ public class PortfolioController : ControllerBase
     [HttpGet("{portfolioId:guid}")]
     public Task<IActionResult> GetPortfolio(Guid portfolioId)
     {
-        var portfolio = _portfolioRepository.GetPortfolio(portfolioId);
+        var portfolio = _portfolioRepository.GetById(portfolioId);
         return Task.FromResult<IActionResult>(Ok(portfolio));
     }
 

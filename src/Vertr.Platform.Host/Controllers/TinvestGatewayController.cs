@@ -5,6 +5,8 @@ using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Interfaces;
+using Vertr.PortfolioManager.Contracts.Interfaces;
+using Vertr.TinvestGateway;
 
 namespace Vertr.Platform.Host.Controllers;
 
@@ -14,16 +16,22 @@ public class TinvestGatewayController : ControllerBase
 {
     private readonly IMarketDataGateway _marketDataGayeway;
     private readonly IOrderExecutionGateway _orderExecutionGateway;
+    private readonly IPortfolioGateway _portfolioGateway;
     private readonly OrderExecutionSettings _orderExecutionSettings;
+    private readonly TinvestSettings _tinvestSettings;
 
     public TinvestGatewayController(
         IMarketDataGateway marketDataGayeway,
-        IOptions<OrderExecutionSettings> options,
-        IOrderExecutionGateway orderExecutionGateway)
+        IOptions<OrderExecutionSettings> orderOptions,
+        IOptions<TinvestSettings> tinvestOptions,
+        IOrderExecutionGateway orderExecutionGateway,
+        IPortfolioGateway portfolioGateway)
     {
         _marketDataGayeway = marketDataGayeway;
         _orderExecutionGateway = orderExecutionGateway;
-        _orderExecutionSettings = options.Value;
+        _portfolioGateway = portfolioGateway;
+        _orderExecutionSettings = orderOptions.Value;
+        _tinvestSettings = tinvestOptions.Value;
     }
 
     [HttpGet("instrument-by-ticker/{classCode}/{ticker}")]
@@ -76,5 +84,50 @@ public class TinvestGatewayController : ControllerBase
         var accountId = _orderExecutionSettings.AccountId;
         var date = await _orderExecutionGateway.CancelOrder(accountId, orderId);
         return Ok(date);
+    }
+
+    [HttpGet("accounts")]
+    public async Task<IActionResult> GetAccounts()
+    {
+        var accounts = await _portfolioGateway.GetAccounts();
+        return Ok(accounts);
+    }
+
+    [HttpGet("sandbox-account")]
+    public async Task<IActionResult> GetSandboxAccounts()
+    {
+        var accounts = await _portfolioGateway.GetSandboxAccounts();
+        return Ok(accounts);
+    }
+
+    [HttpPost("sandbox-account")]
+    public async Task<IActionResult> CreateAccount(string accountName)
+    {
+        var accountId = await _portfolioGateway.CreateSandboxAccount(accountName);
+        return Ok(accountId);
+    }
+
+    [HttpDelete("sandbox-account")]
+    public async Task<IActionResult> CloseAccount(string? accountId)
+    {
+        var accId = accountId ?? _tinvestSettings.AccountId;
+        await _portfolioGateway.CloseSandboxAccount(accId);
+        return Ok();
+    }
+
+    [HttpGet("gateway-portfolio")]
+    public async Task<IActionResult> GetGatewayPortfolio(string? accountId)
+    {
+        var accId = accountId ?? _tinvestSettings.AccountId;
+        var portfolio = await _portfolioGateway.GetPortfolio(accId);
+        return Ok(portfolio);
+    }
+
+    [HttpGet("gateway-operations")]
+    public async Task<IActionResult> GetGatewayOperations(DateTime from, DateTime to, string? accountId)
+    {
+        var accId = accountId ?? _tinvestSettings.AccountId;
+        var operations = await _portfolioGateway.GetOperations(accId, from, to);
+        return Ok(operations);
     }
 }

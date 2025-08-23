@@ -7,24 +7,24 @@ using Vertr.PortfolioManager.Contracts.Commands;
 
 namespace Vertr.PortfolioManager.Application.CommandHandlers;
 
-internal class PayInHandler : IRequestHandler<PayInRequest>
+internal class DepositAmountHandler : IRequestHandler<DepositAmountRequest>
 {
     private readonly IDataProducer<TradeOperation> _tradeOperationsProducer;
 
     private readonly ICurrencyRepository _currencyRepository;
-    private readonly ILogger<PayInHandler> _logger;
+    private readonly ILogger<DepositAmountHandler> _logger;
 
-    public PayInHandler(
+    public DepositAmountHandler(
         IDataProducer<TradeOperation> tradeOperationsProducer,
         ICurrencyRepository currencyRepository,
-        ILogger<PayInHandler> logger)
+        ILogger<DepositAmountHandler> logger)
     {
         _tradeOperationsProducer = tradeOperationsProducer;
         _currencyRepository = currencyRepository;
         _logger = logger;
     }
 
-    public async Task Handle(PayInRequest request, CancellationToken cancellationToken)
+    public async Task Handle(DepositAmountRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Pay in operation received.");
 

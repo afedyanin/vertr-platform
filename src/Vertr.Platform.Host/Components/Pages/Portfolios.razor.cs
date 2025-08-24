@@ -28,7 +28,11 @@ public partial class Portfolios
 
     private Task HandleCellClick(FluentDataGridCell<PortfolioModel> cell)
     {
-        // TODO: Navigate to portfolio details page
+        if (cell.Item is not null)
+        {
+            NavigationManager.NavigateTo($"/portfolios/details/{cell.Item.Portfolio.Id}");
+        }
+
         return Task.CompletedTask;
     }
 

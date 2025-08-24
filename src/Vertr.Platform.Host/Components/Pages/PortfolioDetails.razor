@@ -1,5 +1,57 @@
-﻿<h3>PortfolioDetails</h3>
+@page "/portfolios/details/{PortfolioId}"
 
-@code {
+@using Vertr.Platform.Host.Components.Common
+@using Vertr.Platform.Host.Components.Models
 
+<h3>Portfolio</h3>
+
+<div>
+    <a href="/portfolios">Back to portfolios</a>
+</div>
+
+<br />
+
+@if (_portfolio != null)
+{
+<FluentStack Orientation="Orientation.Horizontal"
+                 HorizontalAlignment="HorizontalAlignment.Center"
+                 VerticalAlignment="VerticalAlignment.Top">
+
+    <div style="display: table; table-layout: fixed; width: 100%;">
+        <div style="overflow-x: auto;">
+        <FluentTextField Value="@_portfolio.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
+        <FluentTextField Value="@_portfolio.UpdatedAt.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Updated At:</FluentTextField>
+        <FluentTextField Value="@_portfolio.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
+        <FluentTextField Value="@_portfolio.IsBacktest.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Is Backtest"></FluentTextField>
+        </div>
+    </div>
+
+    <FluentSpacer />
+
+    <div style="display: table; table-layout: fixed; width: 100%;">
+        <div style="overflow-x: auto;">
+            <FluentDataGrid @ref=dataGrid
+                            TGridItem=PositionModel
+                            Items="@_positions"
+                            ShowHover=true
+                            DisplayMode="DataGridDisplayMode.Table"
+                            RowSize="@DataGridRowSize.Medium">
+                <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true"  Title="Instrument" />
+                <PropertyColumn Property="@(p => p.Position.Balance.ToString())" Sortable="true" Title="Balance" />
+            </FluentDataGrid>
+        </div>
+    </div>
+</FluentStack>
+
+<br />
+
+<TradeOperationsGrid Height="800px"
+    TableName="Trade operations"
+    PortfolioId="@PortfolioId" />
 }
+else
+{
+    <h4>Portfolio is not found</h4>
+}
+
+

@@ -1,3 +1,16 @@
+# 2025-08-24
+
+- add select portfolio into strategy dialog
+- add select portfolio into backtest dialog
+- portfolio details actions
+  - delete
+  - deposit
+  - ajustment
+  - open position
+  - close position
+  - reverse
+  - post order
+ 
 # 2025-08-16
 
 - доработать UI под разные разрешения монитора (responsive)

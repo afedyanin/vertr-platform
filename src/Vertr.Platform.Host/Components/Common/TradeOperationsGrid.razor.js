@@ -3,7 +3,8 @@ import perspective from "https://cdn.jsdelivr.net/npm/@finos/perspective/dist/cd
 export async function loadJson(schema, data, view) {
   const worker = await perspective.worker();
   const table = await worker.table(schema);
-  table.update(data);
+  let json = JSON.parse(data);
+  table.update(json);
   view.load(table);
 }
 

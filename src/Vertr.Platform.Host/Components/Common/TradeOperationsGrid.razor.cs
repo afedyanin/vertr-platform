@@ -1,5 +1,11 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Vertr.MarketData.Contracts;
+using Vertr.Platform.Common.Utils;
+using Vertr.Platform.Host.Components.Models;
+using Vertr.PortfolioManager.Contracts;
+using Vertr.PortfolioManager.Contracts.Extensions;
 
 namespace Vertr.Platform.Host.Components.Common;
 
@@ -24,38 +30,81 @@ public partial class TradeOperationsGrid
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
+    private IDictionary<Guid, Instrument> _instruments { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _instruments = await InitInstruments();
+        await base.OnParametersSetAsync();
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         var schema = GetJsonSchema();
-        var candles = await GetCandles();
+        var operations = await GetOperations();
+        var operationsJson = JsonSerializer.Serialize(operations, JsonOptions.DefaultOptions);
+
         _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Common/TradeOperationsGrid.razor.js");
-        await _jsModule.InvokeVoidAsync("loadJson", schema, candles, perspectiveViewer);
+        await _jsModule.InvokeVoidAsync("loadJson", schema, operationsJson, perspectiveViewer);
     }
 
-    private async Task<Dictionary<string, object>[]> GetCandles()
+    private async Task<TradeOperationModel[]> GetOperations()
     {
-        //if (!string.IsNullOrEmpty(PortfolioId))
+        if (string.IsNullOrEmpty(PortfolioId))
         {
-            await Task.Delay(100);
+            DemoLogger.WriteLine("PortfolioId is empty");
             return [];
         }
-        /*
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-        var candles = await apiClient.GetFromJsonAsync<Dictionary<string, object>[]>($"api/candles/{InstrumentId.Value}");
 
-        return candles ?? [];
-        */
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        var operations = await apiClient.GetFromJsonAsync<TradeOperation[]>($"api/trade-operations/{PortfolioId}", JsonOptions.DefaultOptions);
+
+        if (operations == null)
+        {
+            DemoLogger.WriteLine("No operations from API");
+            return [];
+        }
+
+        var items = new List<TradeOperationModel>();
+
+        foreach (var operation in operations)
+        {
+            var instrumentName = "Unknown";
+
+            if (_instruments.TryGetValue(operation.InstrumentId, out var instrument))
+            {
+                instrumentName = instrument.GetFullName();
+            }
+
+            var model = new TradeOperationModel
+            {
+                CreatedAt = operation.CreatedAt,
+                OperationType = operation.OperationType.GetFullName(),
+                Instrument = instrumentName,
+                Amount = operation.Amount.Value,
+                Currency = operation.Amount.Currency,
+                Price = operation.Price.Value,
+                Quantity = operation.Quantity,
+                OrderId = operation.OrderId,
+            };
+
+            items.Add(model);
+        }
+
+        return [.. items];
     }
 
     private Dictionary<string, string> GetJsonSchema()
         => new Dictionary<string, string>
         {
-            {  "timeUtc", "datetime" },
-            {  "open", "float" },
-            {  "low", "float" },
-            {  "high", "float" },
-            {  "close", "float" },
-            {  "volume", "float" },
+            {  "createdAt", "datetime" },
+            {  "operationType", "string" },
+            {  "instrument", "string" },
+            {  "amount", "float" },
+            {  "currency", "string" },
+            {  "price", "float" },
+            {  "quantity", "float" },
+            {  "orderId", "string" },
         };
 
     public async ValueTask DisposeAsync()
@@ -74,5 +123,23 @@ public partial class TradeOperationsGrid
         }
     }
 
+    private async Task<IDictionary<Guid, Instrument>> InitInstruments()
+    {
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        var instruments = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments", JsonOptions.DefaultOptions);
+        var res = new Dictionary<Guid, Instrument>();
+
+        if (instruments == null)
+        {
+            return res;
+        }
+
+        foreach (var instrument in instruments)
+        {
+            res[instrument.Id] = instrument;
+        }
+
+        return res;
+    }
 }
 

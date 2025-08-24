@@ -1,0 +1,14 @@
+@using Vertr.MarketData.Contracts
+@using Vertr.Platform.Host.Components.Models
+@using Vertr.Strategies.Contracts
+
+@implements IDialogContentComponent<PortfolioModel>
+
+<FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
+
+<FluentDialogBody>
+    <FluentTextField Value="@Content.Portfolio.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
+    <FluentTextField Value="@Content.Portfolio.UpdatedAt.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Updated At:</FluentTextField>
+    <FluentTextField @bind-Value="@Content.Portfolio.Name" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
+    <FluentCheckbox @bind-Value="@Content.Portfolio.IsBacktest" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Is Backtest"></FluentCheckbox>
+</FluentDialogBody>

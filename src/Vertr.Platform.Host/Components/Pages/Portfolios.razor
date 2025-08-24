@@ -1,5 +1,42 @@
-﻿<h3>Portfolios</h3>
+@page "/portfolios"
+
+@using Vertr.Platform.Host.Components.Common
+@using Vertr.Platform.Host.Components.Models
+
+@using Vertr.MarketData.Contracts
+
+@inject IDialogService DialogService
+
+<h3>Portfolios</h3>
+
+<FluentStack>
+    <FluentButton @onclick="AddPortfolioAsync" Appearance="Appearance.Accent">
+        Add
+    </FluentButton>
+    <FluentSpacer />
+    <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
+</FluentStack>
+
+<div style="display: table; table-layout: fixed; width: 100%;">
+    <div style="overflow-x: auto;">
+        <FluentDataGrid @ref=dataGrid
+                        TGridItem=PortfolioModel
+                        OnCellClick="HandleCellClick"
+                        Items="@_portfolios"
+                        Pagination="@_pagination"
+                        ShowHover=true
+                        DisplayMode="DataGridDisplayMode.Table"
+                        RowSize="@DataGridRowSize.Medium">
+            <PropertyColumn Property="@(p => p.Portfolio.Id)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Portfolio.Name)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Portfolio.UpdatedAt.ToString(ModelConsts.DateTimeFormat))" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Portfolio.IsBacktest)" Sortable="true" />
+        </FluentDataGrid>
+    </div>
+</div>
+
+<FluentPaginator State="@_pagination" />
 
 @code {
-
+    private RenderFragment template = @<span />;
 }

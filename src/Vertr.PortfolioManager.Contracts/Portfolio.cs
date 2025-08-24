@@ -7,7 +7,7 @@ public class Portfolio
 
     public DateTime UpdatedAt { get; set; }
 
-    public bool? IsBacktest { get; set; }
+    public bool IsBacktest { get; set; }
 
     public IList<Position> Positions { get; set; } = [];
 }

@@ -8,15 +8,15 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.Platform.Host.Controllers;
 
-[Route("api/portfolio")]
+[Route("api/portfolios")]
 [ApiController]
-public class PortfolioController : ControllerBase
+public class PortfoliosController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly OrderExecutionSettings _orderExecutionSettings;
 
-    public PortfolioController(
+    public PortfoliosController(
         IMediator mediator,
         IPortfolioRepository portfolioRepository,
         IOptions<OrderExecutionSettings> orderOptions)
@@ -26,15 +26,35 @@ public class PortfolioController : ControllerBase
         _orderExecutionSettings = orderOptions.Value;
     }
 
-    [HttpGet("{portfolioId:guid}")]
-    public Task<IActionResult> GetPortfolio(Guid portfolioId)
+    [HttpGet()]
+    public async Task<IActionResult> GetAll()
     {
-        var portfolio = _portfolioRepository.GetById(portfolioId);
-        return Task.FromResult<IActionResult>(Ok(portfolio));
+        var portfolios = await _portfolioRepository.GetAll();
+        return Ok(portfolios);
+    }
+
+    [HttpGet("{portfolioId:guid}")]
+    public async Task<IActionResult> GetPortfolio(Guid portfolioId)
+    {
+        var portfolio = await _portfolioRepository.GetById(portfolioId);
+        return Ok(portfolio);
+    }
+
+    [HttpPost()]
+    public async Task<IActionResult> SavePortfolio(Portfolio portfolio)
+    {
+        var saved = await _portfolioRepository.Save(portfolio);
+
+        if (!saved)
+        {
+            return BadRequest($"Cannot save porfolio Id={portfolio.Id}");
+        }
+
+        return Ok(portfolio.Id);
     }
 
     [HttpPut("deposit/{portfolioId:guid}")]
-    public async Task<IActionResult> PayIn(Guid portfolioId, decimal amount, string currency = "RUB")
+    public async Task<IActionResult> PayIn(Guid portfolioId, decimal amount, string currency = "rub")
     {
         var request = new DepositAmountRequest
         {

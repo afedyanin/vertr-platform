@@ -36,6 +36,7 @@ internal class ApplyOpeationHandler : IRequestHandler<ApplyOperationRequest>
         portfolio ??= new Portfolio
         {
             Id = operation.PortfolioId,
+            UpdatedAt = operation.CreatedAt,
         };
 
         var currencyPosition = await GetCurrencyPosition(portfolio, operation);
@@ -74,6 +75,26 @@ internal class ApplyOpeationHandler : IRequestHandler<ApplyOperationRequest>
         await _portfolioRepository.Save(portfolio);
     }
 
+    private static Position GetOrCreatePosition(Portfolio portfolio, Guid instrumentId)
+    {
+        var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == instrumentId);
+
+        if (position == null)
+        {
+            position = new Position
+            {
+                Id = Guid.NewGuid(),
+                PortfolioId = portfolio.Id,
+                InstrumentId = instrumentId,
+                Balance = decimal.Zero,
+            };
+
+            portfolio.Positions.Add(position);
+        }
+
+        return position;
+    }
+
     private async Task<Position> GetCurrencyPosition(Portfolio portfolio, TradeOperation operation)
     {
         var currencyId = await GetCurrrencyId(operation.Amount.Currency, operation.InstrumentId);
@@ -98,23 +119,5 @@ internal class ApplyOpeationHandler : IRequestHandler<ApplyOperationRequest>
         }
 
         return currencyId;
-    }
-
-    private static Position GetOrCreatePosition(Portfolio portfolio, Guid instrumentId)
-    {
-        var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == instrumentId);
-
-        if (position == null)
-        {
-            position = new Position
-            {
-                InstrumentId = instrumentId,
-                Balance = decimal.Zero,
-            };
-
-            portfolio.Positions.Add(position);
-        }
-
-        return position;
     }
 }

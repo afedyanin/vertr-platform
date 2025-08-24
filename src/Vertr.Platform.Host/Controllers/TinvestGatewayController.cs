@@ -93,7 +93,7 @@ public class TinvestGatewayController : ControllerBase
         return Ok(accounts);
     }
 
-    [HttpGet("sandbox-account")]
+    [HttpGet("sandbox-accounts")]
     public async Task<IActionResult> GetSandboxAccounts()
     {
         var accounts = await _portfolioGateway.GetSandboxAccounts();
@@ -115,7 +115,7 @@ public class TinvestGatewayController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("gateway-portfolio")]
+    [HttpGet("portfolio")]
     public async Task<IActionResult> GetGatewayPortfolio(string? accountId)
     {
         var accId = accountId ?? _tinvestSettings.AccountId;
@@ -123,7 +123,7 @@ public class TinvestGatewayController : ControllerBase
         return Ok(portfolio);
     }
 
-    [HttpGet("gateway-operations")]
+    [HttpGet("operations")]
     public async Task<IActionResult> GetGatewayOperations(DateTime from, DateTime to, string? accountId)
     {
         var accId = accountId ?? _tinvestSettings.AccountId;

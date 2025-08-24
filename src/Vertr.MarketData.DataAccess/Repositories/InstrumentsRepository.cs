@@ -85,11 +85,9 @@ internal class InstrumentsRepository : RepositoryBase, IInstrumentsRepository, I
 
         var currency = context.Instruments
             .Where(s =>
-                !string.IsNullOrEmpty(s.InstrumentType) &&
-                s.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase) &&
-                !string.IsNullOrEmpty(s.Currency) &&
-                s.Currency.Equals(currencyCode, StringComparison.OrdinalIgnoreCase))
-            .FirstOrDefault();
+                s.InstrumentType == "currency" &&
+                s.Currency == currencyCode)
+                .FirstOrDefault();
 
         return currency?.Id;
     }

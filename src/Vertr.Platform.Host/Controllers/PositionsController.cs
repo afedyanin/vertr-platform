@@ -42,7 +42,7 @@ public class PositionsController : ControllerBase
             QtyLots = request.Lots,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = request.Date,
         };
 
         var response = await _mediator.Send(command);

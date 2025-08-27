@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Vertr.OrderExecution.Application;
 using Vertr.Platform.Common.Mediator;
+using Vertr.Platform.Host.Requests;
 using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Commands;
 using Vertr.PortfolioManager.Contracts.Interfaces;
@@ -53,14 +54,15 @@ public class PortfoliosController : ControllerBase
         return Ok(portfolio.Id);
     }
 
-    [HttpPut("deposit/{portfolioId:guid}")]
-    public async Task<IActionResult> PayIn(Guid portfolioId, decimal amount, string currency = "rub")
+    [HttpPut("deposit")]
+    public async Task<IActionResult> PayIn(DepositRequest depositRequest)
     {
         var request = new DepositAmountRequest
         {
             AccountId = _orderExecutionSettings.AccountId,
-            PortfolioId = portfolioId,
-            Amount = new Money(amount, currency),
+            PortfolioId = depositRequest.PortfolioId,
+            Amount = new Money(depositRequest.Amount, depositRequest.Currency),
+            CreatedAt = depositRequest.Date,
         };
 
         await _mediator.Send(request);
@@ -80,6 +82,13 @@ public class PortfoliosController : ControllerBase
 
         await _mediator.Send(req);
 
+        return Ok();
+    }
+
+    [HttpDelete("{portfolioId:guid}")]
+    public async Task<IActionResult> DeletePortfolio(Guid portfolioId)
+    {
+        var deletedCount = await _portfolioRepository.Delete(portfolioId);
         return Ok();
     }
 }

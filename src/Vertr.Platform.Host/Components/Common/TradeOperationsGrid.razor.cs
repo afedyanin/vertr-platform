@@ -32,6 +32,17 @@ public partial class TradeOperationsGrid
 
     private IDictionary<Guid, Instrument> _instruments { get; set; }
 
+    public async Task RefreshDataAsync()
+    {
+        var schema = GetJsonSchema();
+        var operations = await GetOperations();
+        var operationsJson = JsonSerializer.Serialize(operations, JsonOptions.DefaultOptions);
+
+        _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Common/TradeOperationsGrid.razor.js");
+        await _jsModule.InvokeVoidAsync("loadJson", schema, operationsJson, perspectiveViewer);
+    }
+
+
     protected override async Task OnParametersSetAsync()
     {
         _instruments = await InitInstruments();
@@ -40,12 +51,7 @@ public partial class TradeOperationsGrid
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var schema = GetJsonSchema();
-        var operations = await GetOperations();
-        var operationsJson = JsonSerializer.Serialize(operations, JsonOptions.DefaultOptions);
-
-        _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Components/Common/TradeOperationsGrid.razor.js");
-        await _jsModule.InvokeVoidAsync("loadJson", schema, operationsJson, perspectiveViewer);
+        await RefreshDataAsync();
     }
 
     private async Task<TradeOperationModel[]> GetOperations()

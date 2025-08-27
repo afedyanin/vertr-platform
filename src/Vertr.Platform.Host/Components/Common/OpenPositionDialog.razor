@@ -1,0 +1,20 @@
+@using Vertr.MarketData.Contracts
+@using Vertr.Platform.Host.Components.Models
+
+@implements IDialogContentComponent<OpenPositionModel>
+
+<FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
+
+<FluentDialogBody>
+    <FluentDatePicker Label="Date" @bind-Value="@Content.SelectedDate" /><FluentTimePicker @bind-Value="@Content.SelectedTime" />
+
+    <FluentSelect TOption="Instrument"
+                  Label="Instrument"
+                  Items="@Instruments"
+                  OptionValue="@(p => p.Id.ToString())"
+                  OptionText="@(p => $"{p.GetFullName()})")"
+                  @bind-SelectedOption="@Content.Instrument" />
+
+    <FluentNumberField @bind-Value="@Content.QuantityLots" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Qty lots:</FluentNumberField>
+    <FluentNumberField @bind-Value="@Content.Price" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Price:</FluentNumberField>
+</FluentDialogBody>

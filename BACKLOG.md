@@ -1,3 +1,13 @@
+# 2025-08-28
+- add select portfolio into strategy dialog
+- add select portfolio into backtest dialog
+
+
+- доработать UI под разные разрешения монитора (responsive)
+- темы
+- складывать и ресайзить лог-консоль
+- сделать сервисную джобу очистки и проверки всей БД: свечи, сигналы и т.п.
+
 # 2025-08-27
 
 ## диалог открытия позиции
@@ -6,9 +16,7 @@
 
 # 2025-08-24
 
-- add select portfolio into strategy dialog
-- add select portfolio into backtest dialog
-- portfolio details actions
+- - portfolio details actions
   - delete
   - deposit
   - ajustment

@@ -1,5 +1,3 @@
-using Vertr.PortfolioManager.Contracts;
-
 namespace Vertr.Platform.Host.Components.Models;
 
 public class TradeOperationModel
@@ -10,7 +8,9 @@ public class TradeOperationModel
 
     public required string Instrument { get; init; }
 
-    public decimal Amount { get; init; }
+    public decimal IncomeAmount { get; init; }
+
+    public decimal OutcomeAmount { get; init; }
 
     public required string Currency { get; init; }
 
@@ -19,4 +19,5 @@ public class TradeOperationModel
     public decimal? Quantity { get; init; }
 
     public string? OrderId { get; init; }
+
 }

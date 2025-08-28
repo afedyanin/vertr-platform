@@ -82,12 +82,21 @@ public partial class TradeOperationsGrid
                 instrumentName = instrument.GetFullName();
             }
 
+            var isIncomeOperationType = operation.OperationType.IsIncome();
+
+            var isIncome = (!isIncomeOperationType.HasValue && operation.Amount.Value > 0)
+                || (isIncomeOperationType.HasValue && isIncomeOperationType.Value);
+
+            var incomeAmount = isIncome ? operation.Amount.Value : decimal.Zero;
+            var outcomeAmount = isIncome ? decimal.Zero : operation.Amount.Value;
+
             var model = new TradeOperationModel
             {
                 CreatedAt = operation.CreatedAt,
                 OperationType = operation.OperationType.GetFullName(),
                 Instrument = instrumentName,
-                Amount = operation.Amount.Value,
+                IncomeAmount = incomeAmount,
+                OutcomeAmount = outcomeAmount,
                 Currency = operation.Amount.Currency,
                 Price = operation.Price.Value,
                 Quantity = operation.Quantity,
@@ -106,7 +115,8 @@ public partial class TradeOperationsGrid
             {  "createdAt", "datetime" },
             {  "operationType", "string" },
             {  "instrument", "string" },
-            {  "amount", "float" },
+            {  "incomeAmount", "float" },
+            {  "outcomeAmount", "float" },
             {  "currency", "string" },
             {  "price", "float" },
             {  "quantity", "float" },

@@ -24,30 +24,31 @@ public partial class PortfolioDetails
 
     private TradeOperationsGrid operationsGrid;
 
+    private bool _simulatedExecutionMode = false;
+
     private IQueryable<PositionModel> _positions { get; set; }
 
     private IDictionary<Guid, Instrument> _instruments { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
-        _instruments = await InitInstruments();
-        await InitPortfolioData();
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+
+        _simulatedExecutionMode = await InitExecutionMode(apiClient);
+        _instruments = await InitInstruments(apiClient);
+        await InitPortfolioData(apiClient);
 
         await base.OnParametersSetAsync();
     }
 
-    private async Task InitPortfolioData()
+    private async Task InitPortfolioData(HttpClient apiClient)
     {
-        _portfolio = await InitPortfolio();
+        _portfolio = await InitPortfolio(apiClient);
         _positions = InitPositions(_portfolio).AsQueryable();
     }
 
-    private async Task<Portfolio?> InitPortfolio()
-    {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-        var portfolio = await apiClient.GetFromJsonAsync<Portfolio?>($"api/portfolios/{PortfolioId}", JsonOptions.DefaultOptions);
-        return portfolio;
-    }
+    private async Task<Portfolio?> InitPortfolio(HttpClient apiClient)
+        => await apiClient.GetFromJsonAsync<Portfolio?>($"api/portfolios/{PortfolioId}", JsonOptions.DefaultOptions);
 
     private List<PositionModel> InitPositions(Portfolio? portfolio)
     {
@@ -80,9 +81,8 @@ public partial class PortfolioDetails
         return res;
     }
 
-    private async Task<IDictionary<Guid, Instrument>> InitInstruments()
+    private async Task<IDictionary<Guid, Instrument>> InitInstruments(HttpClient apiClient)
     {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
         var instruments = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments", JsonOptions.DefaultOptions);
         var res = new Dictionary<Guid, Instrument>();
 
@@ -98,6 +98,9 @@ public partial class PortfolioDetails
 
         return res;
     }
+
+    private async Task<bool> InitExecutionMode(HttpClient apiClient)
+        => await apiClient.GetFromJsonAsync<bool>("api/positions/simulated-order-execution", JsonOptions.DefaultOptions);
 
     private async Task HandleDeleteAction()
     {
@@ -170,9 +173,10 @@ public partial class PortfolioDetails
             return;
         }
 
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+
         try
         {
-            using var apiClient = _httpClientFactory.CreateClient("backend");
             var request = new DepositRequest(model.ComposeDate(), _portfolio.Id, model.Amount, model.Currency);
             var content = JsonContent.Create(request);
             var message = await apiClient.PutAsync("api/portfolios/deposit", content);
@@ -187,7 +191,7 @@ public partial class PortfolioDetails
 
         ToastService.ShowSuccess($"Added deposit amount: {model.Amount} ({model.Currency})");
 
-        await RefreshPage();
+        await RefreshPage(apiClient);
     }
 
     private async Task HandleOpenPositionAction()
@@ -200,10 +204,11 @@ public partial class PortfolioDetails
         var openPositionModel = new OpenPositionModel
         {
             QuantityLots = 10,
-            Price = 100,
+            Price = 0,
             InstrumentId = GetDafultInstrumentId(),
             SelectedDate = DateTime.UtcNow,
             SelectedTime = DateTime.UtcNow,
+            OrderExecutionSimulated = _simulatedExecutionMode
         };
 
         var dialog = await DialogService.ShowDialogAsync<OpenPositionDialog>(openPositionModel, new DialogParameters<OpenPositionModel>()
@@ -211,7 +216,7 @@ public partial class PortfolioDetails
             Content = openPositionModel,
             Alignment = HorizontalAlignment.Right,
             Title = "Open position",
-            PrimaryAction = "Save",
+            PrimaryAction = "Execute",
             SecondaryAction = "Cancel",
             Width = "400px",
         });
@@ -238,9 +243,10 @@ public partial class PortfolioDetails
             return;
         }
 
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+
         try
         {
-            using var apiClient = _httpClientFactory.CreateClient("backend");
             var request = new OpenRequest(model.ComposeDate(), Guid.Parse(model.InstrumentId), _portfolio.Id, model.QuantityLots, model.Price);
             var content = JsonContent.Create(request, options: JsonOptions.DefaultOptions);
             var message = await apiClient.PostAsync("api/positions/open", content);
@@ -268,7 +274,7 @@ public partial class PortfolioDetails
             return;
         }
 
-        await RefreshPage(5000);
+        await RefreshPage(apiClient, 5000);
     }
 
     private string GetDafultInstrumentId()
@@ -276,10 +282,10 @@ public partial class PortfolioDetails
             !string.IsNullOrEmpty(x.InstrumentType) &&
             !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase)).Id.ToString();
 
-    private async Task RefreshPage(int timeout = 1000)
+    private async Task RefreshPage(HttpClient apiClient, int timeout = 1000)
     {
         await Task.Delay(timeout);
-        await InitPortfolioData();
+        await InitPortfolioData(apiClient);
         await dataGrid.RefreshDataAsync(force: true);
         await operationsGrid.RefreshDataAsync();
     }

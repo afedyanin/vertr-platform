@@ -8,11 +8,23 @@
 
 @inject NavigationManager Navigation
 
-<h3>Portfolio</h3>
+<FluentStack>
+    <h3>Portfolio</h3>
+</FluentStack>
 
+<br />
 
 <FluentStack Orientation="Orientation.Horizontal">
     <FluentAnchor Href="/portfolios" Appearance="Appearance.Hypertext">Back to portfolios</FluentAnchor>
+    <FluentSpacer />
+    @if (_simulatedExecutionMode)
+    {
+        <FluentBadge Appearance="Appearance.Neutral" Fill="highlight" BackgroundColor="#ffd800;" Color="#000">Order execution: Simulated mode</FluentBadge>
+    }
+    else
+    {
+        <FluentBadge Fill="somevalue" BackgroundColor="red" Color="white">Order execution: Live trading mode</FluentBadge>
+    }
     <FluentSpacer />
     <FluentButton Appearance=Appearance.Accent
                   Title="Open position"

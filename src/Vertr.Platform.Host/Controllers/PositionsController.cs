@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common.Mediator;
 using Vertr.Platform.Host.Requests;
@@ -9,8 +11,14 @@ namespace Vertr.Platform.Host.Controllers;
 public class PositionsController : ControllerBase
 {
     private readonly IMediator _mediator;
-    public PositionsController(IMediator mediator)
+
+    private readonly OrderExecutionSettings _orderExecutionSettings;
+
+    public PositionsController(
+        IMediator mediator,
+        IOptions<OrderExecutionSettings> options)
     {
+        _orderExecutionSettings = options.Value;
         _mediator = mediator;
     }
 
@@ -96,5 +104,11 @@ public class PositionsController : ControllerBase
 
         var response = await _mediator.Send(command);
         return Ok(response);
+    }
+
+    [HttpGet("simulated-order-execution")]
+    public IActionResult GetOrderExecutionMode()
+    {
+        return Ok(_orderExecutionSettings.SimulatedExecution);
     }
 }

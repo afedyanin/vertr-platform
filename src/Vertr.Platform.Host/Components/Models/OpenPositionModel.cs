@@ -8,6 +8,8 @@ public class OpenPositionModel
 
     public DateTime? SelectedTime { get; set; }
 
+    public bool OrderExecutionSimulated { get; set; }
+
     public long QuantityLots{ get; set; }
 
     public decimal Price { get; set; }

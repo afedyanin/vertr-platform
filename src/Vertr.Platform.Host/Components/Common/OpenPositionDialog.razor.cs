@@ -12,6 +12,9 @@ public partial class OpenPositionDialog
 
     private Instrument[] _instruments = [];
 
+    private bool _selectDateDisabled => !Content.OrderExecutionSimulated;
+    private bool _selectPriceDisabled => !Content.OrderExecutionSimulated;
+
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 

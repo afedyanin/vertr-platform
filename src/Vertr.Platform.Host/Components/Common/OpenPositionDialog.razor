@@ -6,7 +6,7 @@
 <FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
 
 <FluentDialogBody>
-    <FluentDatePicker Label="Date" @bind-Value="@Content.SelectedDate" /><FluentTimePicker @bind-Value="@Content.SelectedTime" />
+    <FluentDatePicker Label="Date" Disabled=_selectDateDisabled @bind-Value="@Content.SelectedDate" /><FluentTimePicker @bind-Value="@Content.SelectedTime" Disabled=_selectDateDisabled />
 
     <FluentSelect Label="Instrument"
         TOption="string"
@@ -18,5 +18,5 @@
     </FluentSelect>
 
     <FluentNumberField @bind-Value="@Content.QuantityLots" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Qty lots:</FluentNumberField>
-    <FluentNumberField @bind-Value="@Content.Price" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Price:</FluentNumberField>
+    <FluentNumberField @bind-Value="@Content.Price" Disabled=_selectPriceDisabled Appearance="FluentInputAppearance.Filled" style="width: 100%;">Price:</FluentNumberField>
 </FluentDialogBody>

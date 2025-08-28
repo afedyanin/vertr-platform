@@ -80,6 +80,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             TimeInForceType = TimeInForceType.Unspecified,
             QuantityLots = Math.Abs(qtyLots),
             CreatedAt = createdAt,
+            PortfolioId = portfolioId,
         };
 
         var accountId = _orderExecutionSettings.AccountId;

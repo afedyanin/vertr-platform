@@ -13,4 +13,6 @@ public record class OrderTrades
     public Guid InstrumentId { get; init; }
 
     public Trade[] Trades { get; init; } = [];
+
+    public Guid? PortfolioId { get; init; }
 }

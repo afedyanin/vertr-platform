@@ -69,6 +69,7 @@ internal class OrderExecutionSimulator : IOrderExecutionSimulator
             CreatedAt = request.CreatedAt,
             Direction = response.OrderDirection,
             OrderId = response.OrderId,
+            PortfolioId = request.PortfolioId,
             Trades =
             [
                 new Trade

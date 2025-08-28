@@ -32,17 +32,24 @@ internal class OrderTradesConsumerService : DataConsumerServiceBase<OrderTrades>
     {
         _logger.LogDebug($"OrderTrades received: {data}");
 
-        // TODO: OrderTrades может прийти раньше, чем сохранится OrderResponse, поэтому может не найти портфолио !!!
-        // TODO: Нужна общая очередь для обработки респонсов по ордерам
-        var portfolioId = await _orderEventRepository.ResolvePortfolioIdByOrderId(data.OrderId);
-        var accountId = _orderExecutionSettings.AccountId;
+        var portfolioId = data.PortfolioId;
 
         if (portfolioId == null)
         {
+            portfolioId = await _orderEventRepository.ResolvePortfolioIdByOrderId(data.OrderId);
+        }
+
+        // TODO: OrderTrades может прийти раньше, чем сохранится OrderResponse, поэтому может не найти портфолио !!!
+        // TODO: Нужна общая очередь для обработки респонсов по ордерам
+        if (portfolioId == null)
+        {
             // Если не нашли portfolioId, значит ордер был выставлен в обход этого API
+            // Либо ордер еще не сохранен в БД - что вероятнее всего
             _logger.LogError($"Cannot get portfolio identity for OrderId={data.OrderId}.");
             return;
         }
+
+        var accountId = _orderExecutionSettings.AccountId;
 
         var orderEvent = OrderEventFactory.CreateEventFromOrderTrades(
             data,

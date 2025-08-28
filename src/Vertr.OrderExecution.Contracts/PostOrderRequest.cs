@@ -13,4 +13,6 @@ public record class PostOrderRequest
     public required decimal Price { get; init; }
     public required long QuantityLots { get; init; }
     public DateTime CreatedAt { get; init; }
+
+    public Guid? PortfolioId { get; init; }
 }

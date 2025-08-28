@@ -32,7 +32,7 @@ public class PositionsController : ControllerBase
             QtyLots = request.Lots,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = request.Date,
         };
 
         var response = await _mediator.Send(command);
@@ -66,10 +66,10 @@ public class PositionsController : ControllerBase
             PortfolioId = request.PortfolioId,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = request.Date,
         };
 
-        var response = await _mediator.Send (command);
+        var response = await _mediator.Send(command);
         return Ok(response);
     }
 
@@ -82,7 +82,7 @@ public class PositionsController : ControllerBase
             PortfolioId = request.PortfolioId,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = request.Date,
         };
 
         var response = await _mediator.Send(command);
@@ -99,7 +99,7 @@ public class PositionsController : ControllerBase
             QtyLots = request.Lots,
             Price = request.Price,
             RequestId = Guid.NewGuid(),
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = request.Date,
         };
 
         var response = await _mediator.Send(command);

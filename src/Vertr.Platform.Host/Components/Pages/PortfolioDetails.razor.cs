@@ -277,6 +277,116 @@ public partial class PortfolioDetails
         await RefreshPage(apiClient, 5000);
     }
 
+    private async Task HandleClosePositionAction(PositionModel positionModel)
+    {
+        if (_portfolio == null)
+        {
+            return;
+        }
+
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            $"Close position: Qty={positionModel.Position.Balance}?",
+            "Yes",
+            "No",
+            $"Postion {positionModel.Instrument.GetFullName()}");
+
+        var result = await confirmation.Result;
+
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+
+        try
+        {
+            // TODO: Use dialog to set specific time and price
+            var request = new CloseRequest(DateTime.UtcNow, positionModel.Instrument.Id, _portfolio.Id, decimal.Zero);
+            var content = JsonContent.Create(request, options: JsonOptions.DefaultOptions);
+            var message = await apiClient.PostAsync("api/positions/close", content);
+            message.EnsureSuccessStatusCode();
+            var response = await message.Content.ReadFromJsonAsync<ExecuteOrderResponse>(options: JsonOptions.DefaultOptions);
+
+            if (response == null)
+            {
+                throw new InvalidOperationException($"Invalid API response. StatusCode={message.StatusCode}");
+            }
+
+            if (!string.IsNullOrEmpty(response.OrderId))
+            {
+                ToastService.ShowSuccess($"Position closed. OrderId={response.OrderId}");
+            }
+            else if (!string.IsNullOrEmpty(response.ErrorMessage))
+            {
+                ToastService.ShowWarning($"Position is not closed! Message={response.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            DemoLogger.WriteLine($"Close position error: {ex.Message}");
+            ToastService.ShowError($"Cannot close position. Instrument={positionModel.Instrument.GetFullName()} Balance={positionModel.Position.Balance}");
+            return;
+        }
+
+        await RefreshPage(apiClient, 5000);
+    }
+
+    private async Task HandleReversePositionAction(PositionModel positionModel)
+    {
+        if (_portfolio == null)
+        {
+            return;
+        }
+
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            $"Reverse position: Qty={positionModel.Position.Balance}?",
+            "Yes",
+            "No",
+            $"Postion {positionModel.Instrument.GetFullName()}");
+
+        var result = await confirmation.Result;
+
+        if (result.Cancelled)
+        {
+            return;
+        }
+
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+
+        try
+        {
+            // TODO: Use dialog to set specific time and price
+            var request = new ReverseRequest(DateTime.UtcNow, positionModel.Instrument.Id, _portfolio.Id, decimal.Zero);
+            var content = JsonContent.Create(request, options: JsonOptions.DefaultOptions);
+            var message = await apiClient.PostAsync("api/positions/reverse", content);
+            message.EnsureSuccessStatusCode();
+            var response = await message.Content.ReadFromJsonAsync<ExecuteOrderResponse>(options: JsonOptions.DefaultOptions);
+
+            if (response == null)
+            {
+                throw new InvalidOperationException($"Invalid API response. StatusCode={message.StatusCode}");
+            }
+
+            if (!string.IsNullOrEmpty(response.OrderId))
+            {
+                ToastService.ShowSuccess($"Position reverted. OrderId={response.OrderId}");
+            }
+            else if (!string.IsNullOrEmpty(response.ErrorMessage))
+            {
+                ToastService.ShowWarning($"Position is not reverted! Message={response.ErrorMessage}");
+            }
+        }
+        catch (Exception ex)
+        {
+            DemoLogger.WriteLine($"Reverse position error: {ex.Message}");
+            ToastService.ShowError($"Cannot reverse position. Instrument={positionModel.Instrument.GetFullName()} Balance={positionModel.Position.Balance}");
+            return;
+        }
+
+        await RefreshPage(apiClient, 5000);
+    }
+
     private string GetDafultInstrumentId()
         => _instruments.Values.First(x =>
             !string.IsNullOrEmpty(x.InstrumentType) &&

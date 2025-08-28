@@ -69,6 +69,13 @@
                             RowSize="@DataGridRowSize.Medium">
                 <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true"  Title="Instrument" />
                 <PropertyColumn Property="@(p => p.Position.Balance.ToString())" Sortable="true" Title="Balance" />
+                <TemplateColumn Title="">
+                        <FluentButton Title="Close" Disabled=@context.TradingDisabled @onclick="@(async () => await @HandleClosePositionAction(context))" >Close</FluentButton>
+                </TemplateColumn>
+                <TemplateColumn Title="">
+                        <FluentButton Title="Reverse" Disabled=@context.TradingDisabled @onclick="@(async () => await HandleReversePositionAction(context))">Reverse</FluentButton>
+                </TemplateColumn>
+
             </FluentDataGrid>
         </div>
     </div>

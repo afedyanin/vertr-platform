@@ -10,14 +10,14 @@ public partial class OpenPositionDialog
     [Parameter]
     public OpenPositionModel Content { get; set; } = default!;
 
-    private Instrument[] Instruments = [];
+    private Instrument[] _instruments = [];
 
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Instruments = await InitInstruments();
+        _instruments = await InitInstruments();
         await base.OnInitializedAsync();
     }
 

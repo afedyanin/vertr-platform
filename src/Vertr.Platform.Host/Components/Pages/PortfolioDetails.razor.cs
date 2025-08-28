@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
+using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common.Utils;
 using Vertr.Platform.Host.Components.Common;
 using Vertr.Platform.Host.Components.Models;
@@ -200,9 +201,7 @@ public partial class PortfolioDetails
         {
             QuantityLots = 10,
             Price = 100,
-            Instrument = _instruments.Values.First(x =>
-                !string.IsNullOrEmpty(x.InstrumentType) &&
-                !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase)),
+            InstrumentId = GetDafultInstrumentId(),
             SelectedDate = DateTime.UtcNow,
             SelectedTime = DateTime.UtcNow,
         };
@@ -234,25 +233,48 @@ public partial class PortfolioDetails
             return;
         }
 
+        if (model.InstrumentId == null)
+        {
+            return;
+        }
+
         try
         {
             using var apiClient = _httpClientFactory.CreateClient("backend");
-            var request = new OpenRequest(model.ComposeDate(), model.Instrument.Id, _portfolio.Id, model.QuantityLots, model.Price);
-            var content = JsonContent.Create(request);
+            var request = new OpenRequest(model.ComposeDate(), Guid.Parse(model.InstrumentId), _portfolio.Id, model.QuantityLots, model.Price);
+            var content = JsonContent.Create(request, options: JsonOptions.DefaultOptions);
             var message = await apiClient.PostAsync("api/positions/open", content);
             message.EnsureSuccessStatusCode();
+            var response = await message.Content.ReadFromJsonAsync<ExecuteOrderResponse>(options: JsonOptions.DefaultOptions);
+
+            if (response == null)
+            {
+                throw new InvalidOperationException($"Invalid API response. StatusCode={message.StatusCode}");
+            }
+
+            if (!string.IsNullOrEmpty(response.OrderId))
+            {
+                ToastService.ShowSuccess($"New position opened. OrderId={response.OrderId}");
+            }
+            else if (!string.IsNullOrEmpty(response.ErrorMessage))
+            {
+                ToastService.ShowWarning($"New position is not opened! Message={response.ErrorMessage}");
+            }
         }
         catch (Exception ex)
         {
             DemoLogger.WriteLine($"Open position error: {ex.Message}");
-            ToastService.ShowError($"Cannot open position. InstrumentId={model.Instrument} Qty=({model.QuantityLots})");
+            ToastService.ShowError($"Cannot open position. InstrumentId={model.InstrumentId} Qty=({model.QuantityLots})");
             return;
         }
 
-        ToastService.ShowSuccess($"New position opened!");
-
         await RefreshPage(5000);
     }
+
+    private string GetDafultInstrumentId()
+        => _instruments.Values.First(x =>
+            !string.IsNullOrEmpty(x.InstrumentType) &&
+            !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase)).Id.ToString();
 
     private async Task RefreshPage(int timeout = 1000)
     {

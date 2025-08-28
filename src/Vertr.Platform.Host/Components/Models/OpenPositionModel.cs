@@ -1,10 +1,8 @@
-using Vertr.MarketData.Contracts;
-
 namespace Vertr.Platform.Host.Components.Models;
 
 public class OpenPositionModel
 {
-    public required Instrument Instrument { get; set; }
+    public string? InstrumentId { get; set; }
 
     public DateTime? SelectedDate { get; set; } = DateTime.UtcNow;
 

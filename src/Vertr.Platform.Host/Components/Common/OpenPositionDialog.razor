@@ -8,12 +8,14 @@
 <FluentDialogBody>
     <FluentDatePicker Label="Date" @bind-Value="@Content.SelectedDate" /><FluentTimePicker @bind-Value="@Content.SelectedTime" />
 
-    <FluentSelect TOption="Instrument"
-                  Label="Instrument"
-                  Items="@Instruments"
-                  OptionValue="@(p => p.Id.ToString())"
-                  OptionText="@(p => $"{p.GetFullName()})")"
-                  @bind-SelectedOption="@Content.Instrument" />
+    <FluentSelect Label="Instrument"
+        TOption="string"
+        @bind-Value="@Content.InstrumentId">
+        @foreach (var item in _instruments)
+        {
+            <FluentOption Value="@item.Id.ToString()" Selected=@(Content.InstrumentId != null && item.Id.ToString() == Content.InstrumentId)>@item.GetFullName()</FluentOption>
+        }
+    </FluentSelect>
 
     <FluentNumberField @bind-Value="@Content.QuantityLots" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Qty lots:</FluentNumberField>
     <FluentNumberField @bind-Value="@Content.Price" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Price:</FluentNumberField>

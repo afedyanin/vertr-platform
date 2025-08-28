@@ -1,7 +1,13 @@
 # 2025-08-28
+
+- в емулатед моде не работает реверс - 
+
+fail: Vertr.OrderExecution.Application.Services.OrderTradesConsumerService[0]
+      Cannot get portfolio identity for OrderId=cb857858-f73d-4abd-94d2-d4d500a55d91.
+- не приходит операция по трейдам, однако комиссия приходит
+
 - add select portfolio into strategy dialog
 - add select portfolio into backtest dialog
-
 
 - доработать UI под разные разрешения монитора (responsive)
 - темы

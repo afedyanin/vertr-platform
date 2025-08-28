@@ -284,15 +284,38 @@ public partial class PortfolioDetails
             return;
         }
 
-        var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Close position: Qty={positionModel.Position.Balance}?",
-            "Yes",
-            "No",
-            $"Postion {positionModel.Instrument.GetFullName()}");
+        var closePositionModel = new CloseReversePostionModel
+        {
+            Price = 0,
+            Instrument = positionModel.Instrument,
+            Balance = positionModel.Position.Balance,
+            SelectedDate = DateTime.UtcNow,
+            SelectedTime = DateTime.UtcNow,
+            OrderExecutionSimulated = _simulatedExecutionMode
+        };
 
-        var result = await confirmation.Result;
+        var dialog = await DialogService.ShowDialogAsync<CloseReversePositionDialog>(closePositionModel, new DialogParameters<CloseReversePostionModel>()
+        {
+            Content = closePositionModel,
+            Alignment = HorizontalAlignment.Right,
+            Title = "Close position",
+            PrimaryAction = "Execute",
+            SecondaryAction = "Cancel",
+        });
+
+        var result = await dialog.Result;
 
         if (result.Cancelled)
+        {
+            return;
+        }
+
+        if (result.Data is null)
+        {
+            return;
+        }
+
+        if (result.Data is not CloseReversePostionModel model)
         {
             return;
         }
@@ -301,8 +324,7 @@ public partial class PortfolioDetails
 
         try
         {
-            // TODO: Use dialog to set specific time and price
-            var request = new CloseRequest(DateTime.UtcNow, positionModel.Instrument.Id, _portfolio.Id, decimal.Zero);
+            var request = new CloseRequest(model.ComposeDate(), positionModel.Instrument.Id, _portfolio.Id, model.Price);
             var content = JsonContent.Create(request, options: JsonOptions.DefaultOptions);
             var message = await apiClient.PostAsync("api/positions/close", content);
             message.EnsureSuccessStatusCode();
@@ -339,15 +361,38 @@ public partial class PortfolioDetails
             return;
         }
 
-        var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Reverse position: Qty={positionModel.Position.Balance}?",
-            "Yes",
-            "No",
-            $"Postion {positionModel.Instrument.GetFullName()}");
+        var closePositionModel = new CloseReversePostionModel
+        {
+            Price = 0,
+            Instrument = positionModel.Instrument,
+            Balance = positionModel.Position.Balance,
+            SelectedDate = DateTime.UtcNow,
+            SelectedTime = DateTime.UtcNow,
+            OrderExecutionSimulated = _simulatedExecutionMode
+        };
 
-        var result = await confirmation.Result;
+        var dialog = await DialogService.ShowDialogAsync<CloseReversePositionDialog>(closePositionModel, new DialogParameters<CloseReversePostionModel>()
+        {
+            Content = closePositionModel,
+            Alignment = HorizontalAlignment.Right,
+            Title = "Reverse position",
+            PrimaryAction = "Execute",
+            SecondaryAction = "Cancel",
+        });
+
+        var result = await dialog.Result;
 
         if (result.Cancelled)
+        {
+            return;
+        }
+
+        if (result.Data is null)
+        {
+            return;
+        }
+
+        if (result.Data is not CloseReversePostionModel model)
         {
             return;
         }
@@ -356,8 +401,7 @@ public partial class PortfolioDetails
 
         try
         {
-            // TODO: Use dialog to set specific time and price
-            var request = new ReverseRequest(DateTime.UtcNow, positionModel.Instrument.Id, _portfolio.Id, decimal.Zero);
+            var request = new ReverseRequest(model.ComposeDate(), positionModel.Instrument.Id, _portfolio.Id, model.Price);
             var content = JsonContent.Create(request, options: JsonOptions.DefaultOptions);
             var message = await apiClient.PostAsync("api/positions/reverse", content);
             message.EnsureSuccessStatusCode();

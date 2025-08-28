@@ -1,0 +1,13 @@
+@using Vertr.MarketData.Contracts
+@using Vertr.Platform.Host.Components.Models
+
+@implements IDialogContentComponent<CloseReversePostionModel>
+
+<FluentMessageBarProvider Section="@App.MESSAGES_DIALOG" MaxMessageCount="1" />
+
+<FluentDialogBody>
+    <FluentDatePicker Label="Date" Disabled=_selectDateDisabled @bind-Value="@Content.SelectedDate" /><FluentTimePicker @bind-Value="@Content.SelectedTime" Disabled=_selectDateDisabled />
+    <FluentTextField Value="@Content.Instrument.GetFullName()" Disabled>Instrument:</FluentTextField>
+    <FluentNumberField Value="@Content.Balance" Disabled Appearance="FluentInputAppearance.Filled" style="width: 100%;">Balance:</FluentNumberField>
+    <FluentNumberField @bind-Value="@Content.Price" Disabled=_selectPriceDisabled Appearance="FluentInputAppearance.Filled" style="width: 100%;">Price:</FluentNumberField>
+</FluentDialogBody>

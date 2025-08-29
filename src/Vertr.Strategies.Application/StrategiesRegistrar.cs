@@ -13,7 +13,15 @@ public static class StrategiesRegistrar
         services.RegisterDataChannel<Candle>();
         services.RegisterDataChannel<TradingSignal>();
 
-        services.AddSingleton<IStrategyRepository, StrategyRepository>(sp => new StrategyRepository(sp));
+        services.AddSingleton<IStrategyRepository, StrategyRepository>(serviceProvider =>
+        {
+            var repo = new StrategyRepository(serviceProvider);
+
+            // TODO: make async
+            repo.InitializeAsync().GetAwaiter().GetResult();
+            return repo;
+        });
+
         services.AddSingleton<IStrategyFactory, StrategyFactory>();
         services.AddHostedService<CandlesConsumerService>();
 

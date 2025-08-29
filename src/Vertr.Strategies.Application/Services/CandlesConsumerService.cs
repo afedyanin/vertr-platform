@@ -21,9 +21,14 @@ internal class CandlesConsumerService : DataConsumerServiceBase<Candle>
 
     protected override async Task Handle(Candle data, CancellationToken cancellationToken = default)
     {
-        _logger.LogDebug($"New Candle received: InstrumentId={data.InstrumentId}");
+        _logger.LogInformation($"New Candle received: InstrumentId={data.InstrumentId}");
 
         var activeStrategies = await _strategyRepository.GetActiveStrategies();
+
+        if (activeStrategies.Length == 0)
+        {
+            _logger.LogWarning($"No active strategies found!");
+        }
 
         // TODO: Use parallel foreach
         foreach (var strategy in activeStrategies)
@@ -33,6 +38,8 @@ internal class CandlesConsumerService : DataConsumerServiceBase<Candle>
                 continue;
             }
 
+
+            _logger.LogInformation($"Executing strategy Id={strategy.Id} for InstrumentId={data.InstrumentId}");
             await strategy.HandleMarketData(data, cancellationToken);
         }
     }

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
@@ -8,13 +9,16 @@ namespace Vertr.OrderExecution.Application.CommandHandlers;
 
 internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<ReversePositionRequest, ExecuteOrderResponse>
 {
+    private readonly ILogger<ReversePositionHandler> _logger;
     public ReversePositionHandler(
         IMediator mediator,
         IPortfolioRepository portfolioProvider,
         IInstrumentsRepository staticMarketDataProvider,
-        IOptions<OrderExecutionSettings> options) :
+        IOptions<OrderExecutionSettings> options,
+        ILogger<ReversePositionHandler> logger) :
         base(mediator, portfolioProvider, staticMarketDataProvider, options)
     {
+        _logger = logger;
     }
 
     public async Task<ExecuteOrderResponse> Handle(
@@ -32,6 +36,15 @@ internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<Revers
         }
 
         var lotsToRevert = currentLots * -2L;
+
+        // TODO: Remove me
+        _logger.LogDebug($"CurrentLots={currentLots} LotsToRevert={lotsToRevert}");
+
+        // TODO: Remove me
+        if (Math.Abs(lotsToRevert) > 100)
+        {
+            throw new InvalidOperationException($"Lot size maximum exceeded. CurrentLots={currentLots} LotsToRevert={lotsToRevert}");
+        }
 
         var orderRequest = new ExecuteOrderRequest
         {

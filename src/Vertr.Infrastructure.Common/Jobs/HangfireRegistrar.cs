@@ -24,7 +24,7 @@ public static class HangfireRegistrar
                     {
                         PrepareSchemaIfNecessary = true,
                         QueuePollInterval = TimeSpan.FromSeconds(5),
-                        InvisibilityTimeout = TimeSpan.FromMinutes(1),
+                        InvisibilityTimeout = TimeSpan.FromDays(1),
                         JobExpirationCheckInterval = TimeSpan.FromHours(2),
                     }
         ));

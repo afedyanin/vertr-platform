@@ -61,13 +61,13 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
 
         try
         {
-            _logger.LogInformation($"Starting backtest Id={bt.Id}.");
-
             var strategy = _strategyFactory.Create(strategyMeta, _serviceProvider);
             await strategy.OnStart(bt, cancellationToken);
 
             var day = DateOnly.FromDateTime(bt.From);
             var dayTo = DateOnly.FromDateTime(bt.To);
+
+            _logger.LogWarning($"Starting backtest Id={bt.Id}. From={day} To={dayTo}");
 
             while (day <= dayTo)
             {
@@ -82,17 +82,18 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
                     break;
                 }
 
-                day.AddDays(1);
+                day = day.AddDays(1);
             }
 
             await strategy.OnStop(cancellationToken);
 
+            bt = await _backtestRepository.GetById(bt.Id);
             if (bt != null && bt.ExecutionState == ExecutionState.InProgress)
             {
                 await SetCompleted(bt);
             }
 
-            _logger.LogInformation($"Backtest Id={bt?.Id} completed.");
+            _logger.LogInformation($"Backtest Id={bt?.Id} completed. State={bt?.ExecutionState}");
         }
         catch (Exception ex)
         {
@@ -142,7 +143,9 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
                 continue;
             }
 
+            _logger.LogInformation($"Backtest Id={bt.Id} Processing step: TimeUtc={candle.TimeUtc:O}");
             await strategy.HandleMarketData(candle, cancellationToken);
+            await Task.Delay(100);
         }
 
         return true;
@@ -177,8 +180,13 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         await _backtestRepository.Save(backtest);
     }
 
-    private async Task SetCompleted(BacktestRun backtest)
+    private async Task SetCompleted(BacktestRun? backtest)
     {
+        if (backtest == null)
+        {
+            return;
+        }
+
         backtest.ExecutionState = ExecutionState.Completed;
         backtest.ProgressMessage = "Backtest completed.";
         backtest.UpdatedAt = DateTime.UtcNow;

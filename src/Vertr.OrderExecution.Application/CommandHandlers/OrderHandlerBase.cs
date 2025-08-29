@@ -19,8 +19,7 @@ internal abstract class OrderHandlerBase
         IMediator mediator,
         IPortfolioRepository portfolioProvider,
         IInstrumentsRepository instrumentsRepository,
-        IOptions<OrderExecutionSettings> options
-        )
+        IOptions<OrderExecutionSettings> options)
     {
         Mediator = mediator;
         _portfolioProvider = portfolioProvider;
@@ -28,6 +27,7 @@ internal abstract class OrderHandlerBase
         _orderExecutionSettings = options.Value;
     }
 
+    // TODO: Use position cache
     protected async Task<long> GetCurrentPositionInLots(
         Guid portfolioId,
         Guid instrumentId)
@@ -36,14 +36,7 @@ internal abstract class OrderHandlerBase
 
         if (portfolio == null)
         {
-            return 0L;
-        }
-
-        var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == instrumentId);
-
-        if (position == null)
-        {
-            return 0L;
+            throw new InvalidOperationException($"Cannot find potfolio with id={portfolioId}");
         }
 
         var instrument = await _instrumentsRepository.GetById(instrumentId);
@@ -58,6 +51,15 @@ internal abstract class OrderHandlerBase
             throw new InvalidOperationException($"Cannot determine lot size for instrument with Id={instrumentId}");
         }
 
-        return (long)(position.Balance / instrument.LotSize);
+        var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == instrumentId);
+
+        if (position == null)
+        {
+            return 0L;
+        }
+
+        var pos = (long)(position.Balance / instrument.LotSize);
+
+        return pos;
     }
 }

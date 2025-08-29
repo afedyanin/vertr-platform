@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
@@ -8,13 +9,17 @@ namespace Vertr.OrderExecution.Application.CommandHandlers;
 
 internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingSignalRequest, ExecuteOrderResponse>
 {
+    private readonly ILogger<TradingSignalHandler> _logger;
+
     public TradingSignalHandler(
         IMediator mediator,
         IPortfolioRepository portfolioProvider,
         IInstrumentsRepository staticMarketDataProvider,
-        IOptions<OrderExecutionSettings> options) :
+        IOptions<OrderExecutionSettings> options,
+        ILogger<TradingSignalHandler> logger) :
         base(mediator, portfolioProvider, staticMarketDataProvider, options)
     {
+        _logger = logger;
     }
 
     public async Task<ExecuteOrderResponse> Handle(

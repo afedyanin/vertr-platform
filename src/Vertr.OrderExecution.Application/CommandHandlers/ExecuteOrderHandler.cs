@@ -38,7 +38,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
 
     public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Handling ExecuteOrder request PortfolioId={request.PortfolioId}");
+        _logger.LogDebug($"Handling ExecuteOrder request PortfolioId={request.PortfolioId}");
 
         var orderId = await PostMarketOrder(
             request.RequestId,
@@ -100,7 +100,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
             return null;
         }
 
-        _logger.LogInformation($"Posting new market order. RequestId={requestId}");
+        _logger.LogDebug($"Posting new market order. RequestId={requestId}");
 
         PostOrderResponse? response = null;
 

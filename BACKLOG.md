@@ -1,3 +1,15 @@
+# 2025-08-29
+
+- implement position cache
+- prevent new order execution before finish previous processing?
+- fix backtest workflow - cahnnel closed event 
+- профилирование воркфлоу бэктеста на прдемет батлнеков по производительности
+- добавлять к бэктесту портфолио автоматически (чекбокс)
+- на списке портфелей переключалка(фильтр) - бэктест/реал портфолио
+- добавить линк в детали портфеля на бэктесте
+- добавить линк в детали портфеля на стратегии
+
+
 # 2025-08-28
 
 - add select portfolio into strategy dialog

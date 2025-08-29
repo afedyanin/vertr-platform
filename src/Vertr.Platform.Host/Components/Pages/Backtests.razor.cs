@@ -5,6 +5,7 @@ using Vertr.Backtest.Contracts.Commands;
 using Vertr.Platform.Common.Utils;
 using Vertr.Platform.Host.Components.Common;
 using Vertr.Platform.Host.Components.Models;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.Host.Components.Pages;
@@ -19,14 +20,20 @@ public partial class Backtests
 
     private IDictionary<Guid, StrategyMetadata> _strategies { get; set; }
 
+    private IDictionary<Guid, Portfolio> _portfolios { get; set; }
+
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+
+        _portfolios = await InitPortfolios(apiClient);
+        _strategies = await InitStrategies(apiClient);
+        _backtests = await InitBacktests(apiClient);
+
         await base.OnInitializedAsync();
-        _strategies = await InitStrategies();
-        _backtests = await InitBacktests();
     }
 
     private async Task HandleCellClick(FluentDataGridCell<BacktestModel> cell)
@@ -44,7 +51,9 @@ public partial class Backtests
             await Task.Delay(delay.Value);
         }
 
-        _backtests = await InitBacktests();
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+
+        _backtests = await InitBacktests(apiClient);
         await dataGrid.RefreshDataAsync(force: true);
     }
 
@@ -53,9 +62,12 @@ public partial class Backtests
     private async Task OpenDialogAsync()
     {
         var strategy = _strategies.Values.First();
+        var portfolio = _portfolios.Values.First();
+
         var initialModel = new BacktestModel()
         {
             Strategy = strategy,
+            Portfolio = portfolio,
             Backtest = new BacktestRun
             {
                 Id = Guid.NewGuid(),
@@ -189,9 +201,8 @@ public partial class Backtests
         }
     }
 
-    private async Task<IQueryable<BacktestModel>> InitBacktests()
+    private async Task<IQueryable<BacktestModel>> InitBacktests(HttpClient apiClient)
     {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
         var backtests = await apiClient.GetFromJsonAsync<BacktestRun[]>("api/backtests", JsonOptions.DefaultOptions);
 
         if (backtests == null)
@@ -203,25 +214,32 @@ public partial class Backtests
 
         foreach (var backtest in backtests)
         {
-            if (_strategies.TryGetValue(backtest.StrategyId, out var strategy))
+            if (!_strategies.TryGetValue(backtest.StrategyId, out var strategy))
             {
-                var item = new BacktestModel
-                {
-                    Backtest = backtest,
-                    Strategy = strategy,
-                };
-
-                modelItems.Add(item);
+                continue;
             }
+
+            if (!_portfolios.TryGetValue(backtest.PortfolioId, out var portfolio))
+            {
+                continue;
+            }
+
+            var item = new BacktestModel
+            {
+                Backtest = backtest,
+                Strategy = strategy,
+                Portfolio = portfolio
+            };
+
+            modelItems.Add(item);
         }
 
         var res = modelItems?.AsQueryable() ?? Array.Empty<BacktestModel>().AsQueryable();
         return res;
     }
 
-    private async Task<IDictionary<Guid, StrategyMetadata>> InitStrategies()
+    private async Task<IDictionary<Guid, StrategyMetadata>> InitStrategies(HttpClient apiClient)
     {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
         var strategies = await apiClient.GetFromJsonAsync<StrategyMetadata[]>("api/strategies", JsonOptions.DefaultOptions);
         var res = new Dictionary<Guid, StrategyMetadata>();
 
@@ -237,6 +255,25 @@ public partial class Backtests
 
         return res;
     }
+
+    private async Task<IDictionary<Guid, Portfolio>> InitPortfolios(HttpClient apiClient)
+    {
+        var portfolios = await apiClient.GetFromJsonAsync<Portfolio[]>("api/portfolios", JsonOptions.DefaultOptions);
+        var res = new Dictionary<Guid, Portfolio>();
+
+        if (portfolios == null)
+        {
+            return res;
+        }
+
+        foreach (var portfolio in portfolios)
+        {
+            res[portfolio.Id] = portfolio;
+        }
+
+        return res;
+    }
+
 
     private async Task<bool> StartBacktest(Guid backtestId)
     {
@@ -278,7 +315,7 @@ public partial class Backtests
                 From = backtestModel.ComposeDateFrom(),
                 To = backtestModel.ComposeDateTo(),
                 StrategyId = backtestModel.Strategy.Id,
-                PortfolioId = backtestModel.Backtest.PortfolioId,
+                PortfolioId = backtestModel.Portfolio.Id,
                 StartImmediately = backtestModel.StartImmediately,
             };
 

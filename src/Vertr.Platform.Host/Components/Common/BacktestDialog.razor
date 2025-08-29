@@ -1,6 +1,7 @@
 @using Vertr.MarketData.Contracts
 @using Vertr.Platform.Host.Components.Models
 @using Vertr.Strategies.Contracts
+@using Vertr.PortfolioManager.Contracts;
 
 @implements IDialogContentComponent<BacktestModel>
 
@@ -18,6 +19,12 @@
                   OptionText="@(p => p.Name)"
                   @bind-SelectedOption="@Content.Strategy" />
 
-    <FluentTextField Value="@Content.Backtest.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
+    <FluentSelect TOption="Portfolio"
+                  Label="Portfolio"
+                  Items="@AllPortfolios"
+                  OptionValue="@(p => p.Id.ToString())"
+                  OptionText="@(p => p.Name ?? "<unnamed>")"
+                  @bind-SelectedOption="@Content.Portfolio" />
+
     <FluentCheckbox @bind-Value="@Content.StartImmediately" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Start Immediately"></FluentCheckbox>
 </FluentDialogBody>

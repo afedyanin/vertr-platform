@@ -1,4 +1,5 @@
 using Vertr.Backtest.Contracts;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.Host.Components.Models;
@@ -8,6 +9,8 @@ public class BacktestModel
     public required BacktestRun Backtest { get; init; }
 
     public required StrategyMetadata Strategy { get; set; }
+
+    public required Portfolio Portfolio { get; set; }
 
     public bool StartImmediately { get; set; }
 

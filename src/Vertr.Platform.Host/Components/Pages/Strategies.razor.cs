@@ -4,6 +4,7 @@ using Vertr.MarketData.Contracts;
 using Vertr.Platform.Common.Utils;
 using Vertr.Platform.Host.Components.Common;
 using Vertr.Platform.Host.Components.Models;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.Host.Components.Pages;
@@ -21,15 +22,20 @@ public partial class Strategies
 
     private IDictionary<Guid, Instrument> _instruments { get; set; }
 
+    private IDictionary<Guid, Portfolio> _portfolios { get; set; }
+
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
+        using var apiClient = _httpClientFactory.CreateClient("backend");
 
-        _instruments = await InitInstruments();
-        _strategies = await InitStrategies();
+        _instruments = await InitInstruments(apiClient);
+        _portfolios = await InitPortfolios(apiClient);
+        _strategies = await InitStrategies(apiClient);
+
+        await base.OnInitializedAsync();
     }
 
     private async Task HandleCellClick(FluentDataGridCell<StrategyModel> cell)
@@ -43,14 +49,16 @@ public partial class Strategies
     private async Task AddStrategyAsync()
     {
         var instrument = _instruments.Values.First();
+        var portfolio = _portfolios.Values.First();
 
         var model = new StrategyModel()
         {
             Instrument = instrument,
+            Portfolio = portfolio,
             Strategy = new StrategyMetadata
             {
                 Id = Guid.NewGuid(),
-                PortfolioId = Guid.NewGuid(),
+                PortfolioId = portfolio.Id,
                 CreatedAt = DateTime.UtcNow,
                 InstrumentId = instrument.Id,
                 Type = StrategyType.RandomWalk,
@@ -65,6 +73,8 @@ public partial class Strategies
 
     private async Task OpenPanelRightAsync(StrategyModel strategyModel)
     {
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+
         _dialog = await DialogService.ShowPanelAsync<StrategyPanel>(strategyModel, new DialogParameters<StrategyModel>()
         {
             Content = strategyModel,
@@ -80,7 +90,7 @@ public partial class Strategies
         if (result.Cancelled)
         {
             // TODO: implement discard changes
-            _strategies = await InitStrategies();
+            _strategies = await InitStrategies(apiClient);
             await dataGrid.RefreshDataAsync(force: true);
             return;
         }
@@ -97,6 +107,8 @@ public partial class Strategies
         }
 
         model.Strategy.InstrumentId = model.Instrument.Id;
+        model.Strategy.PortfolioId = model.Portfolio.Id;
+
         var saved = await SaveStrategy(model.Strategy);
         if (saved)
         {
@@ -107,13 +119,12 @@ public partial class Strategies
             DemoLogger.WriteLine($"Saving strategy {model.Strategy.Name} FAILED!");
         }
 
-        _strategies = await InitStrategies();
+        _strategies = await InitStrategies(apiClient);
         await dataGrid.RefreshDataAsync(force: true);
     }
 
-    private async Task<IDictionary<Guid, Instrument>> InitInstruments()
+    private async Task<IDictionary<Guid, Instrument>> InitInstruments(HttpClient apiClient)
     {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
         var instruments = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments", JsonOptions.DefaultOptions);
         var res = new Dictionary<Guid, Instrument>();
 
@@ -130,9 +141,26 @@ public partial class Strategies
         return res;
     }
 
-    private async Task<IQueryable<StrategyModel>> InitStrategies()
+    private async Task<IDictionary<Guid, Portfolio>> InitPortfolios(HttpClient apiClient)
     {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
+        var portfolios = await apiClient.GetFromJsonAsync<Portfolio[]>("api/portfolios", JsonOptions.DefaultOptions);
+        var res = new Dictionary<Guid, Portfolio>();
+
+        if (portfolios == null)
+        {
+            return res;
+        }
+
+        foreach (var portfolio in portfolios)
+        {
+            res[portfolio.Id] = portfolio;
+        }
+
+        return res;
+    }
+
+    private async Task<IQueryable<StrategyModel>> InitStrategies(HttpClient apiClient)
+    {
         var strategies = await apiClient.GetFromJsonAsync<StrategyMetadata[]>("api/strategies", JsonOptions.DefaultOptions);
 
         if (strategies == null)
@@ -144,16 +172,26 @@ public partial class Strategies
 
         foreach (var strategy in strategies)
         {
-            if (_instruments.TryGetValue(strategy.InstrumentId, out var instrument))
+            if (!_instruments.TryGetValue(strategy.InstrumentId, out var instrument))
             {
-                var item = new StrategyModel
-                {
-                    Strategy = strategy,
-                    Instrument = instrument,
-                };
-
-                modelItems.Add(item);
+                // Instrument is not found
+                continue;
             }
+
+            if (!_portfolios.TryGetValue(strategy.PortfolioId, out var portfolio))
+            {
+                // Portfolio is not found
+                continue;
+            }
+
+            var item = new StrategyModel
+            {
+                Strategy = strategy,
+                Instrument = instrument,
+                Portfolio = portfolio
+            };
+
+            modelItems.Add(item);
         }
 
         var res = modelItems?.AsQueryable() ?? Array.Empty<StrategyModel>().AsQueryable();
@@ -196,7 +234,7 @@ public partial class Strategies
         var message = await apiClient.DeleteAsync($"api/strategies/{model.Strategy.Id}");
         message.EnsureSuccessStatusCode();
 
-        _strategies = await InitStrategies();
+        _strategies = await InitStrategies(apiClient);
         await dataGrid.RefreshDataAsync(force: true);
 
         DemoLogger.WriteLine($"Strategy {model.Strategy.Name} is deleted.");

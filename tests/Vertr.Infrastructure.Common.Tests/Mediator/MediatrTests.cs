@@ -4,6 +4,8 @@ using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.Infrastructure.Common.Tests.Mediator;
 
+[TestFixture(Category = "Unit")]
+
 public class MediatrTests
 {
     [Test]

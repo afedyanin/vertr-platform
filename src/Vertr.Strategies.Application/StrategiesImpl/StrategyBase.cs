@@ -1,15 +1,18 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.Backtest.Contracts;
 using Vertr.MarketData.Contracts;
-using Vertr.Platform.Common.Channels;
+using Vertr.OrderExecution.Contracts.Commands;
+using Vertr.Platform.Common.Mediator;
 using Vertr.Strategies.Contracts;
 using Vertr.Strategies.Contracts.Interfaces;
 
 namespace Vertr.Strategies.Application.StrategiesImpl;
 internal abstract class StrategyBase : IStrategy
 {
-    private readonly IDataProducer<TradingSignal> _tradingSignalProducer;
     private readonly ITradingSignalRepository _tradingSignalRepository;
+    private readonly IMediator _mediator;
+
+    private Candle? _lastProcessedCandle;
 
     protected IServiceProvider ServiceProvider { get; private set; }
 
@@ -26,16 +29,33 @@ internal abstract class StrategyBase : IStrategy
     protected StrategyBase(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
-        _tradingSignalProducer = ServiceProvider.GetRequiredService<IDataProducer<TradingSignal>>();
         _tradingSignalRepository = ServiceProvider.GetRequiredService<ITradingSignalRepository>();
+        _mediator = ServiceProvider.GetRequiredService<IMediator>();
     }
 
     public virtual async Task HandleMarketData(Candle candle, CancellationToken cancellationToken = default)
     {
+        _lastProcessedCandle = candle;
+
         var tradingSignal = CreateTradingSignal(candle);
 
-        await _tradingSignalRepository.Save(tradingSignal);
-        await _tradingSignalProducer.Produce(tradingSignal, cancellationToken);
+        if (!tradingSignal.BacktestId.HasValue)
+        {
+            _ = await _tradingSignalRepository.Save(tradingSignal);
+        }
+
+        var command = new TradingSignalRequest
+        {
+            RequestId = tradingSignal.Id,
+            InstrumentId = tradingSignal.InstrumentId,
+            QtyLots = tradingSignal.QtyLots,
+            PortfolioId = tradingSignal.PortfolioId,
+            BacktestId = tradingSignal.BacktestId,
+            CreatedAt = tradingSignal.CreatedAt,
+            Price = tradingSignal.Price,
+        };
+
+        _ = await _mediator.Send(command, cancellationToken);
     }
 
     public abstract TradingSignal CreateTradingSignal(Candle candle);
@@ -53,9 +73,19 @@ internal abstract class StrategyBase : IStrategy
         return Task.CompletedTask;
     }
 
-    public virtual Task OnStop(CancellationToken cancellationToken = default)
+    public virtual async Task OnStop(CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        var command = new ClosePositionRequest
+        {
+            RequestId = Guid.NewGuid(),
+            InstrumentId = InstrumentId,
+            PortfolioId = PortfolioId,
+            BacktestId = BacktestId,
+            CreatedAt = _lastProcessedCandle?.TimeUtc ?? DateTime.UtcNow,
+            Price = _lastProcessedCandle?.Close ?? decimal.Zero,
+        };
+
+        await _mediator.Send(command);
     }
 
     public virtual void Dispose()

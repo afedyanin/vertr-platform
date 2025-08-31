@@ -3,7 +3,6 @@ using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common.Mediator;
-using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;

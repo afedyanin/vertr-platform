@@ -2,7 +2,7 @@ using System.Collections.Concurrent;
 using Vertr.Platform.Common.Awating;
 
 namespace Vertr.Infrastructure.Common.Awaiting;
-internal class AwatingService<T> : IAwatingService<T> where T : struct
+public class AwatingService<T> : IAwatingService<T> where T : struct
 {
     private readonly ConcurrentDictionary<T, TaskCompletionSource<T>> _commands = [];
 

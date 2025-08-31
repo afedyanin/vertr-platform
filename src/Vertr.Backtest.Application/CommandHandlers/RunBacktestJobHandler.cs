@@ -145,8 +145,9 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
             }
 
             _logger.LogDebug($"Backtest Id={bt.Id} Processing step: TimeUtc={candle.TimeUtc:O}");
+            // TODO: Collect execution metrics
             await strategy.HandleMarketData(candle, cancellationToken);
-            await Task.Delay(100);
+            //await Task.Delay(100);
         }
 
         return true;

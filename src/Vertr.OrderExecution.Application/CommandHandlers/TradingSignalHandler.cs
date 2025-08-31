@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.Platform.Common.Mediator;
+using Vertr.PortfolioManager.Contracts;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
@@ -10,16 +11,19 @@ namespace Vertr.OrderExecution.Application.CommandHandlers;
 internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingSignalRequest, ExecuteOrderResponse>
 {
     private readonly ILogger<TradingSignalHandler> _logger;
+    private readonly IPortfolioAwatingService _portfolioAwatingService;
 
     public TradingSignalHandler(
         IMediator mediator,
         IPortfolioRepository portfolioProvider,
         IInstrumentsRepository staticMarketDataProvider,
+        IPortfolioAwatingService portfolioAwatingService,
         IOptions<OrderExecutionSettings> options,
         ILogger<TradingSignalHandler> logger) :
         base(mediator, portfolioProvider, staticMarketDataProvider, options)
     {
         _logger = logger;
+        _portfolioAwatingService = portfolioAwatingService;
     }
 
     public async Task<ExecuteOrderResponse> Handle(
@@ -34,6 +38,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
             };
         }
 
+        // Нужно синхронизировать обрабтку сингалов с обновлением портфеля
         var currentLots = await GetCurrentPositionInLots(request.PortfolioId, request.InstrumentId);
 
         if (currentLots == 0L)
@@ -49,6 +54,13 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
             };
 
             var openResponse = await Mediator.Send(openRequest, cancellationToken);
+
+            // TODO: Refactor this
+            if (request.BacktestId.HasValue)
+            {
+                _logger.LogDebug($"Open position: Sart awaitng process portfolio: Id={request.PortfolioId}");
+                await _portfolioAwatingService.WaitToComplete(request.PortfolioId, cancellationToken);
+            }
 
             return new ExecuteOrderResponse()
             {
@@ -78,6 +90,13 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
         };
 
         var reverseResponse = await Mediator.Send(reverseRequest, cancellationToken);
+
+        // TODO: Refactor this
+        if (request.BacktestId.HasValue)
+        {
+            _logger.LogDebug($"Reverse position: Sart awaitng process portfolio: Id={request.PortfolioId}");
+            await _portfolioAwatingService.WaitToComplete(request.PortfolioId, cancellationToken);
+        }
 
         return new ExecuteOrderResponse()
         {

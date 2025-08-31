@@ -14,15 +14,18 @@ internal class ApplyOperationRequest : IRequest
 internal class ApplyOpeationHandler : IRequestHandler<ApplyOperationRequest>
 {
     private readonly IPortfolioRepository _portfolioRepository;
+    private readonly IPortfolioAwatingService _portfolioAwatingService;
     private readonly ICurrencyRepository _currencyRepository;
     private readonly ILogger<ApplyOpeationHandler> _logger;
 
     public ApplyOpeationHandler(
         IPortfolioRepository portfolioRepository,
+        IPortfolioAwatingService portfolioAwatingService,
         ICurrencyRepository currencyRepository,
         ILogger<ApplyOpeationHandler> logger)
     {
         _portfolioRepository = portfolioRepository;
+        _portfolioAwatingService = portfolioAwatingService;
         _currencyRepository = currencyRepository;
         _logger = logger;
     }
@@ -73,6 +76,13 @@ internal class ApplyOpeationHandler : IRequestHandler<ApplyOperationRequest>
 
         portfolio.UpdatedAt = operation.CreatedAt;
         await _portfolioRepository.Save(portfolio);
+
+        // TODO: Refactor this
+        if (IsPositionOperation(operation) && portfolio.IsBacktest)
+        {
+            _logger.LogDebug($"Process portfolio completed. Id={portfolio.Id}");
+            _portfolioAwatingService.SetCompleted(portfolio.Id);
+        }
     }
 
     private static Position GetOrCreatePosition(Portfolio portfolio, Guid instrumentId)
@@ -120,4 +130,8 @@ internal class ApplyOpeationHandler : IRequestHandler<ApplyOperationRequest>
 
         return currencyId;
     }
+
+    private bool IsPositionOperation(TradeOperation operation)
+        => operation.OperationType is TradeOperationType.Sell ||
+        operation.OperationType is TradeOperationType.Buy;
 }

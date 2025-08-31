@@ -10,7 +10,7 @@ public class BacktestModel
 
     public required StrategyMetadata Strategy { get; set; }
 
-    public required Portfolio Portfolio { get; set; }
+    public Portfolio? Portfolio { get; set; }
 
     public bool StartImmediately { get; set; }
 

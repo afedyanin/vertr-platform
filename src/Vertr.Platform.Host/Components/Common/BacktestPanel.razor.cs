@@ -12,6 +12,7 @@ public partial class BacktestPanel
     [CascadingParameter]
     public FluentDialog? Dialog { get; set; }
 
+    private string _portfolioDeatilsLink => $"/portfolios/details/{Content?.Portfolio?.Id}";
     private bool CancelDiasbled => Content.Backtest.ExecutionState
         is not Backtest.Contracts.ExecutionState.InProgress
         || Content.Backtest.IsCancellationRequested;

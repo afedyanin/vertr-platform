@@ -62,12 +62,11 @@ public partial class Backtests
     private async Task OpenDialogAsync()
     {
         var strategy = _strategies.Values.First();
-        var portfolio = _portfolios.Values.First();
 
         var initialModel = new BacktestModel()
         {
             Strategy = strategy,
-            Portfolio = portfolio,
+            Portfolio = null,
             Backtest = new BacktestRun
             {
                 Id = Guid.NewGuid(),
@@ -78,7 +77,6 @@ public partial class Backtests
                 UpdatedAt = DateTime.UtcNow,
                 ExecutionState = ExecutionState.Created,
                 IsCancellationRequested = false,
-                PortfolioId = Guid.NewGuid(),
                 ProgressMessage = string.Empty,
             }
         };
@@ -113,16 +111,34 @@ public partial class Backtests
             return;
         }
 
+        var btPortfolio = new Portfolio
+        {
+            Id = Guid.NewGuid(),
+            IsBacktest = true,
+            Name = $"{model.Backtest.Description}",
+            UpdatedAt = model.Backtest.CreatedAt,
+        };
+
+        var portfolioSaved = await SavePortfolio(btPortfolio);
+
+        if (!portfolioSaved)
+        {
+            ToastService.ShowError($"Cannot create portfolio for Backtest: {model.Backtest.Description}.");
+            return;
+        }
+
+        model.Portfolio = btPortfolio;
+
         var saved = await SaveBacktest(model);
 
-        if (saved)
-        {
-            ToastService.ShowSuccess($"Backtest {model.Backtest.Description} created.");
-        }
-        else
+        if (!saved)
         {
             ToastService.ShowError($"Saving backtest {model.Backtest.Description} failed.");
+            return;
+
         }
+
+        ToastService.ShowSuccess($"Backtest {model.Backtest.Description} created.");
 
         if (model.StartImmediately)
         {
@@ -301,6 +317,24 @@ public partial class Backtests
         }
         catch
         {
+            return false;
+        }
+    }
+
+
+    private async Task<bool> SavePortfolio(Portfolio portfolio)
+    {
+        try
+        {
+            using var apiClient = _httpClientFactory.CreateClient("backend");
+            var content = JsonContent.Create(portfolio);
+            var message = await apiClient.PostAsync("api/portfolios", content);
+            message.EnsureSuccessStatusCode();
+            return true;
+        }
+        catch
+        {
+            // TODO: Use toast service
             return false;
         }
     }

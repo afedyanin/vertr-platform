@@ -19,12 +19,6 @@
                   OptionText="@(p => p.Name)"
                   @bind-SelectedOption="@Content.Strategy" />
 
-    <FluentSelect TOption="Portfolio"
-                  Label="Portfolio"
-                  Items="@AllPortfolios"
-                  OptionValue="@(p => p.Id.ToString())"
-                  OptionText="@(p => p.Name ?? "<unnamed>")"
-                  @bind-SelectedOption="@Content.Portfolio" />
     <br />
     <br />
     <FluentCheckbox @bind-Value="@Content.StartImmediately" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Start Immediately"></FluentCheckbox>

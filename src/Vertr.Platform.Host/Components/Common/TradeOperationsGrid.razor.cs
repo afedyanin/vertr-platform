@@ -51,7 +51,10 @@ public partial class TradeOperationsGrid
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await RefreshDataAsync();
+        if (firstRender)
+        {
+            await RefreshDataAsync();
+        }
     }
 
     private async Task<TradeOperationModel[]> GetOperations()

@@ -32,6 +32,7 @@ internal class OpenPositionHandler : OrderHandlerBase, IRequestHandler<OpenPosit
         var orderRequest = new ExecuteOrderRequest
         {
             RequestId = request.RequestId,
+            BacktestId = request.BacktestId,
             PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
             QtyLots = request.QtyLots,

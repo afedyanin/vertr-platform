@@ -36,6 +36,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
         var orderRequest = new ExecuteOrderRequest
         {
             RequestId = request.RequestId,
+            BacktestId = request.BacktestId,
             PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
             QtyLots = lotsToClose,

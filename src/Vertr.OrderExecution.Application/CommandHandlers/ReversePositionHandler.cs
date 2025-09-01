@@ -50,6 +50,7 @@ internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<Revers
         {
             RequestId = request.RequestId,
             PortfolioId = request.PortfolioId,
+            BacktestId = request.BacktestId,
             InstrumentId = request.InstrumentId,
             QtyLots = lotsToRevert,
             CreatedAt = request.CreatedAt,

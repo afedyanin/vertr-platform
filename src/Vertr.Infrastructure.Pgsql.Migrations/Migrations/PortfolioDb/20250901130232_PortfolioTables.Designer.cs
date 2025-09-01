@@ -13,8 +13,8 @@ using Vertr.PortfolioManager.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.PortfolioDb
 {
     [DbContext(typeof(PortfolioDbContext))]
-    [Migration("20250824075401_PortfolioIsBacktets")]
-    partial class PortfolioIsBacktets
+    [Migration("20250901130232_PortfolioTables")]
+    partial class PortfolioTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

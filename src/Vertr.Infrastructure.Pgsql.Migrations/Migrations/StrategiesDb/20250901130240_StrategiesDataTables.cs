@@ -19,8 +19,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.StrategiesDb
                     name = table.Column<string>(type: "text", nullable: false),
                     type = table.Column<int>(type: "integer", nullable: false),
                     instrument_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    account_id = table.Column<string>(type: "text", nullable: false),
-                    sub_account_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    portfolio_id = table.Column<Guid>(type: "uuid", nullable: false),
                     qty_lots = table.Column<long>(type: "bigint", nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false),
                     params_json = table.Column<string>(type: "json", nullable: true),
@@ -37,10 +36,11 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.StrategiesDb
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     strategy_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    account_id = table.Column<string>(type: "text", nullable: false),
-                    sub_account_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    portfolio_id = table.Column<Guid>(type: "uuid", nullable: false),
                     instrument_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    backtest_id = table.Column<Guid>(type: "uuid", nullable: true),
                     qty_lots = table.Column<long>(type: "bigint", nullable: false),
+                    price = table.Column<decimal>(type: "numeric", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>

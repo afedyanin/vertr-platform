@@ -9,11 +9,11 @@ using Vertr.OrderExecution.DataAccess;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
 {
     [DbContext(typeof(OrderExecutionDbContext))]
-    [Migration("20250820164213_OrderEvents")]
-    partial class OrderEvents
+    [Migration("20250901130223_OrderExecutionTables")]
+    partial class OrderExecutionTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,13 +57,13 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                         .HasColumnType("text")
                         .HasColumnName("order_id");
 
+                    b.Property<Guid>("PortfolioId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("portfolio_id");
+
                     b.Property<Guid?>("RequestId")
                         .HasColumnType("uuid")
                         .HasColumnName("request_id");
-
-                    b.Property<Guid>("SubAccountId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("sub_account_id");
 
                     b.HasKey("Id")
                         .HasName("order_events_pkey");

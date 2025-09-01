@@ -1,5 +1,5 @@
 namespace Vertr.PortfolioManager.Contracts;
-public class Portfolio
+public record class Portfolio
 {
     public Guid Id { get; set; }
 

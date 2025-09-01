@@ -1,6 +1,6 @@
 namespace Vertr.PortfolioManager.Contracts;
 
-public class Position
+public record class Position
 {
     public Guid Id { get; set; }
 

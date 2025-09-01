@@ -8,7 +8,7 @@ using Vertr.Backtest.DataAccess;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.BacktestDb
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     [DbContext(typeof(BacktestDbContext))]
     partial class BacktestDbContextModelSnapshot : ModelSnapshot

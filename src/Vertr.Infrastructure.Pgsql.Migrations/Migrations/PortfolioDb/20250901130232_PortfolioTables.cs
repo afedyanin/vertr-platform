@@ -6,11 +6,34 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.PortfolioDb
 {
     /// <inheritdoc />
-    public partial class PortfolioAddPositions : Migration
+    public partial class PortfolioTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "operations",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    operation_type = table.Column<int>(type: "integer", nullable: false),
+                    order_id = table.Column<string>(type: "text", nullable: true),
+                    account_id = table.Column<string>(type: "text", nullable: false),
+                    portfolio_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    instrument_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    trade_id = table.Column<string>(type: "text", nullable: true),
+                    quantity = table.Column<long>(type: "bigint", nullable: true),
+                    amount_currency = table.Column<string>(type: "text", nullable: false),
+                    amount_value = table.Column<decimal>(type: "numeric", nullable: false),
+                    price_currency = table.Column<string>(type: "text", nullable: false),
+                    price_value = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("operations_pkey", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "portfolios",
                 columns: table => new
@@ -18,7 +41,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.PortfolioDb
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "text", nullable: true),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    is_backtest = table.Column<bool>(type: "boolean", nullable: true)
+                    is_backtest = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,14 +69,18 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.PortfolioDb
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_positions_portfolio_id",
+                name: "positions_unique",
                 table: "positions",
-                column: "portfolio_id");
+                columns: new[] { "portfolio_id", "instrument_id" },
+                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "operations");
+
             migrationBuilder.DropTable(
                 name: "positions");
 

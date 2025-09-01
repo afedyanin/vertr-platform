@@ -9,11 +9,11 @@ using Vertr.Backtest.DataAccess;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.BacktestDb
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
 {
     [DbContext(typeof(BacktestDbContext))]
-    [Migration("20250814135138_BacktestTables3")]
-    partial class BacktestTables3
+    [Migration("20250901130203_BacktestTables")]
+    partial class BacktestTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,13 +48,13 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.BacktestDb
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("from");
 
-                    b.Property<Guid>("InstrumentId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("instrument_id");
-
                     b.Property<bool>("IsCancellationRequested")
                         .HasColumnType("boolean")
                         .HasColumnName("is_cancellation_requested");
+
+                    b.Property<Guid>("PortfolioId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("portfolio_id");
 
                     b.Property<string>("ProgressMessage")
                         .HasColumnType("text")
@@ -63,10 +63,6 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.BacktestDb
                     b.Property<Guid>("StrategyId")
                         .HasColumnType("uuid")
                         .HasColumnName("strategy_id");
-
-                    b.Property<Guid>("SubAccountId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("sub_account_id");
 
                     b.Property<DateTime>("To")
                         .HasColumnType("timestamp with time zone")

@@ -27,6 +27,8 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Folder Include="Migrations\MarketDataDb\" />
+    <Folder Include="Migrations\OrderExecutionDb\" />
     <Folder Include="Migrations\PortfolioDb\" />
     <Folder Include="Migrations\StrategiesDb\" />
   </ItemGroup>

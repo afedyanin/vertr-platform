@@ -13,8 +13,8 @@ using Vertr.MarketData.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.MarketDataDb
 {
     [DbContext(typeof(MarketDataDbContext))]
-    [Migration("20250804141603_MarketDataSubscriptionsUnique")]
-    partial class MarketDataSubscriptionsUnique
+    [Migration("20250901130213_MarketDataTables")]
+    partial class MarketDataTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,44 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.MarketDataDb
                         .HasDatabaseName("candle_subscriptions_unique");
 
                     b.ToTable("candle_subscriptions", (string)null);
+                });
+
+            modelBuilder.Entity("Vertr.MarketData.Contracts.CandlesHistoryItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<long>("Count")
+                        .HasColumnType("bigint")
+                        .HasColumnName("count");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("data");
+
+                    b.Property<DateOnly>("Day")
+                        .HasColumnType("date")
+                        .HasColumnName("day");
+
+                    b.Property<Guid>("InstrumentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("instrument_id");
+
+                    b.Property<int>("Interval")
+                        .HasColumnType("integer")
+                        .HasColumnName("interval");
+
+                    b.HasKey("Id")
+                        .HasName("candles_history_pkey");
+
+                    b.HasIndex("InstrumentId", "Interval", "Day")
+                        .IsUnique()
+                        .HasDatabaseName("candles_history_unique");
+
+                    b.ToTable("candles_history", (string)null);
                 });
 
             modelBuilder.Entity("Vertr.MarketData.Contracts.Instrument", b =>

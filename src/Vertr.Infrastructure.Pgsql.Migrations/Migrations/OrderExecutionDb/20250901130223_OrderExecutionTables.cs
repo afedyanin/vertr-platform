@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
+namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.OrderExecutionDb
 {
     /// <inheritdoc />
-    public partial class OrderEvents : Migration
+    public partial class OrderExecutionTables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,7 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations
                     order_id = table.Column<string>(type: "text", nullable: true),
                     instrument_id = table.Column<Guid>(type: "uuid", nullable: false),
                     account_id = table.Column<string>(type: "text", nullable: false),
-                    sub_account_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    portfolio_id = table.Column<Guid>(type: "uuid", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     json_data = table.Column<string>(type: "json", nullable: true),
                     json_data_type = table.Column<string>(type: "text", nullable: true)

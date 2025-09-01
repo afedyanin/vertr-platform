@@ -1,27 +1,19 @@
-using System.Net.Http;
 using System.Net.Http.Headers;
 using Tinkoff.InvestApi;
 using Vertr.MarketData.Contracts;
 using Vertr.TinvestGateway.Proxy;
 
-namespace Vertr.TinvestGateway.Tests;
+namespace Vertr.TinvestGateway.Tests.Proxy;
 
 [TestFixture(Category = "Gateway", Explicit = true)]
 public class TinvestGatewayMarketDataTests
 {
-    private static readonly InvestApiSettings _settings = new InvestApiSettings()
-    {
-        AccessToken = "t.8DpIsag8_t2bHcaPEXZiAxDLdxbyqP7MXvDwoamPBWSDBD7dgQeMNutgas5Ay83YOlLsA-m8qSPm8Sz-FMaNuw",
-        AppName = "VERTR",
-        Sandbox = true,
-    };
-
     private InvestApiClient _client;
 
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-        _client = InvestApiClientFactory.Create(_settings);
+        _client = InvestApiClientFactory.Create(Credentials.ApiSettings);
     }
 
     [TestCase("SBER")]
@@ -88,7 +80,7 @@ public class TinvestGatewayMarketDataTests
     public async Task CanLoadAllHistory(string figi, int year, string filePath)
     {
         var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _settings.AccessToken);
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Credentials.ApiSettings.AccessToken);
         httpClient.BaseAddress = new Uri("https://invest-public-api.tinkoff.ru");
 
         var response = await httpClient.GetAsync($"/history-data?figi={figi}&year={year}");
@@ -114,7 +106,7 @@ public class TinvestGatewayMarketDataTests
         var gateway = new TinvestGatewayMarketData(_client);
         var day = new DateOnly(2025, 08, 14);
 
-        for (int i = 0; i <= 500; i++)
+        for (var i = 0; i <= 500; i++)
         {
             var candles = await gateway.GetCandles(Guid.Parse(instrumentId), day);
             day = day.AddDays(-1);

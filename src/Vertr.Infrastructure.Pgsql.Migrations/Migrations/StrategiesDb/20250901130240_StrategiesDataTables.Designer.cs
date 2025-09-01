@@ -12,7 +12,7 @@ using Vertr.Strategies.DataAccess;
 namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.StrategiesDb
 {
     [DbContext(typeof(StrategiesDbContext))]
-    [Migration("20250808170656_StrategiesDataTables")]
+    [Migration("20250901130240_StrategiesDataTables")]
     partial class StrategiesDataTables
     {
         /// <inheritdoc />
@@ -31,11 +31,6 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.StrategiesDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("account_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -58,13 +53,13 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.StrategiesDb
                         .HasColumnType("json")
                         .HasColumnName("params_json");
 
+                    b.Property<Guid>("PortfolioId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("portfolio_id");
+
                     b.Property<long>("QtyLots")
                         .HasColumnType("bigint")
                         .HasColumnName("qty_lots");
-
-                    b.Property<Guid>("SubAccountId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("sub_account_id");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer")
@@ -83,10 +78,9 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.StrategiesDb
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("AccountId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("account_id");
+                    b.Property<Guid?>("BacktestId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("backtest_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -96,6 +90,14 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.StrategiesDb
                         .HasColumnType("uuid")
                         .HasColumnName("instrument_id");
 
+                    b.Property<Guid>("PortfolioId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("portfolio_id");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric")
+                        .HasColumnName("price");
+
                     b.Property<long>("QtyLots")
                         .HasColumnType("bigint")
                         .HasColumnName("qty_lots");
@@ -103,10 +105,6 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.StrategiesDb
                     b.Property<Guid>("StrategyId")
                         .HasColumnType("uuid")
                         .HasColumnName("strategy_id");
-
-                    b.Property<Guid>("SubAccountId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("sub_account_id");
 
                     b.HasKey("Id")
                         .HasName("trading_signals_pkey");

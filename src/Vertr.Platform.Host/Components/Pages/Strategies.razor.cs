@@ -19,10 +19,7 @@ public partial class Strategies
 
     private IQueryable<StrategyModel> _strategies { get; set; }
 
-
     private IDictionary<Guid, Instrument> _instruments { get; set; }
-
-    private IDictionary<Guid, Portfolio> _portfolios { get; set; }
 
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
@@ -32,7 +29,6 @@ public partial class Strategies
         using var apiClient = _httpClientFactory.CreateClient("backend");
 
         _instruments = await InitInstruments(apiClient);
-        _portfolios = await InitPortfolios(apiClient);
         _strategies = await InitStrategies(apiClient);
 
         await base.OnInitializedAsync();
@@ -49,16 +45,13 @@ public partial class Strategies
     private async Task AddStrategyAsync()
     {
         var instrument = _instruments.Values.First();
-        var portfolio = _portfolios.Values.First();
 
         var model = new StrategyModel()
         {
             Instrument = instrument,
-            Portfolio = portfolio,
             Strategy = new StrategyMetadata
             {
                 Id = Guid.NewGuid(),
-                PortfolioId = portfolio.Id,
                 CreatedAt = DateTime.UtcNow,
                 InstrumentId = instrument.Id,
                 Type = StrategyType.RandomWalk,
@@ -106,10 +99,32 @@ public partial class Strategies
             return;
         }
 
+        // Create portfolio for new strategy
+        if (model.Strategy.PortfolioId == Guid.Empty)
+        {
+            var portfolio = new Portfolio
+            {
+                Id = Guid.NewGuid(),
+                IsBacktest = false,
+                Name = $"Portfolio for {model.Strategy.Name} strategy",
+                UpdatedAt = model.Strategy.CreatedAt,
+            };
+
+            var savedPortfolio = await SavePortfolio(portfolio);
+
+            if (!savedPortfolio)
+            {
+                DemoLogger.WriteLine($"Error creating portfolio for strategy {model.Strategy.Name}");
+                return;
+            }
+
+            model.Strategy.PortfolioId = portfolio.Id;
+        }
+
         model.Strategy.InstrumentId = model.Instrument.Id;
-        model.Strategy.PortfolioId = model.Portfolio.Id;
 
         var saved = await SaveStrategy(model.Strategy);
+
         if (saved)
         {
             DemoLogger.WriteLine($"Strategy {model.Strategy.Name} saved.");
@@ -133,27 +148,16 @@ public partial class Strategies
             return res;
         }
 
-        foreach (var instrument in instruments)
+        var filterd = instruments?
+            .Where(x =>
+                !string.IsNullOrEmpty(x.InstrumentType) &&
+                !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase))
+            .ToArray() ?? [];
+
+
+        foreach (var instrument in filterd)
         {
             res[instrument.Id] = instrument;
-        }
-
-        return res;
-    }
-
-    private async Task<IDictionary<Guid, Portfolio>> InitPortfolios(HttpClient apiClient)
-    {
-        var portfolios = await apiClient.GetFromJsonAsync<Portfolio[]>("api/portfolios", JsonOptions.DefaultOptions);
-        var res = new Dictionary<Guid, Portfolio>();
-
-        if (portfolios == null)
-        {
-            return res;
-        }
-
-        foreach (var portfolio in portfolios)
-        {
-            res[portfolio.Id] = portfolio;
         }
 
         return res;
@@ -178,17 +182,10 @@ public partial class Strategies
                 continue;
             }
 
-            if (!_portfolios.TryGetValue(strategy.PortfolioId, out var portfolio))
-            {
-                // Portfolio is not found
-                continue;
-            }
-
             var item = new StrategyModel
             {
                 Strategy = strategy,
                 Instrument = instrument,
-                Portfolio = portfolio
             };
 
             modelItems.Add(item);
@@ -196,6 +193,23 @@ public partial class Strategies
 
         var res = modelItems?.AsQueryable() ?? Array.Empty<StrategyModel>().AsQueryable();
         return res;
+    }
+
+    private async Task<bool> SavePortfolio(Portfolio portfolio)
+    {
+        try
+        {
+            using var apiClient = _httpClientFactory.CreateClient("backend");
+            var content = JsonContent.Create(portfolio);
+            var message = await apiClient.PostAsync("api/portfolios", content);
+            message.EnsureSuccessStatusCode();
+            return true;
+        }
+        catch
+        {
+            // TODO: Use toast service
+            return false;
+        }
     }
 
     private async Task<bool> SaveStrategy(StrategyMetadata metadata)

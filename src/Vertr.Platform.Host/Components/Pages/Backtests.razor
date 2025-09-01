@@ -37,6 +37,7 @@
             <PropertyColumn Property="@(p => p.Backtest.Description)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Backtest.ExecutionState)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Backtest.ProgressMessage)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Backtest.PortfolioId)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Backtest.CreatedAt.ToString(ModelConsts.DateTimeFormat))" Title="Created At" Sortable="true" />
             <TemplateColumn Title="">
                 <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"

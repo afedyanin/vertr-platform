@@ -11,7 +11,6 @@
     <FluentTextField Value="@Content.Strategy.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
     <FluentTextField Value="@Content.Strategy.CreatedAt.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Created At:</FluentTextField>
     <FluentTextField @bind-Value="@Content.Strategy.Name" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
-
     <FluentSelect Items="@(Enum.GetValues<StrategyType>())"
                   @bind-SelectedOption="@Content.Strategy.Type"
                   Label="Type:"
@@ -24,15 +23,16 @@
                   OptionText="@(p => p.GetFullName())"
                   @bind-SelectedOption="@Content.Instrument" />
 
-    <FluentSelect TOption="Portfolio"
-                  Label="Portfolio"
-                  Items="@AllPortfolios"
-                  OptionValue="@(p => p.Id.ToString())"
-                  OptionText="@(p => p.Name ?? "<unnamed>")"
-                  @bind-SelectedOption="@Content.Portfolio" />
-
     <FluentNumberField @bind-Value="@Content.Strategy.QtyLots" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Qty lots:</FluentNumberField>
     <FluentCheckbox @bind-Value="@Content.Strategy.IsActive" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Is Active"></FluentCheckbox>
+    <br />
+    <br />
+
+    @if(Content.Strategy.PortfolioId != Guid.Empty)
+    {
+        <FluentTextField Value="@Content.Strategy.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
+        <FluentAnchor Href=@_portfolioDeatilsLink>Go to portfolio</FluentAnchor>
+    }
 
 </FluentDialogBody>
 

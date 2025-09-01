@@ -102,35 +102,6 @@ public partial class PortfolioDetails
     private async Task<bool> InitExecutionMode(HttpClient apiClient)
         => await apiClient.GetFromJsonAsync<bool>("api/positions/simulated-order-execution", JsonOptions.DefaultOptions);
 
-    private async Task HandleDeleteAction()
-    {
-        if (_portfolio == null)
-        {
-            return;
-        }
-
-        var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Delete portfolio: {_portfolio.Name}?",
-            "Yes",
-            "No",
-            $"Deleting portfolio {_portfolio.Name}");
-
-        var result = await confirmation.Result;
-
-        if (result.Cancelled)
-        {
-            return;
-        }
-
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-        var message = await apiClient.DeleteAsync($"api/portfolios/{_portfolio.Id}");
-        message.EnsureSuccessStatusCode();
-
-        ToastService.ShowWarning($"Portfolio Id={_portfolio.Id} deleted.");
-
-        Navigation.NavigateTo("/portfolios");
-    }
-
     private async Task HandleDepositAction()
     {
         if (_portfolio == null)

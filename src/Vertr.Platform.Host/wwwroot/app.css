@@ -47,8 +47,9 @@ aside {
   height: 100vh;
   position: sticky;
   width: 18rem;
+  max-height: calc(100dvh - 90px);
+  overflow-y: auto;
 }
-
 .manage {
     width: 100dvw;
 }
@@ -147,64 +148,155 @@ code {
     color: #c02d76;
 }
 
-@media (max-width: 600px) {
-    .header-gutters {
-        margin: 0.5rem 3rem 0.5rem 1.5rem !important;
+
+@media (max-width: 767px) {
+
+  .siteheader {
+    grid-area: header;
+    grid-template-columns: 150px 1fr;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+    .siteheader .search {
+      display: none;
     }
 
-    [dir="rtl"] .header-gutters {
-        margin: 0.5rem 1.5rem 0.5rem 3rem !important;
+    .siteheader .logo {
+      width: 160px;
+      height: 23px;
+      /*padding: 0 25px;*/
     }
 
-    .main {
-        flex-direction: column !important;
-        row-gap: 0 !important;
+
+  .body-stack {
+    flex-direction: column !important;
+  }
+
+  nav.sitenav {
+    width: 100%;
+    height: calc(100dvh - 50px);
+  }
+
+  .navmenu {
+    width: 100%;
+  }
+
+  #navmenu-toggle {
+    appearance: none;
+  }
+
+  .navmenu-icon {
+    cursor: pointer;
+    z-index: 10;
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: unset;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+    border: none;
+  }
+
+  [dir="rtl"] .navmenu-icon {
+    left: 20px;
+    right: unset
+  }
+
+  #navmenu-toggle ~ nav {
+    display: none;
+  }
+
+  #navmenu-toggle:checked ~ nav {
+    display: block;
+  }
+
+  #navmenu-toggle ~ article {
+    display: block;
+  }
+
+  #navmenu-toggle:checked ~ article {
+    display: none;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  article {
+    padding-top: 0px;
+    width: 100%;
+  }
+
+  aside {
+    padding: 1em 0.75em;
+    width: 100%;
+  }
+
+  .footer {
+    display: grid;
+    grid-template-columns: 10px auto 10px;
+  }
+
+    .footer .version {
+      grid-column: 2;
+      justify-self: start;
     }
 
-    nav.sitenav {
-        width: 100%;
-        height: 100%;
+    .footer .copy {
+      grid-column: 2;
+      grid-row: 2;
+      justify-self: end;
     }
 
-    #main-menu {
-        width: 100% !important;
+
+  @media screen and (max-width: 767px) and (orientation: landscape) {
+
+    nav {
+      padding: 25px 40px;
     }
 
-        #main-menu > div:first-child:is(.expander) {
-            display: none;
-        }
-
-    .navmenu {
-        width: 100%;
-    }
-
-    #navmenu-toggle {
-        appearance: none;
-    }
-
-        #navmenu-toggle ~ nav {
-            display: none;
-        }
-
-        #navmenu-toggle:checked ~ nav {
-            display: block;
-        }
-
-    .navmenu-icon {
-        cursor: pointer;
-        z-index: 10;
-        display: block;
-        position: absolute;
-        top: 15px;
-        left: unset;
-        right: 20px;
-        width: 20px;
-        height: 20px;
-        border: none;
-    }
-
-    [dir="rtl"] .navmenu-icon {
-        left: 20px;
-        right: unset;
-    }
+      nav ul {
+        margin: 0 0;
+      }
+  }
 }
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  fluent-select::part(control) {
+    width: 150px;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+
+  aside {
+    padding: 1.5em 0.75em 1em 0.75em;
+    width: 100%;
+    height: 100% !important;
+    max-height: 100% !important;
+  }
+
+  article {
+    padding-top: 0px;
+    width: 100%;
+  }
+}
+
+
+@media (min-width: 800px) {
+  .fluent-dialog-main {
+    --dialog-width: 340px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .fluent-dialog-main {
+    --dialog-width: 100vw;
+  }
+}
+
+

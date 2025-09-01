@@ -45,6 +45,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
             var openRequest = new OpenPositionRequest
             {
                 RequestId = request.RequestId,
+                BacktestId = request.BacktestId,
                 PortfolioId = request.PortfolioId,
                 InstrumentId = request.InstrumentId,
                 QtyLots = request.QtyLots,
@@ -82,6 +83,7 @@ internal class TradingSignalHandler : OrderHandlerBase, IRequestHandler<TradingS
         var reverseRequest = new ReversePositionRequest
         {
             RequestId = request.RequestId,
+            BacktestId = request.BacktestId,
             PortfolioId = request.PortfolioId,
             InstrumentId = request.InstrumentId,
             CreatedAt = request.CreatedAt,

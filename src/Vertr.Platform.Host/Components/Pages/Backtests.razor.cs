@@ -381,6 +381,19 @@ public partial class Backtests
         }
 
         using var apiClient = _httpClientFactory.CreateClient("backend");
+
+        // delete portfolio
+        var portfolioDeleted = await apiClient.DeleteAsync($"api/portfolios/{model.Backtest.PortfolioId}");
+        portfolioDeleted.EnsureSuccessStatusCode();
+
+        // delete trading operations
+        var operationsDeleted = await apiClient.DeleteAsync($"api/trade-operations/{model.Backtest.PortfolioId}");
+        operationsDeleted.EnsureSuccessStatusCode();
+
+        // delete order events
+        var ordersDeleted = await apiClient.DeleteAsync($"api/order-events/{model.Backtest.PortfolioId}");
+        ordersDeleted.EnsureSuccessStatusCode();
+
         var message = await apiClient.DeleteAsync($"api/backtests/{model.Backtest.Id}");
         message.EnsureSuccessStatusCode();
 

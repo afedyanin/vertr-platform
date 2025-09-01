@@ -78,4 +78,13 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         var savedRecords = await context.SaveChangesAsync();
         return savedRecords > 0;
     }
+
+    public async Task<int> DeleteByPortfolioId(Guid portfolioId)
+    {
+        using var context = await GetDbContext();
+
+        return await context.OrderEvents
+            .Where(s => s.PortfolioId == portfolioId)
+            .ExecuteDeleteAsync();
+    }
 }

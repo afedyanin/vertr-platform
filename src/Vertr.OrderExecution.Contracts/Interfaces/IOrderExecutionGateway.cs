@@ -6,7 +6,7 @@ public interface IOrderExecutionGateway
 {
     public Task<PostOrderResponse?> PostOrder(PostOrderRequest request);
 
-    public Task<DateTime> CancelOrder(string accountId, string orderId);
+    public Task<DateTime?> CancelOrder(string accountId, string orderId);
 
     public Task<OrderState?> GetOrderState(
         string accountId,

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Tinkoff.InvestApi;
 using Vertr.OrderExecution.Contracts;
 using Vertr.OrderExecution.Contracts.Enums;
@@ -8,44 +9,76 @@ namespace Vertr.TinvestGateway.Proxy;
 
 internal class TinvestGatewayOrders : TinvestGatewayBase, IOrderExecutionGateway
 {
-    public TinvestGatewayOrders(InvestApiClient investApiClient) : base(investApiClient)
+    private ILogger<TinvestGatewayOrders> _logger;
+
+    public TinvestGatewayOrders(
+        InvestApiClient investApiClient,
+        ILogger<TinvestGatewayOrders> logger) : base(investApiClient)
     {
+        _logger = logger;
     }
 
     public async Task<PostOrderResponse?> PostOrder(PostOrderRequest request)
     {
-        var tRequest = request.Convert();
-        var response = await InvestApiClient.Orders.PostOrderAsync(tRequest);
-        var orderResponse = response.Convert();
+        try
+        {
+            var tRequest = request.Convert();
+            var response = await InvestApiClient.Orders.PostOrderAsync(tRequest);
+            var orderResponse = response.Convert();
 
-        return orderResponse;
+            return orderResponse;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Post order failed: {ex.Message}");
+        }
+
+        return null;
     }
 
-    public async Task<DateTime> CancelOrder(string accountId, string orderId)
+    public async Task<DateTime?> CancelOrder(string accountId, string orderId)
     {
-        var cancelOrderRequest = new Tinkoff.InvestApi.V1.CancelOrderRequest
+        try
         {
-            AccountId = accountId,
-            OrderId = orderId,
-        };
+            var cancelOrderRequest = new Tinkoff.InvestApi.V1.CancelOrderRequest
+            {
+                AccountId = accountId,
+                OrderId = orderId,
+            };
 
-        var response = await InvestApiClient.Orders.CancelOrderAsync(cancelOrderRequest);
+            var response = await InvestApiClient.Orders.CancelOrderAsync(cancelOrderRequest);
 
-        return response.Time.ToDateTime();
+            return response.Time.ToDateTime();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Cancel order failed: {ex.Message}");
+        }
+
+        return null;
     }
 
     public async Task<OrderState?> GetOrderState(string accountId, string orderId, PriceType priceType = PriceType.Unspecified)
     {
-        var orderStateRequest = new Tinkoff.InvestApi.V1.GetOrderStateRequest
+        try
         {
-            AccountId = accountId,
-            OrderId = orderId,
-            PriceType = priceType.Convert(),
-        };
+            var orderStateRequest = new Tinkoff.InvestApi.V1.GetOrderStateRequest
+            {
+                AccountId = accountId,
+                OrderId = orderId,
+                PriceType = priceType.Convert(),
+            };
 
-        var response = await InvestApiClient.Orders.GetOrderStateAsync(orderStateRequest);
-        var state = response.Convert();
+            var response = await InvestApiClient.Orders.GetOrderStateAsync(orderStateRequest);
+            var state = response.Convert();
 
-        return state;
+            return state;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Get order state failed: {ex.Message}");
+        }
+
+        return null;
     }
 }

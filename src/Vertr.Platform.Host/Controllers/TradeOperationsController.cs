@@ -19,4 +19,11 @@ public class TradeOperationsController : ControllerBase
         var res = await _tradeOperationRepository.GetByPortfolio(portfolioId);
         return Ok(res ?? []);
     }
+
+    [HttpDelete("{portfolioId:guid}")]
+    public async Task<IActionResult> DeleteOperations(Guid portfolioId)
+    {
+        var res = await _tradeOperationRepository.Delete(portfolioId);
+        return Ok(res);
+    }
 }

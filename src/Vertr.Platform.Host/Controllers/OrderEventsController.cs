@@ -36,4 +36,11 @@ public class OrderEventsController : ControllerBase
 
         return Ok(res);
     }
+
+    [HttpDelete("{portfolioId:guid}")]
+    public async Task<IActionResult> DeleteOrderEvents(Guid portfolioId)
+    {
+        var res = await _orderEventRepository.DeleteByPortfolioId(portfolioId);
+        return Ok(res);
+    }
 }

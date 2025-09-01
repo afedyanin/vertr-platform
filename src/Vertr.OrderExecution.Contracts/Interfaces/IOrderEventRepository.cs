@@ -13,4 +13,6 @@ public interface IOrderEventRepository
     public Task<Guid?> ResolvePortfolioIdByOrderId(string orderId);
 
     public Task<Guid?> ResolvePortfolioIdByOrderRequestId(Guid orderRequestId);
+
+    public Task<int> DeleteByPortfolioId(Guid portfolioId);
 }

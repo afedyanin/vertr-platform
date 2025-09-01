@@ -245,6 +245,23 @@ public partial class Strategies
         }
 
         using var apiClient = _httpClientFactory.CreateClient("backend");
+
+        // delete portfolio
+        var portfolioDeleted = await apiClient.DeleteAsync($"api/portfolios/{model.Strategy.PortfolioId}");
+        portfolioDeleted.EnsureSuccessStatusCode();
+
+        // delete trading operations
+        var operationsDeleted = await apiClient.DeleteAsync($"api/trade-operations/{model.Strategy.PortfolioId}");
+        operationsDeleted.EnsureSuccessStatusCode();
+
+        // delete order events
+        var ordersDeleted = await apiClient.DeleteAsync($"api/order-events/{model.Strategy.PortfolioId}");
+        ordersDeleted.EnsureSuccessStatusCode();
+
+        // delete trading signals
+        var signalsDeleted = await apiClient.DeleteAsync($"api/trading-signals/by-strategy/{model.Strategy.Id}");
+        signalsDeleted.EnsureSuccessStatusCode();
+
         var message = await apiClient.DeleteAsync($"api/strategies/{model.Strategy.Id}");
         message.EnsureSuccessStatusCode();
 

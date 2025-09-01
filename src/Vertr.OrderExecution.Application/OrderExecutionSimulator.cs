@@ -88,7 +88,7 @@ internal class OrderExecutionSimulator : IOrderExecutionSimulator
         return response;
     }
 
-    public Task<DateTime> CancelOrder(string accountId, string orderId)
+    public Task<DateTime?> CancelOrder(string accountId, string orderId)
     {
         throw new NotImplementedException();
     }

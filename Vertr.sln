@@ -96,6 +96,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.PortfolioManager.WebA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Strategies.WebApi", "src\Vertr.Strategies.WebApi\Vertr.Strategies.WebApi.csproj", "{B2F7B312-7BF5-4B1D-8822-0157BB06BECC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Platform.BlazorUI.Components", "src\Vertr.Platform.BlazorUI.Components\Vertr.Platform.BlazorUI.Components.csproj", "{088F9151-5EE5-48FF-9160-11C5D6823FCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -238,6 +240,10 @@ Global
 		{B2F7B312-7BF5-4B1D-8822-0157BB06BECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2F7B312-7BF5-4B1D-8822-0157BB06BECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2F7B312-7BF5-4B1D-8822-0157BB06BECC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{088F9151-5EE5-48FF-9160-11C5D6823FCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088F9151-5EE5-48FF-9160-11C5D6823FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{088F9151-5EE5-48FF-9160-11C5D6823FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{088F9151-5EE5-48FF-9160-11C5D6823FCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -284,6 +290,7 @@ Global
 		{257842FD-8206-4282-81D5-0842D2DFFFE5} = {E176B476-0553-4840-B6B6-1C53F84F62EB}
 		{30A1864F-B2E2-4C1B-B77B-7DE47F72F037} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{B2F7B312-7BF5-4B1D-8822-0157BB06BECC} = {7162A705-D875-400C-BC4C-FABD2CCDFE48}
+		{088F9151-5EE5-48FF-9160-11C5D6823FCF} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

@@ -6,7 +6,7 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePositionRequest, ExecuteOrderResponse>
+internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePositionCommand, ExecuteOrderResponse>
 {
     public ClosePositionHandler(
         IMediator mediator,
@@ -18,7 +18,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
     }
 
     public async Task<ExecuteOrderResponse> Handle(
-        ClosePositionRequest request,
+        ClosePositionCommand request,
         CancellationToken cancellationToken)
     {
         var currentLots = await GetCurrentPositionInLots(request.PortfolioId, request.InstrumentId);
@@ -33,7 +33,7 @@ internal class ClosePositionHandler : OrderHandlerBase, IRequestHandler<ClosePos
 
         var lotsToClose = currentLots * -1L;
 
-        var orderRequest = new ExecuteOrderRequest
+        var orderRequest = new ExecuteOrderCommand
         {
             RequestId = request.RequestId,
             BacktestId = request.BacktestId,

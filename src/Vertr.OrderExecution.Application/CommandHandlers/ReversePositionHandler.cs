@@ -7,7 +7,7 @@ using Vertr.PortfolioManager.Contracts.Interfaces;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<ReversePositionRequest, ExecuteOrderResponse>
+internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<ReversePositionCommand, ExecuteOrderResponse>
 {
     private readonly ILogger<ReversePositionHandler> _logger;
     public ReversePositionHandler(
@@ -22,7 +22,7 @@ internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<Revers
     }
 
     public async Task<ExecuteOrderResponse> Handle(
-        ReversePositionRequest request,
+        ReversePositionCommand request,
         CancellationToken cancellationToken)
     {
         var currentLots = await GetCurrentPositionInLots(request.PortfolioId, request.InstrumentId);
@@ -46,7 +46,7 @@ internal class ReversePositionHandler : OrderHandlerBase, IRequestHandler<Revers
             throw new InvalidOperationException($"Lot size maximum exceeded. CurrentLots={currentLots} LotsToRevert={lotsToRevert}");
         }
 
-        var orderRequest = new ExecuteOrderRequest
+        var orderRequest = new ExecuteOrderCommand
         {
             RequestId = request.RequestId,
             PortfolioId = request.PortfolioId,

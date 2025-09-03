@@ -11,7 +11,7 @@ using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.OrderExecution.Application.CommandHandlers;
 
-internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, ExecuteOrderResponse>
+internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderCommand, ExecuteOrderResponse>
 {
     private readonly IOrderExecutionGateway _executionGateway;
     private readonly IOrderExecutionSimulator _executionSimulator;
@@ -36,7 +36,7 @@ internal class ExecuteOrderHandler : IRequestHandler<ExecuteOrderRequest, Execut
         _logger = logger;
     }
 
-    public async Task<ExecuteOrderResponse> Handle(ExecuteOrderRequest request, CancellationToken cancellationToken)
+    public async Task<ExecuteOrderResponse> Handle(ExecuteOrderCommand request, CancellationToken cancellationToken)
     {
         _logger.LogDebug($"Handling ExecuteOrder request PortfolioId={request.PortfolioId}");
 

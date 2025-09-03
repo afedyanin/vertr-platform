@@ -1,0 +1,21 @@
+@using Vertr.MarketData.Contracts
+
+@implements IDialogContentComponent<Instrument>
+
+<FluentMessageBarProvider Section="@ModelConsts.MESSAGES_DIALOG" MaxMessageCount="1" />
+
+<FluentDialogBody>
+    <FluentTextField Value="@Content.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
+    <FluentTextField Value="@Content.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
+    <FluentTextField Value="@Content.Symbol.ClassCode" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Class Code:</FluentTextField>
+    <FluentTextField Value="@Content.Symbol.Ticker" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Ticker:</FluentTextField>
+    <FluentTextField Value="@Content.InstrumentType" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Type:</FluentTextField>
+    <FluentTextField Value="@Content.Currency" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Currency:</FluentTextField>
+    <FluentTextField Value="@Content.LotSize.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Lot Size:</FluentTextField>
+</FluentDialogBody>
+
+
+@code {
+    [Parameter]
+    public Instrument Content { get; set; } = default!;
+}

@@ -6,7 +6,6 @@ using Vertr.Infrastructure.Common.Jobs;
 using Vertr.Infrastructure.Common.Mediator;
 using Vertr.MarketData.Application;
 using Vertr.MarketData.DataAccess;
-using Vertr.Platform.Host.Components;
 using Vertr.Strategies.Application;
 using Vertr.Strategies.DataAccess;
 using Vertr.TinvestGateway;
@@ -20,6 +19,7 @@ using Vertr.MarketData.WebApi;
 using Vertr.OrderExecution.WebApi;
 using Vertr.PortfolioManager.WebApi;
 using Vertr.Strategies.WebApi;
+using Vertr.Platform.BlazorUI.Components;
 
 namespace Vertr.Platform.Host;
 

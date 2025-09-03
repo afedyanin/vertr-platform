@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Vertr.OrderExecution.Application\Vertr.OrderExecution.Application.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.WebApi\Vertr.OrderExecution.WebApi.csproj" />
+    <ProjectReference Include="..\Vertr.Platform.BlazorUI.Components\Vertr.Platform.BlazorUI.Components.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.WebApi\Vertr.PortfolioManager.WebApi.csproj" />

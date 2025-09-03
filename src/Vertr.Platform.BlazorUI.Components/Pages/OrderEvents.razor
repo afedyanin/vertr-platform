@@ -1,0 +1,36 @@
+@page "/order-events"
+
+@using Vertr.MarketData.Contracts
+
+@inject IDialogService DialogService
+
+<h3>Order Events</h3>
+
+<FluentPaginator State="@_pagination" SummaryTemplate="@template" />
+
+<div style="display: table; table-layout: fixed; width: 100%;">
+    <div style="overflow-x: auto;">
+        <FluentDataGrid @ref=dataGrid
+                        TGridItem=OrderEventModel
+                        OnCellClick="HandleCellClick"
+                        Items="@_orderEvents"
+                        Pagination="@_pagination"
+                        ShowHover=true
+                        DisplayMode="DataGridDisplayMode.Table"
+                        RowSize="@DataGridRowSize.Medium">
+            <PropertyColumn Property="@(p => p.OrderEvent.CreatedAt)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.OrderEvent.JsonDataType)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.OrderEvent.RequestId)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.OrderEvent.OrderId)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true" />
+            <PropertyColumn Property="@(p => p.OrderEvent.PortfolioId)" Sortable="true" />
+        </FluentDataGrid>
+
+    </div>
+</div>
+
+<FluentPaginator State="@_pagination" />
+
+@code {
+    private RenderFragment template = @<span />;
+}

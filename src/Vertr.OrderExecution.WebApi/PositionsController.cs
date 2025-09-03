@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.Contracts.Commands;
-using Vertr.OrderExecution.WebApi.Requests;
+using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.Common.Mediator;
 
 namespace Vertr.OrderExecution.WebApi;
@@ -26,7 +26,7 @@ public class PositionsController : ControllerBase
     [HttpPost("execute-order")]
     public async Task<IActionResult> ExecuteOrder(ExecuteRequest request)
     {
-        var command = new ExecuteOrderRequest
+        var command = new ExecuteOrderCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioId = request.PortfolioId,
@@ -44,7 +44,7 @@ public class PositionsController : ControllerBase
     [HttpPost("open")]
     public async Task<IActionResult> OpenPosition(OpenRequest request)
     {
-        var command = new OpenPositionRequest
+        var command = new OpenPositionCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioId = request.PortfolioId,
@@ -61,7 +61,7 @@ public class PositionsController : ControllerBase
     [HttpPost("close")]
     public async Task<IActionResult> ClosePosition(CloseRequest request)
     {
-        var command = new ClosePositionRequest
+        var command = new ClosePositionCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioId = request.PortfolioId,
@@ -77,7 +77,7 @@ public class PositionsController : ControllerBase
     [HttpPost("reverse")]
     public async Task<IActionResult> RevertPosition(ReverseRequest request)
     {
-        var command = new ReversePositionRequest
+        var command = new ReversePositionCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioId = request.PortfolioId,
@@ -93,7 +93,7 @@ public class PositionsController : ControllerBase
     [HttpPost("signal")]
     public async Task<IActionResult> PorocessSignal(SignalRequest request)
     {
-        var command = new TradingSignalRequest
+        var command = new TradingSignalCommand
         {
             InstrumentId = request.InstrumentId,
             PortfolioId = request.PortfolioId,

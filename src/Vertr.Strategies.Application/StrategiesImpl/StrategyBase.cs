@@ -44,7 +44,7 @@ internal abstract class StrategyBase : IStrategy
             _ = await _tradingSignalRepository.Save(tradingSignal);
         }
 
-        var command = new TradingSignalRequest
+        var command = new TradingSignalCommand
         {
             RequestId = tradingSignal.Id,
             InstrumentId = tradingSignal.InstrumentId,
@@ -75,7 +75,7 @@ internal abstract class StrategyBase : IStrategy
 
     public virtual async Task OnStop(CancellationToken cancellationToken = default)
     {
-        var command = new ClosePositionRequest
+        var command = new ClosePositionCommand
         {
             RequestId = Guid.NewGuid(),
             InstrumentId = InstrumentId,

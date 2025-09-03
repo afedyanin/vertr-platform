@@ -4,7 +4,8 @@ using Vertr.Backtest.Contracts.Interfaces;
 using Vertr.Platform.Common.Jobs;
 using Vertr.Platform.Common.Mediator;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.Backtest.WebApi;
+
 [Route("api/backtests")]
 [ApiController]
 public class BacktestController : ControllerBase

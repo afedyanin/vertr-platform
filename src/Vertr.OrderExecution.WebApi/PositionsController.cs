@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.Contracts.Commands;
+using Vertr.OrderExecution.WebApi.Requests;
 using Vertr.Platform.Common.Mediator;
-using Vertr.Platform.Host.Requests;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.OrderExecution.WebApi;
+
 [Route("api/positions")]
 [ApiController]
 public class PositionsController : ControllerBase

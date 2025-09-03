@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Vertr.MarketData.Contracts.Extensions;
 using Vertr.MarketData.Contracts.Interfaces;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.MarketData.WebApi;
+
 [Route("api/candles-history")]
 [ApiController]
 public class CandlesHistoryController : ControllerBase

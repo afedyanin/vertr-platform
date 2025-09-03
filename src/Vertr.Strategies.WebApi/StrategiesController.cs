@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Vertr.Strategies.Contracts;
 using Vertr.Strategies.Contracts.Interfaces;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.Strategies.WebApi;
+
 [Route("api/strategies")]
 [ApiController]
 public class StrategiesController : ControllerBase

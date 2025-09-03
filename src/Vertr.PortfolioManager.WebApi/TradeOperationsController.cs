@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Vertr.PortfolioManager.Contracts.Interfaces;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.PortfolioManager.WebApi;
+
 [Route("api/trade-operations")]
 [ApiController]
 public class TradeOperationsController : ControllerBase

@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Vertr.OrderExecution.Contracts.Interfaces;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.OrderExecution.WebApi;
+
 [Route("api/order-events")]
 [ApiController]
 public class OrderEventsController : ControllerBase

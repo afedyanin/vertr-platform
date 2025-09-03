@@ -1,4 +1,4 @@
-namespace Vertr.Platform.Host.Requests;
+namespace Vertr.OrderExecution.WebApi.Requests;
 
 public record class ExecuteRequest(DateTime Date, Guid InstrumentId, Guid PortfolioId, long Lots, decimal Price);
 

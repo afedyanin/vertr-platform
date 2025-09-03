@@ -17,15 +17,21 @@
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Backtest.Application\Vertr.Backtest.Application.csproj" />
     <ProjectReference Include="..\Vertr.Backtest.DataAccess\Vertr.Backtest.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.Backtest.WebApi\Vertr.Backtest.WebApi.csproj" />
     <ProjectReference Include="..\Vertr.MarketData.Application\Vertr.MarketData.Application.csproj" />
     <ProjectReference Include="..\Vertr.MarketData.DataAccess\Vertr.MarketData.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.MarketData.WebApi\Vertr.MarketData.WebApi.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.Application\Vertr.OrderExecution.Application.csproj" />
     <ProjectReference Include="..\Vertr.OrderExecution.DataAccess\Vertr.OrderExecution.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.OrderExecution.WebApi\Vertr.OrderExecution.WebApi.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.Application\Vertr.PortfolioManager.Application.csproj" />
     <ProjectReference Include="..\Vertr.PortfolioManager.DataAccess\Vertr.PortfolioManager.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.PortfolioManager.WebApi\Vertr.PortfolioManager.WebApi.csproj" />
     <ProjectReference Include="..\Vertr.Strategies.Application\Vertr.Strategies.Application.csproj" />
     <ProjectReference Include="..\Vertr.Strategies.Contracts\Vertr.Strategies.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.Strategies.DataAccess\Vertr.Strategies.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.Strategies.WebApi\Vertr.Strategies.WebApi.csproj" />
+    <ProjectReference Include="..\Vertr.TinvestGateway.WebApi\Vertr.TinvestGateway.WebApi.csproj" />
     <ProjectReference Include="..\Vertr.TinvestGateway\Vertr.TinvestGateway.csproj" />
   </ItemGroup>
 

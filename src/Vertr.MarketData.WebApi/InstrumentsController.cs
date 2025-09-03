@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Vertr.MarketData.Contracts;
 using Vertr.MarketData.Contracts.Interfaces;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.MarketData.WebApi;
+
 [Route("api/instruments")]
 [ApiController]
 

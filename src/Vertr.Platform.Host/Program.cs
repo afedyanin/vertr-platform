@@ -14,6 +14,12 @@ using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.DataAccess;
 using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.DataAccess;
+using Vertr.Backtest.WebApi;
+using Vertr.TinvestGateway.WebApi;
+using Vertr.MarketData.WebApi;
+using Vertr.OrderExecution.WebApi;
+using Vertr.PortfolioManager.WebApi;
+using Vertr.Strategies.WebApi;
 
 namespace Vertr.Platform.Host;
 
@@ -27,8 +33,14 @@ public class Program
 
         builder.Services
             .AddControllers()
-            .AddJsonOptions(options => 
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
+            .AddApplicationPart(typeof(BacktestController).Assembly)
+            .AddApplicationPart(typeof(TinvestGatewayController).Assembly)
+            .AddApplicationPart(typeof(CandlesController).Assembly)
+            .AddApplicationPart(typeof(OrderEventsController).Assembly)
+            .AddApplicationPart(typeof(PortfoliosController).Assembly)
+            .AddApplicationPart(typeof(StrategiesController).Assembly);
 
         // Add services to the container.
         builder.Services.AddRazorComponents()

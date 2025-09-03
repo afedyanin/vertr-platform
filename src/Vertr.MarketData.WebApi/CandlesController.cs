@@ -3,7 +3,8 @@ using Vertr.MarketData.Contracts.Commands;
 using Vertr.MarketData.Contracts.Interfaces;
 using Vertr.Platform.Common.Mediator;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.MarketData.WebApi;
+
 [Route("api/candles")]
 [ApiController]
 public class CandlesController : ControllerBase

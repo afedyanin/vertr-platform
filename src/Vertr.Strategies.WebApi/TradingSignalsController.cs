@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Vertr.Strategies.Contracts.Interfaces;
 
-namespace Vertr.Platform.Host.Controllers;
+namespace Vertr.Strategies.WebApi;
+
 [Route("api/trading-signals")]
 [ApiController]
 public class TradingSignalsController : ControllerBase

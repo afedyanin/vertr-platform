@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
+using Vertr.OrderExecution.WebApi.Requests;
 using Vertr.Platform.Common.Utils;
 using Vertr.Platform.Host.Components.Common;
 using Vertr.Platform.Host.Components.Models;
-using Vertr.Platform.Host.Requests;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.Platform.Host.Components.Pages;
@@ -101,69 +101,6 @@ public partial class PortfolioDetails
 
     private async Task<bool> InitExecutionMode(HttpClient apiClient)
         => await apiClient.GetFromJsonAsync<bool>("api/positions/simulated-order-execution", JsonOptions.DefaultOptions);
-
-    private async Task HandleDepositAction()
-    {
-        if (_portfolio == null)
-        {
-            return;
-        }
-
-        var depositModel = new DepositModel
-        {
-            Amount = 100_000,
-            Currency = "rub",
-            SelectedDate = DateTime.UtcNow,
-            SelectedTime = DateTime.UtcNow,
-        };
-
-        var dialog = await DialogService.ShowDialogAsync<DepositDialog>(depositModel, new DialogParameters<DepositModel>()
-        {
-            Content = depositModel,
-            Alignment = HorizontalAlignment.Right,
-            Title = "Make deposit",
-            PrimaryAction = "Save",
-            SecondaryAction = "Cancel",
-            Width = "400px",
-        });
-
-        var result = await dialog.Result;
-
-        if (result.Cancelled)
-        {
-            return;
-        }
-
-        if (result.Data is null)
-        {
-            return;
-        }
-
-        if (result.Data is not DepositModel model)
-        {
-            return;
-        }
-
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-
-        try
-        {
-            var request = new DepositRequest(model.ComposeDate(), _portfolio.Id, model.Amount, model.Currency);
-            var content = JsonContent.Create(request);
-            var message = await apiClient.PutAsync("api/portfolios/deposit", content);
-            message.EnsureSuccessStatusCode();
-        }
-        catch (Exception ex)
-        {
-            DemoLogger.WriteLine($"Making deposit error: {ex.Message}");
-            ToastService.ShowError($"Cannot save deposit amount: {model.Amount} ({model.Currency})");
-            return;
-        }
-
-        ToastService.ShowSuccess($"Added deposit amount: {model.Amount} ({model.Currency})");
-
-        await RefreshPage(apiClient);
-    }
 
     private async Task HandleOpenPositionAction()
     {

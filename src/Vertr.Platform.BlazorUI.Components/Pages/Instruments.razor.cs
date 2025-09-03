@@ -10,8 +10,6 @@ public partial class Instruments
 {
     private IDialogReference? _dialog;
 
-    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
-
     private IQueryable<Instrument> _instrumentList { get; set; }
 
     [Inject]

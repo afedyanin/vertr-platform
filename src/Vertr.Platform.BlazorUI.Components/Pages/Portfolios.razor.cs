@@ -11,8 +11,6 @@ public partial class Portfolios
 {
     private IDialogReference? _dialog;
 
-    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
-
     private FluentDataGrid<PortfolioModel> dataGrid;
 
     private IQueryable<PortfolioModel> _portfolios { get; set; }

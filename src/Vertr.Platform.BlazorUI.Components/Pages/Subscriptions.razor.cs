@@ -12,8 +12,6 @@ public partial class Subscriptions
 {
     private IDialogReference? _dialog;
 
-    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
-
     private FluentDataGrid<SubscriptionModel> dataGrid;
 
     private IQueryable<SubscriptionModel> _subscriptions { get; set; }

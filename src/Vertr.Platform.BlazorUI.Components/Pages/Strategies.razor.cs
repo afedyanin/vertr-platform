@@ -14,8 +14,6 @@ public partial class Strategies
 {
     private IDialogReference? _dialog;
 
-    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
-
     private FluentDataGrid<StrategyModel> dataGrid;
 
     private IQueryable<StrategyModel> _strategies { get; set; }

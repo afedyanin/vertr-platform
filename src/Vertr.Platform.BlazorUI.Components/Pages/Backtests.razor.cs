@@ -13,8 +13,6 @@ namespace Vertr.Platform.BlazorUI.Components.Pages;
 
 public partial class Backtests
 {
-    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
-
     private FluentDataGrid<BacktestModel> dataGrid;
 
     private IQueryable<BacktestModel> _backtests { get; set; }

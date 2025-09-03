@@ -50,20 +50,21 @@
     <div style="display: table; table-layout: fixed; width: 100%;">
         <div style="overflow-x: auto;">
             <FluentDataGrid @ref=dataGrid
-                            TGridItem=PositionModel
-                            Items="@_positions"
-                            ShowHover=true
-                            DisplayMode="DataGridDisplayMode.Table"
-                            RowSize="@DataGridRowSize.Medium">
-                <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true"  Title="Instrument" />
-                <PropertyColumn Property="@(p => p.Position.Balance.ToString())" Sortable="true" Title="Balance" />
-                <TemplateColumn Title="">
-                        <FluentButton Title="Close" Disabled=@context.TradingDisabled @onclick="@(async () => await @HandleClosePositionAction(context))" >Close</FluentButton>
-                </TemplateColumn>
-                <TemplateColumn Title="">
-                        <FluentButton Title="Reverse" Disabled=@context.TradingDisabled @onclick="@(async () => await HandleReversePositionAction(context))">Reverse</FluentButton>
-                </TemplateColumn>
-
+                TGridItem=PositionModel
+                Items="@_positions"
+                Virtualize=true
+                ShowHover=true
+                Style="width: 100%;"
+                DisplayMode="DataGridDisplayMode.Table"
+                RowSize="@DataGridRowSize.Medium">
+                    <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true"  Title="Instrument" />
+                    <PropertyColumn Property="@(p => p.Position.Balance.ToString())" Sortable="true" Title="Balance" />
+                    <TemplateColumn Title="">
+                            <FluentButton Title="Close" Disabled=@context.TradingDisabled @onclick="@(async () => await @HandleClosePositionAction(context))" >Close</FluentButton>
+                    </TemplateColumn>
+                    <TemplateColumn Title="">
+                            <FluentButton Title="Reverse" Disabled=@context.TradingDisabled @onclick="@(async () => await HandleReversePositionAction(context))">Reverse</FluentButton>
+                    </TemplateColumn>
             </FluentDataGrid>
         </div>
     </div>

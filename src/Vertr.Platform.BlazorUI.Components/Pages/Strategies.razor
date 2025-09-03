@@ -10,8 +10,6 @@
     <FluentButton @onclick="AddStrategyAsync" Appearance="Appearance.Accent">
         Add
     </FluentButton>
-    <FluentSpacer />
-    <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
 </FluentStack>
 
 <div style="display: table; table-layout: fixed; width: 100%;">
@@ -20,30 +18,25 @@
             TGridItem=StrategyModel
             OnCellClick="HandleCellClick"
             Items="@_strategies"
-            Pagination="@_pagination"
+            Virtualize=true
             ShowHover=true
+            Style="width: 100%;"
             DisplayMode="DataGridDisplayMode.Table"
             RowSize="@DataGridRowSize.Medium">
-            <PropertyColumn Property="@(p => p.Strategy.CreatedAt)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Strategy.Type)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Strategy.Name)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Strategy.QtyLots)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Strategy.PortfolioId)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Strategy.IsActive)" Sortable="true" />
-            <TemplateColumn Title="">
-                <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
-                              Appearance=Appearance.Lightweight
-                              Title="Delete"
-                              @onclick="@(async () => await HandleDeleteAction(context))" />
-            </TemplateColumn>
+                <PropertyColumn Property="@(p => p.Strategy.CreatedAt)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Strategy.Type)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Strategy.Name)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Strategy.QtyLots)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Strategy.PortfolioId)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Strategy.IsActive)" Sortable="true" />
+                <TemplateColumn Title="">
+                    <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
+                                  Appearance=Appearance.Lightweight
+                                  Title="Delete"
+                                  @onclick="@(async () => await HandleDeleteAction(context))" />
+                </TemplateColumn>
         </FluentDataGrid>
 
     </div>
 </div>
-
-<FluentPaginator State="@_pagination" />
-
-@code {
-    private RenderFragment template = @<span />;
-}

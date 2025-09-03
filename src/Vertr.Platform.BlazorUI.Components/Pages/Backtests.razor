@@ -14,41 +14,34 @@
     <FluentButton @onclick="RefreshAsync" Appearance="Appearance.Accent">
         Refresh
     </FluentButton>
-    <FluentSpacer />
-    <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
 </FluentStack>
 
 <div style="display: table; table-layout: fixed; width: 100%;">
     <div style="overflow-x: auto;">
         <FluentDataGrid @ref=dataGrid
-                        TGridItem=BacktestModel
-                        OnCellClick="HandleCellClick"
-                        Items="@_backtests"
-                        Pagination="@_pagination"
-                        ShowHover=true
-                        DisplayMode="DataGridDisplayMode.Table"
-                        RowSize="@DataGridRowSize.Medium">
-            <PropertyColumn Property="@(p => p.Backtest.From.ToString(ModelConsts.DateTimeFormat))" Title="From" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Backtest.To.ToString(ModelConsts.DateTimeFormat))" Title="To" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Strategy.Name)" Title="Strategy" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Backtest.Description)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Backtest.ExecutionState)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Backtest.ProgressMessage)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Backtest.PortfolioId)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Backtest.CreatedAt.ToString(ModelConsts.DateTimeFormat))" Title="Created At" Sortable="true" />
-            <TemplateColumn Title="">
-                <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
-                              Appearance=Appearance.Lightweight
-                              Title="Delete"
-                              @onclick="@(async () => await HandleDeleteAction(context))" />
-            </TemplateColumn>
+            TGridItem=BacktestModel
+            OnCellClick="HandleCellClick"
+            Items="@_backtests"
+            Virtualize=true
+            ShowHover=true
+            Style="width: 100%;"
+            DisplayMode="DataGridDisplayMode.Table"
+            RowSize="@DataGridRowSize.Medium">
+                <PropertyColumn Property="@(p => p.Backtest.From.ToString(ModelConsts.DateTimeFormat))" Title="From" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Backtest.To.ToString(ModelConsts.DateTimeFormat))" Title="To" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Strategy.Name)" Title="Strategy" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Backtest.Description)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Backtest.ExecutionState)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Backtest.ProgressMessage)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Backtest.PortfolioId)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Backtest.CreatedAt.ToString(ModelConsts.DateTimeFormat))" Title="Created At" Sortable="true" />
+                <TemplateColumn Title="">
+                    <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
+                                  Appearance=Appearance.Lightweight
+                                  Title="Delete"
+                                  @onclick="@(async () => await HandleDeleteAction(context))" />
+                </TemplateColumn>
         </FluentDataGrid>
 
     </div>
 </div>
-
-<FluentPaginator State="@_pagination" />
-
-@code {
-    private RenderFragment template = @<span />;
-}

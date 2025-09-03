@@ -11,39 +11,31 @@
     <FluentButton @onclick="AddSubscriptionAsync" Appearance="Appearance.Accent">
         Add
     </FluentButton>
-    <FluentSpacer />
-    <FluentPaginator State="@_pagination" SummaryTemplate="@template" />
 </FluentStack>
 
 <div style="display: table; table-layout: fixed; width: 100%;">
     <div style="overflow-x: auto;">
         <FluentDataGrid @ref=dataGrid
-                        TGridItem=SubscriptionModel
-                        OnCellClick="HandleCellClick"
-                        Items="@_subscriptions"
-                        Pagination="@_pagination"
-                        ShowHover=true
-                        DisplayMode="DataGridDisplayMode.Table"
-                        RowSize="@DataGridRowSize.Medium">
-            <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Subscription.Interval)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Subscription.Disabled)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Subscription.LoadHistory)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Subscription.ExternalStatus)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Subscription.ExternalSubscriptionId)" Sortable="true" />
-            <TemplateColumn Title="">
-                <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
-                              Appearance=Appearance.Lightweight
-                              Title="Delete"
-                              @onclick="@(async () => await HandleDeleteAction(context))" />
-            </TemplateColumn>
+            TGridItem=SubscriptionModel
+            OnCellClick="HandleCellClick"
+            Items="@_subscriptions"
+            Virtualize=true
+            ShowHover=true
+            Style="width: 100%;"
+            DisplayMode="DataGridDisplayMode.Table"
+            RowSize="@DataGridRowSize.Medium">
+                <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Subscription.Interval)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Subscription.Disabled)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Subscription.LoadHistory)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Subscription.ExternalStatus)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Subscription.ExternalSubscriptionId)" Sortable="true" />
+                <TemplateColumn Title="">
+                    <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
+                                  Appearance=Appearance.Lightweight
+                                  Title="Delete"
+                                  @onclick="@(async () => await HandleDeleteAction(context))" />
+                </TemplateColumn>
         </FluentDataGrid>
-
     </div>
 </div>
-
-<FluentPaginator State="@_pagination" />
-
-@code {
-    private RenderFragment template = @<span />;
-}

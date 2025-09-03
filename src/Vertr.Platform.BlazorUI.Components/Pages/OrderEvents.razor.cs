@@ -13,8 +13,6 @@ public partial class OrderEvents
 {
     private IDialogReference? _dialog;
 
-    private PaginationState _pagination = new PaginationState() { ItemsPerPage = 12 };
-
     private FluentDataGrid<OrderEventModel> dataGrid;
 
     private IQueryable<OrderEventModel> _orderEvents { get; set; }

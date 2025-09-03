@@ -31,7 +31,7 @@ public partial class CandlesHistoryGrid
         {
             var schema = GetJsonSchema();
             var candles = await GetCandles();
-            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Common/CandlesGrid.razor.js");
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Vertr.Platform.BlazorUI.Components/Common/CandlesGrid.razor.js");
             await _jsModule.InvokeVoidAsync("loadJson", schema, candles, perspectiveViewer);
         }
     }

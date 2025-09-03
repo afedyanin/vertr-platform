@@ -39,7 +39,7 @@ public partial class TradeOperationsGrid
         var operations = await GetOperations();
         var operationsJson = JsonSerializer.Serialize(operations, JsonOptions.DefaultOptions);
 
-        _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Common/TradeOperationsGrid.razor.js");
+        _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Vertr.Platform.BlazorUI.Components/Common/TradeOperationsGrid.razor.js");
         await _jsModule.InvokeVoidAsync("loadJson", schema, operationsJson, perspectiveViewer);
     }
 

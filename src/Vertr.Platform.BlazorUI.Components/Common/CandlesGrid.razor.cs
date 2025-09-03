@@ -27,10 +27,17 @@ public partial class CandlesGrid
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var schema = GetJsonSchema();
-        var candles = await GetCandles();
-        _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Common/CandlesGrid.razor.js");
-        await _jsModule.InvokeVoidAsync("loadJson", schema, candles, perspectiveViewer);
+        if (firstRender)
+        {
+            _jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Vertr.Platform.BlazorUI.Components/Common/CandlesGrid.razor.js");
+        }
+
+        if (_jsModule != null)
+        {
+            var schema = GetJsonSchema();
+            var candles = await GetCandles();
+            await _jsModule.InvokeVoidAsync("loadJson", schema, candles, perspectiveViewer);
+        }
     }
 
     private async Task<Dictionary<string, object>[]> GetCandles()

@@ -22,15 +22,21 @@
                         Style="width: 100%;"
                         DisplayMode="DataGridDisplayMode.Table"
                         RowSize="@DataGridRowSize.Medium">
+            <PropertyColumn Property="@(p => p.UpdatedAt)" Sortable="true" Class="flash-on-update" />
             <PropertyColumn Property="@(p => p.Symbol)" Sortable="true" />
             <PropertyColumn Property="@(p => p.DayOpen)" Sortable="true" />
             <PropertyColumn Property="@(p => p.DayHigh)" Sortable="true" />
             <PropertyColumn Property="@(p => p.DayHigh)" Sortable="true" />
             <PropertyColumn Property="@(p => p.DayLow)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.LastChange)" Sortable="true" />
+            <TemplateColumn Title="LastChange">
+                <FluentNumberField
+                    Step=0.25
+                    @bind-Value="@context!.LastChange"
+                    TValue="decimal"
+                    @oninput="@(e => LastChangeInput(decimal.Parse(e.Value.ToString()), context))" />
+            </TemplateColumn>
             <PropertyColumn Property="@(p => p.Change)" Sortable="true" />
             <PropertyColumn Property="@(p => p.PercentChange)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.UpdatedAt)" Sortable="true" />
         </FluentDataGrid>
 
     </div>

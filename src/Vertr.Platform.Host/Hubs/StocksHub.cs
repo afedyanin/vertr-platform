@@ -9,17 +9,57 @@ namespace Vertr.Platform.Host.Hubs;
 public class StocksHub : Hub
 {
     private readonly IStockTickerObservable _stockTickerObservable;
+    private readonly IStockTickerDataHandler _stockTickerDataHandler;
 
-    public StocksHub(IStockTickerObservable stockTickerObservable)
+
+    private readonly Dictionary<string, StockModel> _stocks;
+
+    public StocksHub(
+        IStockTickerObservable stockTickerObservable,
+        IStockTickerDataHandler stockTickerDataHandler)
     {
         _stockTickerObservable = stockTickerObservable;
+        _stocks = InitStocks();
+        _stockTickerDataHandler = stockTickerDataHandler;
     }
 
     public Task<StockModel[]> GetSnapshot()
     {
-        var res = new List<StockModel>();
+        return Task.FromResult(_stocks.Values.ToArray());
+    }
 
-        res.Add(new StockModel
+    public ChannelReader<StockModel> StreamStocks()
+    {
+        return _stockTickerObservable.StreamStocks().AsChannelReader(10);
+    }
+
+    public Task OnNewLastChangeInput(StockModel stockModel)
+    {
+        stockModel.UpdatedAt = DateTime.UtcNow;
+        stockModel.DayOpen = stockModel.LastChange;
+        _stocks[stockModel.Symbol] = stockModel;
+
+        Console.WriteLine($"LastChange value: {_stocks[stockModel.Symbol].LastChange}");
+        _stockTickerDataHandler.HandlePriceChange(_stocks[stockModel.Symbol]);
+
+        return Task.CompletedTask;
+    }
+
+    public override Task OnConnectedAsync()
+    {
+        return base.OnConnectedAsync();
+    }
+
+    public override Task OnDisconnectedAsync(Exception? exception)
+    {
+        return base.OnDisconnectedAsync(exception);
+    }
+
+    private Dictionary<string, StockModel> InitStocks()
+    {
+        var res = new Dictionary<string, StockModel>();
+
+        res.Add("AAA", new StockModel
         {
             Symbol = "AAA",
             DayOpen = 100,
@@ -31,7 +71,7 @@ public class StocksHub : Hub
             UpdatedAt = DateTime.UtcNow,
         });
 
-        res.Add(new StockModel
+        res.Add("BBB", new StockModel
         {
             Symbol = "BBB",
             DayOpen = 100,
@@ -43,7 +83,7 @@ public class StocksHub : Hub
             UpdatedAt = DateTime.UtcNow,
         });
 
-        res.Add(new StockModel
+        res.Add("CCC", new StockModel
         {
             Symbol = "CCC",
             DayOpen = 100,
@@ -55,21 +95,6 @@ public class StocksHub : Hub
             UpdatedAt = DateTime.UtcNow,
         });
 
-        return Task.FromResult(res.ToArray());
-    }
-
-    public ChannelReader<StockModel> StreamStocks()
-    {
-        return _stockTickerObservable.StreamStocks().AsChannelReader(10);
-    }
-
-    public override Task OnConnectedAsync()
-    {
-        return base.OnConnectedAsync();
-    }
-
-    public override Task OnDisconnectedAsync(Exception? exception)
-    {
-        return base.OnDisconnectedAsync(exception);
+        return res;
     }
 }

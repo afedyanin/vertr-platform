@@ -70,4 +70,11 @@ public partial class StockTicker : IAsyncDisposable
             StateHasChanged();
         }
     }
+
+    private async Task LastChangeInput(decimal value, StockModel stockModel)
+    {
+        stockModel.LastChange = value;
+        await _hubConnection.SendAsync("OnNewLastChangeInput", stockModel);
+        await Task.Delay(1500);
+    }
 }

@@ -89,7 +89,7 @@ public class Program
         builder.Services.AddSignalR();
 
         // Hubs
-        builder.Services.AddHostedService<StockPricesUpdatingService>();
+        //builder.Services.AddHostedService<StockPricesUpdatingService>();
         builder.Services.AddSingleton<StockTickerSubject>();
         builder.Services.AddSingleton<IStockTickerObservable>(x => x.GetRequiredService<StockTickerSubject>());
         builder.Services.AddSingleton<IStockTickerDataHandler>(x => x.GetRequiredService<StockTickerSubject>());

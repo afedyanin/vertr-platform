@@ -22,7 +22,7 @@ public class StockPricesUpdatingService : BackgroundService
                 DayOpen = 100,
                 DayLow = 90,
                 DayHigh = 120,
-                LastChange = 103,
+                LastChange = "103",
                 Change = 3,
                 PercentChange = 0.04,
                 UpdatedAt = DateTime.UtcNow,

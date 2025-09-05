@@ -9,7 +9,7 @@ public class StockModel
 
     public decimal DayHigh { get; set; }
 
-    public decimal LastChange { get; set; }
+    public string? LastChange { get; set; }
 
     public decimal Change { get; set; }
 

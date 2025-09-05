@@ -29,11 +29,12 @@
             <PropertyColumn Property="@(p => p.DayHigh)" Sortable="true" />
             <PropertyColumn Property="@(p => p.DayLow)" Sortable="true" />
             <TemplateColumn Title="LastChange">
-                <FluentNumberField
-                    Step=0.25
+                <FluentTextField
+                    Immediate="true"
+                    ImmediateDelay="1500"
                     @bind-Value="@context!.LastChange"
-                    TValue="decimal"
-                    @oninput="@(e => LastChangeInput(decimal.Parse(e.Value.ToString()), context))" />
+                    ValueChanged="OnValueChanged"
+                    />
             </TemplateColumn>
             <PropertyColumn Property="@(p => p.Change)" Sortable="true" />
             <PropertyColumn Property="@(p => p.PercentChange)" Sortable="true" />

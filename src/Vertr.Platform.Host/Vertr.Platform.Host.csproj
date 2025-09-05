@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.*-*" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.*-* " />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.*-* " />
+    <PackageReference Include="System.Reactive" Version="6.0.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,97 +1,73 @@
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Vertr.MarketData.Contracts;
 using Vertr.Platform.BlazorUI.Components.Models;
-using Vertr.Platform.Common.Utils;
 
 namespace Vertr.Platform.BlazorUI.Components.Pages;
 
-public partial class StockTicker
+public partial class StockTicker : IAsyncDisposable
 {
     private FluentDataGrid<StockModel> dataGrid;
 
-    private IQueryable<StockModel> _stocks { get; set; }
+    private HubConnection _hubConnection;
 
-    private IDictionary<Guid, Instrument> _instruments { get; set; }
+    private bool _isConnected =>
+           _hubConnection?.State == HubConnectionState.Connected;
 
-    [Inject]
-    private IHttpClientFactory _httpClientFactory { get; set; }
+    private Dictionary<string, StockModel> _stocksDict = [];
+
+    private IQueryable<StockModel> _stocks => _stocksDict.Values.AsQueryable();
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/stocksHub"))
+            .Build();
 
-        _instruments = await InitInstruments(apiClient);
-        _stocks = await InitStocks();
+        await _hubConnection.StartAsync();
+        _stocksDict = await InitStocks();
 
         await base.OnInitializedAsync();
     }
-    private async Task<IDictionary<Guid, Instrument>> InitInstruments(HttpClient apiClient)
-    {
-        var instruments = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments", JsonOptions.DefaultOptions);
-        var res = new Dictionary<Guid, Instrument>();
 
-        if (instruments == null)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
-            return res;
+            await StartStreaming();
         }
 
-        var filterd = instruments?
-            .Where(x =>
-                !string.IsNullOrEmpty(x.InstrumentType) &&
-                !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase))
-            .ToArray() ?? [];
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
+    private async Task<Dictionary<string, StockModel>> InitStocks()
+    {
+        var res = new Dictionary<string, StockModel>();
 
-        foreach (var instrument in filterd)
+        var items = await _hubConnection.InvokeAsync<StockModel[]>("GetSnapshot");
+
+        foreach (var item in items)
         {
-            res[instrument.Id] = instrument;
+            res[item.Symbol] = item;
         }
 
         return res;
     }
-
-    private Task<IQueryable<StockModel>> InitStocks()
+    private async Task StartStreaming()
     {
-        var res = new List<StockModel>();
+        var stream = _hubConnection.StreamAsync<StockModel>("StreamStocks");
 
-        res.Add(new StockModel
+        await foreach (var item in stream)
         {
-            Symbol = "AAA",
-            DayOpen = 100,
-            DayLow = 90,
-            DayHigh = 120,
-            LastChange = 103,
-            Change = 3,
-            PercentChange = 0.04,
-            UpdatedAt = DateTime.UtcNow,
-        });
-
-        res.Add(new StockModel
-        {
-            Symbol = "BBB",
-            DayOpen = 100,
-            DayLow = 90,
-            DayHigh = 120,
-            LastChange = 103,
-            Change = 3,
-            PercentChange = 0.04,
-            UpdatedAt = DateTime.UtcNow,
-        });
-
-        res.Add(new StockModel
-        {
-            Symbol = "CCC",
-            DayOpen = 100,
-            DayLow = 90,
-            DayHigh = 120,
-            LastChange = 103,
-            Change = 3,
-            PercentChange = 0.04,
-            UpdatedAt = DateTime.UtcNow,
-        });
-
-        return Task.FromResult(res.AsQueryable());
+            _stocksDict[item.Symbol] = item;
+            StateHasChanged();
+        }
     }
 }

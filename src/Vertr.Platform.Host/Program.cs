@@ -1,25 +1,29 @@
 using System.Text.Json.Serialization;
+using Google.Api;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Backtest.Application;
 using Vertr.Backtest.DataAccess;
+using Vertr.Backtest.WebApi;
 using Vertr.Infrastructure.Common.Jobs;
 using Vertr.Infrastructure.Common.Mediator;
 using Vertr.MarketData.Application;
 using Vertr.MarketData.DataAccess;
-using Vertr.Strategies.Application;
-using Vertr.Strategies.DataAccess;
-using Vertr.TinvestGateway;
+using Vertr.MarketData.WebApi;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.DataAccess;
+using Vertr.OrderExecution.WebApi;
+using Vertr.Platform.BlazorUI.Components;
+using Vertr.Platform.Host.BackgroundServices;
+using Vertr.Platform.Host.Hubs;
+using Vertr.Platform.Host.StockTicker;
 using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.DataAccess;
-using Vertr.Backtest.WebApi;
-using Vertr.TinvestGateway.WebApi;
-using Vertr.MarketData.WebApi;
-using Vertr.OrderExecution.WebApi;
 using Vertr.PortfolioManager.WebApi;
+using Vertr.Strategies.Application;
+using Vertr.Strategies.DataAccess;
 using Vertr.Strategies.WebApi;
-using Vertr.Platform.BlazorUI.Components;
+using Vertr.TinvestGateway;
+using Vertr.TinvestGateway.WebApi;
 
 namespace Vertr.Platform.Host;
 
@@ -82,6 +86,14 @@ public class Program
         // Mediator
         builder.Services.AddMediator();
 
+        builder.Services.AddSignalR();
+
+        // Hubs
+        builder.Services.AddHostedService<StockPricesUpdatingService>();
+        builder.Services.AddSingleton<StockTickerSubject>();
+        builder.Services.AddSingleton<IStockTickerObservable>(x => x.GetRequiredService<StockTickerSubject>());
+        builder.Services.AddSingleton<IStockTickerDataHandler>(x => x.GetRequiredService<StockTickerSubject>());
+
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
@@ -106,6 +118,8 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.MapHub<StocksHub>("/stocksHub");
 
         app.UseHangfireDashboard();
 

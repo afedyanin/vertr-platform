@@ -56,6 +56,7 @@ public partial class StockTicker : IAsyncDisposable
         foreach (var item in items)
         {
             res[item.Symbol] = item;
+            item.Updated = ModelUpdated;
         }
 
         return res;
@@ -67,20 +68,13 @@ public partial class StockTicker : IAsyncDisposable
         await foreach (var item in stream)
         {
             _stocksDict[item.Symbol] = item;
+            item.Updated = ModelUpdated;
             StateHasChanged();
         }
     }
 
-    private async Task LastChangeInput(string value, StockModel stockModel)
+    private void ModelUpdated(StockModel model)
     {
-        //stockModel.LastChange = value;
-        //await _hubConnection.SendAsync("OnNewLastChangeInput", stockModel);
-        Console.WriteLine($"value: {value}  stockModelValue: {stockModel.LastChange}");
-
-    }
-
-    private void OnValueChanged(string? value)
-    {
-        Console.WriteLine($"OnValueChanged: {value}");
+        _hubConnection.SendAsync("OnNewLastChangeInput", model).GetAwaiter().GetResult();
     }
 }

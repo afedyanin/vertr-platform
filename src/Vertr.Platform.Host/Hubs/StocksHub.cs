@@ -36,10 +36,9 @@ public class StocksHub : Hub
     public Task OnNewLastChangeInput(StockModel stockModel)
     {
         stockModel.UpdatedAt = DateTime.UtcNow;
-        stockModel.DayOpen = decimal.Parse(stockModel.LastChange);
+        stockModel.DayOpen = stockModel.LastChange;
         _stocks[stockModel.Symbol] = stockModel;
 
-        Console.WriteLine($"LastChange value: {_stocks[stockModel.Symbol].LastChange}");
         _stockTickerDataHandler.HandlePriceChange(_stocks[stockModel.Symbol]);
 
         return Task.CompletedTask;
@@ -65,7 +64,7 @@ public class StocksHub : Hub
             DayOpen = 100,
             DayLow = 90,
             DayHigh = 120,
-            LastChange = 103.ToString(),
+            LastChange = 103,
             Change = 3,
             PercentChange = 0.04,
             UpdatedAt = DateTime.UtcNow,
@@ -77,7 +76,7 @@ public class StocksHub : Hub
             DayOpen = 100,
             DayLow = 90,
             DayHigh = 120,
-            LastChange = 103.ToString(),
+            LastChange = 103,
             Change = 3,
             PercentChange = 0.04,
             UpdatedAt = DateTime.UtcNow,
@@ -89,7 +88,7 @@ public class StocksHub : Hub
             DayOpen = 100,
             DayLow = 90,
             DayHigh = 120,
-            LastChange = 103.ToString(),
+            LastChange = 103,
             Change = 3,
             PercentChange = 0.04,
             UpdatedAt = DateTime.UtcNow,

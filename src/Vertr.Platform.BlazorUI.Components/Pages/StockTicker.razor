@@ -21,23 +21,18 @@
                         ShowHover=true
                         Style="width: 100%;"
                         DisplayMode="DataGridDisplayMode.Table"
-                        RowSize="@DataGridRowSize.Medium">
+                        RowSize="@DataGridRowSize.Small">
             <PropertyColumn Property="@(p => p.UpdatedAt)" Sortable="true" Class="flash-on-update" />
-            <PropertyColumn Property="@(p => p.Symbol)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.DayOpen)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.DayHigh)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.DayHigh)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.DayLow)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Symbol)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.DayOpen)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.DayHigh)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.DayHigh)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.DayLow)" Sortable="true" Class="flash-on-update" />
             <TemplateColumn Title="LastChange">
-                <FluentTextField
-                    Immediate="true"
-                    ImmediateDelay="1500"
-                    @bind-Value="@context!.LastChange"
-                    ValueChanged="OnValueChanged"
-                    />
+                <FluentNumberField @bind-Value="@context!.LastChange" Max="200" Min="50" />
             </TemplateColumn>
-            <PropertyColumn Property="@(p => p.Change)" Sortable="true" />
-            <PropertyColumn Property="@(p => p.PercentChange)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Change)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.PercentChange)" Sortable="true" Class="flash-on-update" />
         </FluentDataGrid>
 
     </div>

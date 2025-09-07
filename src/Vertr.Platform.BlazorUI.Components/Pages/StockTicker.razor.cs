@@ -8,6 +8,8 @@ public partial class StockTicker : IAsyncDisposable
 {
     private FluentDataGrid<StockModel> dataGrid;
 
+    private TemplateColumn<StockModel> templateColumn;
+
     private HubConnection _hubConnection;
 
     private bool _isConnected =>
@@ -77,8 +79,8 @@ public partial class StockTicker : IAsyncDisposable
     {
         if (cell.GridColumn == 7)
         {
-            var castedField = cell.ChildContent?.Target as FluentNumberField<decimal>;
-            Console.WriteLine($"Casted field value: {castedField?.Value}");
+            var target = cell.ChildContent?.Target;
+            Console.WriteLine($"Traget: {target}");
         }
     }
 

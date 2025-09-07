@@ -1,3 +1,10 @@
+# 2025-09-07
+
+## CSS stuff
+
+https://stackoverflow.com/questions/79171401/how-to-style-individual-cells-of-fluentdatagrid-based-on-their-value
+https://github.com/microsoft/fluentui-blazor/issues/2715
+
 # 2025-09-01
 
 - добавить UI для работы с тинвест акаунтами

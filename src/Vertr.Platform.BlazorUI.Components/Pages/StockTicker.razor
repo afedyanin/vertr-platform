@@ -20,8 +20,8 @@
                         Virtualize=true
                         ShowHover=true
                         Style="width: 100%;"
-                        DisplayMode="DataGridDisplayMode.Grid"
-                        RowSize="@DataGridRowSize.Medium">
+                        DisplayMode="DataGridDisplayMode.Table"
+                        RowSize="@DataGridRowSize.Medium" >
             <PropertyColumn Property="@(p => p.UpdatedAt)" Sortable="true" Class="flash-on-update" />
             <PropertyColumn Property="@(p => p.Symbol)" Sortable="true" Class="flash-on-update" />
             <PropertyColumn Property="@(p => p.DayOpen)" Sortable="true" Class="flash-on-update" />
@@ -29,7 +29,7 @@
             <PropertyColumn Property="@(p => p.DayHigh)" Sortable="true" Class="flash-on-update" />
             <PropertyColumn Property="@(p => p.DayLow)" Sortable="true" Class="flash-on-update" />
             <TemplateColumn Title="LastChange">
-                <FluentNumberField @bind-Value="@context!.LastChange" MaxLength="12" UseTypeConstraints Autofocus />
+                <FluentNumberField @bind-Value="@context!.LastChange" MaxLength="12" UseTypeConstraints/>
             </TemplateColumn>
             <PropertyColumn Property="@(p => p.Change)" Sortable="true" Class="flash-on-update" />
             <PropertyColumn Property="@(p => p.PercentChange)" Sortable="true" Class="flash-on-update" />

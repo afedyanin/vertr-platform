@@ -73,8 +73,17 @@ public partial class StockTicker : IAsyncDisposable
         }
     }
 
-    private void ModelUpdated(StockModel model)
+    private void OnCellFocused(FluentDataGridCell<StockModel> cell)
     {
-        _hubConnection.SendAsync("OnNewLastChangeInput", model).GetAwaiter().GetResult();
+        if (cell.GridColumn == 7)
+        {
+            var castedField = cell.ChildContent?.Target as FluentNumberField<decimal>;
+            Console.WriteLine($"Casted field value: {castedField?.Value}");
+        }
+    }
+
+    private async Task ModelUpdated(StockModel model)
+    {
+        await _hubConnection.SendAsync("OnNewLastChangeInput", model);
     }
 }

@@ -30,5 +30,6 @@ public class StockModel
 
     public DateTime UpdatedAt { get; set; }
 
-    public Action<StockModel>? Updated;
+    public Func<StockModel, Task>? Updated;
+
 }

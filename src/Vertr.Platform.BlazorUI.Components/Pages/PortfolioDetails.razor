@@ -16,7 +16,7 @@
     <FluentSpacer />
     @if (_simulatedExecutionMode)
     {
-        <FluentBadge Appearance="Appearance.Neutral" Fill="highlight" BackgroundColor="#ffd800;" Color="#000">Order execution: Simulated mode</FluentBadge>
+        <FluentBadge Appearance="Appearance.Neutral" Fill="highlight" BackgroundColor="#000" Color="#fff">Order execution: Simulated mode</FluentBadge>
     }
     else
     {
@@ -38,10 +38,17 @@
 
     <div style="display: table; table-layout: fixed; width: 100%;">
         <div style="overflow-x: auto;">
-        <FluentTextField Value="@_portfolio.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
-        <FluentTextField Value="@_portfolio.UpdatedAt.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Updated At:</FluentTextField>
-        <FluentTextField Value="@_portfolio.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
-        <FluentTextField Value="@_portfolio.IsBacktest.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Is Backtest"></FluentTextField>
+            @if (_portfolio.IsBacktest)
+            {
+                    <FluentBadge Appearance="Appearance.Accent" Circular=true style="width: 100%;">Backtest portfolio</FluentBadge>
+            }
+            else
+            {
+                    <FluentBadge Appearance="Appearance.Neutral" Circular=true style="width: 100%;">Strategy portfolio</FluentBadge>
+            }
+            <FluentTextField Value="@_portfolio.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
+            <FluentTextField Value="@_portfolio.UpdatedAt.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Updated At:</FluentTextField>
+            <FluentTextField Value="@_portfolio.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
         </div>
     </div>
 

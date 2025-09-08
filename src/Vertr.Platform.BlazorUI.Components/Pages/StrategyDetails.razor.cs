@@ -16,7 +16,7 @@ public partial class StrategyDetails
 
     private Instrument[] AllInstruments = [];
 
-    private string _portfolioDetailsLink => $"/portfolios/details/{Content?.Strategy.PortfolioId}";
+    private bool ActivateDiasbled => Content!.Strategy.IsActive;
 
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
@@ -28,6 +28,72 @@ public partial class StrategyDetails
         Content = await InitStrategy(apiClient);
 
         await base.OnInitializedAsync();
+    }
+
+    private async Task OnActivate()
+    {
+        if (Content?.Strategy == null)
+        {
+            return;
+        }
+
+        Content.Strategy.IsActive = true;
+
+        var saved = await SaveStrategy(Content.Strategy);
+
+        if (saved)
+        {
+            ToastService.ShowSuccess("Strategy activated!");
+        }
+    }
+    private async Task OnDeactivate()
+    {
+        if (Content?.Strategy == null)
+        {
+            return;
+        }
+
+        Content.Strategy.IsActive = false;
+
+        var saved = await SaveStrategy(Content.Strategy);
+
+        if (saved)
+        {
+            ToastService.ShowSuccess("Strategy deactivated!");
+        }
+    }
+
+    private async Task OnSave()
+    {
+        if (Content?.Strategy == null)
+        {
+            return;
+        }
+
+        var saved = await SaveStrategy(Content.Strategy);
+
+        if (saved)
+        {
+            ToastService.ShowSuccess("Strategy saved!");
+            StateHasChanged();
+        }
+    }
+
+    private async Task<bool> SaveStrategy(StrategyMetadata metadata)
+    {
+        try
+        {
+            using var apiClient = _httpClientFactory.CreateClient("backend");
+            var content = JsonContent.Create(metadata);
+            var message = await apiClient.PostAsync("api/strategies", content);
+            message.EnsureSuccessStatusCode();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Cannot save strategy. Error: {ex.Message}");
+            return false;
+        }
     }
 
     private async Task<Instrument[]> InitInstruments(HttpClient apiClient)

@@ -6,7 +6,7 @@ using Vertr.Platform.Common.Utils;
 
 namespace Vertr.Platform.BlazorUI.Components.Common;
 
-public partial class StrategyPanel
+public partial class StrategyDialog
 {
     [Parameter]
     public StrategyModel Content { get; set; } = default!;

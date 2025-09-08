@@ -115,7 +115,7 @@ public partial class Backtests : IAsyncDisposable
 
         var parameters = new DialogParameters()
         {
-            Alignment = HorizontalAlignment.Right,
+            Alignment = HorizontalAlignment.Center,
             Title = "Create new backtest",
             PrimaryAction = "Save",
             SecondaryAction = "Cancel",
@@ -169,8 +169,6 @@ public partial class Backtests : IAsyncDisposable
             return;
 
         }
-
-        ToastService.ShowSuccess($"Backtest {model.Backtest.Description} created.");
 
         Navigation.NavigateTo($"backtests/details/{model.Backtest.Id}");
     }

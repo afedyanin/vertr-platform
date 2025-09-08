@@ -56,36 +56,35 @@ public partial class Strategies
                 CreatedAt = DateTime.UtcNow,
                 InstrumentId = instrument.Id,
                 Type = StrategyType.RandomWalk,
-                Name = "Test Strategy",
+                Name = "Strategy",
                 IsActive = false,
                 QtyLots = 10
             }
         };
 
-        await OpenPanelRightAsync(model);
-    }
-
-    private async Task OpenPanelRightAsync(StrategyModel strategyModel)
-    {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-
-        _dialog = await DialogService.ShowPanelAsync<StrategyPanel>(strategyModel, new DialogParameters<StrategyModel>()
+        _dialog = await DialogService.ShowDialogAsync<StrategyDialog>(model, new DialogParameters<StrategyModel>()
         {
-            Content = strategyModel,
-            Alignment = HorizontalAlignment.Right,
-            Title = $"{strategyModel.Strategy.Name}",
+            Content = model,
+            Alignment = HorizontalAlignment.Center,
+            Title = "Create new strategy",
             PrimaryAction = "Save",
             SecondaryAction = "Cancel",
-            Width = "400px",
+            Width = "500px",
+            Height = "580px",
+            TrapFocus = true,
+            Modal = true,
+            PreventScroll = true
         });
 
         var result = await _dialog.Result;
+
+        using var apiClient = _httpClientFactory.CreateClient("backend");
 
         if (result.Cancelled)
         {
             // TODO: implement discard changes
             _strategies = await InitStrategies(apiClient);
-            await dataGrid.RefreshDataAsync(force: true);
+            StateHasChanged();
             return;
         }
 
@@ -94,49 +93,40 @@ public partial class Strategies
             return;
         }
 
-
-        if (result.Data is not StrategyModel model)
+        if (result.Data is not StrategyModel strategyModel)
         {
             return;
         }
 
-        // Create portfolio for new strategy
-        if (model.Strategy.PortfolioId == Guid.Empty)
+        var portfolio = new Portfolio
         {
-            var portfolio = new Portfolio
-            {
-                Id = Guid.NewGuid(),
-                IsBacktest = false,
-                Name = $"Portfolio for {model.Strategy.Name} strategy",
-                UpdatedAt = model.Strategy.CreatedAt,
-            };
+            Id = Guid.NewGuid(),
+            IsBacktest = false,
+            Name = $"Portfolio for {strategyModel.Strategy.Name} strategy",
+            UpdatedAt = model.Strategy.CreatedAt,
+        };
 
-            var savedPortfolio = await SavePortfolio(portfolio);
+        var savedPortfolio = await SavePortfolio(portfolio);
 
-            if (!savedPortfolio)
-            {
-                DemoLogger.WriteLine($"Error creating portfolio for strategy {model.Strategy.Name}");
-                return;
-            }
-
-            model.Strategy.PortfolioId = portfolio.Id;
+        if (!savedPortfolio)
+        {
+            DemoLogger.WriteLine($"Error creating portfolio for strategy {model.Strategy.Name}");
+            return;
         }
 
-        model.Strategy.InstrumentId = model.Instrument.Id;
+        strategyModel.Strategy.PortfolioId = portfolio.Id;
+        strategyModel.Strategy.InstrumentId = strategyModel.Instrument.Id;
 
-        var saved = await SaveStrategy(model.Strategy);
+        var saved = await SaveStrategy(strategyModel.Strategy);
 
-        if (saved)
+        if (!saved)
         {
-            DemoLogger.WriteLine($"Strategy {model.Strategy.Name} saved.");
-        }
-        else
-        {
-            DemoLogger.WriteLine($"Saving strategy {model.Strategy.Name} FAILED!");
+            ToastService.ShowError($"Saving strategy {model.Strategy.Name} failed.");
+            return;
+
         }
 
-        _strategies = await InitStrategies(apiClient);
-        await dataGrid.RefreshDataAsync(force: true);
+        Navigation.NavigateTo($"strategies/details/{strategyModel.Strategy.Id}");
     }
 
     private async Task<IDictionary<Guid, Instrument>> InitInstruments(HttpClient apiClient)

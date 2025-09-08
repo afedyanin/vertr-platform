@@ -25,19 +25,28 @@
 <br />
 @if (Content != null)
 {
-    <FluentTextField Value="@Content.Backtest.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
-    <FluentTextField Value="@Content.Backtest.From.ToString(ModelConsts.DateTimeFormat)" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">From:</FluentTextField>
-    <FluentTextField Value="@Content.Backtest.To.ToString(ModelConsts.DateTimeFormat)" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">To:</FluentTextField>
-    <FluentTextField Value="@Content.Backtest.Description" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Description:</FluentTextField>
-    <FluentTextField Value="@Content.Strategy.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Strategy:</FluentTextField>
-    <FluentTextField Value="@Content.Backtest.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
-    <FluentTextField Value="@Content.Backtest.ExecutionState.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">State:</FluentTextField>
-    <FluentTextField Value="@Content.Backtest.ProgressMessage?.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Message:</FluentTextField>
-    <FluentTextField Value="@Content.Backtest.IsCancellationRequested.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Cancel requested:</FluentTextField>
-    <br />
-    <br />
-    <FluentButton OnClick="OnStartAsync" Appearance="Appearance.Accent" Disabled="StartDiasbled">Start</FluentButton>
-    <FluentButton OnClick="OnCancelAsync" Appearance="Appearance.Accent" Disabled="CancelDiasbled">Cancel</FluentButton>
+    <FluentStack Orientation="Orientation.Horizontal">
+        <div style="display: table; table-layout: fixed; width: 100%;">
+            <div style="overflow-x: auto;">
+                <FluentTextField Value="@Content.Backtest.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Id:" />
+                <FluentTextField Value="@Content.Backtest.From.ToString(ModelConsts.DateTimeFormat)" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">From:</FluentTextField>
+                <FluentTextField Value="@Content.Backtest.To.ToString(ModelConsts.DateTimeFormat)" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">To:</FluentTextField>
+                <FluentTextField Value="@Content.Backtest.Description" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Description:</FluentTextField>
+                <FluentTextField Value="@Content.Strategy.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Strategy:</FluentTextField>
+                <FluentTextField Value="@Content.Backtest.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
+                <FluentTextField Value="@Content.Backtest.ExecutionState.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">State:</FluentTextField>
+                <FluentTextField Value="@Content.Backtest.ProgressMessage?.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Message:</FluentTextField>
+                <FluentTextField Value="@Content.Backtest.IsCancellationRequested.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Cancel requested:</FluentTextField>
+            </div>
+        </div>
+        <FluentSpacer />
+        <div style="display: table; table-layout: fixed; width: 100%;">
+            <div style="overflow-x: auto;">
+                <FluentButton OnClick="OnStartAsync" Appearance="Appearance.Accent" Disabled="StartDiasbled">Start</FluentButton>
+                <FluentButton OnClick="OnCancelAsync" Appearance="Appearance.Accent" Disabled="CancelDiasbled">Cancel</FluentButton>
+            </div>
+        </div>
+    </FluentStack>
 }
 else
 {

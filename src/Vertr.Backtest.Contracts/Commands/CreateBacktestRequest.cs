@@ -3,6 +3,8 @@ using Vertr.Platform.Common.Mediator;
 namespace Vertr.Backtest.Contracts.Commands;
 public class CreateBacktestRequest : IRequest<CreateBacktestResponse>
 {
+    public Guid BacktestId { get; set; }
+
     public DateTime From { get; init; }
 
     public DateTime To { get; init; }

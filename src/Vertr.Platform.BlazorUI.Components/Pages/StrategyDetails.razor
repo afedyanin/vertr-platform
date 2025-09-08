@@ -10,13 +10,24 @@
 
 <h3>Strategy Details</h3>
 
+<FluentStack Orientation="Orientation.Horizontal">
+    <FluentAnchor Href="/strategies" Appearance="Appearance.Hypertext">Back to strategies</FluentAnchor>
+    @if (Content != null)
+    {
+        <FluentSpacer />
+        <FluentAnchor Href=@($"/portfolios/details/{Content?.Strategy.PortfolioId}") Appearance="Appearance.Hypertext">View portfolio</FluentAnchor>
+        <FluentSpacer />
+        <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
+            Appearance=Appearance.Lightweight
+            Title="Delete"
+            @onclick="HandleDeleteAction" />
+    }
+</FluentStack>
+
+<br />
+
 @if (Content != null)
 {
-    <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
-                  Appearance=Appearance.Lightweight
-                  Title="Delete"
-                  @onclick="@(async () => await HandleDeleteAction())" />
-
     <FluentTextField Value="@Content.Strategy.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
     <FluentTextField Value="@Content.Strategy.CreatedAt.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Created At:</FluentTextField>
     <FluentTextField @bind-Value="@Content.Strategy.Name" Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>
@@ -37,12 +48,7 @@
     <FluentCheckbox @bind-Value="@Content.Strategy.IsActive" Appearance="FluentInputAppearance.Filled" style="width: 100%;" Label="Is Active"></FluentCheckbox>
     <br />
     <br />
-
-    @if (Content.Strategy.PortfolioId != Guid.Empty)
-    {
-        <FluentTextField Value="@Content.Strategy.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
-        <FluentAnchor Href=@_portfolioDetailsLink>Go to portfolio</FluentAnchor>
-    }
+    <FluentTextField Value="@Content.Strategy.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
 }
 else
 {

@@ -9,8 +9,6 @@ using Vertr.Strategies.Contracts;
 namespace Vertr.Platform.BlazorUI.Components.Pages;
 public partial class BacktestDetails
 {
-    private string _portfolioDeatilsLink => $"/portfolios/details/{Content?.Portfolio?.Id}";
-
     private IDictionary<Guid, StrategyMetadata> _strategies { get; set; }
 
     private IDictionary<Guid, Portfolio> _portfolios { get; set; }
@@ -132,13 +130,15 @@ public partial class BacktestDetails
         return res;
     }
 
-    private async Task HandleDeleteAction(BacktestModel model)
+    private async Task HandleDeleteAction()
     {
+        var backtest = Content!.Backtest;
+
         var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Delete backtest: {model.Backtest.Description}?",
+            $"Delete backtest: {backtest.Description}?",
             "Yes",
             "No",
-            $"Deleting backtest {model.Backtest.Description}");
+            $"Deleting backtest {backtest.Description}");
 
         var result = await confirmation.Result;
 
@@ -150,22 +150,22 @@ public partial class BacktestDetails
         using var apiClient = _httpClientFactory.CreateClient("backend");
 
         // delete portfolio
-        var portfolioDeleted = await apiClient.DeleteAsync($"api/portfolios/{model.Backtest.PortfolioId}");
+        var portfolioDeleted = await apiClient.DeleteAsync($"api/portfolios/{backtest.PortfolioId}");
         portfolioDeleted.EnsureSuccessStatusCode();
 
         // delete trading operations
-        var operationsDeleted = await apiClient.DeleteAsync($"api/trade-operations/{model.Backtest.PortfolioId}");
+        var operationsDeleted = await apiClient.DeleteAsync($"api/trade-operations/{backtest.PortfolioId}");
         operationsDeleted.EnsureSuccessStatusCode();
 
         // delete order events
-        var ordersDeleted = await apiClient.DeleteAsync($"api/order-events/{model.Backtest.PortfolioId}");
+        var ordersDeleted = await apiClient.DeleteAsync($"api/order-events/{backtest.PortfolioId}");
         ordersDeleted.EnsureSuccessStatusCode();
 
         // delete backtest
-        var message = await apiClient.DeleteAsync($"api/backtests/{model.Backtest.Id}");
+        var message = await apiClient.DeleteAsync($"api/backtests/{backtest.Id}");
         message.EnsureSuccessStatusCode();
 
-        ToastService.ShowWarning($"Backtest {model.Backtest.Description} is deleted.");
+        ToastService.ShowWarning($"Backtest {backtest.Description} is deleted.");
 
         Navigation.NavigateTo("/backtests");
     }

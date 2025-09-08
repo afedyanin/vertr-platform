@@ -32,7 +32,7 @@ internal class CreateBacktestHandler : IRequestHandler<CreateBacktestRequest, Cr
     {
         var bt = new BacktestRun
         {
-            Id = Guid.NewGuid(),
+            Id = request.BacktestId,
             From = request.From,
             To = request.To,
             CreatedAt = DateTime.UtcNow,

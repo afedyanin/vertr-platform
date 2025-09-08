@@ -13,14 +13,26 @@
 
 <FluentStack Orientation="Orientation.Horizontal">
     <FluentAnchor Href="/portfolios" Appearance="Appearance.Hypertext">Back to portfolios</FluentAnchor>
+    @if (_portfolio != null)
+    {
+        <FluentSpacer />
+        @if (_portfolio.IsBacktest)
+        {
+            <FluentBadge Appearance="Appearance.Accent" Circular>Backtest portfolio</FluentBadge>
+        }
+        else
+        {
+            <FluentBadge Fill="somevalue" BackgroundColor="red" Color="white" Circular>Strategy portfolio</FluentBadge>
+        }
+    }
     <FluentSpacer />
     @if (_simulatedExecutionMode)
     {
-        <FluentBadge Appearance="Appearance.Neutral" Fill="highlight" BackgroundColor="#000" Color="#fff">Order execution: Simulated mode</FluentBadge>
+        <FluentBadge Appearance="Appearance.Neutral" Fill="highlight" BackgroundColor="#000" Color="#fff" Circular>Order execution: Simulated mode</FluentBadge>
     }
     else
     {
-        <FluentBadge Fill="somevalue" BackgroundColor="red" Color="white">Order execution: Live trading mode</FluentBadge>
+        <FluentBadge Fill="somevalue" BackgroundColor="red" Color="white" Circular>Order execution: Live trading mode</FluentBadge>
     }
     <FluentSpacer />
     <FluentButton Appearance=Appearance.Accent
@@ -38,14 +50,6 @@
 
     <div style="display: table; table-layout: fixed; width: 100%;">
         <div style="overflow-x: auto;">
-            @if (_portfolio.IsBacktest)
-            {
-                    <FluentBadge Appearance="Appearance.Accent" Circular=true style="width: 100%;">Backtest portfolio</FluentBadge>
-            }
-            else
-            {
-                    <FluentBadge Appearance="Appearance.Neutral" Circular=true style="width: 100%;">Strategy portfolio</FluentBadge>
-            }
             <FluentTextField Value="@_portfolio.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
             <FluentTextField Value="@_portfolio.UpdatedAt.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Updated At:</FluentTextField>
             <FluentTextField Value="@_portfolio.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Name:</FluentTextField>

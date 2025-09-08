@@ -281,11 +281,12 @@ public partial class Backtests : IAsyncDisposable
         {
             var request = new CreateBacktestRequest
             {
+                BacktestId = backtestModel.Backtest.Id,
                 Description = backtestModel.Backtest.Description,
                 From = backtestModel.ComposeDateFrom(),
                 To = backtestModel.ComposeDateTo(),
                 StrategyId = backtestModel.Strategy.Id,
-                PortfolioId = backtestModel.Portfolio.Id,
+                PortfolioId = backtestModel.Portfolio!.Id,
                 StartImmediately = backtestModel.StartImmediately,
             };
 
@@ -293,6 +294,7 @@ public partial class Backtests : IAsyncDisposable
             var content = JsonContent.Create(request);
             var message = await apiClient.PostAsync("api/backtests", content);
             message.EnsureSuccessStatusCode();
+
             return true;
         }
         catch

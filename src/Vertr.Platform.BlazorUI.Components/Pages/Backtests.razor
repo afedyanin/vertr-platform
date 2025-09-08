@@ -16,7 +16,7 @@
 
 <div style="display: table; table-layout: fixed; width: 100%;">
     <div style="overflow-x: auto;">
-        <FluentDataGrid @ref=dataGrid
+        <FluentDataGrid
             TGridItem=BacktestModel
             OnCellClick="HandleCellClick"
             Items="@_backtests"
@@ -33,12 +33,6 @@
             <PropertyColumn Property="@(p => p.Backtest.ProgressMessage)" Sortable="true" Class="flash-on-update" />
             <PropertyColumn Property="@(p => p.Backtest.PortfolioId)" Sortable="true" Class="flash-on-update" />
             <PropertyColumn Property="@(p => p.Backtest.CreatedAt.ToString(ModelConsts.DateTimeFormat))" Title="Created At" Sortable="true" Class="flash-on-update" />
-                <TemplateColumn Title="">
-                    <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
-                                  Appearance=Appearance.Lightweight
-                                  Title="Delete"
-                                  @onclick="@(async () => await HandleDeleteAction(context))" />
-                </TemplateColumn>
         </FluentDataGrid>
 
     </div>

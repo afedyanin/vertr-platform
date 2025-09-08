@@ -14,8 +14,6 @@ namespace Vertr.Platform.BlazorUI.Components.Pages;
 
 public partial class Backtests : IAsyncDisposable
 {
-    private FluentDataGrid<BacktestModel> dataGrid;
-
     private HubConnection _hubConnection;
 
     private bool _isConnected =>
@@ -85,9 +83,9 @@ public partial class Backtests : IAsyncDisposable
 
     private async Task HandleCellClick(FluentDataGridCell<BacktestModel> cell)
     {
-        if (cell.Item != null && cell.GridColumn <= 7)
+        if (cell.Item != null)
         {
-            await OpenPanelRightAsync(cell.Item);
+            Navigation.NavigateTo($"backtests/details/{cell.Item.Backtest.Id}");
         }
     }
 
@@ -171,70 +169,10 @@ public partial class Backtests : IAsyncDisposable
         }
 
         ToastService.ShowSuccess($"Backtest {model.Backtest.Description} created.");
+
+        Navigation.NavigateTo($"backtests/details/{model.Backtest.Id}");
     }
 
-
-    private async Task OpenPanelRightAsync(BacktestModel backtestModel)
-    {
-        var dialog = await DialogService.ShowPanelAsync<BacktestPanel>(backtestModel, new DialogParameters<BacktestModel>()
-        {
-            Content = backtestModel,
-            Alignment = HorizontalAlignment.Right,
-            Title = $"{backtestModel.Backtest.Description}",
-            PrimaryAction = "Close",
-            SecondaryAction = null,
-            Width = "400px",
-        });
-
-        var result = await dialog.Result;
-
-        if (result.Cancelled)
-        {
-            return;
-        }
-
-        if (result.Data is null)
-        {
-            return;
-        }
-
-        if (result.Data is not BacktestModel model)
-        {
-            return;
-        }
-
-        if (model.DoCancel)
-        {
-            var cancelled = await CancelBacktest(model.Backtest.Id);
-
-            if (cancelled)
-            {
-                ToastService.ShowWarning($"Backtest {model.Backtest.Description} requested to cancel.");
-            }
-            else
-            {
-                ToastService.ShowError($"Backtest {model.Backtest.Description} failed to cancel.");
-            }
-
-            return;
-        }
-
-        if (model.DoStart)
-        {
-            var started = await StartBacktest(model.Backtest.Id);
-
-            if (started)
-            {
-                ToastService.ShowSuccess($"Backtest {model.Backtest.Description} enqueued to start.");
-            }
-            else
-            {
-                ToastService.ShowError($"Backtest {model.Backtest.Description} failed to start.");
-            }
-
-            return;
-        }
-    }
 
     private async Task<IDictionary<Guid, BacktestModel>> InitBacktests(HttpClient apiClient)
     {
@@ -318,36 +256,6 @@ public partial class Backtests : IAsyncDisposable
         return res;
     }
 
-    private async Task<bool> StartBacktest(Guid backtestId)
-    {
-        try
-        {
-            using var apiClient = _httpClientFactory.CreateClient("backend");
-            var message = await apiClient.PutAsync($"api/backtests/start/{backtestId}", null);
-            message.EnsureSuccessStatusCode();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    private async Task<bool> CancelBacktest(Guid backtestId)
-    {
-        try
-        {
-            using var apiClient = _httpClientFactory.CreateClient("backend");
-            var message = await apiClient.PutAsync($"api/backtests/cancel/{backtestId}", null);
-            message.EnsureSuccessStatusCode();
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
     private async Task<bool> SavePortfolio(Portfolio portfolio)
     {
         try
@@ -389,50 +297,5 @@ public partial class Backtests : IAsyncDisposable
         {
             return false;
         }
-    }
-
-    private async Task HandleDeleteAction(BacktestModel model)
-    {
-        var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Delete backtest: {model.Backtest.Description}?",
-            "Yes",
-            "No",
-            $"Deleting backtest {model.Backtest.Description}");
-
-        var result = await confirmation.Result;
-
-        if (result.Cancelled)
-        {
-            return;
-        }
-
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-
-        // delete portfolio
-        var portfolioDeleted = await apiClient.DeleteAsync($"api/portfolios/{model.Backtest.PortfolioId}");
-        portfolioDeleted.EnsureSuccessStatusCode();
-
-        // delete trading operations
-        var operationsDeleted = await apiClient.DeleteAsync($"api/trade-operations/{model.Backtest.PortfolioId}");
-        operationsDeleted.EnsureSuccessStatusCode();
-
-        // delete order events
-        var ordersDeleted = await apiClient.DeleteAsync($"api/order-events/{model.Backtest.PortfolioId}");
-        ordersDeleted.EnsureSuccessStatusCode();
-
-        // delete backtest
-        var message = await apiClient.DeleteAsync($"api/backtests/{model.Backtest.Id}");
-        message.EnsureSuccessStatusCode();
-
-        await RefreshAsync();
-
-        ToastService.ShowWarning($"Backtest {model.Backtest.Description} is deleted.");
-    }
-
-    private async Task RefreshAsync()
-    {
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-        _backtestsDict = await InitBacktests(apiClient);
-        await dataGrid.RefreshDataAsync(force: true);
     }
 }

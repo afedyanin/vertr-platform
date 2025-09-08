@@ -1,12 +1,16 @@
+@page "/backtests/details/{BacktestId}"
+
 @using Vertr.MarketData.Contracts
-@using Vertr.Platform.BlazorUI.Components.Models
-@using Vertr.Strategies.Contracts
 
-@implements IDialogContentComponent<BacktestModel>
+@inject IDialogService DialogService
+@inject IToastService ToastService
 
-<FluentMessageBarProvider Section="@ModelConsts.MESSAGES_DIALOG" MaxMessageCount="1" />
+@inject NavigationManager Navigation
 
-<FluentDialogBody>
+<h3>Backtest Details</h3>
+
+@if (Content != null)
+{
     <FluentTextField Value="@Content.Backtest.Id.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Id:</FluentTextField>
     <FluentTextField Value="@Content.Backtest.From.ToString(ModelConsts.DateTimeFormat)" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">From:</FluentTextField>
     <FluentTextField Value="@Content.Backtest.To.ToString(ModelConsts.DateTimeFormat)" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">To:</FluentTextField>
@@ -20,8 +24,15 @@
     <br />
     <FluentButton OnClick="OnStartAsync" Appearance="Appearance.Accent" Disabled="StartDiasbled">Start</FluentButton>
     <FluentButton OnClick="OnCancelAsync" Appearance="Appearance.Accent" Disabled="CancelDiasbled">Cancel</FluentButton>
+    <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
+                  Appearance=Appearance.Lightweight
+                  Title="Delete"
+                  @onclick="@(async () => await HandleDeleteAction(Content))" />
     <br />
     <br />
     <FluentAnchor Href=@_portfolioDeatilsLink>Go to portfolio</FluentAnchor>
-</FluentDialogBody>
-
+}
+else
+{
+    <h4>Backtest is not found</h4>
+}

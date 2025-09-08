@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Vertr.Backtest.Contracts;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Common.Utils;
@@ -7,11 +8,23 @@ using Vertr.PortfolioManager.Contracts;
 using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.BlazorUI.Components.Pages;
-public partial class BacktestDetails
+public partial class BacktestDetails : IAsyncDisposable
 {
+    private HubConnection _hubConnection;
+
+    private bool _isConnected =>
+           _hubConnection?.State == HubConnectionState.Connected;
+
     private IDictionary<Guid, StrategyMetadata> _strategies { get; set; }
 
     private IDictionary<Guid, Portfolio> _portfolios { get; set; }
+
+    private bool CancelDiasbled => Content!.Backtest.ExecutionState
+        is not ExecutionState.InProgress
+        || Content.Backtest.IsCancellationRequested;
+    private bool StartDiasbled => Content!.Backtest.ExecutionState
+        is not ExecutionState.Created
+        and not ExecutionState.Enqueued;
 
     public BacktestModel? Content { get; set; } = default!;
 
@@ -21,8 +34,22 @@ public partial class BacktestDetails
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/backtestsHub"))
+            .Build();
+
+        await _hubConnection.StartAsync();
+
         using var apiClient = _httpClientFactory.CreateClient("backend");
 
         _portfolios = await InitPortfolios(apiClient);
@@ -32,12 +59,31 @@ public partial class BacktestDetails
         await base.OnInitializedAsync();
     }
 
-    private bool CancelDiasbled => Content!.Backtest.ExecutionState
-        is not ExecutionState.InProgress
-        || Content.Backtest.IsCancellationRequested;
-    private bool StartDiasbled => Content!.Backtest.ExecutionState
-        is not ExecutionState.Created
-        and not ExecutionState.Enqueued;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await StartStreaming();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task StartStreaming()
+    {
+        var stream = _hubConnection.StreamAsync<BacktestRun>("StreamBacktestsProgress");
+
+        await foreach (var backtest in stream)
+        {
+            if (backtest.Id != Content!.Backtest.Id)
+            {
+                continue;
+            }
+
+            Content.Backtest = backtest;
+            StateHasChanged();
+        }
+    }
 
     private async Task OnCancelAsync()
     {

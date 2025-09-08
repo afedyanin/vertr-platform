@@ -32,7 +32,9 @@
                 <FluentTextField Value="@Content.Backtest.From.ToString(ModelConsts.DateTimeFormat)" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">From:</FluentTextField>
                 <FluentTextField Value="@Content.Backtest.To.ToString(ModelConsts.DateTimeFormat)" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">To:</FluentTextField>
                 <FluentTextField Value="@Content.Backtest.Description" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Description:</FluentTextField>
-                <FluentTextField Value="@Content.Strategy.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Strategy:</FluentTextField>
+                <FluentTextField Value="@Content.Strategy.Name" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">
+                    <FluentAnchor Href=@($"/strategies/details/{Content.Strategy.Id}") Appearance="Appearance.Hypertext">Strategy:</FluentAnchor>
+                </FluentTextField>
                 <FluentTextField Value="@Content.Backtest.PortfolioId.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Portfolio Id:</FluentTextField>
                 <FluentTextField Value="@Content.Backtest.ExecutionState.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">State:</FluentTextField>
                 <FluentTextField Value="@Content.Backtest.ProgressMessage?.ToString()" ReadOnly Appearance="FluentInputAppearance.Filled" style="width: 100%;">Message:</FluentTextField>

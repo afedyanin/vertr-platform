@@ -81,12 +81,14 @@ public partial class Backtests : IAsyncDisposable
         }
     }
 
-    private async Task HandleCellClick(FluentDataGridCell<BacktestModel> cell)
+    private void HandleCellClick(FluentDataGridCell<BacktestModel> cell)
     {
-        if (cell.Item != null)
+        if (cell.Item == null)
         {
-            Navigation.NavigateTo($"backtests/details/{cell.Item.Backtest.Id}");
+            return;
         }
+
+        Navigation.NavigateTo($"backtests/details/{cell.Item.Backtest.Id}");
     }
 
     private async Task OpenDialogAsync()

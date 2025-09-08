@@ -33,12 +33,14 @@ public partial class Strategies
         await base.OnInitializedAsync();
     }
 
-    private async Task HandleCellClick(FluentDataGridCell<StrategyModel> cell)
+    private void HandleCellClick(FluentDataGridCell<StrategyModel> cell)
     {
-        if (cell.Item != null && cell.GridColumn <= 6)
+        if (cell.Item == null)
         {
-            await OpenPanelRightAsync(cell.Item);
+            return;
         }
+
+        Navigation.NavigateTo($"strategies/details/{cell.Item.Strategy.Id}");
     }
 
     private async Task AddStrategyAsync()
@@ -226,48 +228,5 @@ public partial class Strategies
             // TODO: Use toast service
             return false;
         }
-    }
-
-    private async Task HandleDeleteAction(StrategyModel model)
-    {
-        var confirmation = await DialogService.ShowConfirmationAsync(
-            $"Delete strategy: {model.Strategy.Name}?",
-            "Yes",
-            "No",
-            $"Deleting {model.Strategy.Name}");
-
-        var result = await confirmation.Result;
-
-        if (result.Cancelled)
-        {
-            return;
-        }
-
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-
-        // delete portfolio
-        var portfolioDeleted = await apiClient.DeleteAsync($"api/portfolios/{model.Strategy.PortfolioId}");
-        portfolioDeleted.EnsureSuccessStatusCode();
-
-        // delete trading operations
-        var operationsDeleted = await apiClient.DeleteAsync($"api/trade-operations/{model.Strategy.PortfolioId}");
-        operationsDeleted.EnsureSuccessStatusCode();
-
-        // delete order events
-        var ordersDeleted = await apiClient.DeleteAsync($"api/order-events/{model.Strategy.PortfolioId}");
-        ordersDeleted.EnsureSuccessStatusCode();
-
-        // delete trading signals
-        var signalsDeleted = await apiClient.DeleteAsync($"api/trading-signals/by-strategy/{model.Strategy.Id}");
-        signalsDeleted.EnsureSuccessStatusCode();
-
-        var message = await apiClient.DeleteAsync($"api/strategies/{model.Strategy.Id}");
-        message.EnsureSuccessStatusCode();
-
-        _strategies = await InitStrategies(apiClient);
-        await dataGrid.RefreshDataAsync(force: true);
-
-        DemoLogger.WriteLine($"Strategy {model.Strategy.Name} is deleted.");
-        return;
     }
 }

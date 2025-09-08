@@ -3,6 +3,7 @@
 @using Vertr.MarketData.Contracts
 
 @inject IDialogService DialogService
+@inject NavigationManager Navigation
 
 <h3>Strategies</h3>
 
@@ -30,12 +31,6 @@
                 <PropertyColumn Property="@(p => p.Strategy.QtyLots)" Sortable="true" />
                 <PropertyColumn Property="@(p => p.Strategy.PortfolioId)" Sortable="true" />
                 <PropertyColumn Property="@(p => p.Strategy.IsActive)" Sortable="true" />
-                <TemplateColumn Title="">
-                    <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
-                                  Appearance=Appearance.Lightweight
-                                  Title="Delete"
-                                  @onclick="@(async () => await HandleDeleteAction(context))" />
-                </TemplateColumn>
         </FluentDataGrid>
 
     </div>

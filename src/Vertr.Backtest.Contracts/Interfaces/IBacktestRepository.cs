@@ -6,6 +6,8 @@ public interface IBacktestRepository
 
     public Task<BacktestRun?> GetById(Guid id);
 
+    public Task<BacktestRun?> GetByPortfolioId(Guid portfolioId);
+
     public Task<bool> Save(BacktestRun backtest);
 
     public Task<bool> Cancel(Guid id);

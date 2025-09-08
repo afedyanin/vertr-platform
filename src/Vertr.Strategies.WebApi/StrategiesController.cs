@@ -39,6 +39,19 @@ public class StrategiesController : ControllerBase
         return Ok(strategy);
     }
 
+    [HttpGet("by-portfolio/{portfolioId:guid}")]
+    public async Task<IActionResult> GetByPortfolioId(Guid portfolioId)
+    {
+        var strategy = await _metadataRepository.GetByPortfolioId(portfolioId);
+
+        if (strategy == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(strategy);
+    }
+
     [HttpPost()]
     public async Task<IActionResult> Save([FromBody] StrategyMetadata metadata)
     {

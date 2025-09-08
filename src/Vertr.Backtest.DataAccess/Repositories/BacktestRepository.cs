@@ -28,6 +28,16 @@ internal class BacktestRepository : RepositoryBase, IBacktestRepository
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<BacktestRun?> GetByPortfolioId(Guid portfolioId)
+    {
+        using var context = await GetDbContext();
+
+        return await context
+            .Backtests
+            .SingleOrDefaultAsync(x => x.PortfolioId == portfolioId);
+    }
+
+
     public async Task<bool> Save(BacktestRun backtest)
     {
         using var context = await GetDbContext();

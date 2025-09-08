@@ -6,7 +6,18 @@
 @inject NavigationManager Navigation
 
 <FluentStack>
-    <h3>Portfolio</h3>
+    @if(_portfolio == null)
+    {
+        <h3>Portfolio</h3>
+    }
+    else if (_portfolio.IsBacktest)
+    {
+        <h3>Backtest Portfolio</h3>
+    }
+    else
+    {
+        <h3>Strategy Portfolio</h3>
+    }
 </FluentStack>
 
 <br />
@@ -18,11 +29,11 @@
         <FluentSpacer />
         @if (_portfolio.IsBacktest)
         {
-            <FluentBadge Appearance="Appearance.Accent" Circular>Backtest portfolio</FluentBadge>
+            <FluentAnchor Href=@($"/backtests/details/{_backtestId!.Value}") Appearance="Appearance.Hypertext">View Backtest</FluentAnchor>
         }
         else
         {
-            <FluentBadge Fill="somevalue" BackgroundColor="red" Color="white" Circular>Strategy portfolio</FluentBadge>
+            <FluentAnchor Href=@($"/strategies/details/{_strategyId!.Value}") Appearance="Appearance.Hypertext">View Strategy</FluentAnchor>
         }
     }
     <FluentSpacer />

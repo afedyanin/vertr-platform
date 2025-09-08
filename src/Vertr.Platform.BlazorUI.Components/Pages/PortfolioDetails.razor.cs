@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Vertr.Backtest.Contracts;
 using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Requests;
@@ -8,6 +9,7 @@ using Vertr.Platform.BlazorUI.Components.Common;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Common.Utils;
 using Vertr.PortfolioManager.Contracts;
+using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.BlazorUI.Components.Pages;
 
@@ -25,7 +27,11 @@ public partial class PortfolioDetails
 
     private TradeOperationsGrid operationsGrid;
 
-    private bool _simulatedExecutionMode = false;
+    private bool _simulatedExecutionMode;
+
+    private Guid? _backtestId;
+
+    private Guid? _strategyId;
 
     private IQueryable<PositionModel> _positions { get; set; }
 
@@ -36,6 +42,13 @@ public partial class PortfolioDetails
         using var apiClient = _httpClientFactory.CreateClient("backend");
 
         _simulatedExecutionMode = await InitExecutionMode(apiClient);
+
+        var backtest = await InitBacktest(apiClient);
+        _backtestId = backtest == null ? Guid.Empty : backtest.Id;
+
+        var strategyMetadata = await InitStrategy(apiClient);
+        _strategyId = strategyMetadata == null ? Guid.Empty : strategyMetadata.Id;
+
         _instruments = await InitInstruments(apiClient);
         await InitPortfolioData(apiClient);
 
@@ -102,6 +115,32 @@ public partial class PortfolioDetails
 
     private async Task<bool> InitExecutionMode(HttpClient apiClient)
         => await apiClient.GetFromJsonAsync<bool>("api/positions/simulated-order-execution", JsonOptions.DefaultOptions);
+
+    private async Task<BacktestRun?> InitBacktest(HttpClient apiClient)
+    {
+        try
+        {
+            var res = await apiClient.GetFromJsonAsync<BacktestRun?>($"api/backtests/by-portfolio/{PortfolioId}", JsonOptions.DefaultOptions);
+            return res;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private async Task<StrategyMetadata?> InitStrategy(HttpClient apiClient)
+    {
+        try
+        {
+            var res = await apiClient.GetFromJsonAsync<StrategyMetadata?>($"api/strategies/by-portfolio/{PortfolioId}", JsonOptions.DefaultOptions);
+            return res;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     private async Task HandleOpenPositionAction()
     {

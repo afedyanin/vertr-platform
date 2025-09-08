@@ -31,6 +31,15 @@ internal class StrategyMetadataRepository : RepositoryBase, IStrategyMetadataRep
             .SingleOrDefaultAsync(x => x.Id == id);
     }
 
+    public async Task<StrategyMetadata?> GetByPortfolioId(Guid portfolioId)
+    {
+        using var context = await GetDbContext();
+
+        return await context
+            .Strategies
+            .SingleOrDefaultAsync(x => x.PortfolioId == portfolioId);
+    }
+
     public async Task<bool> Save(StrategyMetadata metadata)
     {
         using var context = await GetDbContext();

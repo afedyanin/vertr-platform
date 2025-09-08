@@ -44,6 +44,19 @@ public class BacktestController : ControllerBase
         return Ok(backtest);
     }
 
+    [HttpGet("by-portfolio/{portfolioId:guid}")]
+    public async Task<IActionResult> GetByPortfolioId(Guid portfolioId)
+    {
+        var backtest = await _backtestRepository.GetByPortfolioId(portfolioId);
+
+        if (backtest == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(backtest);
+    }
+
     [HttpPost()]
     public async Task<IActionResult> Create([FromBody] CreateBacktestRequest request)
     {

@@ -2,7 +2,7 @@ using System.Threading.Channels;
 using Microsoft.AspNetCore.SignalR;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Host.StockTicker;
-using Vertr.Platform.Host.Extensions;
+using Vertr.Platform.Common.Extensions;
 
 namespace Vertr.Platform.Host.Hubs;
 

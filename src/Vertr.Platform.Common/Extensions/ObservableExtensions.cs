@@ -1,6 +1,6 @@
 using System.Threading.Channels;
 
-namespace Vertr.Platform.Host.Extensions;
+namespace Vertr.Platform.Common.Extensions;
 
 public static class ObservableExtensions
 {
@@ -18,9 +18,9 @@ public static class ObservableExtensions
         var channel = maxBufferSize != null ? Channel.CreateBounded<T>(maxBufferSize.Value) : Channel.CreateUnbounded<T>();
 
         var disposable = observable.Subscribe(
-                            value => channel.Writer.TryWrite(value),
-                            error => channel.Writer.TryComplete(error),
-                            () => channel.Writer.TryComplete());
+            value => channel.Writer.TryWrite(value),
+            error => channel.Writer.TryComplete(error),
+            () => channel.Writer.TryComplete());
 
         // Complete the subscription on the reader completing
         channel.Reader.Completion.ContinueWith(task => disposable.Dispose());

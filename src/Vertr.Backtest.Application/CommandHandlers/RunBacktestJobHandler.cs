@@ -16,6 +16,7 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
     private readonly IStrategyFactory _strategyFactory;
     private readonly IServiceProvider _serviceProvider;
     private readonly ICandlesHistoryLoader _candlesHistoryLoader;
+    private readonly IBacktestProgressHandler _backtestProgressHandler;
 
     private readonly ILogger<RunBacktestJobHandler> _logger;
 
@@ -25,6 +26,7 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         IStrategyFactory strategyFactory,
         IServiceProvider serviceProvider,
         ICandlesHistoryLoader candlesHistoryLoader,
+        IBacktestProgressHandler backtestProgressHandler,
         ILogger<RunBacktestJobHandler> logger)
     {
         _backtestRepository = backtestRepository;
@@ -32,6 +34,7 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         _strategyFactory = strategyFactory;
         _serviceProvider = serviceProvider;
         _candlesHistoryLoader = candlesHistoryLoader;
+        _backtestProgressHandler = backtestProgressHandler;
         _logger = logger;
     }
 
@@ -158,6 +161,7 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         backtest.ProgressMessage = message;
         backtest.UpdatedAt = DateTime.UtcNow;
         await _backtestRepository.Save(backtest);
+        await _backtestProgressHandler.HandleProgress(backtest);
     }
 
     private async Task SetCancelled(BacktestRun backtest)
@@ -166,6 +170,7 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         backtest.ProgressMessage = "Backtest cancelled.";
         backtest.UpdatedAt = DateTime.UtcNow;
         await _backtestRepository.Save(backtest);
+        await _backtestProgressHandler.HandleProgress(backtest);
     }
 
     private async Task SetFailed(BacktestRun? backtest, string errorMessage)
@@ -179,6 +184,7 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         backtest.ProgressMessage = errorMessage;
         backtest.UpdatedAt = DateTime.UtcNow;
         await _backtestRepository.Save(backtest);
+        await _backtestProgressHandler.HandleProgress(backtest);
     }
 
     private async Task SetCompleted(BacktestRun? backtest)
@@ -192,5 +198,6 @@ internal class RunBacktestJobHandler : IRequestHandler<RunBacktestJobRequest>
         backtest.ProgressMessage = "Backtest completed.";
         backtest.UpdatedAt = DateTime.UtcNow;
         await _backtestRepository.Save(backtest);
+        await _backtestProgressHandler.HandleProgress(backtest);
     }
 }

@@ -11,14 +11,17 @@ internal class CreateBacktestHandler : IRequestHandler<CreateBacktestRequest, Cr
 {
     private readonly IBacktestRepository _backtestRepository;
     private readonly IJobScheduler _jobScheduler;
+    private readonly IBacktestProgressHandler _backtestProgressHandler;
     private readonly ILogger<CreateBacktestHandler> _logger;
 
     public CreateBacktestHandler(
         IBacktestRepository backtestRepository,
         IJobScheduler jobScheduler,
+        IBacktestProgressHandler backtestProgressHandler,
         ILogger<CreateBacktestHandler> logger)
     {
         _backtestRepository = backtestRepository;
+        _backtestProgressHandler = backtestProgressHandler;
         _jobScheduler = jobScheduler;
         _logger = logger;
     }
@@ -45,6 +48,8 @@ internal class CreateBacktestHandler : IRequestHandler<CreateBacktestRequest, Cr
         {
             throw new InvalidOperationException($"Cannot save backtest instance.");
         }
+
+        await _backtestProgressHandler.HandleProgress(bt);
 
         _logger.LogDebug($"Backtest created. BacktestId={bt.Id}");
 

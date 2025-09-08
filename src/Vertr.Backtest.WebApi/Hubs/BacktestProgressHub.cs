@@ -16,7 +16,7 @@ public class BacktestProgressHub : Hub
         _stockTickerObservable = stockTickerObservable;
     }
 
-    public ChannelReader<BacktestRun> StreamProgress()
+    public ChannelReader<BacktestRun> StreamBacktestsProgress()
     {
         return _stockTickerObservable.StreamBacktests().AsChannelReader(10);
     }

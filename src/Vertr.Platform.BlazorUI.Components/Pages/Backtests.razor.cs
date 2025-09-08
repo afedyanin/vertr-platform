@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Backtest.Contracts;
 using Vertr.Backtest.Contracts.Commands;
@@ -11,11 +12,18 @@ using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.BlazorUI.Components.Pages;
 
-public partial class Backtests
+public partial class Backtests : IAsyncDisposable
 {
     private FluentDataGrid<BacktestModel> dataGrid;
 
-    private IQueryable<BacktestModel> _backtests { get; set; }
+    private HubConnection _hubConnection;
+
+    private bool _isConnected =>
+           _hubConnection?.State == HubConnectionState.Connected;
+
+    private IDictionary<Guid, BacktestModel> _backtestsDict = new Dictionary<Guid, BacktestModel>();
+
+    private IQueryable<BacktestModel> _backtests => _backtestsDict.Values.AsQueryable();
 
     private IDictionary<Guid, StrategyMetadata> _strategies { get; set; }
 
@@ -24,15 +32,55 @@ public partial class Backtests
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/backtestsHub"))
+            .Build();
+
+        await _hubConnection.StartAsync();
+
+
         using var apiClient = _httpClientFactory.CreateClient("backend");
 
         _portfolios = await InitPortfolios(apiClient);
         _strategies = await InitStrategies(apiClient);
-        _backtests = await InitBacktests(apiClient);
+        _backtestsDict = await InitBacktests(apiClient);
 
         await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await StartStreaming();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task StartStreaming()
+    {
+        var stream = _hubConnection.StreamAsync<BacktestRun>("StreamBacktestsProgress");
+
+        await foreach (var backtest in stream)
+        {
+            var model = CreateModel(backtest);
+            if (model != null)
+            {
+                _backtestsDict[backtest.Id] = model;
+                StateHasChanged();
+            }
+        }
     }
 
     private async Task HandleCellClick(FluentDataGridCell<BacktestModel> cell)
@@ -42,21 +90,6 @@ public partial class Backtests
             await OpenPanelRightAsync(cell.Item);
         }
     }
-
-    private async Task RefreshAsync(TimeSpan? delay)
-    {
-        if (delay.HasValue)
-        {
-            await Task.Delay(delay.Value);
-        }
-
-        using var apiClient = _httpClientFactory.CreateClient("backend");
-
-        _backtests = await InitBacktests(apiClient);
-        await dataGrid.RefreshDataAsync(force: true);
-    }
-
-    private Task RefreshAsync() => RefreshAsync(null);
 
     private async Task OpenDialogAsync()
     {
@@ -138,15 +171,6 @@ public partial class Backtests
         }
 
         ToastService.ShowSuccess($"Backtest {model.Backtest.Description} created.");
-
-        if (model.StartImmediately)
-        {
-            await RefreshAsync(TimeSpan.FromSeconds(5));
-        }
-        else
-        {
-            await RefreshAsync();
-        }
     }
 
 
@@ -192,8 +216,6 @@ public partial class Backtests
                 ToastService.ShowError($"Backtest {model.Backtest.Description} failed to cancel.");
             }
 
-            await RefreshAsync(TimeSpan.FromSeconds(1));
-
             return;
         }
 
@@ -210,47 +232,54 @@ public partial class Backtests
                 ToastService.ShowError($"Backtest {model.Backtest.Description} failed to start.");
             }
 
-            await RefreshAsync(TimeSpan.FromSeconds(5));
-
             return;
         }
     }
 
-    private async Task<IQueryable<BacktestModel>> InitBacktests(HttpClient apiClient)
+    private async Task<IDictionary<Guid, BacktestModel>> InitBacktests(HttpClient apiClient)
     {
         var backtests = await apiClient.GetFromJsonAsync<BacktestRun[]>("api/backtests", JsonOptions.DefaultOptions);
 
+        var res = new Dictionary<Guid, BacktestModel>();
+
         if (backtests == null)
         {
-            return Array.Empty<BacktestModel>().AsQueryable();
+            return res;
         }
-
-        var modelItems = new List<BacktestModel>();
 
         foreach (var backtest in backtests)
         {
-            if (!_strategies.TryGetValue(backtest.StrategyId, out var strategy))
+            var model = CreateModel(backtest);
+
+            if (model != null)
             {
-                continue;
+                res[backtest.Id] = model;
             }
-
-            if (!_portfolios.TryGetValue(backtest.PortfolioId, out var portfolio))
-            {
-                continue;
-            }
-
-            var item = new BacktestModel
-            {
-                Backtest = backtest,
-                Strategy = strategy,
-                Portfolio = portfolio
-            };
-
-            modelItems.Add(item);
         }
 
-        var res = modelItems?.AsQueryable() ?? Array.Empty<BacktestModel>().AsQueryable();
         return res;
+    }
+
+    private BacktestModel? CreateModel(BacktestRun backtest)
+    {
+        if (!_strategies.TryGetValue(backtest.StrategyId, out var strategy))
+        {
+            return null;
+        }
+
+        if (!_portfolios.TryGetValue(backtest.PortfolioId, out var portfolio))
+        {
+            return null;
+        }
+
+        var model = new BacktestModel
+        {
+            Backtest = backtest,
+            Strategy = strategy,
+            Portfolio = portfolio
+        };
+
+        return model;
     }
 
     private async Task<IDictionary<Guid, StrategyMetadata>> InitStrategies(HttpClient apiClient)
@@ -289,7 +318,6 @@ public partial class Backtests
         return res;
     }
 
-
     private async Task<bool> StartBacktest(Guid backtestId)
     {
         try
@@ -319,7 +347,6 @@ public partial class Backtests
             return false;
         }
     }
-
 
     private async Task<bool> SavePortfolio(Portfolio portfolio)
     {
@@ -393,10 +420,19 @@ public partial class Backtests
         var ordersDeleted = await apiClient.DeleteAsync($"api/order-events/{model.Backtest.PortfolioId}");
         ordersDeleted.EnsureSuccessStatusCode();
 
+        // delete backtest
         var message = await apiClient.DeleteAsync($"api/backtests/{model.Backtest.Id}");
         message.EnsureSuccessStatusCode();
 
         await RefreshAsync();
+
         ToastService.ShowWarning($"Backtest {model.Backtest.Description} is deleted.");
+    }
+
+    private async Task RefreshAsync()
+    {
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        _backtestsDict = await InitBacktests(apiClient);
+        await dataGrid.RefreshDataAsync(force: true);
     }
 }

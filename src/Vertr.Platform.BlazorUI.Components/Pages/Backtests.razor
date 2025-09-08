@@ -4,15 +4,13 @@
 
 @inject IDialogService DialogService
 @inject IToastService ToastService
+@inject NavigationManager Navigation
 
 <h3>Backtests</h3>
 
 <FluentStack>
     <FluentButton @onclick="OpenDialogAsync" Appearance="Appearance.Accent">
         Add
-    </FluentButton>
-    <FluentButton @onclick="RefreshAsync" Appearance="Appearance.Accent">
-        Refresh
     </FluentButton>
 </FluentStack>
 
@@ -27,14 +25,14 @@
             Style="width: 100%;"
             DisplayMode="DataGridDisplayMode.Table"
             RowSize="@DataGridRowSize.Medium">
-                <PropertyColumn Property="@(p => p.Backtest.From.ToString(ModelConsts.DateTimeFormat))" Title="From" Sortable="true" />
-                <PropertyColumn Property="@(p => p.Backtest.To.ToString(ModelConsts.DateTimeFormat))" Title="To" Sortable="true" />
-                <PropertyColumn Property="@(p => p.Strategy.Name)" Title="Strategy" Sortable="true" />
-                <PropertyColumn Property="@(p => p.Backtest.Description)" Sortable="true" />
-                <PropertyColumn Property="@(p => p.Backtest.ExecutionState)" Sortable="true" />
-                <PropertyColumn Property="@(p => p.Backtest.ProgressMessage)" Sortable="true" />
-                <PropertyColumn Property="@(p => p.Backtest.PortfolioId)" Sortable="true" />
-                <PropertyColumn Property="@(p => p.Backtest.CreatedAt.ToString(ModelConsts.DateTimeFormat))" Title="Created At" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Backtest.From.ToString(ModelConsts.DateTimeFormat))" Title="From" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.Backtest.To.ToString(ModelConsts.DateTimeFormat))" Title="To" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.Strategy.Name)" Title="Strategy" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.Backtest.Description)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.Backtest.ExecutionState)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.Backtest.ProgressMessage)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.Backtest.PortfolioId)" Sortable="true" Class="flash-on-update" />
+            <PropertyColumn Property="@(p => p.Backtest.CreatedAt.ToString(ModelConsts.DateTimeFormat))" Title="Created At" Sortable="true" Class="flash-on-update" />
                 <TemplateColumn Title="">
                     <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())"
                                   Appearance=Appearance.Lightweight

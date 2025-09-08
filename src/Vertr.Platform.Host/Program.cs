@@ -4,6 +4,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Backtest.Application;
 using Vertr.Backtest.DataAccess;
 using Vertr.Backtest.WebApi;
+using Vertr.Backtest.WebApi.Hubs;
 using Vertr.Infrastructure.Common.Jobs;
 using Vertr.Infrastructure.Common.Mediator;
 using Vertr.MarketData.Application;
@@ -120,6 +121,7 @@ public class Program
         app.MapControllers();
 
         app.MapHub<StocksHub>("/stocksHub");
+        app.MapHub<BacktestProgressHub>("/backtestsHub");
 
         app.UseHangfireDashboard();
 

@@ -14,7 +14,7 @@ using Vertr.Strategies.Contracts;
 
 namespace Vertr.Platform.BlazorUI.Components.Pages;
 
-public partial class PortfolioDetails
+public partial class PortfolioDetails : IAsyncDisposable
 {
     private Portfolio? _portfolio;
 
@@ -47,19 +47,7 @@ public partial class PortfolioDetails
 
     protected override async Task OnInitializedAsync()
     {
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/positionsHub"))
-            .Build();
-
-        await _hubConnection.StartAsync();
-
-        await base.OnInitializedAsync();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
         using var apiClient = _httpClientFactory.CreateClient("backend");
-
         _simulatedExecutionMode = await InitExecutionMode(apiClient);
 
         var backtest = await InitBacktest(apiClient);
@@ -71,17 +59,23 @@ public partial class PortfolioDetails
         _instruments = await InitInstruments(apiClient);
         await InitPortfolioData(apiClient);
 
-        await base.OnParametersSetAsync();
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/positionsHub"))
+            .Build();
+
+        await _hubConnection.StartAsync();
+
+        await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await base.OnAfterRenderAsync(firstRender);
-
         if (firstRender)
         {
             await StartStreaming();
         }
+
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task StartStreaming()
@@ -435,4 +429,12 @@ public partial class PortfolioDetails
         => _instruments.Values.First(x =>
             !string.IsNullOrEmpty(x.InstrumentType) &&
             !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase)).Id.ToString();
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
 }

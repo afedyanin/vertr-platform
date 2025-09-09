@@ -16,17 +16,20 @@ internal class ApplyOperationHandler : IRequestHandler<ApplyOperationRequest>
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioAwatingService _portfolioAwatingService;
     private readonly ICurrencyRepository _currencyRepository;
+    private readonly IPositionDataHandler _positionDataHandler;
     private readonly ILogger<ApplyOperationHandler> _logger;
 
     public ApplyOperationHandler(
         IPortfolioRepository portfolioRepository,
         IPortfolioAwatingService portfolioAwatingService,
         ICurrencyRepository currencyRepository,
+        IPositionDataHandler positionDataHandler,
         ILogger<ApplyOperationHandler> logger)
     {
         _portfolioRepository = portfolioRepository;
         _portfolioAwatingService = portfolioAwatingService;
         _currencyRepository = currencyRepository;
+        _positionDataHandler = positionDataHandler;
         _logger = logger;
     }
 
@@ -83,6 +86,11 @@ internal class ApplyOperationHandler : IRequestHandler<ApplyOperationRequest>
             _logger.LogDebug($"Process portfolio completed. Id={portfolio.Id}");
             _portfolioAwatingService.SetCompleted(portfolio.Id);
         }
+
+        var t1 = _positionDataHandler.HandlePosition(operationPosition);
+        var t2 = _positionDataHandler.HandlePosition(currencyPosition);
+
+        await Task.WhenAll(t1, t2);
     }
 
     private static Position GetOrCreatePosition(Portfolio portfolio, Guid instrumentId)

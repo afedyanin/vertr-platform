@@ -50,6 +50,7 @@ public partial class Instruments
     {
         var dummyInstrument = new Instrument
         {
+            Id = Guid.Empty,
             Symbol = new Symbol("", "")
         };
 
@@ -75,7 +76,7 @@ public partial class Instruments
         var selectedInstrument = result.Data as Instrument;
         var instrumentId = selectedInstrument?.Id;
 
-        if (instrumentId == null)
+        if (instrumentId is null || instrumentId == Guid.Empty)
         {
             return;
         }

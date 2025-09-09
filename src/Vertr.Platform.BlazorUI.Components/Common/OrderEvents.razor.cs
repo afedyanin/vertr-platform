@@ -1,7 +1,10 @@
 using System.Net.Http.Json;
+using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Microsoft.FluentUI.AspNetCore.Components.Utilities;
+using Microsoft.JSInterop;
 using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts;
 using Vertr.Platform.BlazorUI.Components.Models;
@@ -40,6 +43,13 @@ public partial class OrderEvents : IAsyncDisposable
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
+    public async Task RefreshDataAsync()
+    {
+        _orderEventList = await InitOrderEvents();
+        StateHasChanged();
+        //await dataGrid.RefreshDataAsync(force: true);
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (_hubConnection is not null)
@@ -50,15 +60,6 @@ public partial class OrderEvents : IAsyncDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        if (UseOrderEventStream)
-        {
-            _hubConnection = new HubConnectionBuilder()
-                .WithUrl(Navigation.ToAbsoluteUri("/orderEventsHub"))
-                .Build();
-
-            await _hubConnection.StartAsync();
-        }
-
         _instruments = await InitInstruments();
         _orderEventList = await InitOrderEvents();
 
@@ -71,6 +72,11 @@ public partial class OrderEvents : IAsyncDisposable
 
         if (firstRender && UseOrderEventStream)
         {
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(Navigation.ToAbsoluteUri("/orderEventsHub"))
+                .Build();
+
+            await _hubConnection.StartAsync();
             await StartStreaming();
         }
     }

@@ -43,7 +43,6 @@ public partial class TradeOperationsGrid
         await _jsModule.InvokeVoidAsync("loadJson", schema, operationsJson, perspectiveViewer);
     }
 
-
     protected override async Task OnParametersSetAsync()
     {
         _instruments = await InitInstruments();

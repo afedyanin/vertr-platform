@@ -46,13 +46,14 @@
             <div style="overflow-x: auto;">
                 <FluentButton OnClick="OnStartAsync" Appearance="Appearance.Accent" Disabled="StartDiasbled">Start</FluentButton>
                 <FluentButton OnClick="OnCancelAsync" Appearance="Appearance.Accent" Disabled="CancelDiasbled">Cancel</FluentButton>
+                <FluentButton OnClick="OnRefreshAsync" Appearance="Appearance.Accent">Refresh</FluentButton>
             </div>
         </div>
     </FluentStack>
     <br/>
     <h4>Order Events (last 100)</h4>
 
-    <OrderEvents PortfolioId="@Content.Backtest.PortfolioId.ToString()" />
+    <OrderEvents @ref="orderEventsGrid" PortfolioId="@Content.Backtest.PortfolioId.ToString()" />
 }
 else
 {

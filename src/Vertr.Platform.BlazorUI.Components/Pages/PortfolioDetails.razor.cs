@@ -41,13 +41,14 @@ public partial class PortfolioDetails : IAsyncDisposable
 
     private Dictionary<Guid, PositionModel> _positionsDict;
 
-    private IQueryable<PositionModel> _positions => _positions.AsQueryable();
+    private IQueryable<PositionModel> _positions => _positionsDict.Values.OrderBy(p => p.Position.InstrumentId).AsQueryable();
 
     private IDictionary<Guid, Instrument> _instruments { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         using var apiClient = _httpClientFactory.CreateClient("backend");
+
         _simulatedExecutionMode = await InitExecutionMode(apiClient);
 
         var backtest = await InitBacktest(apiClient);
@@ -57,25 +58,25 @@ public partial class PortfolioDetails : IAsyncDisposable
         _strategyId = strategyMetadata == null ? Guid.Empty : strategyMetadata.Id;
 
         _instruments = await InitInstruments(apiClient);
-        await InitPortfolioData(apiClient);
-
-        _hubConnection = new HubConnectionBuilder()
-            .WithUrl(Navigation.ToAbsoluteUri("/positionsHub"))
-            .Build();
-
-        await _hubConnection.StartAsync();
+        _portfolio = await InitPortfolio(apiClient);
+        _positionsDict = InitPositions(_portfolio);
 
         await base.OnInitializedAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender && _portfolio != null && !_portfolio.IsBacktest)
         {
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(Navigation.ToAbsoluteUri("/positionsHub"))
+                .Build();
+
+            await _hubConnection.StartAsync();
             await StartStreaming();
         }
-
-        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task StartStreaming()
@@ -93,16 +94,10 @@ public partial class PortfolioDetails : IAsyncDisposable
             if (model != null)
             {
                 _positionsDict[model.Position.Id] = model;
-                StateHasChanged();
                 await dataGrid.RefreshDataAsync();
+                await operationsGrid.RefreshDataAsync();
             }
         }
-    }
-
-    private async Task InitPortfolioData(HttpClient apiClient)
-    {
-        _portfolio = await InitPortfolio(apiClient);
-        _positionsDict = InitPositions(_portfolio);
     }
 
     private async Task<Portfolio?> InitPortfolio(HttpClient apiClient)
@@ -192,6 +187,16 @@ public partial class PortfolioDetails : IAsyncDisposable
         {
             return null;
         }
+    }
+
+    private async Task HandleRefresh()
+    {
+        using var apiClient = _httpClientFactory.CreateClient("backend");
+        _portfolio = await InitPortfolio(apiClient);
+        _positionsDict = InitPositions(_portfolio);
+
+        await dataGrid.RefreshDataAsync();
+        await operationsGrid.RefreshDataAsync();
     }
 
     private async Task HandleOpenPositionAction()

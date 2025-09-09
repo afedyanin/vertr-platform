@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using Vertr.Backtest.Contracts;
+using Vertr.Platform.BlazorUI.Components.Common;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Common.Utils;
 using Vertr.PortfolioManager.Contracts;
@@ -18,6 +19,8 @@ public partial class BacktestDetails : IAsyncDisposable
     private IDictionary<Guid, StrategyMetadata> _strategies { get; set; }
 
     private IDictionary<Guid, Portfolio> _portfolios { get; set; }
+
+    private OrderEvents orderEventsGrid;
 
     private bool CancelDiasbled => Content!.Backtest.ExecutionState
         is not ExecutionState.InProgress
@@ -83,6 +86,11 @@ public partial class BacktestDetails : IAsyncDisposable
             Content.Backtest = backtest;
             StateHasChanged();
         }
+    }
+
+    private async Task OnRefreshAsync()
+    {
+        await orderEventsGrid.RefreshDataAsync();
     }
 
     private async Task OnCancelAsync()

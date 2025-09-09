@@ -46,9 +46,9 @@
         <FluentBadge Fill="somevalue" BackgroundColor="red" Color="white" Circular>Order execution: Live trading mode</FluentBadge>
     }
     <FluentSpacer />
-    <FluentButton Appearance=Appearance.Accent
-                  Title="Open position"
-                  @onclick="@HandleOpenPositionAction">Open position</FluentButton>
+    <FluentButton Appearance=Appearance.Accent Title="Open position" @onclick="@HandleOpenPositionAction">Open position</FluentButton>
+    <FluentButton Appearance=Appearance.Accent Title="Refresh" @onclick="@HandleRefresh" Disabled=@(_portfolio == null || !_portfolio.IsBacktest)>Refresh</FluentButton>
+
 </FluentStack>
 
 <br />
@@ -80,7 +80,7 @@
                 DisplayMode="DataGridDisplayMode.Table"
                 RowSize="@DataGridRowSize.Medium">
                     <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true"  Title="Instrument" />
-                    <PropertyColumn Property="@(p => p.Position.Balance.ToString())" Sortable="true" Title="Balance" />
+                    <PropertyColumn Property="@(p => p.Position.Balance.ToString())" Sortable="true" Title="Balance" Class="flash-on-update" />
                     <TemplateColumn Title="">
                             <FluentButton Title="Close" Disabled=@context.TradingDisabled @onclick="@(async () => await @HandleClosePositionAction(context))" >Close</FluentButton>
                     </TemplateColumn>

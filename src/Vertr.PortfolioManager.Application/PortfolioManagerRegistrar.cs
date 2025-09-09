@@ -16,6 +16,10 @@ public static class PortfolioManagerRegistrar
         services.AddMediatorHandlers(typeof(PortfolioManagerRegistrar).Assembly);
         services.AddSingleton<IPortfolioAwatingService, PortfolioAwatingService>();
 
+        services.AddSingleton<PositionSubject>();
+        services.AddSingleton<IPositionObservable>(x => x.GetRequiredService<PositionSubject>());
+        services.AddSingleton<IPositionDataHandler>(x => x.GetRequiredService<PositionSubject>());
+
         return services;
     }
 }

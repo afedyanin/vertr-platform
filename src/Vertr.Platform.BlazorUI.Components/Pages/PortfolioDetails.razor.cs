@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Backtest.Contracts;
 using Vertr.MarketData.Contracts;
@@ -17,6 +18,11 @@ public partial class PortfolioDetails
 {
     private Portfolio? _portfolio;
 
+    private HubConnection _hubConnection;
+
+    private bool _isConnected =>
+           _hubConnection?.State == HubConnectionState.Connected;
+
     [Parameter]
     public string PortfolioId { get; set; }
 
@@ -33,9 +39,22 @@ public partial class PortfolioDetails
 
     private Guid? _strategyId;
 
-    private IQueryable<PositionModel> _positions { get; set; }
+    private Dictionary<Guid, PositionModel> _positionsDict;
+
+    private IQueryable<PositionModel> _positions => _positions.AsQueryable();
 
     private IDictionary<Guid, Instrument> _instruments { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/positionsHub"))
+            .Build();
+
+        await _hubConnection.StartAsync();
+
+        await base.OnInitializedAsync();
+    }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -55,18 +74,49 @@ public partial class PortfolioDetails
         await base.OnParametersSetAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await StartStreaming();
+        }
+    }
+
+    private async Task StartStreaming()
+    {
+        var stream = _hubConnection.StreamAsync<Position>("StreamPositions");
+
+        await foreach (var position in stream)
+        {
+            if (position.PortfolioId.ToString() != PortfolioId)
+            {
+                continue;
+            }
+
+            var model = CreateModel(position);
+            if (model != null)
+            {
+                _positionsDict[model.Position.Id] = model;
+                StateHasChanged();
+                await dataGrid.RefreshDataAsync();
+            }
+        }
+    }
+
     private async Task InitPortfolioData(HttpClient apiClient)
     {
         _portfolio = await InitPortfolio(apiClient);
-        _positions = InitPositions(_portfolio).AsQueryable();
+        _positionsDict = InitPositions(_portfolio);
     }
 
     private async Task<Portfolio?> InitPortfolio(HttpClient apiClient)
         => await apiClient.GetFromJsonAsync<Portfolio?>($"api/portfolios/{PortfolioId}", JsonOptions.DefaultOptions);
 
-    private List<PositionModel> InitPositions(Portfolio? portfolio)
+    private Dictionary<Guid, PositionModel> InitPositions(Portfolio? portfolio)
     {
-        var res = new List<PositionModel>();
+        var res = new Dictionary<Guid, PositionModel>();
 
         if (portfolio == null)
         {
@@ -75,24 +125,32 @@ public partial class PortfolioDetails
 
         foreach (var position in portfolio.Positions)
         {
-            _instruments.TryGetValue(position.InstrumentId, out var instrument);
-
-            if (instrument == null)
+            var model = CreateModel(position);
+            if (model != null)
             {
-                // TODO: Handle unknown instrument
-                continue;
+                res[model.Position.Id] = model;
             }
-
-            var model = new PositionModel
-            {
-                Position = position,
-                Instrument = instrument,
-            };
-
-            res.Add(model);
         }
 
         return res;
+    }
+
+    private PositionModel? CreateModel(Position position)
+    {
+        _instruments.TryGetValue(position.InstrumentId, out var instrument);
+
+        if (instrument == null)
+        {
+            return null;
+        }
+
+        var model = new PositionModel
+        {
+            Position = position,
+            Instrument = instrument,
+        };
+
+        return model;
     }
 
     private async Task<IDictionary<Guid, Instrument>> InitInstruments(HttpClient apiClient)
@@ -221,8 +279,6 @@ public partial class PortfolioDetails
             ToastService.ShowError($"Cannot open position. InstrumentId={model.InstrumentId} Qty=({model.QuantityLots})");
             return;
         }
-
-        await RefreshPage(apiClient, 5000);
     }
 
     private async Task HandleClosePositionAction(PositionModel positionModel)
@@ -298,8 +354,6 @@ public partial class PortfolioDetails
             ToastService.ShowError($"Cannot close position. Instrument={positionModel.Instrument.GetFullName()} Balance={positionModel.Position.Balance}");
             return;
         }
-
-        await RefreshPage(apiClient, 5000);
     }
 
     private async Task HandleReversePositionAction(PositionModel positionModel)
@@ -375,20 +429,10 @@ public partial class PortfolioDetails
             ToastService.ShowError($"Cannot reverse position. Instrument={positionModel.Instrument.GetFullName()} Balance={positionModel.Position.Balance}");
             return;
         }
-
-        await RefreshPage(apiClient, 5000);
     }
 
     private string GetDafultInstrumentId()
         => _instruments.Values.First(x =>
             !string.IsNullOrEmpty(x.InstrumentType) &&
             !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase)).Id.ToString();
-
-    private async Task RefreshPage(HttpClient apiClient, int timeout = 1000)
-    {
-        await Task.Delay(timeout);
-        await InitPortfolioData(apiClient);
-        await dataGrid.RefreshDataAsync(force: true);
-        await operationsGrid.RefreshDataAsync();
-    }
 }

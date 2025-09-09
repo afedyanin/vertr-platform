@@ -11,18 +11,18 @@ internal class ApplyOperationRequest : IRequest
     public required TradeOperation Operation { get; init; }
 }
 
-internal class ApplyOpeationHandler : IRequestHandler<ApplyOperationRequest>
+internal class ApplyOperationHandler : IRequestHandler<ApplyOperationRequest>
 {
     private readonly IPortfolioRepository _portfolioRepository;
     private readonly IPortfolioAwatingService _portfolioAwatingService;
     private readonly ICurrencyRepository _currencyRepository;
-    private readonly ILogger<ApplyOpeationHandler> _logger;
+    private readonly ILogger<ApplyOperationHandler> _logger;
 
-    public ApplyOpeationHandler(
+    public ApplyOperationHandler(
         IPortfolioRepository portfolioRepository,
         IPortfolioAwatingService portfolioAwatingService,
         ICurrencyRepository currencyRepository,
-        ILogger<ApplyOpeationHandler> logger)
+        ILogger<ApplyOperationHandler> logger)
     {
         _portfolioRepository = portfolioRepository;
         _portfolioAwatingService = portfolioAwatingService;

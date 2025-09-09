@@ -21,6 +21,7 @@ using Vertr.Platform.Host.StockTicker;
 using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.DataAccess;
 using Vertr.PortfolioManager.WebApi;
+using Vertr.PortfolioManager.WebApi.Hubs;
 using Vertr.Strategies.Application;
 using Vertr.Strategies.DataAccess;
 using Vertr.Strategies.WebApi;
@@ -124,6 +125,7 @@ public class Program
         app.MapHub<StocksHub>("/stocksHub");
         app.MapHub<BacktestProgressHub>("/backtestsHub");
         app.MapHub<OrderEventsHub>("/orderEventsHub");
+        app.MapHub<PositionsHub>("/positionsHub");
 
         app.UseHangfireDashboard();
 

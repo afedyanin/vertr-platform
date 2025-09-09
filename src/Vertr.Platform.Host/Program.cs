@@ -13,6 +13,7 @@ using Vertr.MarketData.WebApi;
 using Vertr.OrderExecution.Application;
 using Vertr.OrderExecution.DataAccess;
 using Vertr.OrderExecution.WebApi;
+using Vertr.OrderExecution.WebApi.Hubs;
 using Vertr.Platform.BlazorUI.Components;
 using Vertr.Platform.Host.BackgroundServices;
 using Vertr.Platform.Host.Hubs;
@@ -122,6 +123,7 @@ public class Program
 
         app.MapHub<StocksHub>("/stocksHub");
         app.MapHub<BacktestProgressHub>("/backtestsHub");
+        app.MapHub<OrderEventsHub>("/orderEventsHub");
 
         app.UseHangfireDashboard();
 

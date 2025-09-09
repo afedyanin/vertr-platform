@@ -8,17 +8,17 @@ namespace Vertr.Backtest.WebApi.Hubs;
 
 public class BacktestProgressHub : Hub
 {
-    private readonly IBacktestObservable _stockTickerObservable;
+    private readonly IBacktestObservable _backtestObservable;
 
     public BacktestProgressHub(
-        IBacktestObservable stockTickerObservable)
+        IBacktestObservable backtestObservable)
     {
-        _stockTickerObservable = stockTickerObservable;
+        _backtestObservable = backtestObservable;
     }
 
     public ChannelReader<BacktestRun> StreamBacktestsProgress()
     {
-        return _stockTickerObservable.StreamBacktests().AsChannelReader(10);
+        return _backtestObservable.StreamBacktests().AsChannelReader(10);
     }
     public override Task OnConnectedAsync()
     {

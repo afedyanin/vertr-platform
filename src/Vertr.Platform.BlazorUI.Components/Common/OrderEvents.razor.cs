@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts;
@@ -8,29 +9,91 @@ using Vertr.Platform.Common.Utils;
 
 namespace Vertr.Platform.BlazorUI.Components.Common;
 
-public partial class OrderEvents
+public partial class OrderEvents : IAsyncDisposable
 {
+    private HubConnection _hubConnection;
+
+    private bool _isConnected =>
+           _hubConnection?.State == HubConnectionState.Connected;
+
     private IDialogReference? _dialog;
 
     private FluentDataGrid<OrderEventModel> dataGrid;
 
-    private IQueryable<OrderEventModel> _orderEvents { get; set; }
+    private IQueryable<OrderEventModel> _orderEvents =>
+        _orderEventList
+        .OrderByDescending(e => e.OrderEvent.CreatedAt)
+        .ThenBy(e => e.OrderEvent.RequestId)
+        .Take(100)
+        .AsQueryable();
+
+    private List<OrderEventModel> _orderEventList = [];
 
     private IDictionary<Guid, Instrument> _instruments { get; set; }
-
 
     [Parameter]
     public string? PortfolioId { get; set; }
 
+    [Parameter]
+    public bool UseOrderEventStream { get; set; }
+
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
+        if (UseOrderEventStream)
+        {
+            _hubConnection = new HubConnectionBuilder()
+                .WithUrl(Navigation.ToAbsoluteUri("/orderEventsHub"))
+                .Build();
+
+            await _hubConnection.StartAsync();
+        }
 
         _instruments = await InitInstruments();
-        _orderEvents = await InitOrderEvents();
+        _orderEventList = await InitOrderEvents();
+
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender && UseOrderEventStream)
+        {
+            await StartStreaming();
+        }
+    }
+
+    private async Task StartStreaming()
+    {
+        var stream = _hubConnection.StreamAsync<OrderEvent>("StreamOrderEvents");
+
+        await foreach (var orderEvent in stream)
+        {
+            if (orderEvent.PortfolioId.ToString() != PortfolioId)
+            {
+                continue;
+            }
+
+            var model = CreateModel(orderEvent);
+            if (model != null)
+            {
+                _orderEventList.Add(model);
+                StateHasChanged();
+                await dataGrid.RefreshDataAsync();
+            }
+        }
     }
 
     private async Task HandleCellClick(FluentDataGridCell<OrderEventModel> cell)
@@ -75,11 +138,11 @@ public partial class OrderEvents
         return res;
     }
 
-    private async Task<IQueryable<OrderEventModel>> InitOrderEvents()
+    private async Task<List<OrderEventModel>> InitOrderEvents()
     {
         if (PortfolioId == null)
         {
-            return Array.Empty<OrderEventModel>().AsQueryable();
+            return [];
         }
 
         using var apiClient = _httpClientFactory.CreateClient("backend");
@@ -90,27 +153,37 @@ public partial class OrderEvents
 
         if (orderEvents == null)
         {
-            return Array.Empty<OrderEventModel>().AsQueryable();
+            return [];
         }
 
         var modelItems = new List<OrderEventModel>();
 
         foreach (var orderEvent in orderEvents)
         {
-            if (_instruments.TryGetValue(orderEvent.InstrumentId, out var instrument))
+            var model = CreateModel(orderEvent);
+            if (model != null)
             {
-                var item = new OrderEventModel
-                {
-                    OrderEvent = orderEvent,
-                    Instrument = instrument,
-                };
-
-                modelItems.Add(item);
+                modelItems.Add(model);
             }
         }
 
-        var res = modelItems?.AsQueryable() ?? Array.Empty<OrderEventModel>().AsQueryable();
-        return res;
+        return modelItems;
+    }
+
+    private OrderEventModel? CreateModel(OrderEvent orderEvent)
+    {
+        if (!_instruments.TryGetValue(orderEvent.InstrumentId, out var instrument))
+        {
+            return null;
+        }
+
+        var item = new OrderEventModel
+        {
+            OrderEvent = orderEvent,
+            Instrument = instrument,
+        };
+
+        return item;
     }
 
     private string GetEventName(OrderEvent orderEvent)

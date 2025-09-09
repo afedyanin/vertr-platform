@@ -5,10 +5,13 @@ using Vertr.OrderExecution.Contracts.Interfaces;
 namespace Vertr.OrderExecution.DataAccess.Repositories;
 internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
 {
+    private readonly IOrderEventHandler _orderEventHandler;
     public OrderEventRepository(
+        IOrderEventHandler orderEventHandler,
         IDbContextFactory<OrderExecutionDbContext> contextFactory)
         : base(contextFactory)
     {
+        _orderEventHandler = orderEventHandler;
     }
 
     public async Task<OrderEvent[]> GetAll(int limit = 1000)
@@ -78,7 +81,14 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         using var context = await GetDbContext();
         await context.OrderEvents.AddAsync(orderEvent);
         var savedRecords = await context.SaveChangesAsync();
-        return savedRecords > 0;
+
+        if (savedRecords > 0)
+        {
+            await _orderEventHandler.HandleOrderEvent(orderEvent);
+            return true;
+        }
+
+        return false;
     }
 
     public async Task<int> DeleteByPortfolioId(Guid portfolioId)

@@ -23,6 +23,10 @@ public static class OrderExecutionRegistrar
         services.AddMediatorHandlers(typeof(OrderExecutionRegistrar).Assembly);
         services.AddTransient<IOrderExecutionSimulator, OrderExecutionSimulator>();
 
+        services.AddSingleton<OrderEventSubject>();
+        services.AddSingleton<IOrderEventObservable>(x => x.GetRequiredService<OrderEventSubject>());
+        services.AddSingleton<IOrderEventHandler>(x => x.GetRequiredService<OrderEventSubject>());
+
         return services;
     }
 }

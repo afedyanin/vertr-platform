@@ -61,12 +61,12 @@ public partial class BacktestDetails : IAsyncDisposable
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await base.OnAfterRenderAsync(firstRender);
+
         if (firstRender)
         {
             await StartStreaming();
         }
-
-        await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task StartStreaming()
@@ -92,9 +92,15 @@ public partial class BacktestDetails : IAsyncDisposable
             using var apiClient = _httpClientFactory.CreateClient("backend");
             var message = await apiClient.PutAsync($"api/backtests/cancel/{BacktestId}", null);
             message.EnsureSuccessStatusCode();
+
+            Content!.Backtest.IsCancellationRequested = true;
+            StateHasChanged();
+
+            ToastService.ShowWarning("Backtest cancellation requested.");
         }
-        catch
+        catch (Exception ex)
         {
+            ToastService.ShowError($"Cannot cancel Backtest. Error={ex.Message}");
         }
     }
 
@@ -105,9 +111,12 @@ public partial class BacktestDetails : IAsyncDisposable
             using var apiClient = _httpClientFactory.CreateClient("backend");
             var message = await apiClient.PutAsync($"api/backtests/start/{BacktestId}", null);
             message.EnsureSuccessStatusCode();
+
+            ToastService.ShowSuccess("Backtest started!");
         }
-        catch
+        catch (Exception ex)
         {
+            ToastService.ShowSuccess($"Cannot start Backtest. Error={ex.Message}");
         }
     }
 

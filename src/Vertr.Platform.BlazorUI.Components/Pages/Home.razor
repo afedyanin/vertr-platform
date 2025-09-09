@@ -1,7 +1,30 @@
 @page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>VERTR Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new Fluent Blazor app.
+<FluentGrid>
+    <FluentGridItem>
+        <FluentCard Width="300px" Height="150px" MinimalStyle>
+            <h4><FluentAnchor Href="/subscriptions" Appearance="Appearance.Hypertext">Subscriptions</FluentAnchor></h4>
+            <p>Subscribe to real time market data feed.</p>
+        </FluentCard>
+    </FluentGridItem>
+    <FluentGridItem>
+        <FluentCard Width="300px" Height="150px" MinimalStyle>
+            <h4><FluentAnchor Href="/strategies" Appearance="Appearance.Hypertext">Strategies</FluentAnchor></h4>
+            <p>Create trading strategies for simulated or real trading.</p>
+        </FluentCard>
+    </FluentGridItem>
+    <FluentGridItem>
+        <FluentCard Width="300px" Height="150px" MinimalStyle>
+            <h4><FluentAnchor Href="/backtests" Appearance="Appearance.Hypertext">Backtests</FluentAnchor></h4>
+            <p>Create and execute backtests on historical market data.</p>
+        </FluentCard>
+    </FluentGridItem>
+    <FluentGridItem>
+        <FluentCard Width="300px" Height="150px" MinimalStyle>
+            <h4><FluentAnchor Href="/portfolios" Appearance="Appearance.Hypertext">Portfolios</FluentAnchor></h4>
+            <p>Control positions in real time for strategies and backtests.</p>
+        </FluentCard>
+    </FluentGridItem>
+</FluentGrid>

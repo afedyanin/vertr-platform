@@ -3,7 +3,7 @@
     <label for="navmenu-toggle" class="navmenu-icon"><FluentIcon Value="@(new Icons.Regular.Size20.Navigation())" Color="Color.Fill" /></label>
     <nav class="sitenav" aria-labelledby="main-menu">
         <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" @bind-Expanded="expanded" CustomToggle="true">
-            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Dashboard</FluentNavLink>
              <FluentNavGroup Expanded="true" Title="Market Data" Icon="@(new Icons.Regular.Size20.DataArea())">
                 <FluentNavLink Href="instruments" Icon="@(new Icons.Regular.Size20.DataBarVerticalStar())" IconColor="Color.Accent">Instruments</FluentNavLink>
                 <FluentNavLink Href="subscriptions" Icon="@(new Icons.Regular.Size20.DatabaseArrowUp())" IconColor="Color.Accent">Subscriptions</FluentNavLink>

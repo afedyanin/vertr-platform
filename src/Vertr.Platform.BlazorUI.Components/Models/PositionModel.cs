@@ -1,4 +1,5 @@
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.PortfolioManager.Contracts;
 
 namespace Vertr.Platform.BlazorUI.Components.Models;
@@ -9,9 +10,7 @@ public class PositionModel
 
     public required Instrument Instrument { get; set; }
 
-    // TODO: Move it to instrument extensions
     public bool TradingDisabled =>
-        string.IsNullOrEmpty(Instrument.InstrumentType) ||
-        Instrument.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase) ||
+        Instrument.IsCurrency() ||
         Position.Balance == decimal.Zero;
 }

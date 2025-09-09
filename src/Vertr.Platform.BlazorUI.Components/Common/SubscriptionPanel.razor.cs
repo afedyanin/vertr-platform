@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Common.Utils;
 
@@ -27,6 +28,6 @@ public partial class SubscriptionPanel
         using var apiClient = _httpClientFactory.CreateClient("backend");
         var instruments = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments", JsonOptions.DefaultOptions);
 
-        return instruments ?? [];
+        return [.. instruments.FliterOutCurrency()];
     }
 }

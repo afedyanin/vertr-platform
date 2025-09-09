@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Google.Api;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Backtest.Application;
 using Vertr.Backtest.DataAccess;
@@ -15,9 +14,6 @@ using Vertr.OrderExecution.DataAccess;
 using Vertr.OrderExecution.WebApi;
 using Vertr.OrderExecution.WebApi.Hubs;
 using Vertr.Platform.BlazorUI.Components;
-using Vertr.Platform.Host.BackgroundServices;
-using Vertr.Platform.Host.Hubs;
-using Vertr.Platform.Host.StockTicker;
 using Vertr.PortfolioManager.Application;
 using Vertr.PortfolioManager.DataAccess;
 using Vertr.PortfolioManager.WebApi;
@@ -91,12 +87,6 @@ public class Program
 
         builder.Services.AddSignalR();
 
-        // Hubs
-        //builder.Services.AddHostedService<StockPricesUpdatingService>();
-        builder.Services.AddSingleton<StockTickerSubject>();
-        builder.Services.AddSingleton<IStockTickerObservable>(x => x.GetRequiredService<StockTickerSubject>());
-        builder.Services.AddSingleton<IStockTickerDataHandler>(x => x.GetRequiredService<StockTickerSubject>());
-
         var app = builder.Build();
 
         if (app.Environment.IsDevelopment())
@@ -122,7 +112,6 @@ public class Program
 
         app.MapControllers();
 
-        app.MapHub<StocksHub>("/stocksHub");
         app.MapHub<BacktestProgressHub>("/backtestsHub");
         app.MapHub<OrderEventsHub>("/orderEventsHub");
         app.MapHub<PositionsHub>("/positionsHub");

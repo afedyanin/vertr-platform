@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Common.Utils;
 
@@ -29,13 +30,6 @@ public partial class OpenPositionDialog
     {
         using var apiClient = _httpClientFactory.CreateClient("backend");
         var instruments = await apiClient.GetFromJsonAsync<Instrument[]>("api/instruments", JsonOptions.DefaultOptions);
-
-        var filterd = instruments?
-            .Where(x =>
-                !string.IsNullOrEmpty(x.InstrumentType) &&
-                !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase))
-            .ToArray() ?? [];
-
-        return filterd;
+        return [.. instruments.FliterOutCurrency()];
     }
 }

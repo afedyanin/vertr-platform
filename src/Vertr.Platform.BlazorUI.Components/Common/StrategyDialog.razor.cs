@@ -13,8 +13,6 @@ public partial class StrategyDialog
 
     private Instrument[] AllInstruments;
 
-    private string _portfolioDeatilsLink => $"/portfolios/details/{Content?.Strategy.PortfolioId}";
-
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 

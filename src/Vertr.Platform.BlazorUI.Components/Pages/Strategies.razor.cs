@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.Platform.BlazorUI.Components.Common;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Common.Utils;
@@ -139,12 +140,7 @@ public partial class Strategies
             return res;
         }
 
-        var filterd = instruments?
-            .Where(x =>
-                !string.IsNullOrEmpty(x.InstrumentType) &&
-                !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase))
-            .ToArray() ?? [];
-
+        var filterd = instruments.FliterOutCurrency();
 
         foreach (var instrument in filterd)
         {

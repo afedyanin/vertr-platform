@@ -64,7 +64,7 @@ public partial class Subscriptions
         {
             Content = subscriptionModel,
             Alignment = HorizontalAlignment.Right,
-            Title = $"{subscriptionModel.Instrument.GetFullName()}",
+            Title = "Subscription",
             PrimaryAction = "Save",
             SecondaryAction = "Cancel",
             Width = "400px",

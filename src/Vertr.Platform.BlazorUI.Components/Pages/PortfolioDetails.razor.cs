@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.Backtest.Contracts;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.OrderExecution.Contracts.Commands;
 using Vertr.OrderExecution.Contracts.Requests;
 using Vertr.Platform.BlazorUI.Components.Common;
@@ -432,9 +433,7 @@ public partial class PortfolioDetails : IAsyncDisposable
     }
 
     private string GetDafultInstrumentId()
-        => _instruments.Values.First(x =>
-            !string.IsNullOrEmpty(x.InstrumentType) &&
-            !x.InstrumentType.Equals("currency", StringComparison.OrdinalIgnoreCase)).Id.ToString();
+        => _instruments.Values.FliterOutCurrency().First().Id.ToString();
 
     public async ValueTask DisposeAsync()
     {

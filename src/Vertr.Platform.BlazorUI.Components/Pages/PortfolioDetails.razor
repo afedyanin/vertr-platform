@@ -47,7 +47,7 @@
     }
     <FluentSpacer />
     <FluentButton Appearance=Appearance.Accent Title="Open position" @onclick="@HandleOpenPositionAction">Open position</FluentButton>
-    <FluentButton Appearance=Appearance.Accent Title="Refresh" @onclick="@HandleRefresh" Disabled=@(_portfolio == null || !_portfolio.IsBacktest)>Refresh</FluentButton>
+    <FluentButton Appearance=Appearance.Accent Title="Refresh" @onclick="@HandleRefresh">Refresh</FluentButton>
 
 </FluentStack>
 

@@ -94,6 +94,7 @@ public partial class PortfolioDetails : IAsyncDisposable
             if (model != null)
             {
                 _positionsDict[model.Position.Id] = model;
+                StateHasChanged();
                 await dataGrid.RefreshDataAsync();
                 await operationsGrid.RefreshDataAsync();
             }

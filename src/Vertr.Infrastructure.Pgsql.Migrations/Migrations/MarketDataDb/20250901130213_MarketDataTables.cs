@@ -101,11 +101,11 @@ namespace Vertr.Infrastructure.Pgsql.Migrations.Migrations.MarketDataDb
                 values: new object[,]
                 {
                     { new Guid("a92e2e25-a698-45cc-a781-167cf465257c"), "currency", "Российский рубль", "rub", 1, "CETS", "RUB000UTSTOM" },
-                    { new Guid("a22a1263-8e1b-4546-a1aa-416463f104d3"), "currency", "Доллар США", "rub", 1000, "CETS", "USD000UTSTOM" },
+                    // { new Guid("a22a1263-8e1b-4546-a1aa-416463f104d3"), "currency", "Доллар США", "rub", 1000, "CETS", "USD000UTSTOM" },
                     { new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13"), "share", "Сбер Банк", "rub", 1, "TQBR", "SBER" },
-                    { new Guid("7de75794-a27f-4d81-a39b-492345813822"), "share", "Яндекс", "rub", 1, "TQBR", "YDEX" },
-                    { new Guid("88468f6c-c67a-4fb4-a006-53eed803883c"), "share", "Татнефть", "rub", 1, "TQBR", "TATN" },
-                    { new Guid("87db07bc-0e02-4e29-90bb-05e8ef791d7b"), "share", "Т-Технологии", "rub", 1, "TQBR", "T" },
+                    // { new Guid("7de75794-a27f-4d81-a39b-492345813822"), "share", "Яндекс", "rub", 1, "TQBR", "YDEX" },
+                    // { new Guid("88468f6c-c67a-4fb4-a006-53eed803883c"), "share", "Татнефть", "rub", 1, "TQBR", "TATN" },
+                    // { new Guid("87db07bc-0e02-4e29-90bb-05e8ef791d7b"), "share", "Т-Технологии", "rub", 1, "TQBR", "T" },
                 });
         }
 

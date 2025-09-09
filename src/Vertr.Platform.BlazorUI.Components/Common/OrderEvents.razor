@@ -1,10 +1,6 @@
-@page "/order-events"
-
 @using Vertr.MarketData.Contracts
 
 @inject IDialogService DialogService
-
-<h3>Order Events</h3>
 
 <div style="display: table; table-layout: fixed; width: 100%;">
     <div style="overflow-x: auto;">
@@ -18,11 +14,10 @@
             DisplayMode="DataGridDisplayMode.Table"
             RowSize="@DataGridRowSize.Medium">
                 <PropertyColumn Property="@(p => p.OrderEvent.CreatedAt)" Sortable="true" />
-                <PropertyColumn Property="@(p => p.OrderEvent.JsonDataType)" Sortable="true" />
+                <PropertyColumn Property="@(p => GetEventName(p.OrderEvent))" Title="Event Type" Sortable="true" />
                 <PropertyColumn Property="@(p => p.OrderEvent.RequestId)" Sortable="true" />
                 <PropertyColumn Property="@(p => p.OrderEvent.OrderId)" Sortable="true" />
-                <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Sortable="true" />
-                <PropertyColumn Property="@(p => p.OrderEvent.PortfolioId)" Sortable="true" />
+                <PropertyColumn Property="@(p => p.Instrument.GetFullName())" Title="Instrument" Sortable="true" />
         </FluentDataGrid>
     </div>
 </div>

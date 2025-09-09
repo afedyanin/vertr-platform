@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
 using Vertr.OrderExecution.Contracts;
-using Vertr.Platform.BlazorUI.Components.Common;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Common.Utils;
 
-namespace Vertr.Platform.BlazorUI.Components.Pages;
+namespace Vertr.Platform.BlazorUI.Components.Common;
 
 public partial class OrderEvents
 {
@@ -18,6 +17,10 @@ public partial class OrderEvents
     private IQueryable<OrderEventModel> _orderEvents { get; set; }
 
     private IDictionary<Guid, Instrument> _instruments { get; set; }
+
+
+    [Parameter]
+    public string? PortfolioId { get; set; }
 
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
@@ -74,8 +77,16 @@ public partial class OrderEvents
 
     private async Task<IQueryable<OrderEventModel>> InitOrderEvents()
     {
+        if (PortfolioId == null)
+        {
+            return Array.Empty<OrderEventModel>().AsQueryable();
+        }
+
         using var apiClient = _httpClientFactory.CreateClient("backend");
-        var orderEvents = await apiClient.GetFromJsonAsync<OrderEvent[]>("api/order-events", JsonOptions.DefaultOptions);
+
+        var orderEvents = await apiClient.GetFromJsonAsync<OrderEvent[]>(
+            $"api/order-events/by-portfolio/{PortfolioId}",
+            JsonOptions.DefaultOptions);
 
         if (orderEvents == null)
         {
@@ -100,5 +111,12 @@ public partial class OrderEvents
 
         var res = modelItems?.AsQueryable() ?? Array.Empty<OrderEventModel>().AsQueryable();
         return res;
+    }
+
+    private string GetEventName(OrderEvent orderEvent)
+    {
+        var res = orderEvent.JsonDataType?.Split('.') ?? [];
+
+        return res.Last();
     }
 }

@@ -17,7 +17,8 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
 
         var orderEvents = await context.OrderEvents
             .OrderByDescending(e => e.CreatedAt)
-            .ThenBy(e => e.RequestId)
+            .ThenByDescending(e => e.RequestId)
+            .ThenBy(e => e.OrderId)
             .Take(limit)
             .ToArrayAsync();
 
@@ -34,7 +35,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
         return orderEvent;
     }
 
-    public async Task<OrderEvent[]> GetByPortfolioId(Guid portfolioId)
+    public async Task<OrderEvent[]> GetByPortfolioId(Guid portfolioId, int limit = 1000)
     {
         using var context = await GetDbContext();
 
@@ -42,6 +43,7 @@ internal class OrderEventRepository : RepositoryBase, IOrderEventRepository
             .Where(e => e.PortfolioId == portfolioId)
             .OrderByDescending(e => e.CreatedAt)
             .ThenBy(e => e.RequestId)
+            .Take(limit)
             .ToArrayAsync();
 
         return orderEvents;

@@ -15,7 +15,7 @@ public class OrderEventsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllOrderEvents(int limit = 1000)
+    public async Task<IActionResult> GetAllOrderEvents(int limit = 100)
     {
         var res = await _orderEventRepository.GetAll(limit);
 
@@ -30,10 +30,10 @@ public class OrderEventsController : ControllerBase
         return Ok(res);
     }
 
-    [HttpGet("portfolio/{portfolioId:guid}")]
-    public async Task<IActionResult> GetOrderEventsByPortfolio(Guid portfolioId)
+    [HttpGet("by-portfolio/{portfolioId:guid}")]
+    public async Task<IActionResult> GetOrderEventsByPortfolio(Guid portfolioId, int limit = 100)
     {
-        var res = await _orderEventRepository.GetByPortfolioId(portfolioId);
+        var res = await _orderEventRepository.GetByPortfolioId(portfolioId, limit);
 
         return Ok(res);
     }

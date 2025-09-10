@@ -111,7 +111,7 @@ public partial class Strategies
 
         if (!savedPortfolio)
         {
-            DemoLogger.WriteLine($"Error creating portfolio for strategy {model.Strategy.Name}");
+            ToastService.ShowError($"Error creating portfolio for strategy {model.Strategy.Name}");
             return;
         }
 

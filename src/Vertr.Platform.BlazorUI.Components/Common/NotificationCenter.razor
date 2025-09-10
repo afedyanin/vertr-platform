@@ -40,8 +40,6 @@ else
 
     private async Task OpenNotificationCenterAsync()
     {
-        DemoLogger.WriteLine($"Open notification center");
-
         _dialog = await DialogService.ShowPanelAsync<NotificationCenterPanel>(new DialogParameters<GlobalState>()
             {
                 Alignment = HorizontalAlignment.Right,
@@ -58,13 +56,11 @@ else
     {
         if (result.Cancelled)
         {
-            DemoLogger.WriteLine($"Notification center dismissed");
             return;
         }
 
         if (result.Data is not null)
         {
-            DemoLogger.WriteLine($"Notification center closed");
             return;
         }
     }

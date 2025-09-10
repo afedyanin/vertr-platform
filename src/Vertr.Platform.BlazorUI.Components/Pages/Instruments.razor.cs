@@ -107,7 +107,7 @@ public partial class Instruments
         await apiClient.PostAsync("api/instruments", content);
         _instrumentList = await InitInstruments();
 
-        DemoLogger.WriteLine($"{instrument.Symbol.ClassCode}.{instrument.Symbol.Ticker} ({instrument.Name}) added.");
+        ToastService.ShowSuccess($"{instrument.GetFullName()} added.");
     }
     private async Task HandleDeleteAction(Instrument instrument)
     {
@@ -129,6 +129,6 @@ public partial class Instruments
         _instrumentList = await InitInstruments();
         await dataGrid.RefreshDataAsync(force: true);
 
-        DemoLogger.WriteLine($"{instrument.Symbol.ClassCode}.{instrument.Symbol.Ticker} ({instrument.Name}) deleted.");
+        ToastService.ShowWarning($"{instrument.GetFullName()} deleted.");
     }
 }

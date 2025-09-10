@@ -276,7 +276,6 @@ public partial class PortfolioDetails : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            DemoLogger.WriteLine($"Open position error: {ex.Message}");
             ToastService.ShowError($"Cannot open position. InstrumentId={model.InstrumentId} Qty=({model.QuantityLots})");
             return;
         }
@@ -351,7 +350,6 @@ public partial class PortfolioDetails : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            DemoLogger.WriteLine($"Close position error: {ex.Message}");
             ToastService.ShowError($"Cannot close position. Instrument={positionModel.Instrument.GetFullName()} Balance={positionModel.Position.Balance}");
             return;
         }
@@ -426,7 +424,6 @@ public partial class PortfolioDetails : IAsyncDisposable
         }
         catch (Exception ex)
         {
-            DemoLogger.WriteLine($"Reverse position error: {ex.Message}");
             ToastService.ShowError($"Cannot reverse position. Instrument={positionModel.Instrument.GetFullName()} Balance={positionModel.Position.Balance}");
             return;
         }

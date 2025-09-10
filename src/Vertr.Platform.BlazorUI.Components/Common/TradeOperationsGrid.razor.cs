@@ -61,7 +61,6 @@ public partial class TradeOperationsGrid
     {
         if (string.IsNullOrEmpty(PortfolioId))
         {
-            DemoLogger.WriteLine("PortfolioId is empty");
             return [];
         }
 
@@ -70,7 +69,6 @@ public partial class TradeOperationsGrid
 
         if (operations == null)
         {
-            DemoLogger.WriteLine("No operations from API");
             return [];
         }
 

@@ -97,11 +97,11 @@ public partial class Subscriptions
         var saved = await SaveSubscription(model.Subscription);
         if (saved)
         {
-            DemoLogger.WriteLine($"Subscription for {model.Instrument.GetFullName()} ({model.Subscription.Interval}) saved.");
+            ToastService.ShowSuccess($"Subscription for {model.Instrument.GetFullName()} ({model.Subscription.Interval}) saved.");
         }
         else
         {
-            DemoLogger.WriteLine($"Saving subscription {model.Instrument.GetFullName()} ({model.Subscription.Interval}) FAILED!");
+            ToastService.ShowError($"Saving subscription {model.Instrument.GetFullName()} ({model.Subscription.Interval}) FAILED!");
         }
 
         _subscriptions = await InitSubscriptions();
@@ -196,6 +196,6 @@ public partial class Subscriptions
         _subscriptions = await InitSubscriptions();
         await dataGrid.RefreshDataAsync(force: true);
 
-        DemoLogger.WriteLine($"Subscription for {model.Instrument.GetFullName()} ({model.Subscription.Interval}) is deleted.");
+        ToastService.ShowWarning($"Subscription for {model.Instrument.GetFullName()} ({model.Subscription.Interval}) deleted.");
     }
 }

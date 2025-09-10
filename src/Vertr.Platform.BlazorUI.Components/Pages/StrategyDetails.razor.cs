@@ -160,12 +160,11 @@ public partial class StrategyDetails
         var message = await apiClient.DeleteAsync($"api/strategies/{Content.Strategy.Id}");
         message.EnsureSuccessStatusCode();
 
-        DemoLogger.WriteLine($"Strategy {Content.Strategy.Name} is deleted.");
+        ToastService.ShowWarning($"Strategy {Content.Strategy.Name} is deleted.");
 
         Navigation.NavigateTo("/strategies");
 
         return;
     }
-
 }
 

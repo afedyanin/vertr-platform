@@ -1,49 +1,16 @@
-# Vertr Platform
-
-## VERTR 
+# VERTR 
 
 Платформа алгоритмической торговли
 
+- vertr-platform: инфраструктура, бэкенд и управление торговлей
 - vertr-ml: предсказательное ядро системы
-- vertr: инфраструктура, бэкенд и управление торговлей
+
+## Функционал релиза 3.1
+
+...
 
 
-## Подготовка и запуск платформы
-
-### Создать один или несколько тестовых акаунтов в песочнице
-
-Использовать класс с тестами - TinvestSandboxRelatedTests для
-
-- создания акаунта - CreateSandboxAccount
-- создания депозита на акаунте - DepositSandboxAccount
-- просмотра списка доступных акаунтов - GetAllAccounts
-- закрытия акаунта CloseSandboxAccount
-
-### Подготовить конфигурационный файл для стратегии торговли
-
-Для каждого акаунта указывается массив стратегий с параметрами торговли.
-Пример секции в appsettings.json для одного акаунта:
-
-```json
-
-  "AccountStrategySettings": {
-    "SignalMappings": {
-      "0fde9e6e-7bb6-4c73-b7ae-629791aa2cf6": [
-        {
-          "Symbol": "SBER",
-          "Interval": "_10Min",
-          "QuantityLots": 10,
-          "PredictorType": "Sb3",
-          "Sb3Algo": "DQN"
-        }
-      ]
-    }
-  },
-
-```
-
-Для заданного акаунта торговля осуществляется по единственной стратегии акциями Сбербанка на 10-минутном интервале в количестве 10 лотов.
-Для торговли используется предиктор Sb3 с алгоритмом DQN.
+## Подготовка и запуск
 
 ### Поднять в докере инфраструктурный слой
 
@@ -74,15 +41,6 @@ dotnet tool install --global dotnet-ef
 dotnet ef database update
 
 ```
-
-### Заполнение БД историческими данными
-
-Система периодически обновляет исторические свечи для заданных в конфиге символов и периодов.
-
-Глубина загрузки истории при обновлении свечей задана в 5 дней.
-
-Если необходимо прогрузить в БД исторические данные за больший период, это можно сделать вручную через запуск теста LoadHistoricCandles.cs
-
 
 ### Стартовать контейнер с Prediction Service
 
@@ -120,12 +78,18 @@ docker compose up -d
 
 ```
 
+### Подключение к T-Invest
 
-## Resources
+Система использует API T-инвестиции в качестве источника рыночных данных и движка для выставления ордеров.
 
-- [Use multiple environments in ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/environments?view=aspnetcore-9.0)
-- [dotnet run](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-run)
-- [8 ways to set the URLs for an ASP.NET Core app](https://andrewlock.net/8-ways-to-set-the-urls-for-an-aspnetcore-app/#command-line-arguments)
+Для подкючения API необходимо
 
+- указать ключ в конфиге
+- указать режим работы в конфиге (sandbox или реальный акаунт)
+- указать AccountId в конфиге
 
+Для тестового режима работы (песочницы)
+
+- создать sandbox акаунт
+- внести сумму депозита для сэндбокс акаунта 
 

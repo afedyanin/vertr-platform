@@ -33,8 +33,6 @@ public abstract class StreamServiceBase : BackgroundService
     {
         try
         {
-            await OnBeforeStart(stoppingToken);
-
             if (!IsEnabled)
             {
                 Logger.LogWarning($"{_serviceName} is disabled.");
@@ -49,11 +47,6 @@ public abstract class StreamServiceBase : BackgroundService
         {
             Logger.LogError(ex, ex.Message);
         }
-    }
-
-    protected virtual Task OnBeforeStart(CancellationToken stoppingToken)
-    {
-        return Task.CompletedTask;
     }
 
     private async Task StartConsumingLoop(CancellationToken stoppingToken)

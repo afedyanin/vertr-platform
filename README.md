@@ -5,9 +5,11 @@
 - vertr-platform: инфраструктура, бэкенд и управление торговлей
 - vertr-ml: предсказательное ядро системы
 
-Платформа использует API T-инвестиции в качестве источника рыночных данных и движка для выставления ордеров.
+Платформа использует [API T-инвестиции](https://developer.tbank.ru/invest/services/accounts/head-account) в качестве источника рыночных данных и движка для выставления ордеров.
 
 ## Функционал релиза 3.0
+
+![dashboard](p001.png)
 
 ### Маркет данные
 
@@ -20,6 +22,8 @@
 - создание, активация/деактивация стратегий в онлайн режиме
 - ведение отдельного портфолио и позиций по каждой стратегии
 
+![strategy](p002.png)
+
 ### Ордер менеджмент
 
 - поддержка режима симуляции исполнения ордеров
@@ -30,6 +34,8 @@
 - поддержка отдельных портфелей для каждой стратегии
 - поддержка отдельных портфелей для каждого бэктеста
 - индивидуальный расчет поизций по каждому портфелю
+
+![portfolio](p003.png)
 
 ### Бэктесты
 
@@ -76,7 +82,7 @@ dotnet ef database update --context StrategiesDbContext
 
 ### Создание БД Hangfire 
 
-Плаформа использует hangfire для запуска фоновых задач.
+Плаформа использует [hangfire](https://github.com/HangfireIO/Hangfire) для запуска фоновых задач.
 
 Необходимо создать БД для hangfire и указать строку подключения в appsettings.json - https://github.com/afedyanin/vertr-platform/blob/main/src/Vertr.Platform.Host/appsettings.json
 
@@ -128,7 +134,7 @@ docker compose up -d
 - создать sandbox акаунт
 - внести сумму депозита для сэндбокс акаунта 
 
-Примеры можно найти в файле - 
+Примеры можно найти в файле - [tinvest.http](https://github.com/afedyanin/vertr-platform/blob/main/src/Vertr.Platform.Host/http_requests/tinvest.http)
 
 
 

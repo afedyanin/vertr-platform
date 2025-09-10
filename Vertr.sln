@@ -7,6 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{8D5C72
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		BACKLOG.md = BACKLOG.md
+		p001.png = p001.png
+		p002.png = p002.png
+		p003.png = p003.png
 		README.md = README.md
 	EndProjectSection
 EndProject

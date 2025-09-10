@@ -14,14 +14,51 @@ namespace Vertr.TinvestGateway.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
+    private readonly IDataConsumer<CandleSubscription> _candleSubscriptionsConsumer;
+
+    private CancellationTokenSource _restartSubscriptionToken;
+
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 
     public MarketDataStreamService(
+        IDataConsumer<CandleSubscription> candleSubscriptionsConsumer,
         IServiceProvider serviceProvider,
         IOptions<TinvestSettings> tinvestOptions,
         ILogger<OrderTradesStreamService> logger) :
             base(serviceProvider, tinvestOptions, logger)
     {
+        _candleSubscriptionsConsumer = candleSubscriptionsConsumer;
+    }
+
+    protected override Task OnBeforeStart(CancellationToken stoppingToken)
+    {
+        var consumingTask = _candleSubscriptionsConsumer.Consume(OnCandleSubscriptionUpdate, stoppingToken);
+        return base.OnBeforeStart(stoppingToken);
+    }
+
+    protected override async Task StartConsumingLoop(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            _restartSubscriptionToken = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+
+            try
+            {
+                Logger.LogInformation($"{nameof(MarketDataStreamService)} started at {DateTime.UtcNow:O}");
+                await Subscribe(Logger, deadline: null, _restartSubscriptionToken.Token);
+            }
+            catch (RpcException rpcEx)
+            {
+                if (rpcEx.StatusCode != StatusCode.DeadlineExceeded)
+                {
+                    Logger.LogError(rpcEx, $"{nameof(MarketDataStreamService)} consuming exception. Message={rpcEx.Message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, $"{nameof(MarketDataStreamService)} consuming exception. Message={ex.Message}");
+            }
+        }
     }
 
     protected override async Task Subscribe(
@@ -124,5 +161,29 @@ public class MarketDataStreamService : StreamServiceBase
         _ = jobScheduler.Schedule(new LoadIntradayCandlesRequest(), TimeSpan.FromSeconds(30), token);
         _ = jobScheduler.Schedule(new LoadHistoryCandlesRequest(), TimeSpan.FromMinutes(1), token);
         _ = jobScheduler.Schedule(new CleanIntradayCandlesRequest(), TimeSpan.FromMinutes(1), token);
+    }
+
+    private Task OnCandleSubscriptionUpdate(
+        CandleSubscription candleSubscription,
+        CancellationToken stoppingToken)
+    {
+        try
+        {
+            Logger.LogDebug($"CandleSubscription update received. SubscriptionId={candleSubscription.Id}");
+            _restartSubscriptionToken?.Cancel();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, $"CandleSubscription update exception. Message={ex.Message}");
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        _restartSubscriptionToken?.Dispose();
     }
 }

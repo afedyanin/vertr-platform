@@ -39,6 +39,8 @@ public abstract class StreamServiceBase : BackgroundService
                 return;
             }
 
+            await OnBeforeStart(stoppingToken);
+
             await StartConsumingLoop(stoppingToken);
 
             Logger.LogInformation($"{_serviceName} execution completed at {DateTime.UtcNow:O}");
@@ -49,7 +51,12 @@ public abstract class StreamServiceBase : BackgroundService
         }
     }
 
-    private async Task StartConsumingLoop(CancellationToken stoppingToken)
+    protected virtual Task OnBeforeStart(CancellationToken stoppingToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    protected virtual async Task StartConsumingLoop(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {

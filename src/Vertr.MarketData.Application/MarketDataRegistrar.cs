@@ -11,7 +11,10 @@ public static class MarketDataRegistrar
     public static IServiceCollection AddMarketData(this IServiceCollection services)
     {
         services.AddOptions<MarketDataSettings>().BindConfiguration(nameof(MarketDataSettings));
+
         services.RegisterDataChannel<Candle>();
+        services.RegisterDataChannel<CandleSubscription>();
+
         services.AddMediatorHandlers(typeof(MarketDataRegistrar).Assembly);
         services.AddSingleton<ICandlesHistoryLoader, CandlesHistoryLoader>();
         return services;

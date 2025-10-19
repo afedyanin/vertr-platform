@@ -26,11 +26,15 @@ public class PredictorClientTests : ClientTestBase
             CsvContent = csv
         };
 
-        var res = await PredictorClient.Predict(request);
+        var response = await PredictorClient.Predict(request);
 
-        Assert.That(res, Is.Not.Null);
+        Assert.That(response, Is.Not.Null);
+        Assert.That(response.Result, Is.Not.Null);
 
-        Console.WriteLine(res.CsvContent);
+        foreach (var kvp in response.Result)
+        {
+            Console.WriteLine($"{kvp.Key}={kvp.Value}");
+        }
     }
 
     [Test]
@@ -71,19 +75,6 @@ public class PredictorClientTests : ClientTestBase
     }
 
     [Test]
-    public async Task CanCallPredictionWithDataFrame()
-    {
-        var csv = File.ReadAllText(_csvFilePath);
-        using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
-        var dataFrame = DataFrame.LoadCsv(csvStream);
-
-        var df = await PredictionService.Predict(StrategyType.Dummy, dataFrame);
-
-        Assert.That(df, Is.Not.Null);
-        Console.WriteLine(df);
-    }
-
-    [Test]
     public async Task CanConvertCandlesToCsv()
     {
         var json = await File.ReadAllTextAsync(_candlesFilePath);
@@ -99,9 +90,15 @@ public class PredictorClientTests : ClientTestBase
     {
         var json = await File.ReadAllTextAsync(_candlesFilePath);
         var candles = JsonSerializer.Deserialize<Candle[]>(json, JsonOptions.DefaultOptions) ?? [];
-        var df = await PredictionService.Predict(StrategyType.Dummy, candles);
+        var res = await PredictionService.Predict(StrategyType.Dummy, candles);
 
-        Assert.That(df, Is.Not.Null);
-        Console.WriteLine(df);
+        Assert.That(res, Is.Not.Null);
+        Console.WriteLine(res);
+
+        var price = res.GetValue("next");
+        Console.WriteLine($"price={price} priceType={price?.GetType().Name}");
+
+        var timestamp = res.GetValue("timestamp");
+        Console.WriteLine($"timestamp={timestamp} timestampType={timestamp?.GetType().Name}");
     }
 }

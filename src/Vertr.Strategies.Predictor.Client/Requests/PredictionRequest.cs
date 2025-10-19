@@ -13,6 +13,6 @@ public class PredictionRequest
 
 public class PredictionResponse
 {
-    [JsonPropertyName("csv")]
-    public required string CsvContent { get; set; }
+    [JsonPropertyName("result")]
+    public Dictionary<string, object>? Result { get; set; }
 }

@@ -7,4 +7,11 @@ public record class Candle(
     decimal Close,
     decimal High,
     decimal Low,
-    long Volume);
+    long Volume)
+{
+    // TODO: Convert to extension property (C#14)
+    public int Date => int.Parse(TimeUtc.ToString("yyMMdd"));
+
+    // TODO: Convert to extension property (C#14)
+    public int Time => int.Parse(TimeUtc.ToString("HHmmss"));
+}

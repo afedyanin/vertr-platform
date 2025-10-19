@@ -1,5 +1,9 @@
 using System.Text;
+using System.Text.Json;
 using Microsoft.Data.Analysis;
+using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
+using Vertr.Platform.Common.Utils;
 using Vertr.Strategies.Contracts;
 using Vertr.Strategies.Predictor.Client.Requests;
 
@@ -8,10 +12,13 @@ namespace Vertr.Strategies.Predictor.Client.Tests;
 [TestFixture(Category = "Web", Explicit = true)]
 public class PredictorClientTests : ClientTestBase
 {
+    private const string _csvFilePath = "Data\\dummy.csv";
+    private const string _candlesFilePath = "Data\\candles.json";
+
     [Test]
     public async Task CanCallPredictorClient()
     {
-        var csv = File.ReadAllText("Data\\dummy.csv");
+        var csv = File.ReadAllText(_csvFilePath);
 
         var request = new PredictionRequest
         {
@@ -29,7 +36,7 @@ public class PredictorClientTests : ClientTestBase
     [Test]
     public async Task CanCallPredictionService()
     {
-        var csv = File.ReadAllText("Data\\dummy.csv");
+        var csv = File.ReadAllText(_csvFilePath);
         var res = await PredictionService.Predict(StrategyType.Dummy, csv);
 
         Assert.That(res, Is.Not.Null);
@@ -40,7 +47,7 @@ public class PredictorClientTests : ClientTestBase
     [Test]
     public void CanReadDataFrame()
     {
-        var csv = File.ReadAllText("Data\\dummy.csv");
+        var csv = File.ReadAllText(_csvFilePath);
         using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
         var dataFrame = DataFrame.LoadCsv(csvStream);
 
@@ -51,7 +58,7 @@ public class PredictorClientTests : ClientTestBase
     [Test]
     public void CanSaveDataFrame()
     {
-        var csv = File.ReadAllText("Data\\dummy.csv");
+        var csv = File.ReadAllText(_csvFilePath);
         using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
         var dataFrame = DataFrame.LoadCsv(csvStream);
 
@@ -66,7 +73,7 @@ public class PredictorClientTests : ClientTestBase
     [Test]
     public async Task CanCallPredictionWithDataFrame()
     {
-        var csv = File.ReadAllText("Data\\dummy.csv");
+        var csv = File.ReadAllText(_csvFilePath);
         using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
         var dataFrame = DataFrame.LoadCsv(csvStream);
 
@@ -77,18 +84,24 @@ public class PredictorClientTests : ClientTestBase
     }
 
     [Test]
-    public void CanConvertCandlesToDataFrame()
+    public async Task CanConvertCandlesToCsv()
     {
-        // TODO: Implement this
+        var json = await File.ReadAllTextAsync(_candlesFilePath);
+        var candles = JsonSerializer.Deserialize<Candle[]>(json, JsonOptions.DefaultOptions) ?? [];
+        var csvString = candles.ToCsv();
+
+        Assert.That(csvString, Is.Not.Null);
+        Console.WriteLine(csvString);
     }
 
     [Test]
-    public void CanCallPredictWithMarketData()
+    public async Task CanCallPredictWithCandles()
     {
-        // TODO:
-        // Call marketData to get candles
-        // Convert candles to dataFrame
-        // Call prediction service
-        // Check result
+        var json = await File.ReadAllTextAsync(_candlesFilePath);
+        var candles = JsonSerializer.Deserialize<Candle[]>(json, JsonOptions.DefaultOptions) ?? [];
+        var df = await PredictionService.Predict(StrategyType.Dummy, candles);
+
+        Assert.That(df, Is.Not.Null);
+        Console.WriteLine(df);
     }
 }

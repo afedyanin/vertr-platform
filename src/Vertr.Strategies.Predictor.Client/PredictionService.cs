@@ -1,5 +1,7 @@
 using System.Text;
 using Microsoft.Data.Analysis;
+using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.Strategies.Contracts;
 using Vertr.Strategies.Contracts.Interfaces;
 using Vertr.Strategies.Predictor.Client.Requests;
@@ -32,6 +34,28 @@ internal class PredictionService : IPredictionService
         using var writeStream = new MemoryStream();
         DataFrame.SaveCsv(dataFrame, writeStream);
         var csv = Encoding.UTF8.GetString(writeStream.ToArray());
+        var resultCsv = await Predict(strategyType, csv);
+
+        if (string.IsNullOrEmpty(resultCsv))
+        {
+            return null;
+        }
+
+        using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(resultCsv));
+        var df = DataFrame.LoadCsv(csvStream);
+
+        return df;
+    }
+
+    public async Task<DataFrame?> Predict(StrategyType strategyType, IEnumerable<Candle> candles)
+    {
+        var csv = candles.ToCsv();
+
+        if (string.IsNullOrEmpty(csv))
+        {
+            return null;
+        }
+
         var resultCsv = await Predict(strategyType, csv);
 
         if (string.IsNullOrEmpty(resultCsv))

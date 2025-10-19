@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Analysis" Version="0.22.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Vertr.Backtest.Contracts\Vertr.Backtest.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.MarketData.Contracts\Vertr.MarketData.Contracts.csproj" />
   </ItemGroup>

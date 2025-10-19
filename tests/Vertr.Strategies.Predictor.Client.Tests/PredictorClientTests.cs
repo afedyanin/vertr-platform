@@ -1,3 +1,5 @@
+using System.Text;
+using Microsoft.Data.Analysis;
 using Vertr.Strategies.Contracts;
 using Vertr.Strategies.Predictor.Client.Requests;
 
@@ -33,5 +35,45 @@ public class PredictorClientTests : ClientTestBase
         Assert.That(res, Is.Not.Null);
 
         Console.WriteLine(res);
+    }
+
+    [Test]
+    public void CanReadDataFrame()
+    {
+        var csv = File.ReadAllText("Data\\dummy.csv");
+        using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
+        var dataFrame = DataFrame.LoadCsv(csvStream);
+
+        Console.WriteLine(dataFrame);
+        //Console.WriteLine(dataFrame.Info());
+        //Console.WriteLine(dataFrame.Description());
+    }
+
+    [Test]
+    public void CanSaveDataFrame()
+    {
+        var csv = File.ReadAllText("Data\\dummy.csv");
+        using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
+        var dataFrame = DataFrame.LoadCsv(csvStream);
+
+        using var writeStream = new MemoryStream();
+        DataFrame.SaveCsv(dataFrame, writeStream);
+        var savedCsv = Encoding.UTF8.GetString(writeStream.ToArray());
+
+        Assert.That(savedCsv, Is.Not.Empty);
+        Console.WriteLine(savedCsv);
+    }
+
+    [Test]
+    public async Task CanCallPredictionWithDataFrame()
+    {
+        var csv = File.ReadAllText("Data\\dummy.csv");
+        using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
+        var dataFrame = DataFrame.LoadCsv(csvStream);
+
+        var df = await PredictionService.Predict(StrategyType.Dummy, dataFrame);
+
+        Assert.That(df, Is.Not.Null);
+        Console.WriteLine(df);
     }
 }

@@ -44,9 +44,8 @@ public class PredictorClientTests : ClientTestBase
         using var csvStream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
         var dataFrame = DataFrame.LoadCsv(csvStream);
 
+        Assert.That(dataFrame, Is.Not.Null);
         Console.WriteLine(dataFrame);
-        //Console.WriteLine(dataFrame.Info());
-        //Console.WriteLine(dataFrame.Description());
     }
 
     [Test]
@@ -75,5 +74,21 @@ public class PredictorClientTests : ClientTestBase
 
         Assert.That(df, Is.Not.Null);
         Console.WriteLine(df);
+    }
+
+    [Test]
+    public void CanConvertCandlesToDataFrame()
+    {
+        // TODO: Implement this
+    }
+
+    [Test]
+    public void CanCallPredictWithMarketData()
+    {
+        // TODO:
+        // Call marketData to get candles
+        // Convert candles to dataFrame
+        // Call prediction service
+        // Check result
     }
 }

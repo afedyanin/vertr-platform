@@ -20,6 +20,7 @@ using Vertr.PortfolioManager.WebApi;
 using Vertr.PortfolioManager.WebApi.Hubs;
 using Vertr.Strategies.Application;
 using Vertr.Strategies.DataAccess;
+using Vertr.Strategies.Predictor.Client;
 using Vertr.Strategies.WebApi;
 using Vertr.TinvestGateway;
 using Vertr.TinvestGateway.WebApi;
@@ -30,6 +31,7 @@ public class Program
 {
     private const string _connStringName = "VertrDbConnection";
     private const string _hangfireConnStringName = "HangfireConnection";
+
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -68,6 +70,7 @@ public class Program
 
         builder.Services.AddStrategies();
         builder.Services.AddStrategiesDataAccess(connectionString!);
+        builder.Services.AddPredictionService("http://127.0.0.1:8081");
 
         builder.Services.AddBacktests();
         builder.Services.AddBacktestDataAccess(connectionString!);

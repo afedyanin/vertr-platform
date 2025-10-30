@@ -32,6 +32,17 @@ internal class StrategyFactory : IStrategyFactory
             };
         }
 
+        if (strategyMetadata.Type == StrategyType.LastKnownValue)
+        {
+            return new LastKnownValueStrategy(serviceProvider)
+            {
+                Id = strategyMetadata.Id,
+                PortfolioId = strategyMetadata.PortfolioId,
+                InstrumentId = strategyMetadata.InstrumentId,
+                QtyLots = strategyMetadata.QtyLots,
+            };
+        }
+
         throw new ArgumentException($"Invalid strategy type: {strategyMetadata.Type}");
     }
 }

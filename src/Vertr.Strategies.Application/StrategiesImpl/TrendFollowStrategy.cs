@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Vertr.MarketData.Contracts;
 using Vertr.Strategies.Contracts;
 
@@ -9,8 +10,9 @@ internal class TrendFollowStrategy : StrategyBase
     {
     }
 
-    public override TradingSignal CreateTradingSignal(Candle candle)
-        => new TradingSignal
+    public override Task<TradingSignal?> CreateTradingSignal(Candle candle)
+    {
+        var signal = new TradingSignal
         {
             Id = Guid.NewGuid(),
             StrategyId = Id,
@@ -21,6 +23,9 @@ internal class TrendFollowStrategy : StrategyBase
             Price = candle.Close,
             CreatedAt = candle.TimeUtc,
         };
+
+        return Task.FromResult<TradingSignal?>(signal);
+    }
 
     private int GetSign(Candle candle) => candle.Open > candle.Close ? -1 : 1;
 }

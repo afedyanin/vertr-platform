@@ -16,6 +16,16 @@ public class PredictionResult
         return value;
     }
 
+    public decimal? GetDecimal(string key)
+    {
+        if (!_dict.TryGetValue(key, out var value))
+        {
+            return null;
+        }
+
+        return Convert.ToDecimal(value);
+    }
+
     public T? GetValue<T>(string key) where T : class
     {
         _dict.TryGetValue(key, out var value);

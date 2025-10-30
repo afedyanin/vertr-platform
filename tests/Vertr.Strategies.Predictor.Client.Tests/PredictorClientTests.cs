@@ -22,7 +22,7 @@ public class PredictorClientTests : ClientTestBase
 
         var request = new PredictionRequest
         {
-            ModelType = "Dummy",
+            ModelType = "LastKnownValue",
             CsvContent = csv
         };
 
@@ -41,7 +41,7 @@ public class PredictorClientTests : ClientTestBase
     public async Task CanCallPredictionService()
     {
         var csv = File.ReadAllText(_csvFilePath);
-        var res = await PredictionService.Predict(StrategyType.Dummy, csv);
+        var res = await PredictionService.Predict(StrategyType.LastKnownValue, csv);
 
         Assert.That(res, Is.Not.Null);
 
@@ -90,12 +90,12 @@ public class PredictorClientTests : ClientTestBase
     {
         var json = await File.ReadAllTextAsync(_candlesFilePath);
         var candles = JsonSerializer.Deserialize<Candle[]>(json, JsonOptions.DefaultOptions) ?? [];
-        var res = await PredictionService.Predict(StrategyType.Dummy, candles);
+        var res = await PredictionService.Predict(StrategyType.LastKnownValue, candles);
 
         Assert.That(res, Is.Not.Null);
         Console.WriteLine(res);
 
-        var price = res.GetValue("next");
+        var price = res.GetDecimal("next");
         Console.WriteLine($"price={price} priceType={price?.GetType().Name}");
 
         var timestamp = res.GetValue("timestamp");

@@ -32,6 +32,7 @@
     <ProjectReference Include="..\Vertr.Strategies.Application\Vertr.Strategies.Application.csproj" />
     <ProjectReference Include="..\Vertr.Strategies.Contracts\Vertr.Strategies.Contracts.csproj" />
     <ProjectReference Include="..\Vertr.Strategies.DataAccess\Vertr.Strategies.DataAccess.csproj" />
+    <ProjectReference Include="..\Vertr.Strategies.Predictor.Client\Vertr.Strategies.Predictor.Client.csproj" />
     <ProjectReference Include="..\Vertr.Strategies.WebApi\Vertr.Strategies.WebApi.csproj" />
     <ProjectReference Include="..\Vertr.TinvestGateway.WebApi\Vertr.TinvestGateway.WebApi.csproj" />
     <ProjectReference Include="..\Vertr.TinvestGateway\Vertr.TinvestGateway.csproj" />

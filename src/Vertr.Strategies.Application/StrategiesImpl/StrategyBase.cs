@@ -37,7 +37,12 @@ internal abstract class StrategyBase : IStrategy
     {
         _lastProcessedCandle = candle;
 
-        var tradingSignal = CreateTradingSignal(candle);
+        var tradingSignal = await CreateTradingSignal(candle);
+
+        if (tradingSignal == null)
+        {
+            return;
+        }
 
         if (!tradingSignal.BacktestId.HasValue)
         {
@@ -58,7 +63,7 @@ internal abstract class StrategyBase : IStrategy
         _ = await _mediator.Send(command, cancellationToken);
     }
 
-    public abstract TradingSignal CreateTradingSignal(Candle candle);
+    public abstract Task<TradingSignal?> CreateTradingSignal(Candle candle);
 
     public virtual Task OnStart(
         BacktestRun? backtest = null,

@@ -9,8 +9,9 @@ internal class RandomWalkStrategy : StrategyBase
     {
     }
 
-    public override TradingSignal CreateTradingSignal(Candle candle)
-        => new TradingSignal
+    public override Task<TradingSignal?> CreateTradingSignal(Candle candle)
+    {
+        var signal = new TradingSignal
         {
             Id = Guid.NewGuid(),
             StrategyId = Id,
@@ -21,6 +22,9 @@ internal class RandomWalkStrategy : StrategyBase
             Price = candle.Close,
             CreatedAt = candle.TimeUtc,
         };
+
+        return Task.FromResult<TradingSignal?>(signal);
+    }
 
     public int GetSign() => Random.Shared.Next(2) == 0 ? -1 : 1;
 }

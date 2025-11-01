@@ -1,7 +1,9 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Vertr.MarketData.Contracts;
+using Vertr.MarketData.Contracts.Extensions;
 using Vertr.Platform.BlazorUI.Components.Common;
 using Vertr.Platform.BlazorUI.Components.Models;
 using Vertr.Platform.Common.Utils;
@@ -21,6 +23,9 @@ public partial class Subscriptions
     [Inject]
     private IHttpClientFactory _httpClientFactory { get; set; }
 
+    [Inject]
+    private ILogger<Subscriptions> _logger { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -38,7 +43,10 @@ public partial class Subscriptions
     }
     private async Task AddSubscriptionAsync()
     {
-        var instrument = _instruments.Values.First();
+        var instrument = _instruments.Values.FliterOutCurrency().First();
+
+        _logger.LogDebug("Init instrument: {instument}", instrument.Name);
+
         var model = new SubscriptionModel()
         {
             Instrument = instrument,
@@ -92,8 +100,9 @@ public partial class Subscriptions
             return;
         }
 
-
         model.Subscription.InstrumentId = model.Instrument.Id;
+        _logger.LogDebug("Selected instrument from model: {instument}", model.Instrument.Name);
+
         var saved = await SaveSubscription(model.Subscription);
         if (saved)
         {

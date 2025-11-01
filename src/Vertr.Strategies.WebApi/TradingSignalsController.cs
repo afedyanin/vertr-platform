@@ -34,4 +34,11 @@ public class TradingSignalsController : ControllerBase
 
         return Ok(signal);
     }
+
+    [HttpDelete("by-strategy/{strategyId:guid}")]
+    public async Task<IActionResult> DeleteByStrategy(Guid strategyId)
+    {
+        var signals = await _repository.Delete(strategyId);
+        return Ok(signals);
+    }
 }

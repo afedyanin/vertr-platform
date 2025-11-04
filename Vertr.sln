@@ -105,6 +105,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Strategies.Predictor.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.Strategies.Predictor.Client.Tests", "tests\Vertr.Strategies.Predictor.Client.Tests\Vertr.Strategies.Predictor.Client.Tests.csproj", "{61E4CC89-B82C-43AC-9DD4-00E455E3D376}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vertr.CliTools.Tests", "tests\Vertr.CliTools.Tests\Vertr.CliTools.Tests.csproj", "{01FBE0AD-7CF7-4538-85F2-3B256F367342}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -259,6 +261,10 @@ Global
 		{61E4CC89-B82C-43AC-9DD4-00E455E3D376}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61E4CC89-B82C-43AC-9DD4-00E455E3D376}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61E4CC89-B82C-43AC-9DD4-00E455E3D376}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01FBE0AD-7CF7-4538-85F2-3B256F367342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01FBE0AD-7CF7-4538-85F2-3B256F367342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01FBE0AD-7CF7-4538-85F2-3B256F367342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01FBE0AD-7CF7-4538-85F2-3B256F367342}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -308,6 +314,7 @@ Global
 		{088F9151-5EE5-48FF-9160-11C5D6823FCF} = {6581D4E0-319E-4EFB-AB3D-A1AF4CA09327}
 		{AF92A0F8-DA82-437F-B4D4-4A80F4FFAA43} = {7162A705-D875-400C-BC4C-FABD2CCDFE48}
 		{61E4CC89-B82C-43AC-9DD4-00E455E3D376} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
+		{01FBE0AD-7CF7-4538-85F2-3B256F367342} = {E5D7D772-26FC-440C-BC2C-0842209B4902}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A1B9B33B-174C-4543-8F55-9B7AD3D746C2}

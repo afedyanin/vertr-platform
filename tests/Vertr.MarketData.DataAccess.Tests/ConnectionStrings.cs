@@ -1,5 +1,0 @@
-namespace Vertr.MarketData.DataAccess.Tests;
-internal static class ConnectionStrings
-{
-    public static readonly string LocalConnection = "Server=localhost;Port=5432;User Id=postgres;Password=admin;Database=vertr;";
-}

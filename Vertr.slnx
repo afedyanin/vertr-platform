@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/common/">
+    <File Path=".editorconfig" />
+    <File Path="compose.yaml" />
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/tests/" />
+</Solution>

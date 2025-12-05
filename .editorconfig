@@ -3,3 +3,7 @@ dotnet_diagnostic.IDE0009.severity = none # Add 'this' or 'Me' qualification
 dotnet_diagnostic.IDE0040.severity = none # Accessibility modifiers unnecessary
 dotnet_diagnostic.CA1027.severity = none # Mark enums with FlagsAttribute
 dotnet_diagnostic.CA2254.severity = none # The logging message template should not vary between calls.
+dotnet_diagnostic.CA1851.severity = none # Possible multiple enumerations of 'IEnumerable' collection. Consider using an implementation that avoids multiple enumerations.
+dotnet_diagnostic.CA1305.severity = none # The behavior of 'StringBuilder.AppendLine(ref StringBuilder.AppendInterpolatedStringHandler)' could vary based on the current user's locale settings. 
+dotnet_diagnostic.CA1873.severity = none # Evaluation of this argument may be expensive and unnecessary if logging is disabled
+dotnet_diagnostic.MA0176.severity = none # Optimize guid creation

@@ -71,7 +71,7 @@ public class OrderTradeRepositoryTests
             InstrumentId = Guid.NewGuid(),
             CreatedAt = DateTime.UtcNow,
             Direction = OrderDirection.Buy,
-            Trades = CreateTrades(tradesCount).ToArray(),
+            Trades = [.. CreateTrades(tradesCount)],
         };
 
     private static IEnumerable<Trade> CreateTrades(int count)

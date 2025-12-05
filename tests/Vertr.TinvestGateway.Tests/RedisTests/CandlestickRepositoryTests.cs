@@ -30,7 +30,6 @@ public class CandlestickRepositoryTests
         await repo.Clear(_sberId);
     }
 
-
     [Test]
     public async Task CanSaveCandles()
     {
@@ -178,6 +177,6 @@ public class CandlestickRepositoryTests
             res.Add(candle);
         }
 
-        return res.ToArray();
+        return [.. res];
     }
 }

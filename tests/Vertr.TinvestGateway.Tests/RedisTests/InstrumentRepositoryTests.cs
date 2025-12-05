@@ -27,7 +27,6 @@ public class InstrumentRepositoryTests
         await repo.Clear();
     }
 
-
     [Test]
     public async Task CanSaveInstrument()
     {

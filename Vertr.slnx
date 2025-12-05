@@ -7,13 +7,28 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/" />
+  <Folder Name="/src/CommandLine/">
+    <Project Path="src/Vertr.CommandLine.Application/Vertr.CommandLine.Application.csproj" />
+    <Project Path="src/Vertr.CommandLine.Common/Vertr.CommandLine.Common.csproj" />
+    <Project Path="src/Vertr.CommandLine.Models/Vertr.CommandLine.Models.csproj" />
+    <Project Path="src/Vertr.CommandLine.Predictor.Client/Vertr.CommandLine.Predictor.Client.csproj" />
+  </Folder>
   <Folder Name="/src/TinvestGateway/">
     <Project Path="src/Vertr.TinvestGateway.Contracts/Vertr.TinvestGateway.Contracts.csproj" />
     <Project Path="src/Vertr.TinvestGateway.DataAccess.Redis/Vertr.TinvestGateway.DataAccess.Redis.csproj" />
     <Project Path="src/Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.csproj" />
     <Project Path="src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj" />
   </Folder>
+  <Folder Name="/src/Trading/">
+    <Project Path="src/Vertr.TradingConsole/Vertr.TradingConsole.csproj" />
+  </Folder>
   <Folder Name="/tests/" />
+  <Folder Name="/tests/CommandLine/">
+    <Project Path="tests/Vertr.CommandLine.Application.Tests/Vertr.CommandLine.Application.Tests.csproj" />
+    <Project Path="tests/Vertr.CommandLine.Common.Tests/Vertr.CommandLine.Common.Tests.csproj" />
+    <Project Path="tests/Vertr.CommandLine.Models.Tests/Vertr.CommandLine.Models.Tests.csproj" />
+    <Project Path="tests/Vertr.CommandLine.Predictor.Client.Tests/Vertr.CommandLine.Predictor.Client.Tests.csproj" />
+  </Folder>
   <Folder Name="/tests/TinvestGateway/">
     <Project Path="tests/Vertr.TinvestGateway.Tests/Vertr.TinvestGateway.Tests.csproj" />
   </Folder>

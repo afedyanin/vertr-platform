@@ -72,8 +72,6 @@ public class TinvestGatewayMarketDataTests
         Assert.Pass();
     }
 
-
-
     [TestCase("BBG004730N88", 2025, "sber_2025.zip")] // SBER
     public async Task CanLoadAllHistory(string figi, int year, string filePath)
     {
@@ -90,13 +88,11 @@ public class TinvestGatewayMarketDataTests
         }
 
         response.EnsureSuccessStatusCode();
-
-        using var fileStream = new FileStream(filePath, FileMode.Create);
-        using var stream = await response.Content.ReadAsStreamAsync();
+        await using var fileStream = new FileStream(filePath, FileMode.Create);
+        await using var stream = await response.Content.ReadAsStreamAsync();
 
         await stream.CopyToAsync(fileStream);
     }
-
 
     [TestCase("e6123145-9665-43e0-8413-cd61b8aa9b13")] // SBER
     public async Task CanGetCandlesForAllDays(string instrumentId)

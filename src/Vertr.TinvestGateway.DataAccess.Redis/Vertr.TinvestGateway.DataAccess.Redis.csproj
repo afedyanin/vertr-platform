@@ -14,4 +14,8 @@
 		<InternalsVisibleTo Include="Vertr.TinvestGateway.Tests" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
+	</ItemGroup>
+
 </Project>

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="Refit" Version="9.0.2" />
+		<PackageReference Include="Refit.HttpClientFactory" Version="9.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="Vertr.CommandLine.Predictor.Client.Tests" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Vertr.CommandLine.Models\Vertr.CommandLine.Models.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
+	</ItemGroup>
+
+</Project>

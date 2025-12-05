@@ -1,0 +1,33 @@
+﻿@baseUrl = http://localhost:5099/api/tinvest
+
+@portfolioId = 2492B82B-5D8A-48F8-B72F-6FE76C9FE5DB
+@orderId = da556e67-8507-4bd0-858a-d6ee29caa953
+@requestId = db7fb9b3-b6f7-40f1-9c40-aa58e7c06538
+
+### Requests
+GET {{baseUrl}}/requests/{{portfolioId}}
+
+### Single Request
+GET {{baseUrl}}/order-request/{{requestId}}
+
+### Reponses
+GET {{baseUrl}}/responses/{{portfolioId}}
+
+### Single Reponse
+@orderId = b0286b86-6705-4037-9606-3b88128116a1
+GET {{baseUrl}}/order-response/{{orderId}}
+
+
+### States
+GET {{baseUrl}}/states/{{orderId}}/{{portfolioId}}
+
+### Order Trades
+@orderId = b0286b86-6705-4037-9606-3b88128116a1
+GET {{baseUrl}}/trades/{{orderId}}
+
+### Portfoio Trades
+GET {{baseUrl}}/portfolio-trades/{{portfolioId}}
+
+### Portfoio Positions
+GET {{baseUrl}}/portfolio/{{portfolioId}}
+

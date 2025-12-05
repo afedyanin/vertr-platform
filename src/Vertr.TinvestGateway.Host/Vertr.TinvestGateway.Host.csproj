@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vertr.TinvestGateway.DataAccess.Redis\Vertr.TinvestGateway.DataAccess.Redis.csproj" />
+    <ProjectReference Include="..\Vertr.TinvestGateway\Vertr.TinvestGateway.csproj" />
+  </ItemGroup>
+
+</Project>

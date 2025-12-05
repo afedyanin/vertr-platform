@@ -1,0 +1,25 @@
+@baseUrl = http://localhost:5099/api/tinvest
+
+@accountId = 1b6184e4-0b7e-493c-b1c8-26094fbf2940
+@portfolioId = 2492B82B-5D8A-48F8-B72F-6FE76C9FE5DB
+
+# SBER
+@instrumentId = e6123145-9665-43e0-8413-cd61b8aa9b13 
+
+### Post market order
+POST {{baseUrl}}/orders
+Content-Type: application/json
+
+{
+  "accountId": "{{accountId}}",
+  "instrumentId": "{{instrumentId}}",
+  "requestId": "{{$guid}}",
+  "portfolioId": "{{portfolioId}}",
+  "orderDirection": 2, 
+  "orderType": 2, 
+  "timeInForceType": 0,
+  "priceType": 0,
+  "price": 0,
+  "quantityLots": 10,
+  "createdAt": "{{$datetime iso8601}}"
+}

@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:5099/api/tinvest
+
+@accountId = 1b6184e4-0b7e-493c-b1c8-26094fbf2940
+#@accountId = 51b24ada-827a-40f7-9d5e-865409254765
+
+### Accounts
+GET {{baseUrl}}/accounts
+
+### Portfolio
+GET {{baseUrl}}/account/{{accountId}}/portfolio
+
+### Operations
+@from = 2025-09-01
+@to = 2025-11-25
+GET {{baseUrl}}/account/{{accountId}}/operations?from={{from}}&to={{to}}
+
+### Create sandbox
+@accName = yet%20another%20acc2
+POST {{baseUrl}}/sandbox-account?accountName=yet%20another%20acc
+
+### Delete sandbox
+@accountToDelete = 97ea9b47-18e1-4de2-a631-59ed4366d8a3
+DELETE  {{baseUrl}}/sandbox-account/{{accountToDelete}}
+

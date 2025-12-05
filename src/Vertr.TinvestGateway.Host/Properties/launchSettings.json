@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Vertr.TinvestGateway.Host": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5099"
+    }
+  }
+}

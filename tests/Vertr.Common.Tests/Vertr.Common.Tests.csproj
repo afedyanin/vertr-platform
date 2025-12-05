@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.CommandLine.Common\Vertr.CommandLine.Common.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Common\Vertr.Common.csproj" />
   </ItemGroup>
 
 	

@@ -1,8 +1,8 @@
-using Vertr.CommandLine.Common.Mediator;
 using Vertr.CommandLine.Models;
 using Vertr.CommandLine.Models.Abstracttions;
 using Vertr.CommandLine.Models.Requests.Orders;
 using Vertr.CommandLine.Models.Requests.Predictor;
+using Vertr.Common.Mediator;
 
 namespace Vertr.CommandLine.Application.Handlers.Predictor;
 

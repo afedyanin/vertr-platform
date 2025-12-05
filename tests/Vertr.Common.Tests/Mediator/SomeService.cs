@@ -1,4 +1,4 @@
-namespace Vertr.CommandLine.Common.Tests.Mediator;
+namespace Vertr.Common.Tests.Mediator;
 
 internal sealed class SomeService : ISomeService
 {

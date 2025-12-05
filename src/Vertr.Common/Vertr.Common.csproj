@@ -6,7 +6,7 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="Vertr.CommandLine.Application.Tests" />
-		<InternalsVisibleTo Include="Vertr.CommandLine.Common.Tests" />
+		<InternalsVisibleTo Include="Vertr.Common.Tests" />
 	</ItemGroup>
 
 	<ItemGroup>

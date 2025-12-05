@@ -1,4 +1,4 @@
-using Vertr.CommandLine.Common.Mediator;
+using Vertr.Common.Mediator;
 
 namespace Vertr.CommandLine.Models.Requests.BackTest;
 

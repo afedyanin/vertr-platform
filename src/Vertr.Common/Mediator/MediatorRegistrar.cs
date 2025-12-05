@@ -1,7 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Vertr.CommandLine.Common.Mediator;
+namespace Vertr.Common.Mediator;
 
 public static class MediatorRegistrar
 {

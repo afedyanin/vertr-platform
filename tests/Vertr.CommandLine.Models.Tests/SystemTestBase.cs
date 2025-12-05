@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.CommandLine.Application;
-using Vertr.CommandLine.Common.Mediator;
 using Vertr.CommandLine.Models.Abstracttions;
 using Vertr.CommandLine.Predictor.Client;
+using Vertr.Common.Mediator;
 
 namespace Vertr.CommandLine.Models.Tests;
 

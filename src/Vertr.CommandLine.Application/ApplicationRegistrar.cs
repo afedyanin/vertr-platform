@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Vertr.CommandLine.Application.Services;
-using Vertr.CommandLine.Common.Mediator;
 using Vertr.CommandLine.Models.Abstracttions;
+using Vertr.Common.Mediator;
 
 namespace Vertr.CommandLine.Application;
 

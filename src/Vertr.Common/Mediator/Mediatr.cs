@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Vertr.CommandLine.Common.Mediator;
+namespace Vertr.Common.Mediator;
 
 internal sealed class Mediatr : IMediator
 {

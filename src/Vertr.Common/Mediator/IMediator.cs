@@ -1,4 +1,4 @@
-namespace Vertr.CommandLine.Common.Mediator;
+namespace Vertr.Common.Mediator;
 
 public interface IMediator
 {

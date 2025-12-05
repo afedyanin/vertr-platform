@@ -1,5 +1,5 @@
-using Vertr.CommandLine.Common.Mediator;
 using Vertr.CommandLine.Models.Requests.Orders;
+using Vertr.Common.Mediator;
 
 namespace Vertr.CommandLine.Models.Requests.Predictor;
 

@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.CommandLine.Common\Vertr.CommandLine.Common.csproj" />
+    <ProjectReference Include="..\Vertr.Common\Vertr.Common.csproj" />
   </ItemGroup>
 
     <ItemGroup>

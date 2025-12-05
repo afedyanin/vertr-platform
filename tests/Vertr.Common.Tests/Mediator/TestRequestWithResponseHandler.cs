@@ -1,6 +1,6 @@
-using Vertr.CommandLine.Common.Mediator;
+using Vertr.Common.Mediator;
 
-namespace Vertr.CommandLine.Common.Tests.Mediator;
+namespace Vertr.Common.Tests.Mediator;
 
 public class TestRequestWithResponseHandler : IRequestHandler<TestRequestWithResponse, TestResponse>
 {

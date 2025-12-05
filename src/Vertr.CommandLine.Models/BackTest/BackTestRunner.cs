@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
-using Vertr.CommandLine.Common.Mediator;
 using Vertr.CommandLine.Models.Abstracttions;
 using Vertr.CommandLine.Models.Helpers;
 using Vertr.CommandLine.Models.Requests.BackTest;
+using Vertr.Common.Mediator;
 
 namespace Vertr.CommandLine.Models.BackTest;
 

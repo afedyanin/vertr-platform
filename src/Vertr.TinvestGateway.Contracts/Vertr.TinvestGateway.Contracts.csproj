@@ -9,8 +9,4 @@
     <PackageReference Include="Refit" Version="9.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
-  </ItemGroup>
-
 </Project>

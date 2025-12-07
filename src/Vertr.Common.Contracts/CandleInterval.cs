@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts.MarketData;
+namespace Vertr.Common.Contracts;
 
 public enum CandleInterval
 {

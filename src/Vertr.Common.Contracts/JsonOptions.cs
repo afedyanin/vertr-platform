@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.Common.Contracts;
 
 public static class JsonOptions
 {

@@ -11,16 +11,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Vertr.Common\Vertr.Common.csproj" />
-  </ItemGroup>
-
     <ItemGroup>
 	    <InternalsVisibleTo Include="Vertr.CommandLine.Application.Tests" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
     </ItemGroup>
 
 </Project>

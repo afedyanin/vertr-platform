@@ -10,9 +10,4 @@
 		<PackageReference Include="Vertr.TinvestGateway.Contracts" Version="1.0.1" />
 		<PackageReference Include="StackExchange.Redis" Version="2.10.1" />
     </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
-    </ItemGroup>
-
 </Project>

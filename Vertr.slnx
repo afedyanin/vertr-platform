@@ -13,7 +13,8 @@
     <Project Path="src/Vertr.CommandLine.Predictor.Client/Vertr.CommandLine.Predictor.Client.csproj" />
   </Folder>
   <Folder Name="/src/Common/">
-    <Project Path="src/Vertr.Common/Vertr.Common.csproj" />
+    <Project Path="src/Vertr.Common.Application/Vertr.Common.Application.csproj" Id="ef22c87e-62cd-4d9e-a383-b50735021013" />
+    <Project Path="src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj" Id="f48a86ef-276f-42d6-b9fb-1c39916da738" />
   </Folder>
   <Folder Name="/src/TinvestGateway/">
     <Project Path="src/Vertr.TinvestGateway.Contracts/Vertr.TinvestGateway.Contracts.csproj" />
@@ -22,6 +23,7 @@
     <Project Path="src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj" />
   </Folder>
   <Folder Name="/src/Trading/">
+    <Project Path="src/Vertr.DisruptorConsole/Vertr.DisruptorConsole.csproj" Id="c58e3368-511d-46a9-8f99-1b0ff6a27377" />
     <Project Path="src/Vertr.TradingConsole/Vertr.TradingConsole.csproj" />
   </Folder>
   <Folder Name="/tests/" />

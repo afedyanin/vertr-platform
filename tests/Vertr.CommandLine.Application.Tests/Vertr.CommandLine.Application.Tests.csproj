@@ -22,7 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vertr.CommandLine.Application\Vertr.CommandLine.Application.csproj" />
     <ProjectReference Include="..\..\src\Vertr.CommandLine.Models\Vertr.CommandLine.Models.csproj" />
-    <ProjectReference Include="..\..\src\Vertr.Common\Vertr.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,9 +33,4 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
-  </ItemGroup>
-
 </Project>

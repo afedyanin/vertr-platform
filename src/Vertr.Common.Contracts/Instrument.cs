@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace Vertr.TinvestGateway.Contracts.MarketData;
+namespace Vertr.Common.Contracts;
 
 public record class Instrument
 {

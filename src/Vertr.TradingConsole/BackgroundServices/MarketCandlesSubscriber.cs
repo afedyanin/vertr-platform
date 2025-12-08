@@ -11,7 +11,7 @@ namespace Vertr.TradingConsole.BackgroundServices;
 internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
     private const string GuidRegexPattern = @"(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})";
-    public static readonly Regex GuidRegex = new Regex(GuidRegexPattern, RegexOptions.Compiled);
+    private static readonly Regex GuidRegex = new Regex(GuidRegexPattern, RegexOptions.Compiled);
 
     private readonly Dictionary<string, Guid> _redisChannels = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
     private readonly Disruptor<CandlestickReceivedEvent> _disruptor;

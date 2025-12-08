@@ -5,9 +5,10 @@ namespace Vertr.Common.Application.Clients;
 
 public interface ITinvestGatewayClient
 {
-    [Get("/api/order-storage/portfolio/{portfolioId}")]
-    public Task<Portfolio?> GetPortfolio(Guid portfolioId);
+    [Post("/api/tinvest/orders/market")]
+    public Task PostMarketOrder(MarketOrderRequest request);
 
-    [Post("/api/tinvest/orders")]
-    public Task PostOrder(OrderRequest request);
+    // TODO: Implement this
+    [Get("/api/tinvest/portfolios")]
+    public Task<Portfolio[]> GetAllPortfolios(); // How to map to predictor??
 }

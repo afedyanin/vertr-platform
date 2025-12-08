@@ -18,6 +18,6 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
         // Evaluate prediction & thresholds
         // Generate and save trading signals
 
-        _logger.LogInformation("PredictionHandler executed.");
+        _logger.LogInformation("TradingSignalsGenerator executed.");
     }
 }

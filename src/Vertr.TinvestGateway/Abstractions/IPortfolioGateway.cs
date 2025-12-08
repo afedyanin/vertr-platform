@@ -4,7 +4,6 @@ using Vertr.TinvestGateway.Models.Orders;
 
 namespace Vertr.TinvestGateway.Abstractions;
 
-// TODO: Remove this?
 public interface IPortfolioGateway
 {
     public Task<Account[]?> GetAccounts();

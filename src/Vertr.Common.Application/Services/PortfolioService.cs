@@ -2,6 +2,7 @@
 
 namespace Vertr.Common.Application.Services;
 
+// TODO Implement portfolio storage by predictor
 internal sealed class PortfolioService : IPortfolioService
 {
     private readonly Dictionary<Guid, Portfolio> _portfolios = [];

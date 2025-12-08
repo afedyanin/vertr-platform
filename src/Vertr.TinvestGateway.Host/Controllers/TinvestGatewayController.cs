@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Abstractions;
 using Vertr.TinvestGateway.Models.Orders;
 
@@ -54,11 +55,12 @@ public class TinvestGatewayController : ControllerBase
         return Ok(candles);
     }
 
-    [HttpPost("orders")]
-    public async Task<IActionResult> PostOrder(PostOrderRequest request)
+    [HttpPost("orders/market")]
+    public async Task<IActionResult> PostMarketOrder(MarketOrderRequest request)
     {
-        var response = await _orderExecutionGateway.PostOrder(request);
-        return Ok(response);
+        var postOrderRequest = PostOrderRequest.FromMarketOrderRequest(request);
+        _ = await _orderExecutionGateway.PostOrder(postOrderRequest);
+        return Ok();
     }
 
     [HttpGet("order-state/{orderId}")]

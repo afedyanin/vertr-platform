@@ -19,6 +19,14 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
         _portfolioService = serviceProvider.GetRequiredService<IPortfolioService>();
     }
 
+    protected override ValueTask OnBeforeStart()
+    {
+        // TODO: Get All portfolios from TinvestGateway
+        // TODO: Update portfolio service with protfolios
+
+        return base.OnBeforeStart();
+    }
+
     public override Task HandleSubscription(RedisChannel channel, RedisValue message)
     {
         Logger.LogInformation("Portfolio received: {Message}", message);

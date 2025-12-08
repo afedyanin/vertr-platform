@@ -1,4 +1,3 @@
-using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Models.Orders.Enums;
 
 namespace Vertr.TinvestGateway.Converters;

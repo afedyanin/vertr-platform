@@ -18,6 +18,6 @@ internal sealed class MarketDataPredictor : IEventHandler<CandlestickReceivedEve
         // Get Predictions from prediction engine.
         // Save predictions to event data
 
-        _logger.LogInformation("MarketDataHandler executed.");
+        _logger.LogInformation("MarketDataPredictor executed.");
     }
 }

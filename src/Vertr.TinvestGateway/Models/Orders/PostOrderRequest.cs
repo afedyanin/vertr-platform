@@ -17,6 +17,23 @@ public record class PostOrderRequest
     public required long QuantityLots { get; init; }
     public DateTime CreatedAt { get; init; }
 
+    public static PostOrderRequest FromMarketOrderRequest(MarketOrderRequest request)
+        => new PostOrderRequest
+        {
+            InstrumentId = request.InstrumentId,
+            RequestId = request.RequestId,
+            PortfolioId = request.PortfolioId,
+            QuantityLots = Math.Abs(request.QuantityLots),
+            Price = decimal.Zero,
+            OrderDirection = request.QuantityLots > 0 ? OrderDirection.Buy :
+                request.QuantityLots < 0 ? OrderDirection.Sell :
+                    OrderDirection.Unspecified,
+            OrderType = OrderType.Market,
+            PriceType = PriceType.Unspecified,
+            TimeInForceType = TimeInForceType.Unspecified,
+            CreatedAt = DateTime.UtcNow,
+        };
+
     public string ToJson() => JsonSerializer.Serialize(this, JsonOptions.DefaultOptions);
     public static PostOrderRequest? FromJson(string json) => JsonSerializer.Deserialize<PostOrderRequest>(json, JsonOptions.DefaultOptions);
 }

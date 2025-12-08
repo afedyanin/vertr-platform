@@ -43,14 +43,17 @@ public static class ApplicationRegistrar
             ringBufferSize: 1024,
             taskScheduler: TaskScheduler.Default,
             producerType: ProducerType.Single,
-            waitStrategy: new BlockingWaitStrategy());
+            waitStrategy: new AsyncWaitStrategy());
 
-        disruptor.HandleEventsWith(
-            serviceProvider.GetRequiredService<MarketDataPredictor>(),
-            serviceProvider.GetRequiredService<TradingSignalsGenerator>(),
-            serviceProvider.GetRequiredService<PortfolioPositionHandler>(),
-            serviceProvider.GetRequiredService<OrderExecutionHandler>()
-            );
+        var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
+        var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
+        var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
+        var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
+
+        disruptor.HandleEventsWith(step1)
+            .Then(step2)
+            .Then(step3)
+            .Then(step4);
 
         return disruptor;
     }

@@ -10,5 +10,5 @@ public record class CandlestickReceivedEvent
 
     public List<TradingSignal> TradingSignals { get; } = [];
 
-    public List<OrderRequest> OrderRequests { get; } = [];
+    public List<MarketOrderRequest> OrderRequests { get; } = [];
 }

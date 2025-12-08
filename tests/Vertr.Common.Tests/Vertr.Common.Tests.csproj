@@ -25,9 +25,4 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-	
-  <ItemGroup>
-    <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
-  </ItemGroup>
-
 </Project>

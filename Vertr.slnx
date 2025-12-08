@@ -30,6 +30,8 @@
     <Project Path="tests/Vertr.CommandLine.Application.Tests/Vertr.CommandLine.Application.Tests.csproj" />
     <Project Path="tests/Vertr.CommandLine.Models.Tests/Vertr.CommandLine.Models.Tests.csproj" />
     <Project Path="tests/Vertr.CommandLine.Predictor.Client.Tests/Vertr.CommandLine.Predictor.Client.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Common/">
     <Project Path="tests/Vertr.Common.Tests/Vertr.Common.Tests.csproj" />
   </Folder>
   <Folder Name="/tests/TinvestGateway/">

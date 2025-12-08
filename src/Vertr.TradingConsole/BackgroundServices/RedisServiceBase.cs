@@ -41,6 +41,7 @@ internal abstract class RedisServiceBase : BackgroundService
                 return;
             }
 
+            await OnBeforeStart();
             _subscriber = Redis.GetSubscriber();
             await _subscriber.SubscribeAsync(RedisChannel, (channel, message) => HandleSubscription(channel, message));
             await Task.Delay(Timeout.Infinite, stoppingToken);
@@ -55,8 +56,20 @@ internal abstract class RedisServiceBase : BackgroundService
 
     public abstract Task HandleSubscription(RedisChannel channel, RedisValue message);
 
+    protected virtual ValueTask OnBeforeStart()
+    {
+        return ValueTask.CompletedTask;
+    }
+
+    protected virtual ValueTask OnBeforeStop()
+    {
+        return ValueTask.CompletedTask;
+    }
+
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
+        await OnBeforeStop();
+
         if (_subscriber != null)
         {
             await _subscriber.UnsubscribeAsync(RedisChannel);

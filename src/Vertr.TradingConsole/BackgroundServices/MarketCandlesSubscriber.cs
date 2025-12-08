@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using Disruptor.Dsl;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -9,6 +10,10 @@ namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
+    private const string GuidRegexPattern = @"(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})";
+    public static readonly Regex GuidRegex = new Regex(GuidRegexPattern, RegexOptions.Compiled);
+
+
     private readonly Dictionary<string, Guid> _redisChannels = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
     private readonly Disruptor<CandlestickReceivedEvent> _disruptor;
 
@@ -50,6 +55,18 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         }
     }
 
+    protected override ValueTask OnBeforeStart()
+    {
+        _disruptor.Start();
+        return base.OnBeforeStart();
+    }
+
+    protected override ValueTask OnBeforeStop()
+    {
+        _disruptor.Shutdown();
+        return base.OnBeforeStop();
+    }
+
     private Guid? GetInstrumentId(RedisChannel channel)
     {
         if (_redisChannels.TryGetValue(channel.ToString(), out var instrumentId))
@@ -57,7 +74,16 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
             return instrumentId;
         }
 
-        // TODO: Implement this
-        return Guid.NewGuid();
+        var guidString = GuidRegex.Match(channel.ToString())?.Value;
+
+        if (string.IsNullOrEmpty(guidString))
+        {
+            return null;
+        }
+
+        instrumentId = Guid.Parse(guidString);
+        _redisChannels[channel.ToString()] = instrumentId;
+
+        return instrumentId;
     }
 }

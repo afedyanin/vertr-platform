@@ -1,10 +1,8 @@
-using System.Threading.Channels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Refit;
 using StackExchange.Redis;
-using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Contracts;
 using Vertr.TradingConsole.BackgroundServices;
 

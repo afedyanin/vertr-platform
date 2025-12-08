@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Vertr.Common.Contracts;
 
-namespace Vertr.TinvestGateway.Contracts.Orders;
+namespace Vertr.TinvestGateway.Models.Orders;
 
 public record class OrderTrades
 {

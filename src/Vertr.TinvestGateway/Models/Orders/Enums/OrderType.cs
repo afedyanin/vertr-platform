@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts.Orders.Enums;
+namespace Vertr.TinvestGateway.Models.Orders.Enums;
 
 public enum OrderType
 {

@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts.Orders;
+namespace Vertr.TinvestGateway.Models.Orders;
 
 public record class Trade
 {

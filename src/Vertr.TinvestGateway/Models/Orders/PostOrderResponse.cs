@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Contracts.Orders.Enums;
+using Vertr.TinvestGateway.Models.Orders.Enums;
 
-namespace Vertr.TinvestGateway.Contracts.Orders;
+namespace Vertr.TinvestGateway.Models.Orders;
 
 public record class PostOrderResponse
 {

@@ -1,8 +1,7 @@
 using Refit;
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Contracts.Orders;
 
-namespace Vertr.TinvestGateway.Contracts;
+namespace Vertr.Common.Application.Clients;
 
 public interface ITinvestGatewayClient
 {
@@ -10,5 +9,5 @@ public interface ITinvestGatewayClient
     public Task<Portfolio?> GetPortfolio(Guid portfolioId);
 
     [Post("/api/tinvest/orders")]
-    public Task<PostOrderResponse> PostOrder(PostOrderRequest request);
+    public Task PostOrder(OrderRequest request);
 }

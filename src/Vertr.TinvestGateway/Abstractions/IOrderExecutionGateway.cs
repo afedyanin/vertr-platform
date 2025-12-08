@@ -1,5 +1,5 @@
-using Vertr.TinvestGateway.Contracts.Orders;
-using Vertr.TinvestGateway.Contracts.Orders.Enums;
+using Vertr.TinvestGateway.Models.Orders;
+using Vertr.TinvestGateway.Models.Orders.Enums;
 
 namespace Vertr.TinvestGateway.Abstractions;
 

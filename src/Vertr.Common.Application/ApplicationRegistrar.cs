@@ -1,7 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Disruptor;
+﻿using Disruptor;
 using Disruptor.Dsl;
+using Microsoft.Extensions.DependencyInjection;
+using Refit;
+using Vertr.Common.Application.Clients;
 using Vertr.Common.Application.EventHandlers;
+using Vertr.Common.Application.Services;
+using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application;
 
@@ -13,6 +17,21 @@ public static class ApplicationRegistrar
         services.AddSingleton<TradingSignalsGenerator>();
         services.AddSingleton<PortfolioPositionHandler>();
         services.AddSingleton<OrderExecutionHandler>();
+
+        services.AddSingleton<IPortfolioService, PortfolioService>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddTinvestGateway(this IServiceCollection services, string baseAddress)
+    {
+        services
+           .AddRefitClient<ITinvestGatewayClient>(
+               new RefitSettings
+               {
+                   ContentSerializer = new SystemTextJsonContentSerializer(JsonOptions.DefaultOptions)
+               })
+           .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseAddress));
 
         return services;
     }

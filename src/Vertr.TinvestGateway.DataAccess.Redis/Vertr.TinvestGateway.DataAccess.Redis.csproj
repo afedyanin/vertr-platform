@@ -6,16 +6,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Vertr.TinvestGateway.Contracts\Vertr.TinvestGateway.Contracts.csproj" />
 		<ProjectReference Include="..\Vertr.TinvestGateway\Vertr.TinvestGateway.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="Vertr.TinvestGateway.Tests" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
-	</ItemGroup>
-
 </Project>

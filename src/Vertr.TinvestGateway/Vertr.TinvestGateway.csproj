@@ -12,11 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vertr.TinvestGateway.Contracts\Vertr.TinvestGateway.Contracts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
+    <ProjectReference Include="..\Vertr.Common.Contracts\Vertr.Common.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Contracts.Orders.Enums;
+using Vertr.TinvestGateway.Models.Orders.Enums;
 
 namespace Vertr.TinvestGateway.Converters;
 

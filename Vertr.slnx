@@ -17,7 +17,6 @@
     <Project Path="src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj" Id="f48a86ef-276f-42d6-b9fb-1c39916da738" />
   </Folder>
   <Folder Name="/src/TinvestGateway/">
-    <Project Path="src/Vertr.TinvestGateway.Contracts/Vertr.TinvestGateway.Contracts.csproj" />
     <Project Path="src/Vertr.TinvestGateway.DataAccess.Redis/Vertr.TinvestGateway.DataAccess.Redis.csproj" />
     <Project Path="src/Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.csproj" />
     <Project Path="src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj" />

@@ -1,4 +1,4 @@
-using Vertr.TinvestGateway.Contracts.Orders;
+using Vertr.TinvestGateway.Models.Orders;
 
 namespace Vertr.TinvestGateway.Abstractions;
 

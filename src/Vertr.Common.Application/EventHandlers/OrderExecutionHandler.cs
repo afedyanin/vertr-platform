@@ -7,6 +7,7 @@ internal sealed class OrderExecutionHandler : IEventHandler<CandlestickReceivedE
 {
     private readonly ILogger<OrderExecutionHandler> _logger;
 
+
     public OrderExecutionHandler(ILogger<OrderExecutionHandler> logger)
     {
         _logger = logger;

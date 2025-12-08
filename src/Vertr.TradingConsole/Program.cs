@@ -1,9 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Refit;
 using StackExchange.Redis;
-using Vertr.TinvestGateway.Contracts;
+using Vertr.Common.Application;
 using Vertr.TradingConsole.BackgroundServices;
 
 namespace Vertr.TradingConsole;
@@ -17,13 +16,9 @@ internal sealed class Program
              {
 
                  services.AddSingleton<IConnectionMultiplexer>((sp) => ConnectionMultiplexer.Connect("localhost"));
-                 services
-                    .AddRefitClient<ITinvestGatewayClient>(
-                        new RefitSettings
-                        {
-                            ContentSerializer = new SystemTextJsonContentSerializer(Common.Contracts.JsonOptions.DefaultOptions)
-                        })
-                    .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://localhost:5099"));
+
+                 services.AddApplication();
+                 services.AddTinvestGateway("http://localhost:5099");
 
                  // Background Services
                  services.AddHostedService<MarketCandlesSubscriber>();

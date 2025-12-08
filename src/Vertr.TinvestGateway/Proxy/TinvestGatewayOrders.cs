@@ -2,9 +2,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
 using Vertr.TinvestGateway.Abstractions;
-using Vertr.TinvestGateway.Contracts.Orders;
-using Vertr.TinvestGateway.Contracts.Orders.Enums;
 using Vertr.TinvestGateway.Converters;
+using Vertr.TinvestGateway.Models.Orders;
+using Vertr.TinvestGateway.Models.Orders.Enums;
 using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.Proxy;

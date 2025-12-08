@@ -8,7 +8,7 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
 {
     protected override bool IsEnabled => true;
 
-    protected override RedisChannel Channel => new RedisChannel("portfolios", PatternMode.Literal);
+    protected override RedisChannel RedisChannel => new RedisChannel("portfolios", PatternMode.Literal);
 
     public PortfolioSubscriber(IServiceProvider serviceProvider, ILogger logger) : base(serviceProvider, logger)
     {

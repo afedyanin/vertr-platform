@@ -1,8 +1,10 @@
+using System.Threading.Channels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Refit;
 using StackExchange.Redis;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Contracts;
 using Vertr.TradingConsole.BackgroundServices;
 
@@ -21,10 +23,11 @@ internal sealed class Program
                     .AddRefitClient<ITinvestGatewayClient>(
                         new RefitSettings
                         {
-                            ContentSerializer = new SystemTextJsonContentSerializer(JsonOptions.DefaultOptions)
+                            ContentSerializer = new SystemTextJsonContentSerializer(Common.Contracts.JsonOptions.DefaultOptions)
                         })
                     .ConfigureHttpClient(c => c.BaseAddress = new Uri("http://localhost:5099"));
 
+                 // Background Services
                  services.AddHostedService<MarketCandlesSubscriber>();
                  services.AddHostedService<PortfolioSubscriber>();
 

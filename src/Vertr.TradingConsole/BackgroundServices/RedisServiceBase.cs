@@ -10,7 +10,7 @@ internal abstract class RedisServiceBase : BackgroundService
     protected IServiceProvider ServiceProvider { get; private set; }
     protected IConnectionMultiplexer Redis { get; private set; }
 
-    protected abstract RedisChannel Channel { get; }
+    protected abstract RedisChannel RedisChannel { get; }
 
     protected abstract bool IsEnabled { get; }
 
@@ -42,7 +42,7 @@ internal abstract class RedisServiceBase : BackgroundService
             }
 
             _subscriber = Redis.GetSubscriber();
-            await _subscriber.SubscribeAsync(Channel, (channel, message) => HandleSubscription(channel, message));
+            await _subscriber.SubscribeAsync(RedisChannel, (channel, message) => HandleSubscription(channel, message));
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
         catch (Exception ex)
@@ -59,7 +59,7 @@ internal abstract class RedisServiceBase : BackgroundService
     {
         if (_subscriber != null)
         {
-            await _subscriber.UnsubscribeAsync(Channel);
+            await _subscriber.UnsubscribeAsync(RedisChannel);
         }
 
         await base.StopAsync(cancellationToken);

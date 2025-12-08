@@ -1,61 +1,63 @@
-using Microsoft.Extensions.DependencyInjection;
+using Disruptor.Dsl;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
-using Vertr.TinvestGateway.Contracts;
-using Vertr.TinvestGateway.Contracts.MarketData;
-using Vertr.TinvestGateway.Contracts.Orders;
-using Vertr.TinvestGateway.Contracts.Orders.Enums;
+using Vertr.Common.Application;
+using Vertr.Common.Contracts;
 using static StackExchange.Redis.RedisChannel;
 
 namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
-    private readonly ITinvestGatewayClient _gatewayClient;
+    private readonly Dictionary<string, Guid> _redisChannels = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
+    private readonly Disruptor<CandlestickReceivedEvent> _disruptor;
 
-    private static readonly Guid InstrumentId = new("e6123145-9665-43e0-8413-cd61b8aa9b13");
-    private static readonly Guid PortfolioId = new("D4713DA2-ED51-4AE2-A31E-3CB986649796");
-
+    // TODO: Get from settings
+    protected override RedisChannel RedisChannel => new RedisChannel("market.candles.*", PatternMode.Pattern);
     protected override bool IsEnabled => true;
-
-    protected override RedisChannel Channel => new RedisChannel("market.candles*", PatternMode.Pattern);
 
     public MarketCandlesSubscriber(
         IServiceProvider serviceProvider,
         ILogger logger) : base(serviceProvider, logger)
     {
-        _gatewayClient = serviceProvider.GetRequiredService<ITinvestGatewayClient>();
+        _disruptor = ApplicationRegistrar.CreateCandlestickPipeline(serviceProvider);
     }
 
     public override async Task HandleSubscription(RedisChannel channel, RedisValue message)
     {
-        var candle = Candlestick.FromJson(message.ToString());
-        Console.WriteLine($"Received candle: {channel} - {candle}");
-        await PostRandomOrder();
-    }
-    private async Task PostRandomOrder()
-    {
-        var request = new PostOrderRequest
-        {
-            RequestId = Guid.NewGuid(),
-            InstrumentId = InstrumentId, // Get from channel name
-            PortfolioId = PortfolioId, // Get From Strategy Dictionary
-            OrderDirection = GetRandomDirection(),
-            OrderType = OrderType.Market,
-            TimeInForceType = TimeInForceType.Unspecified,
-            PriceType = PriceType.Unspecified,
-            Price = 0.0m,
-            QuantityLots = 10,
-            CreatedAt = DateTime.UtcNow,
-        };
+        Logger.LogInformation($"Received candlestick: {channel} - {message}");
 
-        if (_gatewayClient != null)
+        var candlestick = Candlestick.FromJson(message.ToString());
+
+        if (candlestick == null)
         {
-            var response = await _gatewayClient.PostOrder(request);
-            Console.WriteLine($"Post order response: {response}");
+            Logger.LogWarning("Cannot deserialize candlestick from message={Message}", message);
+            return;
+        }
+
+        var instrumentId = GetInstrumentId(channel);
+
+        if (instrumentId == null)
+        {
+            Logger.LogWarning("Cannot determine InstrumentId from channel={Channel}", channel.ToString());
+            return;
+        }
+
+        using (var scope = _disruptor.PublishEvent())
+        {
+            var evt = scope.Event();
+            evt.Candle = Candle.FromCandlestick(candlestick.Value, instrumentId.Value);
         }
     }
 
-    private static OrderDirection GetRandomDirection()
-        => Random.Shared.Next(0, 2) == 0 ? OrderDirection.Buy : OrderDirection.Sell;
+    private Guid? GetInstrumentId(RedisChannel channel)
+    {
+        if (_redisChannels.TryGetValue(channel.ToString(), out var instrumentId))
+        {
+            return instrumentId;
+        }
+
+        // TODO: Implement this
+        return Guid.NewGuid();
+    }
 }

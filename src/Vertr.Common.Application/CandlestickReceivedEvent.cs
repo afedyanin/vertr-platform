@@ -6,9 +6,9 @@ public record class CandlestickReceivedEvent
 {
     public Candlestick Candlestick { get; set; }
 
-    public Prediction[] Predictions { get; set; } = [];
+    public List<Prediction> Predictions { get; } = [];
 
-    public TradingSignal[] TradingSignal { get; set; } = [];
+    public List<TradingSignal> TradingSignals { get; } = [];
 
-    public OrderRequest[] OrderRequests { get; set; } = [];
+    public List<OrderRequest> OrderRequests { get; } = [];
 }

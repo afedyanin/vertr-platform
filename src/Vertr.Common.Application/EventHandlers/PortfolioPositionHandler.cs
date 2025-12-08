@@ -3,11 +3,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal class RiskEngineHandler : IEventHandler<CandlestickReceivedEvent>
+internal class PortfolioPositionHandler : IEventHandler<CandlestickReceivedEvent>
 {
-    private readonly ILogger<RiskEngineHandler> _logger;
+    private readonly ILogger<PortfolioPositionHandler> _logger;
 
-    public RiskEngineHandler(ILogger<RiskEngineHandler> logger)
+    public PortfolioPositionHandler(ILogger<PortfolioPositionHandler> logger)
     {
         _logger = logger;
     }

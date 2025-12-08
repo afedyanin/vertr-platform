@@ -9,9 +9,9 @@ public static class ApplicationRegistrar
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddSingleton<MarketDataHandler>();
-        services.AddSingleton<PredictionHandler>();
-        services.AddSingleton<RiskEngineHandler>();
+        services.AddSingleton<MarketDataPredictor>();
+        services.AddSingleton<TradingSignalsGenerator>();
+        services.AddSingleton<PortfolioPositionHandler>();
         services.AddSingleton<OrderExecutionHandler>();
 
         return services;
@@ -27,9 +27,9 @@ public static class ApplicationRegistrar
             waitStrategy: new BlockingWaitStrategy());
 
         disruptor.HandleEventsWith(
-            serviceProvider.GetRequiredService<MarketDataHandler>(),
-            serviceProvider.GetRequiredService<PredictionHandler>(),
-            serviceProvider.GetRequiredService<RiskEngineHandler>(),
+            serviceProvider.GetRequiredService<MarketDataPredictor>(),
+            serviceProvider.GetRequiredService<TradingSignalsGenerator>(),
+            serviceProvider.GetRequiredService<PortfolioPositionHandler>(),
             serviceProvider.GetRequiredService<OrderExecutionHandler>()
             );
 

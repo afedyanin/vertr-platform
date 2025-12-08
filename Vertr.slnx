@@ -23,7 +23,6 @@
     <Project Path="src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj" />
   </Folder>
   <Folder Name="/src/Trading/">
-    <Project Path="src/Vertr.DisruptorConsole/Vertr.DisruptorConsole.csproj" Id="c58e3368-511d-46a9-8f99-1b0ff6a27377" />
     <Project Path="src/Vertr.TradingConsole/Vertr.TradingConsole.csproj" />
   </Folder>
   <Folder Name="/tests/" />

@@ -10,4 +10,9 @@
 		<PackageReference Include="Vertr.TinvestGateway.Contracts" Version="1.0.1" />
 		<PackageReference Include="StackExchange.Redis" Version="2.10.1" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Vertr.CommandLine.Application\Vertr.CommandLine.Application.csproj" />
+      <ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
+    </ItemGroup>
 </Project>

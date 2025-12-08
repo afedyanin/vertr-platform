@@ -9,6 +9,9 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandlestickReceiv
 {
     private readonly ILogger<PortfolioPositionHandler> _logger;
 
+    // TODO: Get from settings
+    private const int DefaultQtyLots = 10;
+
     private readonly IPortfolioService _portfolioService;
     public PortfolioPositionHandler(
         IPortfolioService portfolioService,
@@ -20,34 +23,60 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandlestickReceiv
 
     public void OnEvent(CandlestickReceivedEvent data, long sequence, bool endOfBatch)
     {
-        // TODO: Handle signal & generate order request
-
-        var portfolio = _portfolioService.GetAll().FirstOrDefault();
-
-        if (portfolio == null)
+        foreach (var signal in data.TradingSignals)
         {
-            portfolio = new Portfolio()
+            if (signal.Direction == TradingDirection.Hold)
             {
-                Id = Guid.NewGuid(),
-                UpdatedAt = DateTime.UtcNow,
+                continue;
+            }
+
+            var portfolio = _portfolioService.GetByPredictor(signal.Predictor);
+
+            if (portfolio == null)
+            {
+                _logger.LogWarning("Portfolio is not found for predictor={Predictor}", signal.Predictor);
+                continue;
+            }
+
+            var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == signal.InstrumentId);
+
+            if (position.Amount > 0 && signal.Direction == TradingDirection.Buy)
+            {
+                continue;
+            }
+
+            if (position.Amount < 0 && signal.Direction == TradingDirection.Sell)
+            {
+                continue;
+            }
+
+            // Open position
+            if (position.Amount == default)
+            {
+                var openRequest = new MarketOrderRequest
+                {
+                    RequestId = Guid.NewGuid(),
+                    InstrumentId = signal.InstrumentId,
+                    PortfolioId = portfolio.Id,
+                    QuantityLots = DefaultQtyLots,
+                };
+
+                data.OrderRequests.Add(openRequest);
+                continue;
+            }
+
+            // Reverse position
+            var reverseRequest = new MarketOrderRequest
+            {
+                RequestId = Guid.NewGuid(),
+                InstrumentId = signal.InstrumentId,
+                PortfolioId = portfolio.Id,
+                QuantityLots = DefaultQtyLots * (-2),
             };
 
-            _portfolioService.Update(portfolio);
+            data.OrderRequests.Add(reverseRequest);
         }
-
-        // TODO: Implement reverse position
-        var request = new MarketOrderRequest
-        {
-            RequestId = Guid.NewGuid(),
-            InstrumentId = data.Candle!.InstrumentId,
-            PortfolioId = portfolio.Id,
-            QuantityLots = 10 * GetOrderDirection(),
-        };
-
-        data.OrderRequests.Add(request);
 
         _logger.LogInformation("PortfolioPositionHandler executed.");
     }
-
-    private static int GetOrderDirection() => Random.Shared.Next(0, 2) > 0 ? 1 : -1;
 }

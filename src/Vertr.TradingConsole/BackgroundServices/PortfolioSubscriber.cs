@@ -21,9 +21,8 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
 
     protected override ValueTask OnBeforeStart()
     {
-        // TODO: Get All portfolios from TinvestGateway
-        // TODO: Update portfolio service with protfolios
-
+        // TODO: Get predictors from config or args
+        _portfolioService.Init(["RandomWalk"]);
         return base.OnBeforeStart();
     }
 

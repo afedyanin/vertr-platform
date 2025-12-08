@@ -1,4 +1,4 @@
-using Vertr.TinvestGateway.Contracts.Portfolios;
+using Vertr.Common.Contracts;
 
 namespace Vertr.TinvestGateway.Repositories;
 

@@ -1,8 +1,10 @@
 using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Abstractions;
-using Vertr.TinvestGateway.Contracts.Portfolios;
+using Vertr.TinvestGateway.Contracts.Orders;
 using Vertr.TinvestGateway.Converters;
+using Vertr.TinvestGateway.Models;
 
 namespace Vertr.TinvestGateway.Proxy;
 

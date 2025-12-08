@@ -1,9 +1,7 @@
 using Microsoft.Extensions.Logging;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Abstractions;
-using Vertr.TinvestGateway.Contracts.MarketData;
 using Vertr.TinvestGateway.Contracts.Orders;
-using Vertr.TinvestGateway.Contracts.Orders.Enums;
-using Vertr.TinvestGateway.Contracts.Portfolios;
 using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.Services;
@@ -97,7 +95,7 @@ internal class PortfolioService : IPortfolioService
         var portfolio = await _portfolioRepository.GetById(portfolioId);
         var instruments = await _instrumentProvider.GetAll();
 
-        var builder = portfolio == null ? new PortfolioBuilder(portfolioId, instruments, _logger) : new PortfolioBuilder(portfolio, instruments, _logger);
+        var builder = portfolio == null ? new PortfolioBuilder(portfolioId, instruments) : new PortfolioBuilder(portfolio, instruments);
 
         return builder;
     }
@@ -112,21 +110,18 @@ internal class PortfolioService : IPortfolioService
 
         public PortfolioBuilder(
             Portfolio portfolio,
-            IEnumerable<Instrument> instruments,
-            ILogger logger)
-            : this(portfolio.Id, instruments, logger)
+            IEnumerable<Instrument> instruments)
+            : this(portfolio.Id, instruments)
         {
             _positions = portfolio.Positions.ToDictionary(x => x.InstrumentId, x => x);
             _comissions = portfolio.Comissions.ToDictionary(x => x.InstrumentId, x => x);
         }
         public PortfolioBuilder(
             Guid portfolioId,
-            IEnumerable<Instrument> instruments,
-            ILogger logger)
+            IEnumerable<Instrument> instruments)
         {
             _portfolioId = portfolioId;
             _instrumentsByTicker = InstrumentsByTicker(instruments);
-            // _logger = logger;
         }
 
         public PortfolioBuilder Apply(PostOrderResponse orderResponse)
@@ -146,7 +141,7 @@ internal class PortfolioService : IPortfolioService
             _comissions[key] = new Position
             {
                 InstrumentId = key,
-                Balance = comissionEntry.Balance + commision.Value,
+                Amount = comissionEntry.Amount + commision.Value,
             };
 
             return this;
@@ -191,13 +186,13 @@ internal class PortfolioService : IPortfolioService
             _positions[instrumentId] = new Position
             {
                 InstrumentId = instrumentId,
-                Balance = positionEntry.Balance + trade.Quantity * qtySign
+                Amount = positionEntry.Amount + trade.Quantity * qtySign
             };
 
             _positions[currencyId] = new Position
             {
                 InstrumentId = currencyId,
-                Balance = moneyPositionEntry.Balance + price * trade.Quantity * qtySign * (-1)
+                Amount = moneyPositionEntry.Amount + price * trade.Quantity * qtySign * (-1)
             };
         }
 

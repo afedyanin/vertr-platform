@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Vertr.TinvestGateway.Contracts.Orders.Enums;
+using Vertr.Common.Contracts;
 
 namespace Vertr.TinvestGateway.Contracts.Orders;
 

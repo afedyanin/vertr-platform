@@ -1,5 +1,3 @@
-using Vertr.Common.Mediator;
-
 namespace Vertr.CommandLine.Models.Requests.BackTest;
 
 public class BackTestClosePositionRequest : IRequest<BackTestClosePostionResponse>

@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts.Portfolios;
+namespace Vertr.TinvestGateway.Models;
 
 public record class Account(
     string Id,

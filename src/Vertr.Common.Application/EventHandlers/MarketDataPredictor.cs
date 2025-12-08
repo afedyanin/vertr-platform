@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal class MarketDataPredictor : IEventHandler<CandlestickReceivedEvent>
+internal sealed class MarketDataPredictor : IEventHandler<CandlestickReceivedEvent>
 {
     private readonly ILogger<MarketDataPredictor> _logger;
 

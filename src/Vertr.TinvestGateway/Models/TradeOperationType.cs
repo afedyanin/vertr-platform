@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Contracts.Portfolios;
+namespace Vertr.TinvestGateway.Models;
 
 public enum TradeOperationType
 {

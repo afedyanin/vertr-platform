@@ -1,7 +1,7 @@
 using Google.Protobuf.WellKnownTypes;
 using Tinkoff.InvestApi;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Abstractions;
-using Vertr.TinvestGateway.Contracts.MarketData;
 using Vertr.TinvestGateway.Converters;
 
 namespace Vertr.TinvestGateway.Proxy;

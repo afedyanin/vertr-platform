@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal class OrderExecutionHandler : IEventHandler<CandlestickReceivedEvent>
+internal sealed class OrderExecutionHandler : IEventHandler<CandlestickReceivedEvent>
 {
     private readonly ILogger<OrderExecutionHandler> _logger;
 

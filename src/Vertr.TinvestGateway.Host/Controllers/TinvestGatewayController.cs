@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Vertr.TinvestGateway.Abstractions;
 using Vertr.TinvestGateway.Contracts.Orders;
-using Vertr.TinvestGateway.Contracts.Portfolios;
 
 namespace Vertr.TinvestGateway.Host.Controllers;
 

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal class TradingSignalsGenerator : IEventHandler<CandlestickReceivedEvent>
+internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceivedEvent>
 {
     private readonly ILogger<TradingSignalsGenerator> _logger;
 

@@ -1,5 +1,5 @@
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Abstractions;
-using Vertr.TinvestGateway.Contracts.MarketData;
 using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.Services;
@@ -20,12 +20,7 @@ internal class InstrumentProvider : IInstrumentProvider
     {
         var dict = await _instruments.Value;
 
-        if (dict == null)
-        {
-            return [];
-        }
-
-        return dict.Values;
+        return dict == null ? [] : dict.Values;
     }
 
     public async ValueTask<Instrument?> GetById(Guid instrumentId)

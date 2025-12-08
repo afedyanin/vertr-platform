@@ -1,5 +1,4 @@
 using Vertr.TinvestGateway.Contracts.Orders;
-using Vertr.TinvestGateway.Contracts.Portfolios;
 
 namespace Vertr.TinvestGateway.Converters;
 

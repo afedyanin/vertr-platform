@@ -4,7 +4,7 @@ namespace Vertr.Common.Application;
 
 public record class CandlestickReceivedEvent
 {
-    public required Candle Candle { get; set; }
+    public Candle? Candle { get; set; }
 
     public List<Prediction> Predictions { get; } = [];
 

@@ -1,4 +1,4 @@
-using Vertr.TinvestGateway.Contracts.Portfolios;
+using Vertr.TinvestGateway.Models;
 
 namespace Vertr.TinvestGateway.Converters;
 

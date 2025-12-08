@@ -1,4 +1,6 @@
-namespace Vertr.TinvestGateway.Contracts.Portfolios;
+using Vertr.TinvestGateway.Contracts.Orders;
+
+namespace Vertr.TinvestGateway.Models;
 
 public record class TradeOperation
 {

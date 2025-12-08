@@ -1,4 +1,4 @@
-using Vertr.TinvestGateway.Contracts.MarketData;
+using Vertr.Common.Contracts;
 
 namespace Vertr.TinvestGateway.Abstractions;
 

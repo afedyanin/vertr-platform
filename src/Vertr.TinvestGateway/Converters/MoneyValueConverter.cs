@@ -1,5 +1,5 @@
 using Tinkoff.InvestApi.V1;
-using Vertr.TinvestGateway.Contracts.Portfolios;
+using Vertr.TinvestGateway.Contracts.Orders;
 
 namespace Vertr.TinvestGateway.Converters;
 

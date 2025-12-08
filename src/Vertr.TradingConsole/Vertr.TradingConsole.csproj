@@ -12,7 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Vertr.CommandLine.Application\Vertr.CommandLine.Application.csproj" />
       <ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
     </ItemGroup>
 </Project>

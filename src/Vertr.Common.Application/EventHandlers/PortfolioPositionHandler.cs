@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal class PortfolioPositionHandler : IEventHandler<CandlestickReceivedEvent>
+internal sealed class PortfolioPositionHandler : IEventHandler<CandlestickReceivedEvent>
 {
     private readonly ILogger<PortfolioPositionHandler> _logger;
 

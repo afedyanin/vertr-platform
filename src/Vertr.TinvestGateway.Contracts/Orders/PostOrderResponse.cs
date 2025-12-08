@@ -1,6 +1,6 @@
 using System.Text.Json;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Contracts.Orders.Enums;
-using Vertr.TinvestGateway.Contracts.Portfolios;
 
 namespace Vertr.TinvestGateway.Contracts.Orders;
 

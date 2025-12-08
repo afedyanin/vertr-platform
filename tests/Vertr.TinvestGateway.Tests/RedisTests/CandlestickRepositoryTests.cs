@@ -1,5 +1,5 @@
 using StackExchange.Redis;
-using Vertr.TinvestGateway.Contracts.MarketData;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.DataAccess.Redis;
 using Vertr.TinvestGateway.Tests.Stubs;
 

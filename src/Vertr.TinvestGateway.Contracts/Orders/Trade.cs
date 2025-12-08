@@ -1,5 +1,3 @@
-using Vertr.TinvestGateway.Contracts.Portfolios;
-
 namespace Vertr.TinvestGateway.Contracts.Orders;
 
 public record class Trade

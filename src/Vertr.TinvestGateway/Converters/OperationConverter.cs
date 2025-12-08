@@ -1,4 +1,5 @@
-using Vertr.TinvestGateway.Contracts.Portfolios;
+using Vertr.TinvestGateway.Contracts.Orders;
+using Vertr.TinvestGateway.Models;
 
 namespace Vertr.TinvestGateway.Converters;
 
@@ -41,7 +42,6 @@ internal static class OperationConverter
 
         return [.. operations];
     }
-
 
     private static TradeOperation? Convert(
         this Tinkoff.InvestApi.V1.OperationItem source,

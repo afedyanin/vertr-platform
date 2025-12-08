@@ -1,4 +1,4 @@
-using Vertr.TinvestGateway.Contracts.Portfolios;
+using Vertr.Common.Contracts;
 
 namespace Vertr.TinvestGateway.Converters;
 
@@ -28,7 +28,7 @@ internal static class PortfolioConverter
         => new Position
         {
             InstrumentId = Guid.Parse(source.InstrumentUid),
-            Balance = source.Quantity,
+            Amount = source.Quantity,
         };
 
     private static Position[] Convert(

@@ -1,4 +1,5 @@
 using StackExchange.Redis;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Contracts.Orders;
 using Vertr.TinvestGateway.Contracts.Orders.Enums;
 using Vertr.TinvestGateway.DataAccess.Redis;

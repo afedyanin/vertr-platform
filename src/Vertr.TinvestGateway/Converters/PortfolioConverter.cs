@@ -16,7 +16,6 @@ internal static class PortfolioConverter
         var res = new Portfolio
         {
             Id = Guid.NewGuid(),
-            Predictor = "Tinvest",
             UpdatedAt = updatedAt,
             Positions = source.Positions.ToArray().Convert()
         };

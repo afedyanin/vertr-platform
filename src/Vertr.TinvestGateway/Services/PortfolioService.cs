@@ -165,7 +165,6 @@ internal class PortfolioService : IPortfolioService
             var portfolio = new Portfolio()
             {
                 Id = _portfolioId,
-                Predictor = "???", // TODO: Fix it
                 UpdatedAt = DateTime.UtcNow,
                 Comissions = [.. _comissions.Values],
                 Positions = [.. _positions.Values],

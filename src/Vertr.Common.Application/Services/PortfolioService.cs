@@ -4,6 +4,7 @@ namespace Vertr.Common.Application.Services;
 
 internal sealed class PortfolioService : IPortfolioService
 {
+    private readonly Dictionary<string, Guid> _predictors = [];
     private readonly Dictionary<Guid, Portfolio> _portfolios = [];
 
     public Portfolio[] GetAll()
@@ -18,11 +19,19 @@ internal sealed class PortfolioService : IPortfolioService
     }
 
     public Portfolio? GetByPredictor(string predictor)
-        => _portfolios.Values
-            .FirstOrDefault(p => p.Predictor.Equals(predictor, StringComparison.OrdinalIgnoreCase));
+    {
+        if (!_predictors.TryGetValue(predictor, out var portfolioId))
+        {
+            return null;
+        }
+
+        _portfolios.TryGetValue(portfolioId, out var portfolio);
+
+        return portfolio;
+    }
 
     public string[] GetPredictors()
-        => [.. _portfolios.Values.Select(p => p.Predictor)];
+        => [.. _predictors.Keys];
 
     public void Init(string[] precitors)
     {
@@ -32,10 +41,10 @@ internal sealed class PortfolioService : IPortfolioService
             {
                 Id = Guid.NewGuid(),
                 UpdatedAt = DateTime.UtcNow,
-                Predictor = precitor,
             };
 
             _portfolios[portfolio.Id] = portfolio;
+            _predictors[precitor] = portfolio.Id;
         }
     }
 

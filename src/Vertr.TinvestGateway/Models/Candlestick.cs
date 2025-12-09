@@ -1,6 +1,7 @@
 using System.Text.Json;
+using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Contracts;
+namespace Vertr.TinvestGateway.Models;
 
 public readonly record struct Candlestick
 {

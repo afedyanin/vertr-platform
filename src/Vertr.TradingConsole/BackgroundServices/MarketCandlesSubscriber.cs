@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using Disruptor.Dsl;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -10,10 +9,6 @@ namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
-    private const string GuidRegexPattern = @"(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})";
-    private static readonly Regex GuidRegex = new Regex(GuidRegexPattern, RegexOptions.Compiled);
-
-    private readonly Dictionary<string, Guid> _redisChannels = new Dictionary<string, Guid>(StringComparer.OrdinalIgnoreCase);
     private readonly Disruptor<CandlestickReceivedEvent> _disruptor;
 
     // TODO: Get from settings
@@ -29,28 +24,20 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
 
     public override async Task HandleSubscription(RedisChannel channel, RedisValue message)
     {
-        Logger.LogInformation($"Received candlestick: {channel} - {message}");
+        Logger.LogInformation($"Received candle: {channel} - {message}");
 
-        var candlestick = Candlestick.FromJson(message.ToString());
+        var candle = Candle.FromJson(message.ToString());
 
-        if (candlestick == null)
+        if (candle == null)
         {
-            Logger.LogWarning("Cannot deserialize candlestick from message={Message}", message);
-            return;
-        }
-
-        var instrumentId = GetInstrumentId(channel);
-
-        if (instrumentId == null)
-        {
-            Logger.LogWarning("Cannot determine InstrumentId from channel={Channel}", channel.ToString());
+            Logger.LogWarning("Cannot deserialize candle from message={Message}", message);
             return;
         }
 
         using (var scope = _disruptor.PublishEvent())
         {
             var evt = scope.Event();
-            evt.Candle = Candle.FromCandlestick(candlestick.Value, instrumentId.Value);
+            evt.Candle = candle;
         }
     }
 
@@ -64,25 +51,5 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     {
         _disruptor.Shutdown();
         return base.OnBeforeStop();
-    }
-
-    private Guid? GetInstrumentId(RedisChannel channel)
-    {
-        if (_redisChannels.TryGetValue(channel.ToString(), out var instrumentId))
-        {
-            return instrumentId;
-        }
-
-        var guidString = GuidRegex.Match(channel.ToString())?.Value;
-
-        if (string.IsNullOrEmpty(guidString))
-        {
-            return null;
-        }
-
-        instrumentId = Guid.Parse(guidString);
-        _redisChannels[channel.ToString()] = instrumentId;
-
-        return instrumentId;
     }
 }

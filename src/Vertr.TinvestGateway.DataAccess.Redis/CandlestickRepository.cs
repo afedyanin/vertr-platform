@@ -1,5 +1,6 @@
 using StackExchange.Redis;
-using Vertr.Common.Contracts;
+using Vertr.TinvestGateway.Converters;
+using Vertr.TinvestGateway.Models;
 using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.DataAccess.Redis;
@@ -35,8 +36,9 @@ internal class CandlestickRepository : RedisRepositoryBase, ICandlestickReposito
 
         // publish last candle
         var last = trimmedCandles.OrderBy(c => c.Time).Last();
+        var candle = last.ToCandle(instrumentId);
         var channel = new RedisChannel(key.ToString(), RedisChannel.PatternMode.Pattern);
-        await db.PublishAsync(channel, last.ToJson());
+        await db.PublishAsync(channel, candle.ToJson());
 
         return added;
     }

@@ -1,6 +1,6 @@
 using StackExchange.Redis;
-using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.DataAccess.Redis;
+using Vertr.TinvestGateway.Models;
 using Vertr.TinvestGateway.Tests.Stubs;
 
 namespace Vertr.TinvestGateway.Tests.RedisTests;

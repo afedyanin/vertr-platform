@@ -1,4 +1,5 @@
 using Vertr.Common.Contracts;
+using Vertr.TinvestGateway.Models;
 
 namespace Vertr.TinvestGateway.Converters;
 
@@ -26,4 +27,7 @@ public static class CandleConverter
             source.Open,
             source.Close,
             source.Volume);
+
+    public static Candle ToCandle(this Candlestick candlestick, Guid instrumentId)
+        => new Candle(instrumentId, candlestick.GetDateTime(), candlestick.Open, candlestick.Close, candlestick.High, candlestick.Low, candlestick.Volume);
 }

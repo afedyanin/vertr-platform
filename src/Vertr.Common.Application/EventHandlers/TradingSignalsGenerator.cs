@@ -15,23 +15,27 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
 
     public void OnEvent(CandlestickReceivedEvent data, long sequence, bool endOfBatch)
     {
-        // Get current market price
-        // Evaluate prediction & thresholds
-        // Generate and save trading signals
-
-        var signal = new TradingSignal
+        foreach (var prediction in data.Predictions)
         {
-            Predictor = "RandomWalk",
-            InstrumentId = data.Candle!.InstrumentId,
-            Direction = GetRandomDirection()
-        };
+            var signal = new TradingSignal
+            {
+                Predictor = prediction.Predictor,
+                InstrumentId = prediction.InstrumentId,
+                Direction = GetTradingDirection(prediction.Price)
+            };
 
-        data.TradingSignals.Add(signal);
+            data.TradingSignals.Add(signal);
+        }
+
 
         _logger.LogInformation("TradingSignalsGenerator executed.");
     }
 
-    private static TradingDirection GetRandomDirection()
-        => Random.Shared.Next(0, 2) > 0 ? TradingDirection.Buy : TradingDirection.Sell;
+    private TradingDirection GetTradingDirection(decimal? predicterPrice)
+    {
+        // Get current market price
+        // Evaluate prediction & thresholds
 
+        return TradingDirection.Hold;
+    }
 }

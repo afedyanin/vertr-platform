@@ -67,7 +67,7 @@ public class SimpleRedisTests
 
         _ = await db.SortedSetAddAsync(key, [e1, e2], SortedSetWhen.Always);
 
-        var saved = await db.SortedSetRangeByRankWithScoresAsync(key, 0, 10, Order.Descending);
+        var saved = await db.SortedSetRangeByRankWithScoresAsync(key, 0, 10, StackExchange.Redis.Order.Descending);
 
         foreach (var value in saved)
         {

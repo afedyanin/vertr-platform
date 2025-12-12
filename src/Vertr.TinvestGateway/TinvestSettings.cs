@@ -17,12 +17,12 @@ public class TinvestSettings
 
     public string AccountId { get; set; } = string.Empty;
 
-    public CandleSubscriptionRequest[] CandleSubscriptions { get; set; } = [];
+    public SubscriptionRequest[] Subscriptions { get; set; } = [];
 
     public Dictionary<string, Guid> Currencies { get; set; } = [];
 }
 
-public record class CandleSubscriptionRequest
+public record class SubscriptionRequest
 {
     public Guid InstrumentId { get; set; }
 
@@ -31,4 +31,6 @@ public record class CandleSubscriptionRequest
     public bool Disabled { get; set; }
 
     public int MaxCount { get; set; }
+
+    public int OrderBookDepth { get; set; }
 }

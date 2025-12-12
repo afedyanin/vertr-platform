@@ -1,8 +1,9 @@
-﻿using Vertr.Common.Contracts;
+﻿using System.Collections.ObjectModel;
+using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.Services;
 
-internal sealed class PortfolioInMemoryRepository : IPortfolioRepository
+internal sealed class PortfolioRepository : IPortfolioRepository
 {
     private readonly Dictionary<string, Guid> _predictors = [];
     private readonly Dictionary<Guid, Portfolio> _portfolios = [];
@@ -30,8 +31,8 @@ internal sealed class PortfolioInMemoryRepository : IPortfolioRepository
         return portfolio;
     }
 
-    public string[] GetPredictors()
-        => [.. _predictors.Keys];
+    public ReadOnlyDictionary<string, Guid> GetPredictors()
+        => _predictors.AsReadOnly();
 
     public void Init(string[] precitors)
     {
@@ -69,5 +70,5 @@ public interface IPortfolioRepository
 
     public void Init(string[] precitors);
 
-    public string[] GetPredictors();
+    public ReadOnlyDictionary<string, Guid> GetPredictors();
 }

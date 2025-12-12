@@ -10,26 +10,36 @@ internal sealed class PortfolioManager : IPortfolioManager
     private const int DefaultQtyLots = 10;
 
     private readonly IPortfolioRepository _portfolioRepository;
+    private readonly IInstrumentRepository _instrumentRepository;
     private readonly ITinvestGatewayClient _tinvestGateway;
     private readonly ILogger<PortfolioManager> _logger;
 
     public PortfolioManager(
         IPortfolioRepository portfolioRepository,
+        IInstrumentRepository instrumentRepository,
         ITinvestGatewayClient tinvestGateway,
         ILogger<PortfolioManager> logger)
     {
         _portfolioRepository = portfolioRepository;
+        _instrumentRepository = instrumentRepository;
         _tinvestGateway = tinvestGateway;
         _logger = logger;
     }
 
-    public MarketOrderRequest? HandleTradingSignal(TradingSignal signal)
+    public async Task<MarketOrderRequest?> HandleTradingSignal(TradingSignal signal)
     {
         var portfolio = _portfolioRepository.GetByPredictor(signal.Predictor);
 
         if (portfolio == null)
         {
             _logger.LogWarning("Portfolio is not found for predictor={Predictor}", signal.Predictor);
+            return null;
+        }
+
+        var instrument = await _instrumentRepository.GetById(signal.InstrumentId);
+        if (instrument == null)
+        {
+            _logger.LogWarning("Instrument is not found InstrumentId={InstrumentId}", signal.InstrumentId);
             return null;
         }
 
@@ -61,13 +71,14 @@ internal sealed class PortfolioManager : IPortfolioManager
         }
 
         // Reverse position
-        var reverseDirection = position.Amount > 0 ? (-2) : 2;
+        var lotSize = instrument.LotSize ?? 1;
+        var positionQtyLots = (long)(position.Amount / lotSize);
         var reverseRequest = new MarketOrderRequest
         {
             RequestId = Guid.NewGuid(),
             InstrumentId = signal.InstrumentId,
             PortfolioId = portfolio.Id,
-            QuantityLots = DefaultQtyLots * reverseDirection,
+            QuantityLots = positionQtyLots * (-2),
         };
 
         _logger.LogInformation("Reverse position Request: QuantityLots={QuantityLots}", reverseRequest.QuantityLots);
@@ -76,8 +87,6 @@ internal sealed class PortfolioManager : IPortfolioManager
 
     public async Task CloseAllPositions()
     {
-        var instruments = await _tinvestGateway.GetAllInstruments();
-        var instrumentDict = instruments.ToDictionary(i => i.Id);
 
         var portfolios = _portfolioRepository.GetAll();
 
@@ -92,9 +101,11 @@ internal sealed class PortfolioManager : IPortfolioManager
                     continue;
                 }
 
-                if (!instrumentDict.TryGetValue(position.InstrumentId, out var instrument))
+                var instrument = await _instrumentRepository.GetById(position.InstrumentId);
+
+                if (instrument == null)
                 {
-                    _logger.LogWarning("Cannot find position instrument by Id={InstrumentId}", position.InstrumentId);
+                    _logger.LogWarning("Instrument is not found InstrumentId={InstrumentId}", position.InstrumentId);
                     continue;
                 }
 
@@ -107,14 +118,14 @@ internal sealed class PortfolioManager : IPortfolioManager
 
                 // Close position request
                 var lotSize = instrument.LotSize ?? 1;
-                var closeQtyLots = (long)(position.Amount / lotSize * (-1));
+                var positionQtyLots = (long)(position.Amount / lotSize);
 
                 var closeRequest = new MarketOrderRequest
                 {
                     RequestId = Guid.NewGuid(),
                     InstrumentId = position.InstrumentId,
                     PortfolioId = portfolio.Id,
-                    QuantityLots = closeQtyLots,
+                    QuantityLots = positionQtyLots * (-1),
                 };
 
                 tasks.Add(_tinvestGateway.PostMarketOrder(closeRequest));
@@ -128,5 +139,6 @@ internal sealed class PortfolioManager : IPortfolioManager
 
 public interface IPortfolioManager
 {
-    public MarketOrderRequest? HandleTradingSignal(TradingSignal signal);
+    public Task<MarketOrderRequest?> HandleTradingSignal(TradingSignal signal);
+    public Task CloseAllPositions();
 }

@@ -1,7 +1,9 @@
 using Disruptor.Dsl;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Vertr.Common.Application;
+using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
 using static StackExchange.Redis.RedisChannel;
 
@@ -10,6 +12,7 @@ namespace Vertr.TradingConsole.BackgroundServices;
 internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
     private readonly Disruptor<CandlestickReceivedEvent> _disruptor;
+    private readonly IPortfolioManager _portfolioManager;
 
     // TODO: Get from settings
     protected override RedisChannel RedisChannel => new RedisChannel("market.candles.*", PatternMode.Pattern);
@@ -20,6 +23,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         ILogger logger) : base(serviceProvider, logger)
     {
         _disruptor = ApplicationRegistrar.CreateCandlestickPipeline(serviceProvider);
+        _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)
@@ -47,10 +51,13 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         return base.OnBeforeStart();
     }
 
-    protected override ValueTask OnBeforeStop()
+    protected override async ValueTask OnBeforeStop()
     {
         Logger.LogWarning("Stopping Disruptor...");
         _disruptor.Shutdown();
-        return base.OnBeforeStop();
+
+        // TODO: Use settings
+        await _portfolioManager.CloseAllPositions();
+        await base.OnBeforeStop();
     }
 }

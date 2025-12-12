@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -9,20 +10,20 @@ namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class PortfolioSubscriber : RedisServiceBase
 {
-    private readonly IPortfolioManager _portfolioService;
+    private readonly IPortfolioRepository _portfolioRepository;
 
     protected override bool IsEnabled => true;
     protected override RedisChannel RedisChannel => new RedisChannel("portfolios", PatternMode.Literal);
 
     public PortfolioSubscriber(IServiceProvider serviceProvider, ILogger logger) : base(serviceProvider, logger)
     {
-        _portfolioService = serviceProvider.GetRequiredService<IPortfolioManager>();
+        _portfolioRepository = serviceProvider.GetRequiredService<IPortfolioRepository>();
     }
 
     protected override ValueTask OnBeforeStart()
     {
         // TODO: Get predictors from config or args
-        _portfolioService.Init(["RandomWalk"]);
+        _portfolioRepository.Init(["RandomWalk"]);
         return base.OnBeforeStart();
     }
 
@@ -38,6 +39,15 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
             return;
         }
 
-        _portfolioService.Update(portfolio);
+        _portfolioRepository.Update(portfolio);
+    }
+
+    protected override ValueTask OnBeforeStop()
+    {
+        var dict = _portfolioRepository.GetPredictors();
+        var json = JsonSerializer.Serialize(dict, JsonOptions.DefaultOptions);
+        Logger.LogInformation("Predictor Portfolios: {Dict}", json);
+
+        return base.OnBeforeStop();
     }
 }

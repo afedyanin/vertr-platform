@@ -21,7 +21,6 @@ internal sealed class Program
 
                  services.AddApplication();
 
-                 // Background Services
                  services.AddHostedService<MarketCandlesSubscriber>();
                  services.AddHostedService<PortfolioSubscriber>();
 

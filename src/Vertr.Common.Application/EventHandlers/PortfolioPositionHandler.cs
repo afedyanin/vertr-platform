@@ -7,17 +7,14 @@ namespace Vertr.Common.Application.EventHandlers;
 
 internal sealed class PortfolioPositionHandler : IEventHandler<CandlestickReceivedEvent>
 {
+    private readonly IPortfolioManager _portfolioManager;
     private readonly ILogger<PortfolioPositionHandler> _logger;
 
-    // TODO: Get from settings
-    private const int DefaultQtyLots = 10;
-
-    private readonly IPortfolioService _portfolioService;
     public PortfolioPositionHandler(
-        IPortfolioService portfolioService,
+        IPortfolioManager portfolioManager,
         ILogger<PortfolioPositionHandler> logger)
     {
-        _portfolioService = portfolioService;
+        _portfolioManager = portfolioManager;
         _logger = logger;
     }
 
@@ -32,54 +29,12 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandlestickReceiv
                 continue;
             }
 
-            var portfolio = _portfolioService.GetByPredictor(signal.Predictor);
+            var orderRequest = _portfolioManager.HandleTradingSignal(signal);
 
-            if (portfolio == null)
+            if (orderRequest != null)
             {
-                _logger.LogWarning("Portfolio is not found for predictor={Predictor}", signal.Predictor);
-                continue;
+                data.OrderRequests.Add(orderRequest);
             }
-
-            var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == signal.InstrumentId);
-
-            if (position.Amount > 0 && signal.Direction == TradingDirection.Buy)
-            {
-                continue;
-            }
-
-            if (position.Amount < 0 && signal.Direction == TradingDirection.Sell)
-            {
-                continue;
-            }
-
-            // Open position
-            if (position.Amount == default)
-            {
-                var openRequest = new MarketOrderRequest
-                {
-                    RequestId = Guid.NewGuid(),
-                    InstrumentId = signal.InstrumentId,
-                    PortfolioId = portfolio.Id,
-                    QuantityLots = DefaultQtyLots,
-                };
-
-                _logger.LogInformation("Open position Request: QuantityLots={QuantityLots}", openRequest.QuantityLots);
-                data.OrderRequests.Add(openRequest);
-                continue;
-            }
-
-            // Reverse position
-            var reverseDirection = position.Amount > 0 ? (-2) : 2;
-            var reverseRequest = new MarketOrderRequest
-            {
-                RequestId = Guid.NewGuid(),
-                InstrumentId = signal.InstrumentId,
-                PortfolioId = portfolio.Id,
-                QuantityLots = DefaultQtyLots * reverseDirection,
-            };
-
-            _logger.LogInformation("Reverse position Request: QuantityLots={QuantityLots}", reverseRequest.QuantityLots);
-            data.OrderRequests.Add(reverseRequest);
         }
 
         _logger.LogInformation("PortfolioPositionHandler executed.");

@@ -9,14 +9,14 @@ namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class PortfolioSubscriber : RedisServiceBase
 {
-    private readonly IPortfolioService _portfolioService;
+    private readonly IPortfolioManager _portfolioService;
 
     protected override bool IsEnabled => true;
     protected override RedisChannel RedisChannel => new RedisChannel("portfolios", PatternMode.Literal);
 
     public PortfolioSubscriber(IServiceProvider serviceProvider, ILogger logger) : base(serviceProvider, logger)
     {
-        _portfolioService = serviceProvider.GetRequiredService<IPortfolioService>();
+        _portfolioService = serviceProvider.GetRequiredService<IPortfolioManager>();
     }
 
     protected override ValueTask OnBeforeStart()

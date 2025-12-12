@@ -2,7 +2,7 @@
 
 namespace Vertr.Common.Application.Services;
 
-internal sealed class PortfolioService : IPortfolioService
+internal sealed class PortfolioInMemoryRepository : IPortfolioRepository
 {
     private readonly Dictionary<string, Guid> _predictors = [];
     private readonly Dictionary<Guid, Portfolio> _portfolios = [];
@@ -57,7 +57,7 @@ internal sealed class PortfolioService : IPortfolioService
     }
 }
 
-public interface IPortfolioService
+public interface IPortfolioRepository
 {
     public Portfolio[] GetAll();
 

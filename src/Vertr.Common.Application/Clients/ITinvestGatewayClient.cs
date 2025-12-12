@@ -8,7 +8,7 @@ public interface ITinvestGatewayClient
     [Post("/api/tinvest/orders/market")]
     public Task PostMarketOrder(MarketOrderRequest request);
 
-    // TODO: Implement this
-    [Get("/api/tinvest/portfolios")]
-    public Task<Portfolio[]> GetAllPortfolios(); // How to map to predictor??
+    [Get("/api/instruments/all")]
+    public Task<Instrument[]> GetAllInstruments();
+
 }

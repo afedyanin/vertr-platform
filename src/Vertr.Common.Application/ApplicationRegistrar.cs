@@ -18,7 +18,8 @@ public static class ApplicationRegistrar
         services.AddSingleton<PortfolioPositionHandler>();
         services.AddSingleton<OrderExecutionHandler>();
 
-        services.AddSingleton<IPortfolioService, PortfolioService>();
+        services.AddSingleton<IPortfolioRepository, PortfolioInMemoryRepository>();
+        services.AddSingleton<IPortfolioManager, PortfolioManager>();
 
         return services;
     }

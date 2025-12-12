@@ -43,7 +43,17 @@ internal abstract class RedisServiceBase : BackgroundService
 
             await OnBeforeStart();
             _subscriber = Redis.GetSubscriber();
-            await _subscriber.SubscribeAsync(RedisChannel, (channel, message) => HandleSubscription(channel, message));
+            await _subscriber.SubscribeAsync(RedisChannel, (channel, message) =>
+            {
+                try
+                {
+                    HandleSubscription(channel, message);
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "HandleSubscription error. Message={Message}", ex.Message);
+                }
+            });
             await Task.Delay(Timeout.Infinite, stoppingToken);
         }
         catch (Exception ex)
@@ -54,7 +64,7 @@ internal abstract class RedisServiceBase : BackgroundService
         Logger.LogInformation($"{_serviceName} execution completed at {DateTime.UtcNow:O}");
     }
 
-    public abstract Task HandleSubscription(RedisChannel channel, RedisValue message);
+    public abstract void HandleSubscription(RedisChannel channel, RedisValue message);
 
     protected virtual ValueTask OnBeforeStart()
     {

@@ -22,16 +22,15 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         _disruptor = ApplicationRegistrar.CreateCandlestickPipeline(serviceProvider);
     }
 
-    public override async Task HandleSubscription(RedisChannel channel, RedisValue message)
+    public override void HandleSubscription(RedisChannel channel, RedisValue message)
     {
-        Logger.LogInformation($"Received candle: {channel} - {message}");
+        Logger.LogInformation("Received candle from cahnnel={Channel}", channel);
 
         var candle = Candle.FromJson(message.ToString());
 
         if (candle == null)
         {
             Logger.LogWarning("Cannot deserialize candle from message={Message}", message);
-            return;
         }
 
         using (var scope = _disruptor.PublishEvent())
@@ -43,12 +42,14 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
 
     protected override ValueTask OnBeforeStart()
     {
+        Logger.LogWarning("Starting Disruptor...");
         _disruptor.Start();
         return base.OnBeforeStart();
     }
 
     protected override ValueTask OnBeforeStop()
     {
+        Logger.LogWarning("Stopping Disruptor...");
         _disruptor.Shutdown();
         return base.OnBeforeStop();
     }

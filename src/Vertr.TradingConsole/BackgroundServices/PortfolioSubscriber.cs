@@ -26,7 +26,7 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
         return base.OnBeforeStart();
     }
 
-    public override Task HandleSubscription(RedisChannel channel, RedisValue message)
+    public override void HandleSubscription(RedisChannel channel, RedisValue message)
     {
         Logger.LogInformation("Portfolio received: {Message}", message);
 
@@ -35,10 +35,9 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
         if (portfolio == null)
         {
             Logger.LogWarning($"Cannot deserialize portfolio.");
-            return Task.CompletedTask;
+            return;
         }
 
         _portfolioService.Update(portfolio);
-        return Task.CompletedTask;
     }
 }

@@ -14,23 +14,26 @@ internal sealed class Program
         var host = Host.CreateDefaultBuilder(args)
              .ConfigureServices((hostContext, services) =>
              {
+                 services.AddSingleton<IConnectionMultiplexer>((sp) =>
+                    ConnectionMultiplexer.Connect("localhost"));
 
-                 services.AddSingleton<IConnectionMultiplexer>((sp) => ConnectionMultiplexer.Connect("localhost"));
+                 services.AddTinvestGateway("http://localhost:5099");
 
                  services.AddApplication();
-                 services.AddTinvestGateway("http://localhost:5099");
 
                  // Background Services
                  services.AddHostedService<MarketCandlesSubscriber>();
                  services.AddHostedService<PortfolioSubscriber>();
 
+                 services.AddSingleton(provider =>
+                    provider.GetRequiredService<ILoggerFactory>()
+                        .CreateLogger("TradingConsole"));
+
                  services.AddLogging(configure =>
                  {
-                     configure.AddConsole(); // Add console logging
-                     configure.SetMinimumLevel(LogLevel.Debug); // Set minimum log level
+                     configure.AddConsole();
+                     configure.SetMinimumLevel(LogLevel.Information);
                  });
-
-                 services.AddSingleton(provider => provider.GetRequiredService<ILoggerFactory>().CreateLogger("TradingConsole"));
              })
              .Build();
 

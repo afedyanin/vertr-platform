@@ -23,6 +23,8 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandlestickReceiv
 
     public void OnEvent(CandlestickReceivedEvent data, long sequence, bool endOfBatch)
     {
+        _logger.LogInformation("Start processing PortfolioPosition Sequence={Sequence}", sequence);
+
         foreach (var signal in data.TradingSignals)
         {
             if (signal.Direction == TradingDirection.Hold)
@@ -61,19 +63,22 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandlestickReceiv
                     QuantityLots = DefaultQtyLots,
                 };
 
+                _logger.LogInformation("Open position Request: QuantityLots={QuantityLots}", openRequest.QuantityLots);
                 data.OrderRequests.Add(openRequest);
                 continue;
             }
 
             // Reverse position
+            var reverseDirection = position.Amount > 0 ? (-2) : 2;
             var reverseRequest = new MarketOrderRequest
             {
                 RequestId = Guid.NewGuid(),
                 InstrumentId = signal.InstrumentId,
                 PortfolioId = portfolio.Id,
-                QuantityLots = DefaultQtyLots * (-2),
+                QuantityLots = DefaultQtyLots * reverseDirection,
             };
 
+            _logger.LogInformation("Reverse position Request: QuantityLots={QuantityLots}", reverseRequest.QuantityLots);
             data.OrderRequests.Add(reverseRequest);
         }
 

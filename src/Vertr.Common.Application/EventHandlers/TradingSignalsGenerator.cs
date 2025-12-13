@@ -53,7 +53,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
 
     private TradingDirection GetTradingDirection(Guid instrumentId, decimal? predictedPrice)
     {
-        if (predictedPrice == null)
+        if (predictedPrice == null || predictedPrice.Value == default)
         {
             return TradingDirection.Hold;
         }
@@ -66,17 +66,18 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
         }
 
         var threshold = GetThreshold(instrumentId);
+        _logger.LogDebug("Trading signal threshold for InstrumentId={InstrumentId} Threshold={Threshold}", instrumentId, threshold);
 
         // цена будет выше минимальной цены предложения
-        var askDelta = predictedPrice.Value - quote.Value.Ask;
-        if ((double)askDelta > threshold)
+        var askDelta = (double)(predictedPrice.Value - quote.Value.Ask);
+        if (askDelta >= threshold)
         {
             return TradingDirection.Buy;
         }
 
         // цена будет ниже максимальной цены спроса
-        var bidDelta = quote.Value.Bid - predictedPrice.Value;
-        if ((double)bidDelta > threshold)
+        var bidDelta = (double)(quote.Value.Bid - predictedPrice.Value);
+        if (bidDelta >= threshold)
         {
             return TradingDirection.Sell;
         }

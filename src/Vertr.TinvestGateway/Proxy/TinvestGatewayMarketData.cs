@@ -3,6 +3,7 @@ using Tinkoff.InvestApi;
 using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Abstractions;
 using Vertr.TinvestGateway.Converters;
+using Vertr.TinvestGateway.Models;
 
 namespace Vertr.TinvestGateway.Proxy;
 
@@ -67,7 +68,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         return instrument;
     }
 
-    public async Task<Candle[]?> GetCandles(
+    public async Task<Candlestick[]> GetCandles(
         Guid instrumentId,
         DateOnly? date = null,
         CandleInterval interval = CandleInterval.Min_1)
@@ -85,7 +86,7 @@ internal class TinvestGatewayMarketData : TinvestGatewayBase, IMarketDataGateway
         };
 
         var response = await InvestApiClient.MarketData.GetCandlesAsync(request);
-        var candles = response.Candles.ToArray().Convert(instrumentId);
+        var candles = response?.Candles.ToArray().ToCandlesticks() ?? [];
 
         return candles;
     }

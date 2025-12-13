@@ -1,55 +1,68 @@
 ﻿using Disruptor;
 using Microsoft.Extensions.Logging;
+using Vertr.Common.Application.Clients;
+using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal sealed class MarketDataPredictor : IEventHandler<CandlestickReceivedEvent>
+internal sealed class MarketDataPredictor : IAsyncBatchEventHandler<CandlestickReceivedEvent>
 {
+    private readonly ICandleRepository _candleRepository;
+    private readonly IPortfolioRepository _portfolioRepository;
+    private readonly ITinvestGatewayClient _gatewayClient;
+    private readonly IPredictorClient _predictorClient;
+
     private readonly ILogger<MarketDataPredictor> _logger;
 
-    public MarketDataPredictor(ILogger<MarketDataPredictor> logger)
+    public MarketDataPredictor(
+        ICandleRepository candleRepository,
+        IPortfolioRepository portfolioRepository,
+        ITinvestGatewayClient gatewayClient,
+        IPredictorClient predictorClient,
+        ILogger<MarketDataPredictor> logger)
     {
+        _candleRepository = candleRepository;
+        _portfolioRepository = portfolioRepository;
+        _gatewayClient = gatewayClient;
+        _predictorClient = predictorClient;
         _logger = logger;
     }
 
-    public void OnEvent(CandlestickReceivedEvent data, long sequence, bool endOfBatch)
+    public async ValueTask OnBatch(EventBatch<CandlestickReceivedEvent> batch, long sequence)
     {
-        // Collect required market data
-        // Get Predictions from prediction engine.
-        // Save predictions to event data
-
-        var prediction = new Prediction
+        try
         {
-            Predictor = "RandomWalk",
-            InstrumentId = data.Candle!.InstrumentId,
-            Price = GetRandomPrice(data.Candle!)
-        };
+            foreach (var data in batch)
+            {
+                var instrumentId = data.Candle!.InstrumentId;
+                var candles = await GetCandles(instrumentId);
+                var predictors = _portfolioRepository.GetPredictors().Keys;
+                var predictions = await _predictorClient.Predict([.. predictors], candles);
 
-        data.Predictions.Add(prediction);
+                foreach (var prediction in predictions)
+                {
+                    data.Predictions.Add(prediction);
+                }
+            }
 
-        _logger.LogInformation("MarketDataPredictor executed.");
+            _logger.LogInformation("MarketDataPredictor executed.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "MarketDataPredictor error. Message={Message}", ex.Message);
+        }
     }
 
-    private decimal GetRandomPrice(Candle candle)
+    private async Task<Candle[]> GetCandles(Guid instrumentId)
     {
-        var prices = new decimal[]
+        if (_candleRepository.GetCount(instrumentId) < _candleRepository.MaxCandlesCount)
         {
-            candle.Open,
-            candle.High,
-            candle.Low,
-            candle.Close,
-        };
+            // TODO: Здесь загрузка не сработает, т.к. есть уже более поздняя свеча
+            var historicCandles = await _gatewayClient.GetCandles(instrumentId);
+            _candleRepository.Load(historicCandles);
+        }
 
-        var count = prices.Length;
-        var avg = prices.Average();
-        var sum = prices.Sum(d => (d - avg) * (d - avg));
-        var dev = Math.Sqrt((double)sum / count);
-        var diff = dev * GetRandomDirection();
-
-        return (decimal)((double)avg + diff);
+        return _candleRepository.Get(instrumentId);
     }
-
-    private static int GetRandomDirection()
-        => Random.Shared.Next(0, 2) > 0 ? 1 : -1;
 }

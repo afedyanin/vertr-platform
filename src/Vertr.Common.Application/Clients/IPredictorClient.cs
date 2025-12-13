@@ -1,6 +1,8 @@
-﻿namespace Vertr.Common.Application.Clients;
+﻿using Vertr.Common.Contracts;
 
-// TODO: Implement this
+namespace Vertr.Common.Application.Clients;
+
 public interface IPredictorClient
 {
+    public Task<Prediction[]> Predict(string[] predictors, Candle[] candles);
 }

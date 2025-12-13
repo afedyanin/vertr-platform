@@ -13,6 +13,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
     private readonly Disruptor<CandlestickReceivedEvent> _disruptor;
     private readonly IPortfolioManager _portfolioManager;
+    private readonly ICandleRepository _candleRepository;
 
     // TODO: Get from settings
     protected override RedisChannel RedisChannel => new RedisChannel("market.candles.*", PatternMode.Pattern);
@@ -24,6 +25,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     {
         _disruptor = ApplicationRegistrar.CreateCandlestickPipeline(serviceProvider);
         _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
+        _candleRepository = serviceProvider.GetRequiredService<ICandleRepository>();
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)
@@ -35,6 +37,15 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         if (candle == null)
         {
             Logger.LogWarning("Cannot deserialize candle from message={Message}", message);
+            return;
+        }
+
+        var updated = _candleRepository.Update(candle);
+
+        if (!updated)
+        {
+            // skip old candle
+            return;
         }
 
         using (var scope = _disruptor.PublishEvent())

@@ -1,5 +1,6 @@
 using System.Net.Http.Headers;
 using Tinkoff.InvestApi;
+using Vertr.TinvestGateway.Converters;
 using Vertr.TinvestGateway.Proxy;
 
 namespace Vertr.TinvestGateway.Tests.Proxy;
@@ -57,6 +58,7 @@ public class TinvestGatewayMarketDataTests
     [TestCase("e6123145-9665-43e0-8413-cd61b8aa9b13")] // SBER
     public async Task CanGetCandles(string instrumentId)
     {
+        var instrumentGuid = Guid.Parse(instrumentId);
         var gateway = new TinvestGatewayMarketData(_client);
         //var day = new DateOnly(2025, 07, 30);
         var day = DateOnly.FromDateTime(DateTime.UtcNow);
@@ -65,8 +67,8 @@ public class TinvestGatewayMarketDataTests
 
         Assert.That(candles, Is.Not.Null);
 
-        var first = candles.First();
-        var last = candles.Last();
+        var first = candles.First().ToCandle(instrumentGuid);
+        var last = candles.Last().ToCandle(instrumentGuid);
 
         Console.WriteLine($"Count={candles.Length} From={first.TimeUtc:O} To={last.TimeUtc:O}");
         Assert.Pass();

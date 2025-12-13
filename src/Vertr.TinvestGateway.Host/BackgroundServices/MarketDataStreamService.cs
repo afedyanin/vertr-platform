@@ -9,6 +9,8 @@ namespace Vertr.TinvestGateway.Host.BackgroundServices;
 
 public class MarketDataStreamService : StreamServiceBase
 {
+    private const int CandlesHistoryLoadMaxDays = 5;
+
     protected override bool IsEnabled => TinvestSettings.MarketDataStreamEnabled;
 
     private readonly Dictionary<Guid, int> _candleLimits = [];
@@ -52,7 +54,38 @@ public class MarketDataStreamService : StreamServiceBase
 
             await instrumentRepository.Save(currency);
         }
+
+        await ReloadMarketData(scope);
     }
+
+    private async Task ReloadMarketData(AsyncServiceScope scope)
+    {
+        var marketDataGateway = scope.ServiceProvider.GetRequiredService<IMarketDataGateway>();
+        var candlestickRepository = scope.ServiceProvider.GetRequiredService<ICandlestickRepository>();
+
+        // Reinit market data
+        foreach (var sub in TinvestSettings.Subscriptions)
+        {
+            // cleanup market data
+            await candlestickRepository.Clear(sub.InstrumentId);
+
+            // load market data
+            var totalSavedCandles = 0L;
+            for (var i = 0; i < CandlesHistoryLoadMaxDays; i++)
+            {
+                var day = DateOnly.FromDateTime(DateTime.UtcNow.Date.AddDays(-i));
+                var candlesByDay = await marketDataGateway.GetCandles(sub.InstrumentId, day, sub.Interval);
+                var savedCountByDay = await candlestickRepository.Save(sub.InstrumentId, candlesByDay, sub.MaxCount, publish: false);
+                totalSavedCandles += savedCountByDay;
+
+                if (sub.MaxCount <= 0 || totalSavedCandles >= sub.MaxCount)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
 
     protected override async Task Subscribe(
         ILogger logger,

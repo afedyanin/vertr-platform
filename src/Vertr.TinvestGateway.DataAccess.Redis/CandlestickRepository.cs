@@ -13,7 +13,7 @@ internal class CandlestickRepository : RedisRepositoryBase, ICandlestickReposito
     {
     }
 
-    public async Task<long> Save(Guid instrumentId, Candlestick[] candles, int maxCount = 0)
+    public async Task<long> Save(Guid instrumentId, Candlestick[] candles, int maxCount = 0, bool publish = true)
     {
         var trimmedCandles = maxCount > 0 ? candles.OrderBy(c => c.Time).TakeLast(maxCount) : candles;
 
@@ -34,11 +34,14 @@ internal class CandlestickRepository : RedisRepositoryBase, ICandlestickReposito
         var entries = trimmedCandles.Select(c => new SortedSetEntry(c.ToJson(), c.Time)).ToArray();
         var added = await db.SortedSetAddAsync(GetKey(instrumentId), entries);
 
-        // publish last candle
-        var last = trimmedCandles.OrderBy(c => c.Time).Last();
-        var candle = last.ToCandle(instrumentId);
-        var channel = new RedisChannel(key.ToString(), RedisChannel.PatternMode.Pattern);
-        await db.PublishAsync(channel, candle.ToJson());
+        if (publish)
+        {
+            // publish last candle
+            var last = trimmedCandles.OrderBy(c => c.Time).Last();
+            var candle = last.ToCandle(instrumentId);
+            var channel = new RedisChannel(key.ToString(), RedisChannel.PatternMode.Pattern);
+            await db.PublishAsync(channel, candle.ToJson());
+        }
 
         return added;
     }

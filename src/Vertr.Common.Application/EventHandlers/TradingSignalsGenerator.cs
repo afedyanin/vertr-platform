@@ -1,5 +1,6 @@
 ﻿using Disruptor;
 using Microsoft.Extensions.Logging;
+using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.EventHandlers;
@@ -7,9 +8,13 @@ namespace Vertr.Common.Application.EventHandlers;
 internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceivedEvent>
 {
     private readonly ILogger<TradingSignalsGenerator> _logger;
+    private readonly IOrderBookRepository _orderBookRepository;
 
-    public TradingSignalsGenerator(ILogger<TradingSignalsGenerator> logger)
+    public TradingSignalsGenerator(
+        IOrderBookRepository orderBookRepository,
+        ILogger<TradingSignalsGenerator> logger)
     {
+        _orderBookRepository = orderBookRepository;
         _logger = logger;
     }
 
@@ -21,19 +26,24 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
             {
                 Predictor = prediction.Predictor,
                 InstrumentId = prediction.InstrumentId,
-                Direction = GetTradingDirection(prediction.Price)
+                Direction = GetTradingDirection(prediction.InstrumentId, prediction.Price)
             };
 
             data.TradingSignals.Add(signal);
         }
 
-
         _logger.LogInformation("TradingSignalsGenerator executed.");
     }
 
-    private TradingDirection GetTradingDirection(decimal? predicterPrice)
+    private TradingDirection GetTradingDirection(Guid instrumentId, decimal? predictedPrice)
     {
-        // Get current market price
+        var quote = _orderBookRepository.GetById(instrumentId);
+
+        if (quote == null)
+        {
+            return TradingDirection.Hold;
+        }
+
         // Evaluate prediction & thresholds
 
         return TradingDirection.Hold;

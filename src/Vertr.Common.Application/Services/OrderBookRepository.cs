@@ -6,7 +6,7 @@ internal sealed class OrderBookRepository : IOrderBookRepository
 {
     private readonly Dictionary<Guid, OrderBook> _books = [];
 
-    public async Task<OrderBook?> GetById(Guid instrumentId)
+    public OrderBook? GetById(Guid instrumentId)
     {
         _books.TryGetValue(instrumentId, out var orderBook);
         return orderBook;
@@ -16,11 +16,25 @@ internal sealed class OrderBookRepository : IOrderBookRepository
     {
         _books[orderBook.InstrumentId] = orderBook;
     }
+
+    public Quote? GetMarketQuote(Guid instrumentId)
+    {
+        if (!_books.TryGetValue(instrumentId, out var orderBook))
+        {
+            return null;
+        }
+
+        return new Quote
+        {
+            Bid = orderBook.Bids.Max(b => b.Price),
+            Ask = orderBook.Asks.Min(a => a.Price),
+        };
+    }
 }
 
 public interface IOrderBookRepository
 {
-    public Task<OrderBook?> GetById(Guid instrumentId);
+    public OrderBook? GetById(Guid instrumentId);
 
     public void Update(OrderBook orderBook);
 }

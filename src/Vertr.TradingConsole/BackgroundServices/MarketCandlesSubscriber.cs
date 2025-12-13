@@ -40,13 +40,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
             return;
         }
 
-        var updated = _candleRepository.Update(candle);
-
-        if (!updated)
-        {
-            // skip old candle
-            return;
-        }
+        _candleRepository.Update(candle);
 
         using (var scope = _disruptor.PublishEvent())
         {

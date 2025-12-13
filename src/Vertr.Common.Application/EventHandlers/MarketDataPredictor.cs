@@ -38,6 +38,8 @@ internal sealed class MarketDataPredictor : IAsyncBatchEventHandler<CandlestickR
                 var instrumentId = data.Candle!.InstrumentId;
                 var candles = await GetCandles(instrumentId);
                 var predictors = _portfolioRepository.GetPredictors().Keys;
+                _logger.LogInformation("{CandlesCount} candles retrived for predictors. InstrumentId={InstrumentId} Predictors={Predictors}", candles.Length, instrumentId, string.Join(',', predictors));
+
                 var predictions = await _predictorClient.Predict([.. predictors], candles);
 
                 foreach (var prediction in predictions)
@@ -58,9 +60,10 @@ internal sealed class MarketDataPredictor : IAsyncBatchEventHandler<CandlestickR
     {
         if (_candleRepository.GetCount(instrumentId) < _candleRepository.MaxCandlesCount)
         {
-            // TODO: Здесь загрузка не сработает, т.к. есть уже более поздняя свеча
             var historicCandles = await _gatewayClient.GetCandles(instrumentId);
             _candleRepository.Load(historicCandles);
+
+            _logger.LogInformation("Historic candles loaded for InstrumentId={InstrumentId} Count={CandlesCount}", instrumentId, historicCandles.Length);
         }
 
         return _candleRepository.Get(instrumentId);

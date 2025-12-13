@@ -20,6 +20,7 @@ public static class ApplicationRegistrar
 
         services.AddSingleton<IPortfolioRepository, PortfolioRepository>();
         services.AddSingleton<IInstrumentRepository, InstrumentRepository>();
+        services.AddSingleton<IOrderBookRepository, OrderBookRepository>();
         services.AddSingleton<IPortfolioManager, PortfolioManager>();
 
         return services;

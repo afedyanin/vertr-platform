@@ -22,6 +22,7 @@ internal sealed class Program
                  services.AddApplication();
 
                  services.AddHostedService<MarketCandlesSubscriber>();
+                 services.AddHostedService<MarketOrderBookSubscriber>();
                  services.AddHostedService<PortfolioSubscriber>();
 
                  services.AddSingleton(provider =>

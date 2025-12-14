@@ -28,12 +28,6 @@ internal sealed class Program
                  services.AddSingleton(provider =>
                     provider.GetRequiredService<ILoggerFactory>()
                         .CreateLogger("TradingConsole"));
-
-                 services.AddLogging(configure =>
-                 {
-                     configure.AddConsole();
-                     configure.SetMinimumLevel(LogLevel.Information);
-                 });
              })
              .Build();
 

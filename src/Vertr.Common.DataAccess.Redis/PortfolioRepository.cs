@@ -7,7 +7,6 @@ namespace Vertr.Common.DataAccess.Redis;
 internal sealed class PortfolioRepository : RedisRepositoryBase, IPortfolioRepository
 {
     private const string PortfoliosKey = "portfolios";
-    private const string OrderToPortfolioKey = "portfolios.orders";
     private static readonly RedisChannel PortfolioChannel = new RedisChannel(PortfoliosKey, RedisChannel.PatternMode.Literal);
 
     public PortfolioRepository(IConnectionMultiplexer connectionMultiplexer) : base(connectionMultiplexer)
@@ -36,23 +35,5 @@ internal sealed class PortfolioRepository : RedisRepositoryBase, IPortfolioRepos
 
         var restored = Portfolio.FromJson(entry.ToString());
         return restored;
-    }
-
-    public async Task BindOrderToPortfolio(string orderId, Guid portfolioId)
-    {
-        var entry = new HashEntry(orderId, portfolioId.ToString());
-        await GetDatabase().HashSetAsync(OrderToPortfolioKey, [entry]);
-    }
-
-    public async Task<Guid?> GetPortfolioByOrderId(string orderId)
-    {
-        var entry = await GetDatabase().HashGetAsync(OrderToPortfolioKey, orderId);
-
-        if (entry.IsNullOrEmpty)
-        {
-            return null;
-        }
-
-        return new Guid(entry.ToString());
     }
 }

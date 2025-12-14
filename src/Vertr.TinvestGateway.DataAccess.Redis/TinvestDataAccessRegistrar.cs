@@ -6,7 +6,7 @@ using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.DataAccess.Redis;
 
-public static class RedisDataAccessRegistrar
+public static class TinvestDataAccessRegistrar
 {
     public static IServiceCollection AddTinvestRedisDataAccess(
         this IServiceCollection services, IConfiguration configuration)
@@ -15,6 +15,7 @@ public static class RedisDataAccessRegistrar
         services.AddTransient<IOrderResponseRepository, OrderResponseRepository>();
         services.AddTransient<IOrderStateRepository, OrderStateRepository>();
         services.AddTransient<IOrderTradeRepository, OrderTradeRepository>();
+        services.AddTransient<IPortfolioOrdersRepository, PortfolioOrdersRepository>();
 
         var redisConnectionString = configuration.GetConnectionString("RedisConnection");
 

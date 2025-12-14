@@ -11,6 +11,7 @@ namespace Vertr.TinvestGateway.Services;
 internal class PortfolioService : IPortfolioService
 {
     private readonly IPortfolioRepository _portfolioRepository;
+    private readonly IPortfolioOrdersRepository _portfolioOrdersRepository;
     private readonly IOrderRequestRepository _orderRequestRepository;
     private readonly IInstrumentProvider _instrumentProvider;
     private readonly ILogger<PortfolioService> _logger;
@@ -19,19 +20,21 @@ internal class PortfolioService : IPortfolioService
 
     public PortfolioService(
         IPortfolioRepository portfolioRepository,
+        IPortfolioOrdersRepository portfolioOrdersRepository,
         IOrderRequestRepository orderRequestRepository,
         IInstrumentProvider instrumentProvider,
         ILogger<PortfolioService> logger)
     {
         _portfolioRepository = portfolioRepository;
-        _instrumentProvider = instrumentProvider;
         _orderRequestRepository = orderRequestRepository;
+        _instrumentProvider = instrumentProvider;
+        _portfolioOrdersRepository = portfolioOrdersRepository;
         _logger = logger;
     }
 
     public async Task Update(PostOrderResponse orderResponse, Guid portfolioId)
     {
-        await _portfolioRepository.BindOrderToPortfolio(orderResponse.OrderId, portfolioId);
+        await _portfolioOrdersRepository.BindOrderToPortfolio(orderResponse.OrderId, portfolioId);
         await Semaphore.WaitAsync();
 
         try
@@ -48,7 +51,7 @@ internal class PortfolioService : IPortfolioService
 
     public async Task Update(OrderTrades orderTrades)
     {
-        var portfolioId = await _portfolioRepository.GetPortfolioByOrderId(orderTrades.OrderId);
+        var portfolioId = await _portfolioOrdersRepository.GetPortfolioByOrderId(orderTrades.OrderId);
 
         if (!portfolioId.HasValue)
         {
@@ -89,7 +92,7 @@ internal class PortfolioService : IPortfolioService
             return;
         }
 
-        await _portfolioRepository.BindOrderToPortfolio(orderState.OrderId, orderRequest.PortfolioId);
+        await _portfolioOrdersRepository.BindOrderToPortfolio(orderState.OrderId, orderRequest.PortfolioId);
     }
 
     private async Task<PortfolioBuilder> CreateBuilderByPortfolioId(Guid portfolioId)

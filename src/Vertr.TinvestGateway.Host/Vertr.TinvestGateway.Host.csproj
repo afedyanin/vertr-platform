@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vertr.Common.DataAccess.Redis\Vertr.Common.DataAccess.Redis.csproj" />
     <ProjectReference Include="..\Vertr.TinvestGateway.DataAccess.Redis\Vertr.TinvestGateway.DataAccess.Redis.csproj" />
     <ProjectReference Include="..\Vertr.TinvestGateway\Vertr.TinvestGateway.csproj" />
   </ItemGroup>

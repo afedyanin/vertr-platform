@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Vertr.Common.Contracts\Vertr.Common.Contracts.csproj" />
+    <ProjectReference Include="..\Vertr.Common.DataAccess\Vertr.Common.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

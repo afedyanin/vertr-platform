@@ -1,9 +1,9 @@
 using Grpc.Core;
 using Microsoft.Extensions.Options;
 using Tinkoff.InvestApi;
+using Vertr.Common.DataAccess.Repositories;
 using Vertr.TinvestGateway.Abstractions;
 using Vertr.TinvestGateway.Converters;
-using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.Host.BackgroundServices;
 

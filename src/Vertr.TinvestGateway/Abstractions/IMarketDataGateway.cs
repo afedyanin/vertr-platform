@@ -1,5 +1,4 @@
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Models;
 
 namespace Vertr.TinvestGateway.Abstractions;
 

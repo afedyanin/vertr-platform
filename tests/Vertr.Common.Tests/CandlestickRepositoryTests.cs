@@ -1,9 +1,9 @@
 using StackExchange.Redis;
-using Vertr.TinvestGateway.DataAccess.Redis;
-using Vertr.TinvestGateway.Models;
-using Vertr.TinvestGateway.Tests.Stubs;
+using Vertr.Common.Contracts;
+using Vertr.Common.DataAccess.Redis;
+using Vertr.Common.Tests.Stubs;
 
-namespace Vertr.TinvestGateway.Tests.RedisTests;
+namespace Vertr.Common.Tests;
 
 public class CandlestickRepositoryTests
 {

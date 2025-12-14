@@ -1,6 +1,6 @@
 using System.Net.Http.Headers;
 using Tinkoff.InvestApi;
-using Vertr.TinvestGateway.Converters;
+using Vertr.Common.Contracts.Converters;
 using Vertr.TinvestGateway.Proxy;
 
 namespace Vertr.TinvestGateway.Tests.Proxy;

@@ -3,7 +3,6 @@ using Tinkoff.InvestApi;
 using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Abstractions;
 using Vertr.TinvestGateway.Converters;
-using Vertr.TinvestGateway.Models;
 
 namespace Vertr.TinvestGateway.Proxy;
 

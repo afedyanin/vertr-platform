@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Repositories;
-using Vertr.TinvestGateway.Converters;
+using Vertr.Common.Contracts.Converters;
+using Vertr.Common.DataAccess.Repositories;
 
 namespace Vertr.TinvestGateway.Host.Controllers;
 

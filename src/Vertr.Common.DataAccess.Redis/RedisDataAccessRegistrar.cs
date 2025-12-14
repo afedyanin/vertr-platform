@@ -2,19 +2,19 @@ using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
-using Vertr.TinvestGateway.Repositories;
+using Vertr.Common.DataAccess.Repositories;
 
-namespace Vertr.TinvestGateway.DataAccess.Redis;
+namespace Vertr.Common.DataAccess.Redis;
 
 public static class RedisDataAccessRegistrar
 {
-    public static IServiceCollection AddTinvestRedisDataAccess(
+    public static IServiceCollection AddCommonRedisDataAccess(
         this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddTransient<IOrderRequestRepository, OrderRequestRepository>();
-        services.AddTransient<IOrderResponseRepository, OrderResponseRepository>();
-        services.AddTransient<IOrderStateRepository, OrderStateRepository>();
-        services.AddTransient<IOrderTradeRepository, OrderTradeRepository>();
+        services.AddTransient<ICandlestickRepository, CandlestickRepository>();
+        services.AddTransient<IInstrumentRepository, InstrumentRepository>();
+        services.AddTransient<IPortfolioRepository, PortfolioRepository>();
+        services.AddTransient<IOrderBookRepository, OrderBookRepository>();
 
         var redisConnectionString = configuration.GetConnectionString("RedisConnection");
 

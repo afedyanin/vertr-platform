@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Vertr.Common.DataAccess.Redis;
 using Vertr.TinvestGateway.DataAccess.Redis;
 using Vertr.TinvestGateway.Host.BackgroundServices;
 
@@ -26,7 +27,8 @@ public static class Program
 
         // Add modules
         builder.Services.AddTinvestGateways(configuration);
-        builder.Services.AddRedisDataAccess(configuration);
+        builder.Services.AddCommonRedisDataAccess(configuration);
+        builder.Services.AddTinvestRedisDataAccess(configuration);
 
         builder.Services.AddHostedService<MarketDataStreamService>();
         builder.Services.AddHostedService<OrderTradesStreamService>();

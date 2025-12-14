@@ -1,10 +1,10 @@
 using StackExchange.Redis;
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Repositories;
+using Vertr.Common.DataAccess.Repositories;
 
-namespace Vertr.TinvestGateway.DataAccess.Redis;
+namespace Vertr.Common.DataAccess.Redis;
 
-internal class InstrumentRepository : RedisRepositoryBase, IInstrumentRepository
+internal sealed class InstrumentRepository : RedisRepositoryBase, IInstrumentRepository
 {
     private const string InstrumentsKey = "market.instruments";
 

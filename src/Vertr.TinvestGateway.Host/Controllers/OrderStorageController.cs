@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Vertr.Common.DataAccess.Repositories;
 using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.Host.Controllers;

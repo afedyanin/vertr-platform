@@ -1,8 +1,8 @@
 using StackExchange.Redis;
 
-namespace Vertr.TinvestGateway.DataAccess.Redis;
+namespace Vertr.Common.DataAccess.Redis;
 
-internal abstract class RedisRepositoryBase
+public abstract class RedisRepositoryBase
 {
     private readonly IConnectionMultiplexer _connection;
 

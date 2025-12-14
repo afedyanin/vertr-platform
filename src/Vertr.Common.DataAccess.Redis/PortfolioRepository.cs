@@ -1,10 +1,10 @@
 using StackExchange.Redis;
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Repositories;
+using Vertr.Common.DataAccess.Repositories;
 
-namespace Vertr.TinvestGateway.DataAccess.Redis;
+namespace Vertr.Common.DataAccess.Redis;
 
-internal class PortfolioRepository : RedisRepositoryBase, IPortfolioRepository
+internal sealed class PortfolioRepository : RedisRepositoryBase, IPortfolioRepository
 {
     private const string PortfoliosKey = "portfolios";
     private const string OrderToPortfolioKey = "portfolios.orders";

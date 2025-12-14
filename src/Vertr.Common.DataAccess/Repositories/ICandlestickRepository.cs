@@ -1,6 +1,6 @@
-using Vertr.TinvestGateway.Models;
+using Vertr.Common.Contracts;
 
-namespace Vertr.TinvestGateway.Repositories;
+namespace Vertr.Common.DataAccess.Repositories;
 
 public interface ICandlestickRepository
 {

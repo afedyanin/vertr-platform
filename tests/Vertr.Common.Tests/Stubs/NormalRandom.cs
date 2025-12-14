@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Tests.Stubs;
+namespace Vertr.Common.Tests.Stubs;
 
 public class NormalRandom
 {

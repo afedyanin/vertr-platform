@@ -1,10 +1,10 @@
 ﻿using StackExchange.Redis;
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Repositories;
+using Vertr.Common.DataAccess.Repositories;
 
-namespace Vertr.TinvestGateway.DataAccess.Redis;
+namespace Vertr.Common.DataAccess.Redis;
 
-internal class OrderBookRepository : RedisRepositoryBase, IOrderBookRepository
+internal sealed class OrderBookRepository : RedisRepositoryBase, IOrderBookRepository
 {
     private const string OrderBooksKey = "market.orderBooks";
     private static readonly RedisChannel OrderBooksChannel = new RedisChannel(OrderBooksKey, RedisChannel.PatternMode.Literal);

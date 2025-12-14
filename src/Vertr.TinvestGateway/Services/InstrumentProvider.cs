@@ -1,6 +1,6 @@
 using Vertr.Common.Contracts;
+using Vertr.Common.DataAccess.Repositories;
 using Vertr.TinvestGateway.Abstractions;
-using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.Services;
 

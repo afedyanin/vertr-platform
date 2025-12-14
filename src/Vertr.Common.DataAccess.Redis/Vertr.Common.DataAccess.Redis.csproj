@@ -6,11 +6,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Vertr.Common.DataAccess.Redis\Vertr.Common.DataAccess.Redis.csproj" />
-		<ProjectReference Include="..\Vertr.TinvestGateway\Vertr.TinvestGateway.csproj" />
+	  <ProjectReference Include="..\Vertr.Common.Contracts\Vertr.Common.Contracts.csproj" />
+	  <ProjectReference Include="..\Vertr.Common.DataAccess\Vertr.Common.DataAccess.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="Vertr.TinvestGateway.Tests" />
+		<InternalsVisibleTo Include="Vertr.Common.Tests"/>
 	</ItemGroup>
 </Project>

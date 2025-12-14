@@ -1,8 +1,8 @@
 using StackExchange.Redis;
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.DataAccess.Redis;
+using Vertr.Common.DataAccess.Redis;
 
-namespace Vertr.TinvestGateway.Tests.RedisTests;
+namespace Vertr.Common.Tests;
 
 public class InstrumentRepositoryTests
 {

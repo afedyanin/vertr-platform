@@ -1,11 +1,11 @@
 using StackExchange.Redis;
-using Vertr.TinvestGateway.Converters;
-using Vertr.TinvestGateway.Models;
-using Vertr.TinvestGateway.Repositories;
+using Vertr.Common.Contracts;
+using Vertr.Common.Contracts.Converters;
+using Vertr.Common.DataAccess.Repositories;
 
-namespace Vertr.TinvestGateway.DataAccess.Redis;
+namespace Vertr.Common.DataAccess.Redis;
 
-internal class CandlestickRepository : RedisRepositoryBase, ICandlestickRepository
+internal sealed class CandlestickRepository : RedisRepositoryBase, ICandlestickRepository
 {
     private const string PrefixKey = "market.candles";
 
@@ -48,7 +48,7 @@ internal class CandlestickRepository : RedisRepositoryBase, ICandlestickReposito
 
     public async Task<IEnumerable<Candlestick?>> GetLast(Guid instrumentId, long maxItems = -1)
     {
-        var items = await GetDatabase().SortedSetRangeByRankAsync(GetKey(instrumentId), 0, maxItems, Order.Descending);
+        var items = await GetDatabase().SortedSetRangeByRankAsync(GetKey(instrumentId), 0, maxItems, StackExchange.Redis.Order.Descending);
         return items.Select(c => Candlestick.FromJson(c.ToString()));
     }
 

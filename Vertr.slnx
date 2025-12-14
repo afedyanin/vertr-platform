@@ -15,6 +15,8 @@
   <Folder Name="/src/Common/">
     <Project Path="src/Vertr.Common.Application/Vertr.Common.Application.csproj" Id="ef22c87e-62cd-4d9e-a383-b50735021013" />
     <Project Path="src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj" Id="f48a86ef-276f-42d6-b9fb-1c39916da738" />
+    <Project Path="src/Vertr.Common.DataAccess.Redis/Vertr.Common.DataAccess.Redis.csproj" Id="00b4a502-70fa-44de-ab8b-b00fb379ffcf" />
+    <Project Path="src/Vertr.Common.DataAccess/Vertr.Common.DataAccess.csproj" Id="9439fcff-b711-48be-9843-23cfd1c1b727" />
   </Folder>
   <Folder Name="/src/TinvestGateway/">
     <Project Path="src/Vertr.TinvestGateway.DataAccess.Redis/Vertr.TinvestGateway.DataAccess.Redis.csproj" />

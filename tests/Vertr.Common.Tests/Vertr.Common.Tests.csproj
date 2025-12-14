@@ -18,6 +18,12 @@
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="5.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.10.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Vertr.Common.DataAccess.Redis\Vertr.Common.DataAccess.Redis.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Common.DataAccess\Vertr.Common.DataAccess.csproj" />
   </ItemGroup>
 
 	

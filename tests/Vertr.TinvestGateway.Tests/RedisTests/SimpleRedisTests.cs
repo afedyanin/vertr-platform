@@ -1,6 +1,5 @@
 using StackExchange.Redis;
 using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Models;
 
 namespace Vertr.TinvestGateway.Tests.RedisTests;
 

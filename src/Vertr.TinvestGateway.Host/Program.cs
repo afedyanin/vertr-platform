@@ -26,8 +26,8 @@ public static class Program
         builder.Services.AddSwaggerGen();
 
         // Add modules
-        builder.Services.AddTinvestGateways(configuration);
         builder.Services.AddCommonRedisDataAccess(configuration);
+        builder.Services.AddTinvestGateways(configuration);
         builder.Services.AddTinvestRedisDataAccess(configuration);
 
         builder.Services.AddHostedService<MarketDataStreamService>();

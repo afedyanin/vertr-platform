@@ -7,6 +7,9 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/" />
+  <Folder Name="/src/BacktestGateway/">
+    <Project Path="src/Vertr.BacktestGateway.Host/Vertr.BacktestGateway.Host.csproj" Id="b9d67760-7e69-40f9-b792-02858907955a" />
+  </Folder>
   <Folder Name="/src/CommandLine/">
     <Project Path="src/Vertr.CommandLine.Application/Vertr.CommandLine.Application.csproj" />
     <Project Path="src/Vertr.CommandLine.Models/Vertr.CommandLine.Models.csproj" />

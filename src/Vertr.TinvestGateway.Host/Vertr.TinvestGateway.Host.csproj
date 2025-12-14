@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Vertr.TinvestGateway\Vertr.TinvestGateway.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="Workleap.DotNet.CodingStandards" Version="1.1.39" />
-  </ItemGroup>
-
 </Project>

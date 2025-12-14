@@ -1,8 +1,9 @@
-﻿using Vertr.Common.Contracts;
+﻿using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Services;
+namespace Vertr.Common.Application.LocalStorage;
 
-internal sealed class OrderBookRepository : IOrderBookRepository
+internal sealed class OrderBooksLocalStorage : IOrderBooksLocalStorage
 {
     private readonly Dictionary<Guid, OrderBook> _books = [];
 
@@ -32,11 +33,3 @@ internal sealed class OrderBookRepository : IOrderBookRepository
     }
 }
 
-public interface IOrderBookRepository
-{
-    public OrderBook? GetById(Guid instrumentId);
-
-    public Quote? GetMarketQuote(Guid instrumentId);
-
-    public void Update(OrderBook orderBook);
-}

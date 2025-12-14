@@ -2,8 +2,10 @@
 using Disruptor.Dsl;
 using Microsoft.Extensions.DependencyInjection;
 using Refit;
-using Vertr.Common.Application.Clients;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.EventHandlers;
+using Vertr.Common.Application.Gateways;
+using Vertr.Common.Application.LocalStorage;
 using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
 
@@ -18,20 +20,22 @@ public static class ApplicationRegistrar
         services.AddSingleton<PortfolioPositionHandler>();
         services.AddSingleton<OrderExecutionHandler>();
 
-        services.AddSingleton<IPortfolioRepository, PortfolioRepository>();
-        services.AddSingleton<IInstrumentRepository, InstrumentRepository>();
-        services.AddSingleton<IOrderBookRepository, OrderBookRepository>();
-        services.AddSingleton<ICandleRepository, CandleRepository>();
+        services.AddSingleton<IPortfoliosLocalStorage, PortfoliosLocalStorage>();
+        services.AddSingleton<IInstrumentsLocalStorage, InstrumentsLocalStorage>();
+        services.AddSingleton<IOrderBooksLocalStorage, OrderBooksLocalStorage>();
+        services.AddSingleton<ICandlesLocalStorage, CandlesLocalStorage>();
         services.AddSingleton<IPortfolioManager, PortfolioManager>();
 
         // TODO: Implement this
-        services.AddSingleton<IPredictorClient, PredictorClientStub>();
+        services.AddSingleton<IPredictorGateway, PredictorGatewayStub>();
 
         return services;
     }
 
     public static IServiceCollection AddTinvestGateway(this IServiceCollection services, string baseAddress)
     {
+        services.AddSingleton<ITradingGateway, TinvestGateway>();
+
         services
            .AddRefitClient<ITinvestGatewayClient>(
                new RefitSettings
@@ -40,6 +44,12 @@ public static class ApplicationRegistrar
                })
            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseAddress));
 
+        return services;
+    }
+
+    public static IServiceCollection AddBacktestGateway(this IServiceCollection services, string baseAddress)
+    {
+        services.AddSingleton<ITradingGateway, BacktestGateway>();
         return services;
     }
 

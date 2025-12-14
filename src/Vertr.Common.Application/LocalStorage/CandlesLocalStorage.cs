@@ -1,8 +1,9 @@
-﻿using Vertr.Common.Contracts;
+﻿using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Services;
+namespace Vertr.Common.Application.LocalStorage;
 
-internal sealed class CandleRepository : ICandleRepository
+internal sealed class CandlesLocalStorage : ICandlesLocalStorage
 {
     private readonly Dictionary<Guid, SortedList<DateTime, Candle>> _candles = new Dictionary<Guid, SortedList<DateTime, Candle>>();
 
@@ -79,19 +80,4 @@ internal sealed class CandleRepository : ICandleRepository
             StdDev = dev,
         };
     }
-}
-
-public interface ICandleRepository
-{
-    public int MaxCandlesCount { get; set; }
-
-    public void Load(IEnumerable<Candle> candles);
-
-    public void Update(Candle candle, bool recalculateStats = true);
-
-    public Candle[] Get(Guid instrumentId);
-
-    public int GetCount(Guid instrumentId);
-
-    public PriceStats? GetStats(Guid instrumentId);
 }

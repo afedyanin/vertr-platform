@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
-using Vertr.Common.Application.Services;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 using static StackExchange.Redis.RedisChannel;
 
@@ -9,7 +9,7 @@ namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class MarketOrderBookSubscriber : RedisServiceBase
 {
-    private readonly IOrderBookRepository _orderBookRepository;
+    private readonly IOrderBooksLocalStorage _orderBookRepository;
 
     // TODO: Get from settings
     protected override RedisChannel RedisChannel => new RedisChannel("market.orderBooks", PatternMode.Pattern);
@@ -19,7 +19,7 @@ internal sealed class MarketOrderBookSubscriber : RedisServiceBase
         IServiceProvider serviceProvider,
         ILogger logger) : base(serviceProvider, logger)
     {
-        _orderBookRepository = serviceProvider.GetRequiredService<IOrderBookRepository>();
+        _orderBookRepository = serviceProvider.GetRequiredService<IOrderBooksLocalStorage>();
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)

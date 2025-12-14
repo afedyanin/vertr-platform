@@ -1,14 +1,14 @@
-﻿using Vertr.Common.Application.Clients;
+﻿using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Services;
+namespace Vertr.Common.Application.LocalStorage;
 
-internal sealed class InstrumentRepository : IInstrumentRepository
+internal sealed class InstrumentsLocalStorage : IInstrumentsLocalStorage
 {
-    private readonly ITinvestGatewayClient _tinvestGateway;
+    private readonly ITradingGateway _tinvestGateway;
     private Dictionary<Guid, Instrument>? _instrumentsDict;
 
-    public InstrumentRepository(ITinvestGatewayClient tinvestGateway)
+    public InstrumentsLocalStorage(ITradingGateway tinvestGateway)
     {
         _tinvestGateway = tinvestGateway;
     }
@@ -32,10 +32,4 @@ internal sealed class InstrumentRepository : IInstrumentRepository
         var instruments = await _tinvestGateway.GetAllInstruments();
         return instruments.ToDictionary(i => i.Id);
     }
-}
-
-public interface IInstrumentRepository
-{
-    public Task<Instrument[]> GetAll();
-    public Task<Instrument?> GetById(Guid instrumentId);
 }

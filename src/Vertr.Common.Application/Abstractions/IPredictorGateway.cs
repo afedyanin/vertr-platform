@@ -1,8 +1,8 @@
 ﻿using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Clients;
+namespace Vertr.Common.Application.Abstractions;
 
-public interface IPredictorClient
+internal interface IPredictorGateway
 {
     public Task<Prediction[]> Predict(string[] predictors, Candle[] candles);
 }

@@ -7,14 +7,6 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/" />
-  <Folder Name="/src/BacktestGateway/">
-    <Project Path="src/Vertr.BacktestGateway.Host/Vertr.BacktestGateway.Host.csproj" Id="b9d67760-7e69-40f9-b792-02858907955a" />
-  </Folder>
-  <Folder Name="/src/CommandLine/">
-    <Project Path="src/Vertr.CommandLine.Application/Vertr.CommandLine.Application.csproj" />
-    <Project Path="src/Vertr.CommandLine.Models/Vertr.CommandLine.Models.csproj" />
-    <Project Path="src/Vertr.CommandLine.Predictor.Client/Vertr.CommandLine.Predictor.Client.csproj" />
-  </Folder>
   <Folder Name="/src/Common/">
     <Project Path="src/Vertr.Common.Application/Vertr.Common.Application.csproj" Id="ef22c87e-62cd-4d9e-a383-b50735021013" />
     <Project Path="src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj" Id="f48a86ef-276f-42d6-b9fb-1c39916da738" />
@@ -27,14 +19,10 @@
     <Project Path="src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj" />
   </Folder>
   <Folder Name="/src/Trading/">
+    <Project Path="src/Vertr.BacktestConsole/Vertr.BacktestConsole.csproj" Id="218fb4a4-1246-4977-873d-7f9c3b554fdb" />
     <Project Path="src/Vertr.TradingConsole/Vertr.TradingConsole.csproj" />
   </Folder>
   <Folder Name="/tests/" />
-  <Folder Name="/tests/CommandLine/">
-    <Project Path="tests/Vertr.CommandLine.Application.Tests/Vertr.CommandLine.Application.Tests.csproj" />
-    <Project Path="tests/Vertr.CommandLine.Models.Tests/Vertr.CommandLine.Models.Tests.csproj" />
-    <Project Path="tests/Vertr.CommandLine.Predictor.Client.Tests/Vertr.CommandLine.Predictor.Client.Tests.csproj" />
-  </Folder>
   <Folder Name="/tests/Common/">
     <Project Path="tests/Vertr.Common.Tests/Vertr.Common.Tests.csproj" />
   </Folder>

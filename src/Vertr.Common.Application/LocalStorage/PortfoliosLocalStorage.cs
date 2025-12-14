@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Services;
+namespace Vertr.Common.Application.LocalStorage;
 
-internal sealed class PortfolioRepository : IPortfolioRepository
+internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
 {
     private readonly Dictionary<string, Guid> _predictors = [];
     private readonly Dictionary<Guid, Portfolio> _portfolios = [];
@@ -58,17 +59,3 @@ internal sealed class PortfolioRepository : IPortfolioRepository
     }
 }
 
-public interface IPortfolioRepository
-{
-    public Portfolio[] GetAll();
-
-    public Portfolio? GetById(Guid portfolioId);
-
-    public Portfolio? GetByPredictor(string predictor);
-
-    public void Update(Portfolio portfolio);
-
-    public void Init(string[] precitors);
-
-    public ReadOnlyDictionary<string, Guid> GetPredictors();
-}

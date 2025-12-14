@@ -1,16 +1,13 @@
-using Refit;
+﻿using Refit;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Clients;
+namespace Vertr.Common.Application.Abstractions;
 
-public interface ITinvestGatewayClient
+internal interface ITradingGateway
 {
-    [Post("/api/tinvest/orders/market")]
     public Task PostMarketOrder(MarketOrderRequest request);
 
-    [Get("/api/instruments/all")]
     public Task<Instrument[]> GetAllInstruments();
 
-    [Get("api/candles/{instrumentId}")]
     public Task<Candle[]> GetCandles(Guid instrumentId, [Query] long maxItems = -1);
 }

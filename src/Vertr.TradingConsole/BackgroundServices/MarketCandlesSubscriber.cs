@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Vertr.Common.Application;
-using Vertr.Common.Application.Services;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 using static StackExchange.Redis.RedisChannel;
 
@@ -13,7 +13,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
     private readonly Disruptor<CandlestickReceivedEvent> _disruptor;
     private readonly IPortfolioManager _portfolioManager;
-    private readonly ICandleRepository _candleRepository;
+    private readonly ICandlesLocalStorage _candleRepository;
 
     // TODO: Get from settings
     protected override RedisChannel RedisChannel => new RedisChannel("market.candles.*", PatternMode.Pattern);
@@ -25,7 +25,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     {
         _disruptor = ApplicationRegistrar.CreateCandlestickPipeline(serviceProvider);
         _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
-        _candleRepository = serviceProvider.GetRequiredService<ICandleRepository>();
+        _candleRepository = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)

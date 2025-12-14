@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Vertr.Common.Application.Clients;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.Services;
@@ -9,15 +9,15 @@ internal sealed class PortfolioManager : IPortfolioManager
     // TODO: Get from settings
     private const int DefaultQtyLots = 10;
 
-    private readonly IPortfolioRepository _portfolioRepository;
-    private readonly IInstrumentRepository _instrumentRepository;
-    private readonly ITinvestGatewayClient _tinvestGateway;
+    private readonly IPortfoliosLocalStorage _portfolioRepository;
+    private readonly IInstrumentsLocalStorage _instrumentRepository;
+    private readonly ITradingGateway _tinvestGateway;
     private readonly ILogger<PortfolioManager> _logger;
 
     public PortfolioManager(
-        IPortfolioRepository portfolioRepository,
-        IInstrumentRepository instrumentRepository,
-        ITinvestGatewayClient tinvestGateway,
+        IPortfoliosLocalStorage portfolioRepository,
+        IInstrumentsLocalStorage instrumentRepository,
+        ITradingGateway tinvestGateway,
         ILogger<PortfolioManager> logger)
     {
         _portfolioRepository = portfolioRepository;
@@ -137,8 +137,3 @@ internal sealed class PortfolioManager : IPortfolioManager
     }
 }
 
-public interface IPortfolioManager
-{
-    public Task<MarketOrderRequest?> HandleTradingSignal(TradingSignal signal);
-    public Task CloseAllPositions();
-}

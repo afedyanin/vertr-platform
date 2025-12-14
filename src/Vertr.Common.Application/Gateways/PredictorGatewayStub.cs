@@ -1,9 +1,9 @@
-﻿using Vertr.Common.Application.Clients;
+﻿using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Services;
+namespace Vertr.Common.Application.Gateways;
 
-internal sealed class PredictorClientStub : IPredictorClient
+internal sealed class PredictorGatewayStub : IPredictorGateway
 {
     public Task<Prediction[]> Predict(string[] predictors, Candle[] candles)
     {

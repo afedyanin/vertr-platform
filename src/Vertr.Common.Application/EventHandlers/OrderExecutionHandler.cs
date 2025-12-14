@@ -1,6 +1,6 @@
 ﻿using Disruptor;
 using Microsoft.Extensions.Logging;
-using Vertr.Common.Application.Clients;
+using Vertr.Common.Application.Abstractions;
 
 namespace Vertr.Common.Application.EventHandlers;
 
@@ -8,10 +8,10 @@ internal sealed class OrderExecutionHandler : IAsyncBatchEventHandler<Candlestic
 {
     private readonly ILogger<OrderExecutionHandler> _logger;
 
-    private readonly ITinvestGatewayClient _tinvestGateway;
+    private readonly ITradingGateway _tinvestGateway;
 
     public OrderExecutionHandler(
-        ITinvestGatewayClient tinvestGateway,
+        ITradingGateway tinvestGateway,
         ILogger<OrderExecutionHandler> logger)
     {
         _tinvestGateway = tinvestGateway;

@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
-using Vertr.Common.Application.Services;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 using static StackExchange.Redis.RedisChannel;
 
@@ -10,14 +10,14 @@ namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class PortfolioSubscriber : RedisServiceBase
 {
-    private readonly IPortfolioRepository _portfolioRepository;
+    private readonly IPortfoliosLocalStorage _portfolioRepository;
 
     protected override bool IsEnabled => true;
     protected override RedisChannel RedisChannel => new RedisChannel("portfolios", PatternMode.Literal);
 
     public PortfolioSubscriber(IServiceProvider serviceProvider, ILogger logger) : base(serviceProvider, logger)
     {
-        _portfolioRepository = serviceProvider.GetRequiredService<IPortfolioRepository>();
+        _portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
     }
 
     protected override ValueTask OnBeforeStart()

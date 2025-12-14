@@ -1,6 +1,6 @@
 ﻿using Disruptor;
 using Microsoft.Extensions.Logging;
-using Vertr.Common.Application.Services;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.EventHandlers;

@@ -1,6 +1,6 @@
 ﻿using Disruptor;
 using Microsoft.Extensions.Logging;
-using Vertr.Common.Application.Services;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.EventHandlers;
@@ -11,12 +11,12 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
     private const int ThresholdSigma = 1;
 
     private readonly ILogger<TradingSignalsGenerator> _logger;
-    private readonly IOrderBookRepository _orderBookRepository;
-    private readonly ICandleRepository _candleRepository;
+    private readonly IOrderBooksLocalStorage _orderBookRepository;
+    private readonly ICandlesLocalStorage _candleRepository;
 
     public TradingSignalsGenerator(
-        IOrderBookRepository orderBookRepository,
-        ICandleRepository candleRepository,
+        IOrderBooksLocalStorage orderBookRepository,
+        ICandlesLocalStorage candleRepository,
         ILogger<TradingSignalsGenerator> logger)
     {
         _orderBookRepository = orderBookRepository;

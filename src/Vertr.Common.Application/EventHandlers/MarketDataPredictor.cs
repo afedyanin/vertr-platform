@@ -1,25 +1,24 @@
 ﻿using Disruptor;
 using Microsoft.Extensions.Logging;
-using Vertr.Common.Application.Clients;
-using Vertr.Common.Application.Services;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.EventHandlers;
 
 internal sealed class MarketDataPredictor : IAsyncBatchEventHandler<CandlestickReceivedEvent>
 {
-    private readonly ICandleRepository _candleRepository;
-    private readonly IPortfolioRepository _portfolioRepository;
-    private readonly ITinvestGatewayClient _gatewayClient;
-    private readonly IPredictorClient _predictorClient;
+    private readonly ICandlesLocalStorage _candleRepository;
+    private readonly IPortfoliosLocalStorage _portfolioRepository;
+    private readonly ITradingGateway _gatewayClient;
+    private readonly IPredictorGateway _predictorClient;
 
     private readonly ILogger<MarketDataPredictor> _logger;
 
     public MarketDataPredictor(
-        ICandleRepository candleRepository,
-        IPortfolioRepository portfolioRepository,
-        ITinvestGatewayClient gatewayClient,
-        IPredictorClient predictorClient,
+        ICandlesLocalStorage candleRepository,
+        IPortfoliosLocalStorage portfolioRepository,
+        ITradingGateway gatewayClient,
+        IPredictorGateway predictorClient,
         ILogger<MarketDataPredictor> logger)
     {
         _candleRepository = candleRepository;

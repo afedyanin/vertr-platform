@@ -24,6 +24,7 @@
   </Folder>
   <Folder Name="/tests/" />
   <Folder Name="/tests/Common/">
+    <Project Path="tests/Vertr.Common.Aplication.Tests/Vertr.Common.Aplication.Tests.csproj" Id="6f5b8d2e-cfd6-4e11-b88e-1637e59f945d" />
     <Project Path="tests/Vertr.Common.Tests/Vertr.Common.Tests.csproj" />
   </Folder>
   <Folder Name="/tests/TinvestGateway/">

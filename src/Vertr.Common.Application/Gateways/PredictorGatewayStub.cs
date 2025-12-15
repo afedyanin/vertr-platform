@@ -9,6 +9,11 @@ internal sealed class PredictorGatewayStub : IPredictorGateway
     {
         var predictions = new List<Prediction>();
 
+        if (candles.Length <= 0)
+        {
+            return Task.FromResult(predictions.ToArray());
+        }
+
         foreach (var predictor in predictors)
         {
             var p = new Prediction

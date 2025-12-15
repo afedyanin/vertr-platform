@@ -29,8 +29,12 @@ internal sealed class CandlesLocalStorage : ICandlesLocalStorage
 
     public void Update(Candle candle, bool recalculateStats = true)
     {
-        _candles.TryGetValue(candle.InstrumentId, out var list);
-        list ??= [];
+        if (!_candles.TryGetValue(candle.InstrumentId, out var list))
+        {
+            list = new SortedList<DateTime, Candle>();
+            _candles[candle.InstrumentId] = list;
+        }
+
         list[candle.TimeUtc] = candle;
 
         if (list.Count > MaxCandlesCount)

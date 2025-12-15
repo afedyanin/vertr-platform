@@ -47,7 +47,7 @@ public static class ApplicationRegistrar
         return services;
     }
 
-    public static IServiceCollection AddBacktestGateway(this IServiceCollection services, string baseAddress)
+    public static IServiceCollection AddBacktestGateway(this IServiceCollection services)
     {
         services.AddSingleton<ITradingGateway, BacktestGateway>();
         return services;
@@ -71,6 +71,28 @@ public static class ApplicationRegistrar
             .Then(step2)
             .Then(step3)
             .Then(step4);
+
+        return disruptor;
+    }
+
+    public static Disruptor<CandlestickReceivedEvent> CreateBacktestCandlestickPipeline(IServiceProvider serviceProvider)
+    {
+        var disruptor = new Disruptor<CandlestickReceivedEvent>(
+            () => new CandlestickReceivedEvent(),
+            ringBufferSize: 1024,
+            taskScheduler: TaskScheduler.Default,
+            producerType: ProducerType.Single,
+            waitStrategy: new AsyncWaitStrategy());
+
+        var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
+        //var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
+        // var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
+        // var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
+
+        disruptor.HandleEventsWith(step1);
+        //.Then(step2)
+        //.Then(step3)
+        //.Then(step4);
 
         return disruptor;
     }

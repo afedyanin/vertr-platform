@@ -11,4 +11,7 @@
 	  <ProjectReference Include="..\Vertr.Common.Contracts\Vertr.Common.Contracts.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="Vertr.Common.Aplication.Tests"/>
+	</ItemGroup>
 </Project>

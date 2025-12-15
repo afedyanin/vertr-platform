@@ -37,7 +37,7 @@ internal sealed class MarketDataPredictor : IAsyncBatchEventHandler<CandlestickR
                 var instrumentId = data.Candle!.InstrumentId;
                 var candles = await GetCandles(instrumentId);
                 var predictors = _portfolioRepository.GetPredictors().Keys;
-                _logger.LogInformation("{CandlesCount} candles retrived for predictors. InstrumentId={InstrumentId} Predictors={Predictors}", candles.Length, instrumentId, string.Join(',', predictors));
+                _logger.LogDebug("{CandlesCount} candles retrived for predictors. InstrumentId={InstrumentId} Predictors={Predictors}", candles.Length, instrumentId, string.Join(',', predictors));
 
                 var predictions = await _predictorClient.Predict([.. predictors], candles);
 
@@ -45,6 +45,8 @@ internal sealed class MarketDataPredictor : IAsyncBatchEventHandler<CandlestickR
                 {
                     data.Predictions.Add(prediction);
                 }
+
+                _logger.LogInformation("Candle processed: CandleTime={CandleTime}", data.Candle.TimeUtc);
             }
 
             _logger.LogInformation("MarketDataPredictor executed.");

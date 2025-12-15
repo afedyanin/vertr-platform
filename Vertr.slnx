@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/common/">
     <File Path=".editorconfig" />
+    <File Path="backlog.md" />
     <File Path="compose.yaml" />
     <File Path="Directory.Build.props" />
     <File Path="LICENSE" />

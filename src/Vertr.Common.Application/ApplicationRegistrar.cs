@@ -22,13 +22,29 @@ public static class ApplicationRegistrar
 
         services.AddSingleton<IPortfoliosLocalStorage, PortfoliosLocalStorage>();
         services.AddSingleton<IInstrumentsLocalStorage, InstrumentsLocalStorage>();
-        services.AddSingleton<IOrderBooksLocalStorage, OrderBooksLocalStorage>();
-        services.AddSingleton<ICandlesLocalStorage, CandlesLocalStorage>();
         services.AddSingleton<IPortfolioManager, PortfolioManager>();
+
+        services.AddSingleton<CandlesLocalStorage>();
+        services.AddSingleton<ICandlesLocalStorage>(sp => sp.GetRequiredService<CandlesLocalStorage>());
+
 
         // TODO: Implement this
         services.AddSingleton<IPredictorGateway, PredictorGatewayStub>();
 
+        return services;
+    }
+
+    public static IServiceCollection AddOrderBookQuoteProvider(this IServiceCollection services)
+    {
+        services.AddSingleton<OrderBooksLocalStorage>();
+        services.AddSingleton<IOrderBooksLocalStorage>(sp => sp.GetRequiredService<OrderBooksLocalStorage>());
+        services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<OrderBooksLocalStorage>());
+        return services;
+    }
+
+    public static IServiceCollection AddCandlesQuoteProvider(this IServiceCollection services)
+    {
+        services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<CandlesLocalStorage>());
         return services;
     }
 
@@ -85,12 +101,12 @@ public static class ApplicationRegistrar
             waitStrategy: new AsyncWaitStrategy());
 
         var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
-        //var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
+        var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
         // var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
         // var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
 
-        disruptor.HandleEventsWith(step1);
-        //.Then(step2)
+        disruptor.HandleEventsWith(step1)
+        .Then(step2);
         //.Then(step3)
         //.Then(step4);
 

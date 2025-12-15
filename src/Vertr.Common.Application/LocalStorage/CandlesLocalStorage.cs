@@ -3,7 +3,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.LocalStorage;
 
-internal sealed class CandlesLocalStorage : ICandlesLocalStorage
+internal sealed class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuoteProvider
 {
     private readonly Dictionary<Guid, SortedList<DateTime, Candle>> _candles = new Dictionary<Guid, SortedList<DateTime, Candle>>();
 
@@ -82,6 +82,32 @@ internal sealed class CandlesLocalStorage : ICandlesLocalStorage
         {
             Mean = (double)avg,
             StdDev = dev,
+        };
+    }
+
+    public Quote? GetMarketQuote(Guid instrumentId)
+    {
+        _candles.TryGetValue(instrumentId, out var candleList);
+
+        if (candleList == null || candleList.Count <= 0)
+        {
+            return null;
+        }
+
+        var last = candleList.Last();
+
+        var prices = new decimal[]
+        {
+            last.Value.Open,
+            last.Value.Close,
+            last.Value.High,
+            last.Value.Low
+        };
+
+        return new Quote
+        {
+            Bid = prices.Min(),
+            Ask = prices.Max()
         };
     }
 }

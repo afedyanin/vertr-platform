@@ -25,6 +25,7 @@ internal static class Program
                 ConnectionMultiplexer.Connect("localhost"));
 
                 services.AddApplication();
+                services.AddCandlesQuoteProvider();
                 services.AddBacktestGateway();
 
                 services.AddSingleton(provider =>
@@ -74,14 +75,11 @@ internal static class Program
 
             candleRepository.Update(candle);
 
-            using (var scope = disruptor.PublishEvents(1))
+            using (var scope = disruptor.PublishEvent())
             {
-                var evt = scope.Event(0);
+                var evt = scope.Event();
                 evt.Candle = candle;
             }
-
-            // TODO: Fixit
-            await Task.Delay(1);
         }
     }
 }

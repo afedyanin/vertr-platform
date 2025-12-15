@@ -11,15 +11,15 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
     private const int ThresholdSigma = 1;
 
     private readonly ILogger<TradingSignalsGenerator> _logger;
-    private readonly IOrderBooksLocalStorage _orderBookRepository;
+    private readonly IMarketQuoteProvider _marketQuoteProvider;
     private readonly ICandlesLocalStorage _candleRepository;
 
     public TradingSignalsGenerator(
-        IOrderBooksLocalStorage orderBookRepository,
+        IMarketQuoteProvider marketQuoteProvider,
         ICandlesLocalStorage candleRepository,
         ILogger<TradingSignalsGenerator> logger)
     {
-        _orderBookRepository = orderBookRepository;
+        _marketQuoteProvider = marketQuoteProvider;
         _candleRepository = candleRepository;
         _logger = logger;
     }
@@ -55,21 +55,25 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
     {
         if (predictedPrice == null || predictedPrice.Value == default)
         {
+            _logger.LogInformation("PredictedPrice is not defined. TradingDirection: Hold.");
             return TradingDirection.Hold;
         }
 
-        var quote = _orderBookRepository.GetMarketQuote(instrumentId);
+        var quote = _marketQuoteProvider.GetMarketQuote(instrumentId);
 
         if (quote == null)
         {
+            _logger.LogInformation("MarketQuote is NULL. TradingDirection: Hold.");
             return TradingDirection.Hold;
         }
 
         var threshold = GetThreshold(instrumentId);
-        _logger.LogDebug("Trading signal threshold for InstrumentId={InstrumentId} Threshold={Threshold}", instrumentId, threshold);
+        _logger.LogInformation("Trading signal threshold for InstrumentId={InstrumentId} Threshold={Threshold}", instrumentId, threshold);
 
         // цена будет выше минимальной цены предложения
         var askDelta = (double)(predictedPrice.Value - quote.Value.Ask);
+        _logger.LogInformation("AskDelta={AskDelta} Threshold={Threshold}", askDelta, threshold);
+
         if (askDelta >= threshold)
         {
             return TradingDirection.Buy;
@@ -77,6 +81,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
 
         // цена будет ниже максимальной цены спроса
         var bidDelta = (double)(quote.Value.Bid - predictedPrice.Value);
+        _logger.LogInformation("BidDelta={BidDelta} Threshold={Threshold}", bidDelta, threshold);
         if (bidDelta >= threshold)
         {
             return TradingDirection.Sell;
@@ -88,6 +93,8 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
     private double GetThreshold(Guid instrumentId)
     {
         var stats = _candleRepository.GetStats(instrumentId);
+        _logger.LogInformation("Stats={Stats}", stats);
+
         var th = stats == null ? DefaultThreshold : stats.Value.StdDev;
         return th * ThresholdSigma;
     }

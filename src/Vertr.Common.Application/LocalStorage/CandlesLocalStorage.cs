@@ -1,4 +1,5 @@
 ﻿using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Application.Extensions;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.LocalStorage;
@@ -61,28 +62,13 @@ internal sealed class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuotePr
     {
         _candles.TryGetValue(instrumentId, out var candles);
 
-        if (candles == null)
-        {
-            return;
-        }
-
-        var count = candles.Count;
-
-        if (count <= 0)
+        if (candles == null || candles.Count <= 0)
         {
             return;
         }
 
         var close = candles.Values.Select(c => c.Close);
-        var avg = close.Average();
-        var sum = close.Sum(d => (d - avg) * (d - avg));
-        var dev = Math.Sqrt((double)sum / count);
-
-        _candleStats[instrumentId] = new PriceStats
-        {
-            Mean = (double)avg,
-            StdDev = dev,
-        };
+        _candleStats[instrumentId] = close.GetPriceStats();
     }
 
     public Quote? GetMarketQuote(Guid instrumentId)

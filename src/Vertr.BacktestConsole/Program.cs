@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Contracts;
+using Vertr.Common.Application.Services;
 
 namespace Vertr.BacktestConsole;
 
@@ -58,21 +58,16 @@ internal static class Program
         var portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
 
         portfolioRepository.Init(["RandomWalk"]);
-        var startTime = DateTime.UtcNow;
 
-        for (var i = 0; i <= 10; i++)
+        var candles = RandomCandleGenerator.GetRandomCandles(
+            SberId,
+            DateTime.UtcNow,
+            100.0m,
+            TimeSpan.FromMinutes(5),
+            10);
+
+        foreach (var candle in candles)
         {
-            var candle = new Candle
-            (
-                InstrumentId: SberId,
-                TimeUtc: startTime.AddMinutes(i),
-                Open: 90.0m,
-                Close: 95.45m,
-                High: 101.14m,
-                Low: 89.89m,
-                Volume: 1234
-            );
-
             candleRepository.Update(candle);
 
             using (var scope = disruptor.PublishEvent())

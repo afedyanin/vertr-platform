@@ -5,7 +5,7 @@ namespace Vertr.Common.Application.Abstractions;
 
 public interface ICandlesLocalStorage
 {
-    public int MaxCandlesCount { get; set; }
+    public int CandlesBufferLength { get; set; }
 
     public void Load(IEnumerable<Candle> candles);
 
@@ -14,6 +14,4 @@ public interface ICandlesLocalStorage
     public Candle[] Get(Guid instrumentId);
 
     public int GetCount(Guid instrumentId);
-
-    public PriceStats? GetStats(Guid instrumentId);
 }

@@ -6,6 +6,12 @@ public record class CandlestickReceivedEvent
 {
     public Candle? Candle { get; set; }
 
+    public PredictionSampleInfo PredictionSampleInfo { get; set; }
+
+    public Quote? MarketQuote { get; set; }
+
+    public double PriceThreshold { get; set; }
+
     public List<Prediction> Predictions { get; } = [];
 
     public List<TradingSignal> TradingSignals { get; } = [];

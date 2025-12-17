@@ -20,7 +20,6 @@ internal sealed class Program
                  services.AddTinvestGateway("http://localhost:5099");
 
                  services.AddApplication();
-                 services.AddCandlesQuoteProvider();
                  //services.AddOrderBookQuoteProvider();
 
                  services.AddHostedService<MarketCandlesSubscriber>();

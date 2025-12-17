@@ -1,10 +1,10 @@
-﻿using Disruptor.Dsl;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Application.EventHandlers;
 using Vertr.Common.Application.Services;
 
 namespace Vertr.BacktestConsole;
@@ -25,7 +25,6 @@ internal static class Program
                 ConnectionMultiplexer.Connect("localhost"));
 
                 services.AddApplication();
-                services.AddCandlesQuoteProvider();
                 services.AddBacktestGateway();
 
                 services.AddSingleton(provider =>
@@ -34,28 +33,25 @@ internal static class Program
             })
             .Build();
 
-        var disruptor = ApplicationRegistrar.CreateBacktestCandlestickPipeline(host.Services);
-
-        disruptor.Start();
-
-        var t1 = MaketDataGenerator(host.Services, disruptor);
+        var t1 = MaketDataGenerator(host.Services);
         var t2 = host.RunAsync();
 
         await Task.WhenAny(t1, t2);
-
-        disruptor.Shutdown();
 
         var portfolioManager = host.Services.GetRequiredService<IPortfolioManager>();
         await portfolioManager.CloseAllPositions();
         // TODO: Dump portfolios
     }
 
-    public static async Task MaketDataGenerator(
-        IServiceProvider serviceProvider,
-        Disruptor<CandlestickReceivedEvent> disruptor)
+    public static async Task MaketDataGenerator(IServiceProvider serviceProvider)
     {
         var candleRepository = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
         var portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
+
+        var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
+        var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
+        // var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
+        // var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
 
         portfolioRepository.Init(["RandomWalk"]);
 
@@ -66,15 +62,19 @@ internal static class Program
             TimeSpan.FromMinutes(5),
             10);
 
+        var seqNum = 0;
         foreach (var candle in candles)
         {
             candleRepository.Update(candle);
 
-            using (var scope = disruptor.PublishEvent())
+            var evt = new CandlestickReceivedEvent
             {
-                var evt = scope.Event();
-                evt.Candle = candle;
-            }
+                Candle = candle
+            };
+
+            step1.OnEvent(evt, seqNum, true);
+            step2.OnEvent(evt, seqNum, true);
+            seqNum++;
         }
     }
 }

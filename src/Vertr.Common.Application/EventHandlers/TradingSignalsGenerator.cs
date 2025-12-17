@@ -1,26 +1,16 @@
 ﻿using Disruptor;
 using Microsoft.Extensions.Logging;
-using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.EventHandlers;
 
 internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceivedEvent>
 {
-    private const double DefaultThreshold = 0.001;
-    private const int ThresholdSigma = 1;
-
     private readonly ILogger<TradingSignalsGenerator> _logger;
-    private readonly IMarketQuoteProvider _marketQuoteProvider;
-    private readonly ICandlesLocalStorage _candleRepository;
 
     public TradingSignalsGenerator(
-        IMarketQuoteProvider marketQuoteProvider,
-        ICandlesLocalStorage candleRepository,
         ILogger<TradingSignalsGenerator> logger)
     {
-        _marketQuoteProvider = marketQuoteProvider;
-        _candleRepository = candleRepository;
         _logger = logger;
     }
 
@@ -28,7 +18,19 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
     {
         foreach (var prediction in data.Predictions)
         {
-            var direction = GetTradingDirection(prediction.InstrumentId, prediction.Price);
+            if (prediction.Price == null || prediction.Price.Value == default)
+            {
+                _logger.LogWarning("PredictedPrice is not defined for Predictor={Predictor}", prediction.Predictor);
+                continue;
+            }
+
+            if (data.MarketQuote == null)
+            {
+                _logger.LogWarning("MarketQuote is not defined for InstrumentId={InstrumentId}", prediction.InstrumentId);
+                continue;
+            }
+
+            var direction = GetTradingDirection(prediction.Price.Value, data.MarketQuote.Value, data.PriceThreshold);
 
             if (direction == TradingDirection.Hold)
             {
@@ -42,60 +44,25 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
                 Direction = direction,
             };
 
-            _logger.LogInformation("Trading signal created for InstrumentId={InstrumentId} Predictor={Predictor} Price={Price} Direction={Direction}",
-                prediction.InstrumentId, prediction.Predictor, prediction.Price, direction);
-
             data.TradingSignals.Add(signal);
         }
 
-        _logger.LogInformation("TradingSignalsGenerator executed.");
+        _logger.LogInformation("#{Sequence} TradingSignalsGenerator executed.", sequence);
     }
 
-    private TradingDirection GetTradingDirection(Guid instrumentId, decimal? predictedPrice)
+    // TODO: Test it
+    internal static TradingDirection GetTradingDirection(decimal predictedPrice, Quote marketQuote, double threshold)
     {
-        if (predictedPrice == null || predictedPrice.Value == default)
-        {
-            _logger.LogInformation("PredictedPrice is not defined. TradingDirection: Hold.");
-            return TradingDirection.Hold;
-        }
-
-        var quote = _marketQuoteProvider.GetMarketQuote(instrumentId);
-
-        if (quote == null)
-        {
-            _logger.LogInformation("MarketQuote is NULL. TradingDirection: Hold.");
-            return TradingDirection.Hold;
-        }
-
-        var threshold = GetThreshold(instrumentId);
-        _logger.LogInformation("Trading signal threshold for InstrumentId={InstrumentId} Threshold={Threshold}", instrumentId, threshold);
-
         // цена будет выше минимальной цены предложения
-        var askDelta = (double)(predictedPrice.Value - quote.Value.Ask);
-        _logger.LogInformation("AskDelta={AskDelta} Threshold={Threshold}", askDelta, threshold);
-
+        var askDelta = (double)((predictedPrice - marketQuote.Ask) / marketQuote.Ask);
         if (askDelta >= threshold)
         {
+
             return TradingDirection.Buy;
         }
 
         // цена будет ниже максимальной цены спроса
-        var bidDelta = (double)(quote.Value.Bid - predictedPrice.Value);
-        _logger.LogInformation("BidDelta={BidDelta} Threshold={Threshold}", bidDelta, threshold);
-        if (bidDelta >= threshold)
-        {
-            return TradingDirection.Sell;
-        }
-
-        return TradingDirection.Hold;
-    }
-
-    private double GetThreshold(Guid instrumentId)
-    {
-        var stats = _candleRepository.GetStats(instrumentId);
-        _logger.LogInformation("Stats={Stats}", stats);
-
-        var th = stats == null ? DefaultThreshold : stats.Value.StdDev;
-        return th * ThresholdSigma;
+        var bidDelta = (double)((marketQuote.Bid - predictedPrice) / predictedPrice);
+        return bidDelta >= threshold ? TradingDirection.Sell : TradingDirection.Hold;
     }
 }

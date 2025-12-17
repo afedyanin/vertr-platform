@@ -13,5 +13,6 @@
 
 	<ItemGroup>
 		<InternalsVisibleTo Include="Vertr.Common.Aplication.Tests" />
+		<InternalsVisibleTo Include="Vertr.BacktestConsole" />
 	</ItemGroup>
 </Project>

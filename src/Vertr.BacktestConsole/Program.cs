@@ -49,7 +49,7 @@ internal static class Program
 
         var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
         var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
-        // var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
+        var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
         // var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
 
         logger.LogInformation("Starting backtest Steps={Steps}.", steps);
@@ -73,7 +73,7 @@ internal static class Program
         var historicCandles = candleRepository.Get(SberId);
         Debug.Assert(historicCandles.Last().TimeUtc < candles.First().TimeUtc, "Candles time mismatch.");
 
-        var instrument = instruments.FirstOrDefault(x => x.Id == SberId);
+        var instrument = instruments.Single(x => x.Id == SberId);
 
         var seqNum = 0;
         foreach (var candle in candles)
@@ -91,6 +91,7 @@ internal static class Program
                 };
                 step1.OnEvent(evt, seqNum, true);
                 step2.OnEvent(evt, seqNum, true);
+                step3.OnEvent(evt, seqNum, true);
 
                 logger.LogWarning($"#{seqNum}\t{evt.Dump()}");
 

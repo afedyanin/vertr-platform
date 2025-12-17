@@ -14,6 +14,7 @@ public static class CandleReceivedEventExtensions
         sb.AppendLine($"Predictions=[{evt.Predictions.Dump()}]");
         sb.AppendLine($"Quote=[{evt.MarketQuote.Dump()}] Threshold={evt.PriceThreshold}");
         sb.AppendLine($"Signals=[{evt.TradingSignals.Dump()}]");
+        sb.AppendLine($"Requests=[{evt.OrderRequests.Dump()}]");
 
         return sb.ToString();
     }
@@ -50,4 +51,10 @@ public static class CandleReceivedEventExtensions
 
     internal static string Dump(this IEnumerable<TradingSignal> signals)
         => string.Join(", ", signals.Select(p => p.Dump()));
+
+    internal static string Dump(this MarketOrderRequest request)
+        => $"{request.Predictor}: Q={request.QuantityLots} ID={request.RequestId}";
+
+    internal static string Dump(this IEnumerable<MarketOrderRequest> requests)
+        => string.Join(", ", requests.Select(p => p.Dump()));
 }

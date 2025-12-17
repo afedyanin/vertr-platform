@@ -1,8 +1,6 @@
-using Disruptor.Dsl;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
-using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 using static StackExchange.Redis.RedisChannel;
@@ -11,7 +9,6 @@ namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
-    private readonly Disruptor<CandleReceivedEvent> _disruptor;
     private readonly IPortfolioManager _portfolioManager;
     private readonly ICandlesLocalStorage _candleRepository;
 
@@ -23,7 +20,6 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         IServiceProvider serviceProvider,
         ILogger logger) : base(serviceProvider, logger)
     {
-        _disruptor = ApplicationRegistrar.CreateCandlestickPipeline(serviceProvider);
         _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
         _candleRepository = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
     }
@@ -40,27 +36,12 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
             return;
         }
 
+        // TODO: Implement this
         _candleRepository.Update(candle);
-
-        using (var scope = _disruptor.PublishEvent())
-        {
-            var evt = scope.Event();
-            evt.Candle = candle;
-        }
-    }
-
-    protected override ValueTask OnBeforeStart()
-    {
-        Logger.LogWarning("Starting Disruptor...");
-        _disruptor.Start();
-        return base.OnBeforeStart();
     }
 
     protected override async ValueTask OnBeforeStop()
     {
-        Logger.LogWarning("Stopping Disruptor...");
-        _disruptor.Shutdown();
-
         // TODO: Use settings
         await _portfolioManager.CloseAllPositions();
         await base.OnBeforeStop();

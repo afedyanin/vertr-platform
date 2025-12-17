@@ -26,8 +26,14 @@ internal sealed class PortfolioManager : IPortfolioManager
         _logger = logger;
     }
 
-    public async Task<MarketOrderRequest?> HandleTradingSignal(TradingSignal signal)
+    public MarketOrderRequest? HandleTradingSignal(TradingSignal signal)
     {
+        if (signal.Direction == TradingDirection.Hold)
+        {
+            _logger.LogWarning("Cannot create order request for TradingDirection.Hold");
+            return null;
+        }
+
         var portfolio = _portfolioRepository.GetByPredictor(signal.Predictor);
 
         if (portfolio == null)
@@ -36,14 +42,9 @@ internal sealed class PortfolioManager : IPortfolioManager
             return null;
         }
 
-        var instrument = await _instrumentRepository.GetById(signal.InstrumentId);
-        if (instrument == null)
-        {
-            _logger.LogWarning("Instrument is not found InstrumentId={InstrumentId}", signal.InstrumentId);
-            return null;
-        }
+        var instrumentId = signal.Instrument.Id;
 
-        var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == signal.InstrumentId);
+        var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == instrumentId);
 
         if (position.Amount > 0 && signal.Direction == TradingDirection.Buy)
         {
@@ -58,30 +59,34 @@ internal sealed class PortfolioManager : IPortfolioManager
         // Open position
         if (position.Amount == default)
         {
+            var openDirection = signal.Direction == TradingDirection.Buy ? 1 : -1;
+
             var openRequest = new MarketOrderRequest
             {
                 RequestId = Guid.NewGuid(),
-                InstrumentId = signal.InstrumentId,
+                Predictor = signal.Predictor,
+                InstrumentId = instrumentId,
                 PortfolioId = portfolio.Id,
-                QuantityLots = DefaultQtyLots,
+                QuantityLots = DefaultQtyLots * openDirection,
             };
 
-            _logger.LogInformation("Open position Request: QuantityLots={QuantityLots}", openRequest.QuantityLots);
+            _logger.LogDebug("Open position Request: QuantityLots={QuantityLots}", openRequest.QuantityLots);
             return openRequest;
         }
 
         // Reverse position
-        var lotSize = instrument.LotSize ?? 1;
+        var lotSize = signal.Instrument.LotSize ?? 1;
         var positionQtyLots = (long)(position.Amount / lotSize);
         var reverseRequest = new MarketOrderRequest
         {
             RequestId = Guid.NewGuid(),
-            InstrumentId = signal.InstrumentId,
+            Predictor = signal.Predictor,
+            InstrumentId = instrumentId,
             PortfolioId = portfolio.Id,
             QuantityLots = positionQtyLots * (-2),
         };
 
-        _logger.LogInformation("Reverse position Request: QuantityLots={QuantityLots}", reverseRequest.QuantityLots);
+        _logger.LogDebug("Reverse position Request: QuantityLots={QuantityLots}", reverseRequest.QuantityLots);
         return reverseRequest;
     }
 
@@ -123,6 +128,7 @@ internal sealed class PortfolioManager : IPortfolioManager
                 var closeRequest = new MarketOrderRequest
                 {
                     RequestId = Guid.NewGuid(),
+                    Predictor = portfolio.Predictor ?? string.Empty,
                     InstrumentId = position.InstrumentId,
                     PortfolioId = portfolio.Id,
                     QuantityLots = positionQtyLots * (-1),
@@ -133,7 +139,7 @@ internal sealed class PortfolioManager : IPortfolioManager
         }
 
         await Task.WhenAll(tasks);
-        _logger.LogInformation("CloseAllPositions request executed.");
+        _logger.LogDebug("CloseAllPositions request executed.");
     }
 }
 

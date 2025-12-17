@@ -6,6 +6,8 @@ public record class Portfolio
 {
     public Guid Id { get; set; }
 
+    public string? Predictor { get; set; }
+
     public DateTime UpdatedAt { get; set; }
 
     public IList<Position> Positions { get; set; } = [];

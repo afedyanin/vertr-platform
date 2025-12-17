@@ -42,6 +42,7 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
             var portfolio = new Portfolio
             {
                 Id = Guid.NewGuid(),
+                Predictor = precitor,
                 UpdatedAt = DateTime.UtcNow,
             };
 

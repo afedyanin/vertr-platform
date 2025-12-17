@@ -5,7 +5,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal sealed class PortfolioPositionHandler : IAsyncBatchEventHandler<CandleReceivedEvent>
+internal sealed class PortfolioPositionHandler : IEventHandler<CandleReceivedEvent>
 {
     private readonly IPortfolioManager _portfolioManager;
     private readonly ILogger<PortfolioPositionHandler> _logger;
@@ -18,35 +18,23 @@ internal sealed class PortfolioPositionHandler : IAsyncBatchEventHandler<CandleR
         _logger = logger;
     }
 
-    public async ValueTask OnBatch(EventBatch<CandleReceivedEvent> batch, long sequence)
+    public void OnEvent(CandleReceivedEvent data, long sequence, bool endOfBatch)
     {
-        _logger.LogInformation("Start processing PortfolioPosition Sequence={Sequence}", sequence);
-
-        try
+        foreach (var signal in data.TradingSignals)
         {
-            foreach (var data in batch)
+            if (signal.Direction == TradingDirection.Hold)
             {
-                foreach (var signal in data.TradingSignals)
-                {
-                    if (signal.Direction == TradingDirection.Hold)
-                    {
-                        continue;
-                    }
-
-                    var orderRequest = await _portfolioManager.HandleTradingSignal(signal);
-
-                    if (orderRequest != null)
-                    {
-                        data.OrderRequests.Add(orderRequest);
-                    }
-                }
+                continue;
             }
 
-            _logger.LogInformation("PortfolioPositionHandler executed.");
+            var orderRequest = _portfolioManager.HandleTradingSignal(signal);
+
+            if (orderRequest != null)
+            {
+                data.OrderRequests.Add(orderRequest);
+            }
         }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "PortfolioPositionHandler error. Message={Message}", ex.Message);
-        }
+
+        _logger.LogInformation("#{Sequence} PortfolioPositionHandler executed. {SignalsCount} signals added.", sequence, data.TradingSignals.Count);
     }
 }

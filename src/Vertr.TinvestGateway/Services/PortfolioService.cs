@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
 using Vertr.Common.DataAccess.Repositories;
 using Vertr.TinvestGateway.Abstractions;
@@ -34,13 +35,20 @@ internal class PortfolioService : IPortfolioService
 
     public async Task Update(PostOrderResponse orderResponse, Guid portfolioId)
     {
+        var commission = orderResponse.ExecutedCommission;
+
+        if (commission == null)
+        {
+            return;
+        }
+
         await _portfolioOrdersRepository.BindOrderToPortfolio(orderResponse.OrderId, portfolioId);
         await Semaphore.WaitAsync();
 
         try
         {
             var builder = await CreateBuilderByPortfolioId(portfolioId);
-            var newPortfolio = builder.Apply(orderResponse).Build();
+            var newPortfolio = builder.ApplyComission(commission.Value, commission.Currency).Build();
             await _portfolioRepository.Save(newPortfolio);
         }
         finally
@@ -64,7 +72,12 @@ internal class PortfolioService : IPortfolioService
         try
         {
             var builder = await CreateBuilderByPortfolioId(portfolioId.Value);
-            var newPortfolio = builder.Apply(orderTrades).Build();
+            var direction =
+                orderTrades.Direction == OrderDirection.Buy ? TradingDirection.Buy :
+                    orderTrades.Direction == OrderDirection.Sell ? TradingDirection.Sell :
+                        TradingDirection.Hold;
+
+            var newPortfolio = builder.ApplyTrades(orderTrades.InstrumentId, orderTrades.Trades, direction).Build();
             await _portfolioRepository.Save(newPortfolio);
         }
         finally
@@ -103,105 +116,5 @@ internal class PortfolioService : IPortfolioService
         var builder = portfolio == null ? new PortfolioBuilder(portfolioId, instruments) : new PortfolioBuilder(portfolio, instruments);
 
         return builder;
-    }
-
-    private class PortfolioBuilder
-    {
-        private readonly Guid _portfolioId;
-        private readonly Dictionary<Guid, Position> _comissions = [];
-        private readonly Dictionary<Guid, Position> _positions = [];
-        private readonly Dictionary<string, Instrument> _instrumentsByTicker;
-        // private readonly ILogger _logger;
-
-        public PortfolioBuilder(
-            Portfolio portfolio,
-            IEnumerable<Instrument> instruments)
-            : this(portfolio.Id, instruments)
-        {
-            _positions = portfolio.Positions.ToDictionary(x => x.InstrumentId, x => x);
-            _comissions = portfolio.Comissions.ToDictionary(x => x.InstrumentId, x => x);
-        }
-        public PortfolioBuilder(
-            Guid portfolioId,
-            IEnumerable<Instrument> instruments)
-        {
-            _portfolioId = portfolioId;
-            _instrumentsByTicker = InstrumentsByTicker(instruments);
-        }
-
-        public PortfolioBuilder Apply(PostOrderResponse orderResponse)
-        {
-            var commision = orderResponse.ExecutedCommission;
-
-            if (commision == null)
-            {
-                return this;
-            }
-
-            _instrumentsByTicker.TryGetValue(commision.Currency, out var instrument);
-            var key = instrument == null ? Guid.Empty : instrument.Id;
-
-            _comissions.TryGetValue(key, out var comissionEntry);
-
-            _comissions[key] = new Position
-            {
-                InstrumentId = key,
-                Amount = comissionEntry.Amount + commision.Value,
-            };
-
-            return this;
-        }
-
-        public PortfolioBuilder Apply(OrderTrades orderTradees)
-        {
-            var qtySign = orderTradees.Direction == OrderDirection.Sell ? -1 : 1;
-
-            foreach (var trade in orderTradees.Trades)
-            {
-                ApplyTrade(trade, orderTradees.InstrumentId, qtySign);
-            }
-
-            return this;
-        }
-
-        public Portfolio Build()
-        {
-            var portfolio = new Portfolio()
-            {
-                Id = _portfolioId,
-                UpdatedAt = DateTime.UtcNow,
-                Comissions = [.. _comissions.Values],
-                Positions = [.. _positions.Values],
-            };
-
-            return portfolio;
-        }
-
-        private void ApplyTrade(Trade trade, Guid instrumentId, int qtySign)
-        {
-            var price = trade.Price?.Value ?? 0;
-            _instrumentsByTicker.TryGetValue(trade.Price?.Currency ?? string.Empty, out var currencyInstrument);
-            var currencyId = currencyInstrument?.Id ?? Guid.Empty;
-
-            // _logger.LogInformation($"Applying trade: {trade}. sPrice={trade.Price} CurrencyInstrument={currencyInstrument} CurrencyId={currencyId}");
-
-            _positions.TryGetValue(instrumentId, out var positionEntry);
-            _positions.TryGetValue(currencyId, out var moneyPositionEntry);
-
-            _positions[instrumentId] = new Position
-            {
-                InstrumentId = instrumentId,
-                Amount = positionEntry.Amount + trade.Quantity * qtySign
-            };
-
-            _positions[currencyId] = new Position
-            {
-                InstrumentId = currencyId,
-                Amount = moneyPositionEntry.Amount + price * trade.Quantity * qtySign * (-1)
-            };
-        }
-
-        private Dictionary<string, Instrument> InstrumentsByTicker(IEnumerable<Instrument> instruments)
-            => instruments.ToDictionary(x => x.Ticker, x => x, StringComparer.OrdinalIgnoreCase);
     }
 }

@@ -26,40 +26,33 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
 
     public ValueTask OnEvent(CandleReceivedEvent data)
     {
-        try
+        var instrumentId = data.Instrument!.Id;
+        var candles = _candleRepository.Get(instrumentId);
+
+        if (candles.Length <= 0)
         {
-            var instrumentId = data.Instrument!.Id;
-            var candles = _candleRepository.Get(instrumentId);
-
-            if (candles.Length <= 0)
-            {
-                _logger.LogWarning("#{Sequence} MarketDataPredictor has no candles to prediction.", data.Sequence);
-                return ValueTask.CompletedTask;
-            }
-
-            var predictors = _portfolioRepository.GetPredictors().Keys;
-
-            data.PredictionSampleInfo = new PredictionSampleInfo
-            {
-                Count = candles.Length,
-                From = candles.First().TimeUtc,
-                To = candles.Last().TimeUtc,
-                ClosePriceStats = candles.Select(c => c.Close).GetPriceStats()
-            };
-
-            var predictions = _predictorClient.Predict([.. predictors], candles).GetAwaiter().GetResult();
-
-            foreach (var prediction in predictions)
-            {
-                data.Predictions.Add(prediction);
-            }
-
-            _logger.LogDebug("#{Sequence} MarketDataPredictor executed.", data.Sequence);
+            _logger.LogWarning("#{Sequence} MarketDataPredictor has no candles to prediction.", data.Sequence);
+            return ValueTask.CompletedTask;
         }
-        catch (Exception ex)
+
+        var predictors = _portfolioRepository.GetPredictors().Keys;
+
+        data.PredictionSampleInfo = new PredictionSampleInfo
         {
-            _logger.LogError(ex, "#{Sequence} MarketDataPredictor error. Message={Message}", ex.Message, data.Sequence);
+            Count = candles.Length,
+            From = candles.First().TimeUtc,
+            To = candles.Last().TimeUtc,
+            ClosePriceStats = candles.Select(c => c.Close).GetPriceStats()
+        };
+
+        var predictions = _predictorClient.Predict([.. predictors], candles).GetAwaiter().GetResult();
+
+        foreach (var prediction in predictions)
+        {
+            data.Predictions.Add(prediction);
         }
+
+        _logger.LogDebug("#{Sequence} MarketDataPredictor executed.", data.Sequence);
 
         return ValueTask.CompletedTask;
     }

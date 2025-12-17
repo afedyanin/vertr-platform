@@ -29,7 +29,8 @@ internal sealed class OrderExecutionHandler : IEventHandler<CandleReceivedEvent>
             }
 
             await Task.WhenAll(tasks);
-            _logger.LogInformation("OrderExecutionHandler executed.");
+
+            _logger.LogDebug("#{Sequence} OrderExecutionHandler executed.", data.Sequence);
         }
         catch (Exception ex)
         {

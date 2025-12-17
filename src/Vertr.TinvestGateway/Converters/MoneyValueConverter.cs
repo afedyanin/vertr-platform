@@ -22,8 +22,8 @@ internal static class MoneyValueConverter
     public static Money Convert(this MoneyValue source)
         => new Money(source, source.Currency);
 
-    public static Money[] Convert(this MoneyValue[] source)
-        => [.. source.Select(Convert)];
+    public static (decimal, string) FromMoneyValue(this MoneyValue source)
+        => (source, source.Currency);
 
     internal static Google.Type.Money ToGoogleType(Money money)
         => new Google.Type.Money

@@ -1,4 +1,4 @@
-namespace Vertr.TinvestGateway.Models.Orders;
+namespace Vertr.Common.Contracts;
 
 public record class Trade
 {
@@ -6,7 +6,9 @@ public record class Trade
 
     public DateTime ExecutionTime { get; init; }
 
-    public Money? Price { get; init; }
+    public decimal Price { get; init; }
+
+    public required string Currency { get; init; }
 
     public long Quantity { get; init; }
 }

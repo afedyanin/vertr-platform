@@ -1,4 +1,5 @@
 using StackExchange.Redis;
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.DataAccess.Redis;
 using Vertr.TinvestGateway.Models.Orders;
 using Vertr.TinvestGateway.Models.Orders.Enums;
@@ -90,7 +91,8 @@ public class OrderTradeRepositoryTests
         {
             TradeId = Guid.NewGuid().ToString(),
             ExecutionTime = DateTime.UtcNow,
-            Price = new Money(123.45m, "RUB"),
+            Price = 123.45m,
+            Currency = "RUB",
             Quantity = 34,
         };
 }

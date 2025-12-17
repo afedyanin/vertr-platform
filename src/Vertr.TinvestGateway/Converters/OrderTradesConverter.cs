@@ -1,3 +1,4 @@
+using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Models.Orders;
 
 namespace Vertr.TinvestGateway.Converters;
@@ -22,7 +23,8 @@ public static class OrderTradesConverter
         => new Trade
         {
             ExecutionTime = source.DateTime.ToDateTime(),
-            Price = new Money(source.Price, currency),
+            Price = source.Price,
+            Currency = currency,
             Quantity = source.Quantity,
             TradeId = source.TradeId,
         };
@@ -32,11 +34,17 @@ public static class OrderTradesConverter
         => [.. source.Select(t => t.Convert(currency))];
 
     public static Trade Convert(this Tinkoff.InvestApi.V1.OrderStage source)
-        => new Trade
+    {
+        (var price, var currency) = source.Price.FromMoneyValue();
+
+        return new Trade
         {
             ExecutionTime = source.ExecutionTime.ToDateTime(),
-            Price = source.Price.Convert(),
+            Price = price,
+            Currency = currency,
             Quantity = source.Quantity,
             TradeId = source.TradeId,
         };
+
+    }
 }

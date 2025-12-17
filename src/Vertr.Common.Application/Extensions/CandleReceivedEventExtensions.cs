@@ -54,7 +54,7 @@ public static class CandleReceivedEventExtensions
         => string.Join(", ", signals.Select(p => p.Dump()));
 
     internal static string Dump(this MarketOrderRequest request)
-        => $"{request.Predictor}: Q={request.QuantityLots} ID={request.RequestId}";
+        => $"{request.Predictor}: D={request.Direction} Q={request.QuantityLots} ID={request.RequestId}";
 
     internal static string Dump(this IEnumerable<MarketOrderRequest> requests)
         => string.Join(", ", requests.Select(p => p.Dump()));

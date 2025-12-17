@@ -57,6 +57,8 @@ internal static class Program
         }
 
         logger.LogInformation("Execution completed.");
+
+        await Task.Delay(2000);
     }
 
     public static async Task RunBacktest(

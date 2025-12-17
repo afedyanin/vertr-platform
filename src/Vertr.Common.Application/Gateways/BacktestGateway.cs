@@ -1,4 +1,5 @@
 ﻿using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Application.Extensions;
 using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
 
@@ -10,6 +11,8 @@ internal sealed class BacktestGateway : ITradingGateway
 
     private static readonly Guid SberId = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
     private static readonly Guid RubId = new Guid("a92e2e25-a698-45cc-a781-167cf465257c");
+
+    private const decimal CommissionPercent = 0.005m;
 
     private static readonly Instrument[] Instruments =
     [
@@ -66,28 +69,29 @@ internal sealed class BacktestGateway : ITradingGateway
             throw new InvalidOperationException($"Cannot find portfolio for OrderRequest={request}");
         }
 
-        var builder = new PortfolioBuilder(portfolio, Instruments);
-
-        // TODO: Implement this
-        builder.ApplyComission(45.45m, "rub");
-
+        var lotSize = Instruments.GetLotSize(request.InstrumentId) ?? 1;
         var trades = new Trade[]
         {
             new Trade
             {
-                // TODO: Implement this
                 TradeId = Guid.NewGuid().ToString(),
                 Currency = "rub",
+                Quantity = (long)(request.QuantityLots * lotSize),
+                
+                // TODO: Use quote provider
                 ExecutionTime = DateTime.UtcNow,
                 Price = 200m,
-                Quantity = Math.Abs(request.QuantityLots),
             }
         };
 
-        // TODO: refactor
-        var direction = request.QuantityLots > 0 ? TradingDirection.Buy : TradingDirection.Sell;
+        var tradesAmount = trades.Sum(t => t.Quantity * t.Price);
+        var commisssionAmount = tradesAmount * CommissionPercent;
 
-        builder.ApplyTrades(request.InstrumentId, trades, direction);
+        var builder = new PortfolioBuilder(portfolio, Instruments);
+
+        builder.ApplyComission(commisssionAmount, "rub");
+        builder.ApplyTrades(request.InstrumentId, trades, request.Direction);
+
         portfolio = builder.Build();
         _portfoliosLocalStorage.Update(portfolio);
 

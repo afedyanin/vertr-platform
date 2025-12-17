@@ -6,4 +6,7 @@ public static class InstrumentExtensions
 {
     public static string GetTicker(this IEnumerable<Instrument> instruments, Guid id)
         => instruments.FirstOrDefault(c => c.Id == id)?.Ticker ?? string.Empty;
+
+    public static decimal? GetLotSize(this IEnumerable<Instrument> instruments, Guid id)
+        => instruments.FirstOrDefault(c => c.Id == id)?.LotSize;
 }

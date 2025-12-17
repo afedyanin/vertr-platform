@@ -23,10 +23,10 @@ public record class PostOrderRequest
             InstrumentId = request.InstrumentId,
             RequestId = request.RequestId,
             PortfolioId = request.PortfolioId,
-            QuantityLots = Math.Abs(request.QuantityLots),
+            QuantityLots = request.QuantityLots,
             Price = decimal.Zero,
-            OrderDirection = request.QuantityLots > 0 ? OrderDirection.Buy :
-                request.QuantityLots < 0 ? OrderDirection.Sell :
+            OrderDirection = request.Direction == TradingDirection.Buy ? OrderDirection.Buy :
+                request.Direction == TradingDirection.Sell ? OrderDirection.Sell :
                     OrderDirection.Unspecified,
             OrderType = OrderType.Market,
             PriceType = PriceType.Unspecified,

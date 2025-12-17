@@ -59,15 +59,14 @@ internal sealed class PortfolioManager : IPortfolioManager
         // Open position
         if (position.Amount == default)
         {
-            var openDirection = signal.Direction == TradingDirection.Buy ? 1 : -1;
-
             var openRequest = new MarketOrderRequest
             {
                 RequestId = Guid.NewGuid(),
                 Predictor = signal.Predictor,
                 InstrumentId = instrumentId,
                 PortfolioId = portfolio.Id,
-                QuantityLots = DefaultQtyLots * openDirection,
+                QuantityLots = DefaultQtyLots,
+                Direction = signal.Direction,
             };
 
             _logger.LogDebug("Open position Request: QuantityLots={QuantityLots}", openRequest.QuantityLots);
@@ -83,7 +82,8 @@ internal sealed class PortfolioManager : IPortfolioManager
             Predictor = signal.Predictor,
             InstrumentId = instrumentId,
             PortfolioId = portfolio.Id,
-            QuantityLots = positionQtyLots * (-2),
+            QuantityLots = Math.Abs(positionQtyLots) * 2,
+            Direction = signal.Direction,
         };
 
         _logger.LogDebug("Reverse position Request: QuantityLots={QuantityLots}", reverseRequest.QuantityLots);
@@ -123,6 +123,7 @@ internal sealed class PortfolioManager : IPortfolioManager
                 // Close position request
                 var lotSize = instrument.LotSize ?? 1;
                 var positionQtyLots = (long)(position.Amount / lotSize);
+                var direction = position.Amount > 0 ? TradingDirection.Sell : TradingDirection.Buy;
 
                 var closeRequest = new MarketOrderRequest
                 {
@@ -130,7 +131,8 @@ internal sealed class PortfolioManager : IPortfolioManager
                     Predictor = kvp.Key,
                     InstrumentId = position.InstrumentId,
                     PortfolioId = kvp.Value.Id,
-                    QuantityLots = positionQtyLots * (-1),
+                    QuantityLots = Math.Abs(positionQtyLots),
+                    Direction = direction,
                 };
 
                 tasks.Add(_tinvestGateway.PostMarketOrder(closeRequest));

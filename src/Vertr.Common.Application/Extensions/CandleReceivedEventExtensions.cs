@@ -9,6 +9,7 @@ public static class CandleReceivedEventExtensions
     {
         var sb = new StringBuilder();
 
+        sb.AppendLine($"# {evt.Sequence}");
         sb.AppendLine($"Candle=[{evt.Instrument?.Ticker}][{evt.Candle.Dump()}]");
         sb.AppendLine($"Sample=[{evt.PredictionSampleInfo.Dump()}]");
         sb.AppendLine($"Predictions=[{evt.Predictions.Dump()}]");

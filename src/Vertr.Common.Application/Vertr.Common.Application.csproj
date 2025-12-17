@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
-		<PackageReference Include="Disruptor" Version="6.0.1" />
 		<PackageReference Include="Refit.HttpClientFactory" Version="9.0.2" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.0" />

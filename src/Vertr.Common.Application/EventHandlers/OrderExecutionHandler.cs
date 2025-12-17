@@ -1,10 +1,9 @@
-﻿using Disruptor;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal sealed class OrderExecutionHandler : IAsyncBatchEventHandler<CandleReceivedEvent>
+internal sealed class OrderExecutionHandler : IEventHandler<CandleReceivedEvent>
 {
     private readonly ILogger<OrderExecutionHandler> _logger;
 
@@ -18,18 +17,15 @@ internal sealed class OrderExecutionHandler : IAsyncBatchEventHandler<CandleRece
         _logger = logger;
     }
 
-    public async ValueTask OnBatch(EventBatch<CandleReceivedEvent> batch, long sequence)
+    public async ValueTask OnEvent(CandleReceivedEvent data)
     {
         try
         {
             var tasks = new List<Task>();
 
-            foreach (var data in batch)
+            foreach (var request in data.OrderRequests)
             {
-                foreach (var request in data.OrderRequests)
-                {
-                    tasks.Add(_tinvestGateway.PostMarketOrder(request));
-                }
+                tasks.Add(_tinvestGateway.PostMarketOrder(request));
             }
 
             await Task.WhenAll(tasks);

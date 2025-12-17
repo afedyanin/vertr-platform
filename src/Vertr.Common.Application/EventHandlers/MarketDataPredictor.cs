@@ -1,5 +1,4 @@
-﻿using Disruptor;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Extensions;
 using Vertr.Common.Contracts;
@@ -25,7 +24,7 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
         _logger = logger;
     }
 
-    public void OnEvent(CandleReceivedEvent data, long sequence, bool endOfBatch)
+    public ValueTask OnEvent(CandleReceivedEvent data)
     {
         try
         {
@@ -34,8 +33,8 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
 
             if (candles.Length <= 0)
             {
-                _logger.LogWarning("#{Sequence} MarketDataPredictor has no candles to prediction.", sequence);
-                return;
+                _logger.LogWarning("#{Sequence} MarketDataPredictor has no candles to prediction.", data.Sequence);
+                return ValueTask.CompletedTask;
             }
 
             var predictors = _portfolioRepository.GetPredictors().Keys;
@@ -55,11 +54,13 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
                 data.Predictions.Add(prediction);
             }
 
-            _logger.LogDebug("#{Sequence} MarketDataPredictor executed.", sequence);
+            _logger.LogDebug("#{Sequence} MarketDataPredictor executed.", data.Sequence);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "#{Sequence} MarketDataPredictor error. Message={Message}", ex.Message, sequence);
+            _logger.LogError(ex, "#{Sequence} MarketDataPredictor error. Message={Message}", ex.Message, data.Sequence);
         }
+
+        return ValueTask.CompletedTask;
     }
 }

@@ -1,5 +1,4 @@
-﻿using Disruptor;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
@@ -21,7 +20,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
         _marketQuoteProvider = marketQuoteProvider;
     }
 
-    public void OnEvent(CandleReceivedEvent data, long sequence, bool endOfBatch)
+    public ValueTask OnEvent(CandleReceivedEvent data)
     {
         foreach (var prediction in data.Predictions)
         {
@@ -61,7 +60,9 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
             data.TradingSignals.Add(signal);
         }
 
-        _logger.LogInformation("#{Sequence} TradingSignalsGenerator executed. {SignalsCount} signals added.", sequence, data.TradingSignals.Count);
+        _logger.LogInformation("#{Sequence} TradingSignalsGenerator executed. {SignalsCount} signals added.", data.Sequence, data.TradingSignals.Count);
+
+        return ValueTask.CompletedTask;
     }
 
     private static Quote? GetMarketQuote(Candle? last)

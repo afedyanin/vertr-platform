@@ -1,5 +1,4 @@
-﻿using Disruptor;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
@@ -18,7 +17,7 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandleReceivedEve
         _logger = logger;
     }
 
-    public void OnEvent(CandleReceivedEvent data, long sequence, bool endOfBatch)
+    public ValueTask OnEvent(CandleReceivedEvent data)
     {
         foreach (var signal in data.TradingSignals)
         {
@@ -35,6 +34,7 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandleReceivedEve
             }
         }
 
-        _logger.LogInformation("#{Sequence} PortfolioPositionHandler executed. {SignalsCount} signals added.", sequence, data.TradingSignals.Count);
+        _logger.LogInformation("#{Sequence} PortfolioPositionHandler executed. {SignalsCount} signals added.", data.Sequence, data.TradingSignals.Count);
+        return ValueTask.CompletedTask;
     }
 }

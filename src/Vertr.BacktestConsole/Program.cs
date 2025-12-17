@@ -34,8 +34,6 @@ internal static class Program
         await RunBacktest(serviceProvider);
 
         Console.WriteLine("Execution completed.");
-
-        // TODO: Dump portfolios
     }
 
     public static async Task RunBacktest(IServiceProvider serviceProvider, int steps = 10)
@@ -50,7 +48,7 @@ internal static class Program
         var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
         var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
         var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
-        // var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
+        var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
 
         logger.LogInformation("Starting backtest Steps={Steps}.", steps);
 
@@ -59,8 +57,7 @@ internal static class Program
 
         var instruments = await tradingGateway.GetAllInstruments();
 
-        // Load Historic candles
-        await LoadCandles(SberId, candleRepository, tradingGateway);
+        await LoadHistoricCandles(SberId, candleRepository, tradingGateway);
 
         // Create Backtest candles
         var candles = RandomCandleGenerator.GetRandomCandles(
@@ -86,14 +83,17 @@ internal static class Program
 
                 var evt = new CandleReceivedEvent
                 {
+                    Sequence = seqNum,
                     Candle = candle,
                     Instrument = instrument,
                 };
-                step1.OnEvent(evt, seqNum, true);
-                step2.OnEvent(evt, seqNum, true);
-                step3.OnEvent(evt, seqNum, true);
 
-                logger.LogWarning($"#{seqNum}\t{evt.Dump()}");
+                await step1.OnEvent(evt);
+                await step2.OnEvent(evt);
+                await step3.OnEvent(evt);
+                await step4.OnEvent(evt);
+
+                logger.LogWarning(evt.Dump());
 
             }
             catch (Exception ex)
@@ -110,7 +110,7 @@ internal static class Program
         logger.LogInformation("Backtest completed.");
     }
 
-    private static async Task LoadCandles(Guid instrumentId, ICandlesLocalStorage candleRepository, ITradingGateway tradingGateway)
+    private static async Task LoadHistoricCandles(Guid instrumentId, ICandlesLocalStorage candleRepository, ITradingGateway tradingGateway)
     {
         if (candleRepository.GetCount(instrumentId) >= candleRepository.CandlesBufferLength)
         {

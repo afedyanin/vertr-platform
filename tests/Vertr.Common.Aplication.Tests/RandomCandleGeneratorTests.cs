@@ -14,7 +14,8 @@ public class RandomCandleGeneratorTests
 
         Assert.That(values.Length, Is.EqualTo(200));
 
-        Console.WriteLine(values.GetPriceStats());
+        var valuesString = string.Join("\n", values);
+        Console.WriteLine(valuesString);
     }
 
     [Test]
@@ -30,10 +31,6 @@ public class RandomCandleGeneratorTests
     {
         var time = DateTime.UtcNow;
         var candles = RandomCandleGenerator.GetRandomCandles(InstrumentId, time, 100.06m, TimeSpan.FromHours(1));
-
-        foreach (var candle in candles)
-        {
-            Console.WriteLine($"{candle}");
-        }
+        Console.WriteLine(candles.Dump());
     }
 }

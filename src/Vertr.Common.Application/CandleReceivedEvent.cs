@@ -2,9 +2,11 @@
 
 namespace Vertr.Common.Application;
 
-public record class CandlestickReceivedEvent
+public record class CandleReceivedEvent
 {
     public Candle? Candle { get; set; }
+
+    public Instrument? Instrument { get; set; }
 
     public PredictionSampleInfo PredictionSampleInfo { get; set; }
 

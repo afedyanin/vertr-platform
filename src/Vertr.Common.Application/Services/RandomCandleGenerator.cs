@@ -62,14 +62,12 @@ public static class RandomCandleGenerator
         return decimals;
     }
 
-    public static decimal GetNextValue(decimal valueToChange, double rangePercent = 0.05)
+    public static decimal GetNextValue(decimal valueToChange, double rangePercent = 0.005)
     {
         var percentChange = Random.Shared.NextDouble() * rangePercent;
-        var pos = Random.Shared.NextDouble() > 0.51;
         var change = Math.Round(valueToChange * (decimal)percentChange, 2);
-        change = pos ? change : -change;
-        valueToChange += change;
 
-        return valueToChange;
+        var sign = Random.Shared.Next(0, 2) > 0 ? 1 : -1;
+        return valueToChange + change * sign;
     }
 }

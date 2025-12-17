@@ -9,5 +9,5 @@ internal interface ITradingGateway
 
     public Task<Instrument[]> GetAllInstruments();
 
-    public Task<Candle[]> GetCandles(Guid instrumentId, [Query] long maxItems = -1);
+    public Task<Candle[]> GetCandles(Guid instrumentId, [Query] int maxItems = -1);
 }

@@ -4,7 +4,7 @@ using Vertr.Common.Application.Abstractions;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal sealed class OrderExecutionHandler : IAsyncBatchEventHandler<CandlestickReceivedEvent>
+internal sealed class OrderExecutionHandler : IAsyncBatchEventHandler<CandleReceivedEvent>
 {
     private readonly ILogger<OrderExecutionHandler> _logger;
 
@@ -18,7 +18,7 @@ internal sealed class OrderExecutionHandler : IAsyncBatchEventHandler<Candlestic
         _logger = logger;
     }
 
-    public async ValueTask OnBatch(EventBatch<CandlestickReceivedEvent> batch, long sequence)
+    public async ValueTask OnBatch(EventBatch<CandleReceivedEvent> batch, long sequence)
     {
         try
         {

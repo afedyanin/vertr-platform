@@ -5,7 +5,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.EventHandlers;
 
-internal sealed class PortfolioPositionHandler : IAsyncBatchEventHandler<CandlestickReceivedEvent>
+internal sealed class PortfolioPositionHandler : IAsyncBatchEventHandler<CandleReceivedEvent>
 {
     private readonly IPortfolioManager _portfolioManager;
     private readonly ILogger<PortfolioPositionHandler> _logger;
@@ -18,7 +18,7 @@ internal sealed class PortfolioPositionHandler : IAsyncBatchEventHandler<Candles
         _logger = logger;
     }
 
-    public async ValueTask OnBatch(EventBatch<CandlestickReceivedEvent> batch, long sequence)
+    public async ValueTask OnBatch(EventBatch<CandleReceivedEvent> batch, long sequence)
     {
         _logger.LogInformation("Start processing PortfolioPosition Sequence={Sequence}", sequence);
 

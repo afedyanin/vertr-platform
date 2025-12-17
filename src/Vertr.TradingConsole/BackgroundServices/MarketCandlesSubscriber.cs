@@ -11,7 +11,7 @@ namespace Vertr.TradingConsole.BackgroundServices;
 
 internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
-    private readonly Disruptor<CandlestickReceivedEvent> _disruptor;
+    private readonly Disruptor<CandleReceivedEvent> _disruptor;
     private readonly IPortfolioManager _portfolioManager;
     private readonly ICandlesLocalStorage _candleRepository;
 

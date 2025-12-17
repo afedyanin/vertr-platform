@@ -4,5 +4,7 @@ namespace Vertr.Common.Application.Abstractions;
 
 internal interface IPredictorGateway
 {
-    public Task<Prediction[]> Predict(string[] predictors, Candle[] candles);
+    public Task<Prediction[]> Predict(
+        string[] predictors,
+        Candle[] candles);
 }

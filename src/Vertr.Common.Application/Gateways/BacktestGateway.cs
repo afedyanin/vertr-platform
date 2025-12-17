@@ -1,5 +1,5 @@
-﻿using Refit;
-using Vertr.Common.Application.Abstractions;
+﻿using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.Gateways;
@@ -25,30 +25,18 @@ internal sealed class BacktestGateway : ITradingGateway
     public Task<Instrument[]> GetAllInstruments()
         => Task.FromResult(Instruments);
 
-    public Task<Candle[]> GetCandles(Guid instrumentId, [Query] long maxItems = -1)
+    public Task<Candle[]> GetCandles(Guid instrumentId, int maxItems = -1)
     {
-        var startTime = DateTime.UtcNow.AddHours(-3);
-        var maxCount = maxItems > 0 ? maxItems : 100;
+        // TODO: Load data from CSV
+        var count = maxItems < 0 ? 100 : maxItems;
+        var candles = RandomCandleGenerator.GetRandomCandles(
+            instrumentId,
+            DateTime.UtcNow.AddDays(-1),
+            100.0m,
+            TimeSpan.FromMinutes(1),
+            count);
 
-        var res = new List<Candle>();
-
-        for (var i = 0; i < maxCount; i++)
-        {
-            var candle = new Candle
-            (
-                InstrumentId: instrumentId,
-                TimeUtc: startTime.AddMinutes(i),
-                Open: 90.0m,
-                Close: 95.45m,
-                High: 101.14m,
-                Low: 89.89m,
-                Volume: 1234
-            );
-
-            res.Add(candle);
-        }
-
-        return Task.FromResult(res.ToArray());
+        return Task.FromResult(candles.ToArray());
     }
 
     public Task PostMarketOrder(MarketOrderRequest request)

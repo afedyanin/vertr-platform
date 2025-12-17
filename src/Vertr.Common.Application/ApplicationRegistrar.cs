@@ -62,10 +62,10 @@ public static class ApplicationRegistrar
         return services;
     }
 
-    public static Disruptor<CandlestickReceivedEvent> CreateCandlestickPipeline(IServiceProvider serviceProvider)
+    public static Disruptor<CandleReceivedEvent> CreateCandlestickPipeline(IServiceProvider serviceProvider)
     {
-        var disruptor = new Disruptor<CandlestickReceivedEvent>(
-            () => new CandlestickReceivedEvent(),
+        var disruptor = new Disruptor<CandleReceivedEvent>(
+            () => new CandleReceivedEvent(),
             ringBufferSize: 1024,
             taskScheduler: TaskScheduler.Default,
             producerType: ProducerType.Single,

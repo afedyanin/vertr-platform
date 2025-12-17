@@ -7,8 +7,6 @@ namespace Vertr.Common.Application.Gateways;
 
 internal sealed class BacktestGateway : ITradingGateway
 {
-    private readonly IPortfoliosLocalStorage _portfoliosLocalStorage;
-
     private static readonly Guid SberId = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
     private static readonly Guid RubId = new Guid("a92e2e25-a698-45cc-a781-167cf465257c");
 
@@ -38,9 +36,15 @@ internal sealed class BacktestGateway : ITradingGateway
         },
     ];
 
-    public BacktestGateway(IPortfoliosLocalStorage portfoliosLocalStorage)
+    private readonly IPortfoliosLocalStorage _portfoliosLocalStorage;
+    private readonly IMarketQuoteProvider _marketQuoteProvider;
+
+    public BacktestGateway(
+        IPortfoliosLocalStorage portfoliosLocalStorage,
+        IMarketQuoteProvider marketQuoteProvider)
     {
         _portfoliosLocalStorage = portfoliosLocalStorage;
+        _marketQuoteProvider = marketQuoteProvider;
     }
 
     public Task<Instrument[]> GetAllInstruments()
@@ -52,7 +56,7 @@ internal sealed class BacktestGateway : ITradingGateway
         var count = maxItems < 0 ? 100 : maxItems;
         var candles = RandomCandleGenerator.GetRandomCandles(
             instrumentId,
-            DateTime.UtcNow.AddDays(-1),
+            DateTime.UtcNow.AddDays(-10),
             100.0m,
             TimeSpan.FromMinutes(1),
             count);
@@ -66,10 +70,18 @@ internal sealed class BacktestGateway : ITradingGateway
 
         if (portfolio == null)
         {
-            throw new InvalidOperationException($"Cannot find portfolio for OrderRequest={request}");
+            throw new InvalidOperationException($"Cannot find portfolio by PortfolioId={request.PortfolioId}");
+        }
+
+        var marketQuote = _marketQuoteProvider.GetMarketQuote(request.InstrumentId);
+
+        if (marketQuote == null)
+        {
+            throw new InvalidOperationException($"Cannot get market quote by InstrumentId={request.InstrumentId}");
         }
 
         var lotSize = Instruments.GetLotSize(request.InstrumentId) ?? 1;
+
         var trades = new Trade[]
         {
             new Trade
@@ -77,10 +89,8 @@ internal sealed class BacktestGateway : ITradingGateway
                 TradeId = Guid.NewGuid().ToString(),
                 Currency = "rub",
                 Quantity = (long)(request.QuantityLots * lotSize),
-                
-                // TODO: Use quote provider
-                ExecutionTime = DateTime.UtcNow,
-                Price = 200m,
+                ExecutionTime = marketQuote.Value.Time,
+                Price = marketQuote.Value.Mid,
             }
         };
 

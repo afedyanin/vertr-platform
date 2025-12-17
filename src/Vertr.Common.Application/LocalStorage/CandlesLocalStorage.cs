@@ -3,9 +3,9 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.LocalStorage;
 
-internal sealed class CandlesLocalStorage : ICandlesLocalStorage
+internal sealed class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuoteProvider
 {
-    private readonly Dictionary<Guid, SortedList<DateTime, Candle>> _candles = new Dictionary<Guid, SortedList<DateTime, Candle>>();
+    private readonly Dictionary<Guid, SortedList<DateTime, Candle>> _candles = [];
 
     public int CandlesBufferLength { get; set; } = 100;
 
@@ -38,4 +38,39 @@ internal sealed class CandlesLocalStorage : ICandlesLocalStorage
 
     public Candle[] Get(Guid instrumentId)
         => _candles.TryGetValue(instrumentId, out var candleList) ? [.. candleList.Values] : [];
+
+    public Quote? GetMarketQuote(Guid instrumentId)
+    {
+        var candles = Get(instrumentId);
+
+        if (candles == null)
+        {
+            return null;
+        }
+
+        return GetMarketQuote(candles.Last());
+    }
+
+    private static Quote? GetMarketQuote(Candle? last)
+    {
+        if (last == null)
+        {
+            return null;
+        }
+
+        var prices = new decimal[]
+        {
+            last.Open,
+            last.Close,
+            last.High,
+            last.Low
+        };
+
+        return new Quote
+        {
+            Time = last.TimeUtc,
+            Bid = prices.Min(),
+            Ask = prices.Max()
+        };
+    }
 }

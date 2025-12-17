@@ -39,7 +39,7 @@ public static class CandleReceivedEventExtensions
         => info == default ? string.Empty : $"F={info.From:s} T={info.To:s} C={info.Count} PMean={info.ClosePriceStats.Mean:N} PStdev={info.ClosePriceStats.StdDev:N}";
 
     internal static string Dump(this Quote? quote)
-        => quote == null ? string.Empty : $"B={quote.Value.Bid:N} A={quote.Value.Ask:N}";
+        => quote == null ? string.Empty : $"B={quote.Value.Bid:N} A={quote.Value.Ask:N} M={quote.Value.Mid:N} T={quote.Value.Time:s}";
 
     internal static string Dump(this Prediction prediction)
         => $"{prediction.Predictor}:{prediction.Price:N}";

@@ -9,12 +9,12 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
     private const int ThresholdSigma = 1;
     private const double DefaultThreshold = 0.001;
 
-    private readonly IMarketQuoteProvider? _marketQuoteProvider;
+    private readonly IMarketQuoteProvider _marketQuoteProvider;
     private readonly ILogger<TradingSignalsGenerator> _logger;
 
     public TradingSignalsGenerator(
         ILogger<TradingSignalsGenerator> logger,
-        IMarketQuoteProvider? marketQuoteProvider = null)
+        IMarketQuoteProvider marketQuoteProvider)
     {
         _logger = logger;
         _marketQuoteProvider = marketQuoteProvider;
@@ -30,7 +30,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
                 continue;
             }
 
-            data.MarketQuote = _marketQuoteProvider?.GetMarketQuote(data.Instrument!.Id) ?? GetMarketQuote(data.Candle);
+            data.MarketQuote = _marketQuoteProvider.GetMarketQuote(data.Instrument!.Id);
 
             if (data.MarketQuote == null)
             {
@@ -63,28 +63,6 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
         _logger.LogInformation("#{Sequence} TradingSignalsGenerator executed. {SignalsCount} signals added.", data.Sequence, data.TradingSignals.Count);
 
         return ValueTask.CompletedTask;
-    }
-
-    private static Quote? GetMarketQuote(Candle? last)
-    {
-        if (last == null)
-        {
-            return null;
-        }
-
-        var prices = new decimal[]
-        {
-            last.Open,
-            last.Close,
-            last.High,
-            last.Low
-        };
-
-        return new Quote
-        {
-            Bid = prices.Min(),
-            Ask = prices.Max()
-        };
     }
 
     // TODO: Test it

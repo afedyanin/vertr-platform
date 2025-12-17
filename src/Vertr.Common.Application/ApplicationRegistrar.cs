@@ -31,16 +31,9 @@ public static class ApplicationRegistrar
         return services;
     }
 
-    public static IServiceCollection AddOrderBookQuoteProvider(this IServiceCollection services)
-    {
-        services.AddSingleton<OrderBooksLocalStorage>();
-        services.AddSingleton<IOrderBooksLocalStorage>(sp => sp.GetRequiredService<OrderBooksLocalStorage>());
-        services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<OrderBooksLocalStorage>());
-        return services;
-    }
-
     public static IServiceCollection AddTinvestGateway(this IServiceCollection services, string baseAddress)
     {
+        services.AddOrderBookQuoteProvider();
         services.AddSingleton<ITradingGateway, TinvestGateway>();
 
         services
@@ -53,10 +46,20 @@ public static class ApplicationRegistrar
 
         return services;
     }
+    private static IServiceCollection AddOrderBookQuoteProvider(this IServiceCollection services)
+    {
+        services.AddSingleton<OrderBooksLocalStorage>();
+        services.AddSingleton<IOrderBooksLocalStorage>(sp => sp.GetRequiredService<OrderBooksLocalStorage>());
+        services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<OrderBooksLocalStorage>());
+        return services;
+    }
+
 
     public static IServiceCollection AddBacktestGateway(this IServiceCollection services)
     {
         services.AddSingleton<ITradingGateway, BacktestGateway>();
+        services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<CandlesLocalStorage>());
+
         return services;
     }
 }

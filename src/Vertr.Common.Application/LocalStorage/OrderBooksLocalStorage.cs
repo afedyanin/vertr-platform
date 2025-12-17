@@ -27,6 +27,7 @@ internal sealed class OrderBooksLocalStorage : IOrderBooksLocalStorage, IMarketQ
 
         return new Quote
         {
+            Time = orderBook.UpdatedAt,
             Bid = orderBook.Bids.Max(b => b.Price),
             Ask = orderBook.Asks.Min(a => a.Price),
         };

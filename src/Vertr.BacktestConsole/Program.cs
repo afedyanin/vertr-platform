@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -37,33 +38,25 @@ internal static class Program
 
         var tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
         var instruments = await tradingGateway.GetAllInstruments();
-        var sber = instruments.Single(x => x.Id == SberId);
-
         var portfolioRepo = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
 
         logger.LogInformation($"Init Random Walk portfolio...");
         portfolioRepo.Init(["RandomWalk"]);
 
-        await RunBacktest(serviceProvider, sber, logger);
+        await RunBacktest(serviceProvider, instruments, logger, steps: 1000);
 
-        //var portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
-        //await portfolioManager.CloseAllPositions();
+        var portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
+        await portfolioManager.CloseAllPositions();
 
-        var portfolios = portfolioRepo.GetAll();
-
-        foreach (var kvp in portfolios)
-        {
-            logger.LogWarning(kvp.Value.Dump(kvp.Key, instruments));
-        }
-
+        logger.LogWarning(DumpPortfolios(portfolioRepo, instruments));
         logger.LogInformation("Execution completed.");
 
-        await Task.Delay(2000);
+        await Task.Delay(100);
     }
 
     public static async Task RunBacktest(
         IServiceProvider serviceProvider,
-        Instrument instrument,
+        Instrument[] instruments,
         ILogger logger,
         int steps = 10)
     {
@@ -71,6 +64,7 @@ internal static class Program
 
         var candleRepository = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
         var tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
+        var portfolioRepo = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
 
         var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
         var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
@@ -82,7 +76,7 @@ internal static class Program
         // Create Backtest candles
         var candles = RandomCandleGenerator.GetRandomCandles(
             SberId,
-            DateTime.UtcNow.AddHours(-3),
+            DateTime.UtcNow.AddHours(-30),
             100.0m,
             TimeSpan.FromMinutes(1),
             steps);
@@ -90,8 +84,9 @@ internal static class Program
         var historicCandles = candleRepository.Get(SberId);
         Debug.Assert(historicCandles.Last().TimeUtc < candles.First().TimeUtc, "Candles time mismatch.");
 
-
+        var sber = instruments.Single(x => x.Id == SberId);
         var seqNum = 0;
+
         foreach (var candle in candles)
         {
             seqNum++;
@@ -104,7 +99,7 @@ internal static class Program
                 {
                     Sequence = seqNum,
                     Candle = candle,
-                    Instrument = instrument,
+                    Instrument = sber,
                 };
 
                 await step1.OnEvent(evt);
@@ -112,8 +107,8 @@ internal static class Program
                 await step3.OnEvent(evt);
                 await step4.OnEvent(evt);
 
-                logger.LogWarning(evt.Dump());
-
+                //logger.LogWarning(evt.Dump());
+                //logger.LogWarning(DumpPortfolios(portfolioRepo, instruments));
             }
             catch (Exception ex)
             {
@@ -134,5 +129,21 @@ internal static class Program
 
         var historicCandles = await tradingGateway.GetCandles(instrumentId, candleRepository.CandlesBufferLength);
         candleRepository.Load(historicCandles);
+    }
+
+    private static string DumpPortfolios(
+        IPortfoliosLocalStorage portfoliosLocalStorage,
+        Instrument[] instruments)
+    {
+        var portfolios = portfoliosLocalStorage.GetAll();
+
+        var sb = new StringBuilder();
+
+        foreach (var kvp in portfolios)
+        {
+            sb.AppendLine(kvp.Value.Dump(kvp.Key, instruments));
+        }
+
+        return sb.ToString();
     }
 }

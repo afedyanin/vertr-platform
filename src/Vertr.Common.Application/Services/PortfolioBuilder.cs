@@ -67,7 +67,6 @@ public class PortfolioBuilder
     private void ApplyTrade(Trade trade, Guid instrumentId, TradingDirection direction)
     {
         var qtySign = direction == TradingDirection.Sell ? -1 : 1;
-        var price = trade.Price;
 
         _instrumentsByTicker.TryGetValue(trade.Currency, out var currencyInstrument);
         var currencyId = currencyInstrument?.Id ?? Guid.Empty;
@@ -75,16 +74,18 @@ public class PortfolioBuilder
         _positions.TryGetValue(instrumentId, out var positionEntry);
         _positions.TryGetValue(currencyId, out var moneyPositionEntry);
 
+        // Asset
         _positions[instrumentId] = new Position
         {
             InstrumentId = instrumentId,
             Amount = positionEntry.Amount + trade.Quantity * qtySign
         };
 
+        // Money: reverse amount
         _positions[currencyId] = new Position
         {
             InstrumentId = currencyId,
-            Amount = moneyPositionEntry.Amount + price * trade.Quantity * qtySign * (-1)
+            Amount = moneyPositionEntry.Amount + trade.Price * trade.Quantity * qtySign * (-1)
         };
     }
 

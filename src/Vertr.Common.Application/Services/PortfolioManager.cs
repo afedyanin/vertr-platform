@@ -92,14 +92,13 @@ internal sealed class PortfolioManager : IPortfolioManager
 
     public async Task CloseAllPositions()
     {
-
         var portfolios = _portfolioRepository.GetAll();
 
         var tasks = new List<Task>();
 
-        foreach (var portfolio in portfolios)
+        foreach (var kvp in portfolios)
         {
-            foreach (var position in portfolio.Positions)
+            foreach (var position in kvp.Value.Positions)
             {
                 if (position.Amount == decimal.Zero)
                 {
@@ -128,9 +127,9 @@ internal sealed class PortfolioManager : IPortfolioManager
                 var closeRequest = new MarketOrderRequest
                 {
                     RequestId = Guid.NewGuid(),
-                    Predictor = portfolio.Predictor ?? string.Empty,
+                    Predictor = kvp.Key,
                     InstrumentId = position.InstrumentId,
-                    PortfolioId = portfolio.Id,
+                    PortfolioId = kvp.Value.Id,
                     QuantityLots = positionQtyLots * (-1),
                 };
 

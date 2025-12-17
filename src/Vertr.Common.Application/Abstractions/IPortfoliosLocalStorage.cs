@@ -5,7 +5,7 @@ namespace Vertr.Common.Application.Abstractions;
 
 public interface IPortfoliosLocalStorage
 {
-    public Portfolio[] GetAll();
+    public ReadOnlyDictionary<string, Portfolio> GetAll();
 
     public Portfolio? GetById(Guid portfolioId);
 
@@ -14,6 +14,4 @@ public interface IPortfoliosLocalStorage
     public void Update(Portfolio portfolio);
 
     public void Init(string[] precitors);
-
-    public ReadOnlyDictionary<string, Guid> GetPredictors();
 }

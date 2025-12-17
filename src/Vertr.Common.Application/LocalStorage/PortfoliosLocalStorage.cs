@@ -9,11 +9,6 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
     private readonly Dictionary<string, Guid> _predictors = [];
     private readonly Dictionary<Guid, Portfolio> _portfolios = [];
 
-    public Portfolio[] GetAll()
-    {
-        return [.. _portfolios.Values];
-    }
-
     public Portfolio? GetById(Guid portfolioId)
     {
         _portfolios.TryGetValue(portfolioId, out var portfolio);
@@ -32,8 +27,22 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
         return portfolio;
     }
 
-    public ReadOnlyDictionary<string, Guid> GetPredictors()
-        => _predictors.AsReadOnly();
+    public ReadOnlyDictionary<string, Portfolio> GetAll()
+    {
+        var res = new Dictionary<string, Portfolio>();
+
+        foreach (var kvp in _predictors)
+        {
+            _portfolios.TryGetValue(kvp.Value, out var pfolio);
+
+            if (pfolio != null)
+            {
+                res[kvp.Key] = pfolio;
+            }
+        }
+
+        return res.AsReadOnly();
+    }
 
     public void Init(string[] precitors)
     {
@@ -42,7 +51,6 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
             var portfolio = new Portfolio
             {
                 Id = Guid.NewGuid(),
-                Predictor = precitor,
                 UpdatedAt = DateTime.UtcNow,
             };
 

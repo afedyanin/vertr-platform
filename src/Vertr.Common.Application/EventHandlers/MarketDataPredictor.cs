@@ -24,7 +24,7 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
         _logger = logger;
     }
 
-    public ValueTask OnEvent(CandleReceivedEvent data)
+    public async ValueTask OnEvent(CandleReceivedEvent data)
     {
         var instrumentId = data.Instrument!.Id;
         var candles = _candleRepository.Get(instrumentId);
@@ -32,10 +32,8 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
         if (candles.Length <= 0)
         {
             _logger.LogWarning("#{Sequence} MarketDataPredictor has no candles to prediction.", data.Sequence);
-            return ValueTask.CompletedTask;
+            return;
         }
-
-        var predictors = _portfolioRepository.GetPredictors().Keys;
 
         data.PredictionSampleInfo = new PredictionSampleInfo
         {
@@ -45,7 +43,8 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
             ClosePriceStats = candles.Select(c => c.Close).GetPriceStats()
         };
 
-        var predictions = _predictorClient.Predict([.. predictors], candles).GetAwaiter().GetResult();
+        var predictors = _portfolioRepository.GetAll().Keys;
+        var predictions = await _predictorClient.Predict([.. predictors], candles);
 
         foreach (var prediction in predictions)
         {
@@ -53,7 +52,5 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
         }
 
         _logger.LogDebug("#{Sequence} MarketDataPredictor executed.", data.Sequence);
-
-        return ValueTask.CompletedTask;
     }
 }

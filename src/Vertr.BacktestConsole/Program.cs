@@ -7,6 +7,7 @@ using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.EventHandlers;
 using Vertr.Common.Application.Extensions;
 using Vertr.Common.Application.Services;
+using Vertr.Common.Contracts;
 
 namespace Vertr.BacktestConsole;
 
@@ -31,31 +32,48 @@ internal static class Program
 
         var serviceProvider = services.BuildServiceProvider();
 
-        await RunBacktest(serviceProvider);
-
-        Console.WriteLine("Execution completed.");
-    }
-
-    public static async Task RunBacktest(IServiceProvider serviceProvider, int steps = 10)
-    {
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger(nameof(RunBacktest));
 
+        var tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
+        var instruments = await tradingGateway.GetAllInstruments();
+        var sber = instruments.Single(x => x.Id == SberId);
+
+        var portfolioRepo = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
+
+        logger.LogInformation($"Init Random Walk portfolio...");
+        portfolioRepo.Init(["RandomWalk"]);
+
+        await RunBacktest(serviceProvider, sber, logger);
+
+        //var portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
+        //await portfolioManager.CloseAllPositions();
+
+        var portfolios = portfolioRepo.GetAll();
+
+        foreach (var kvp in portfolios)
+        {
+            logger.LogWarning(kvp.Value.Dump(kvp.Key, instruments));
+        }
+
+        logger.LogInformation("Execution completed.");
+    }
+
+    public static async Task RunBacktest(
+        IServiceProvider serviceProvider,
+        Instrument instrument,
+        ILogger logger,
+        int steps = 10)
+    {
+        logger.LogInformation("Starting backtest Steps={Steps}.", steps);
+
         var candleRepository = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
-        var portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         var tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
 
         var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
         var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
         var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
         var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
-
-        logger.LogInformation("Starting backtest Steps={Steps}.", steps);
-
-        logger.LogInformation($"Init Random Walk portfolio...");
-        portfolioRepository.Init(["RandomWalk"]);
-
-        var instruments = await tradingGateway.GetAllInstruments();
 
         await LoadHistoricCandles(SberId, candleRepository, tradingGateway);
 
@@ -70,7 +88,6 @@ internal static class Program
         var historicCandles = candleRepository.Get(SberId);
         Debug.Assert(historicCandles.Last().TimeUtc < candles.First().TimeUtc, "Candles time mismatch.");
 
-        var instrument = instruments.Single(x => x.Id == SberId);
 
         var seqNum = 0;
         foreach (var candle in candles)
@@ -103,10 +120,6 @@ internal static class Program
         }
 
         Debug.Assert(seqNum == steps);
-
-        var portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
-        await portfolioManager.CloseAllPositions();
-
         logger.LogInformation("Backtest completed.");
     }
 

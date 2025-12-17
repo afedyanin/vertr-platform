@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -44,9 +43,7 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
 
     protected override ValueTask OnBeforeStop()
     {
-        var dict = _portfolioRepository.GetPredictors();
-        var json = JsonSerializer.Serialize(dict, JsonOptions.DefaultOptions);
-        Logger.LogInformation("Predictor Portfolios: {Dict}", json);
+        // TODO: Dump portfolios
 
         return base.OnBeforeStop();
     }

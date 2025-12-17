@@ -24,8 +24,8 @@ internal sealed class MarketDataPredictor : IEventHandler<CandlestickReceivedEve
         IPortfoliosLocalStorage portfolioRepository,
         ITradingGateway gatewayClient,
         IPredictorGateway predictorClient,
-        IMarketQuoteProvider? marketQuoteProvider,
-        ILogger<MarketDataPredictor> logger)
+        ILogger<MarketDataPredictor> logger,
+        IMarketQuoteProvider? marketQuoteProvider = null)
     {
         _candleRepository = candleRepository;
         _portfolioRepository = portfolioRepository;

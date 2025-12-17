@@ -47,7 +47,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandlestickReceive
             data.TradingSignals.Add(signal);
         }
 
-        _logger.LogInformation("#{Sequence} TradingSignalsGenerator executed.", sequence);
+        _logger.LogInformation("#{Sequence} TradingSignalsGenerator executed. {SignalsCount} signals added.", sequence, data.TradingSignals.Count);
     }
 
     // TODO: Test it

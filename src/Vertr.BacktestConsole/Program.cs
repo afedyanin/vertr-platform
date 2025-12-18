@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Application.EventHandlers;
 using Vertr.Common.Application.Extensions;
 using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
@@ -65,11 +64,7 @@ internal static class Program
         var candleRepository = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
         var tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
         var portfolioRepo = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
-
-        var step1 = serviceProvider.GetRequiredService<MarketDataPredictor>();
-        var step2 = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
-        var step3 = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
-        var step4 = serviceProvider.GetRequiredService<OrderExecutionHandler>();
+        var pipeline = ApplicationRegistrar.CreateCandleReceivedPipeline(serviceProvider);
 
         await LoadHistoricCandles(SberId, candleRepository, tradingGateway);
 
@@ -102,10 +97,10 @@ internal static class Program
                     Instrument = sber,
                 };
 
-                await step1.OnEvent(evt);
-                await step2.OnEvent(evt);
-                await step3.OnEvent(evt);
-                await step4.OnEvent(evt);
+                foreach (var handler in pipeline)
+                {
+                    await handler.OnEvent(evt);
+                }
 
                 //logger.LogWarning(evt.Dump());
                 //logger.LogWarning(DumpPortfolios(portfolioRepo, instruments));

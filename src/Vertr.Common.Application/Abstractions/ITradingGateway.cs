@@ -3,7 +3,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.Abstractions;
 
-internal interface ITradingGateway
+public interface ITradingGateway
 {
     public Task PostMarketOrder(MarketOrderRequest request);
 

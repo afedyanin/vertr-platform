@@ -31,6 +31,17 @@ public static class ApplicationRegistrar
         return services;
     }
 
+    public static IEventHandler<CandleReceivedEvent>[] CreateCandleReceivedPipeline(IServiceProvider serviceProvider)
+    {
+        var pipeline = new IEventHandler<CandleReceivedEvent>[4];
+        pipeline[0] = serviceProvider.GetRequiredService<MarketDataPredictor>();
+        pipeline[1] = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
+        pipeline[2] = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
+        pipeline[3] = serviceProvider.GetRequiredService<OrderExecutionHandler>();
+
+        return pipeline;
+    }
+
     public static IServiceCollection AddTinvestGateway(this IServiceCollection services, string baseAddress)
     {
         services.AddOrderBookQuoteProvider();

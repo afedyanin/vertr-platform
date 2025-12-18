@@ -78,6 +78,8 @@ public class MarketDataStreamService : StreamServiceBase
                 var savedCountByDay = await candlestickRepository.Save(sub.InstrumentId, candlesByDay, sub.MaxCount, publish: false);
                 totalSavedCandles += savedCountByDay;
 
+                Logger.LogInformation("Historic candles loaded for InstrumentId={InstrumentId} Total={Total}", sub.InstrumentId, totalSavedCandles);
+
                 if (sub.MaxCount <= 0 || totalSavedCandles >= sub.MaxCount)
                 {
                     break;
@@ -85,7 +87,6 @@ public class MarketDataStreamService : StreamServiceBase
             }
         }
     }
-
 
     protected override async Task Subscribe(
         ILogger logger,
@@ -116,7 +117,7 @@ public class MarketDataStreamService : StreamServiceBase
                 continue;
             }
 
-            logger.LogInformation($"Adding candle subscription: InstrumentId={sub.InstrumentId} Interval={sub.Interval}");
+            logger.LogInformation("Adding candle subscription: InstrumentId={InstrumentId} Interval={Interval}", sub.InstrumentId, sub.Interval);
 
             candleRequest.Instruments.Add(new Tinkoff.InvestApi.V1.CandleInstrument()
             {
@@ -148,7 +149,7 @@ public class MarketDataStreamService : StreamServiceBase
                 _candleLimits.TryGetValue(instrumentId, out var maxCount);
                 var candle = response.Candle.ToCandlestick();
                 await candlestickRepository.Save(instrumentId, [candle], maxCount);
-                logger.LogInformation($"Candle subscriptions received: candle={candle}");
+                logger.LogInformation("Candle subscriptions received: candle={Candle}", candle);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeCandlesResponse)
             {
@@ -160,13 +161,13 @@ public class MarketDataStreamService : StreamServiceBase
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Ping)
             {
-                logger.LogDebug($"Candle ping received: {response.Ping}");
+                logger.LogDebug("Candle ping received: {Ping}", response.Ping);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Orderbook)
             {
                 var ob = response.Orderbook.Convert();
                 await orderBookRepository.Save(ob);
-                logger.LogInformation($"Order book received: {ob}");
+                logger.LogDebug("Order book received: {OrderBook}", ob);
             }
             else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeOrderBookResponse)
             {

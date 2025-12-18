@@ -52,8 +52,6 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
             return;
         }
 
-        _candleRepository.Update(candle);
-
         if (!_candlesChannel.Writer.TryWrite(candle))
         {
             Logger.LogError("Cannot write candle to channel Candle={Candle}", candle);
@@ -67,6 +65,9 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         {
             try
             {
+                await LoadHistoricCandlesIfReq(candle.InstrumentId);
+                _candleRepository.Update(candle);
+
                 var evt = new CandleReceivedEvent
                 {
                     Sequence = _sequence++,
@@ -94,6 +95,18 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _channelConsumerTask = ConsumeChannelAsync(_tokenSource.Token);
     }
+
+    private async ValueTask LoadHistoricCandlesIfReq(Guid instrumentId)
+    {
+        if (_candleRepository.GetCount(instrumentId) >= _candleRepository.CandlesBufferLength)
+        {
+            return;
+        }
+
+        var historicCandles = await _tradingGateway.GetCandles(instrumentId, _candleRepository.CandlesBufferLength);
+        _candleRepository.Load(historicCandles);
+    }
+
 
     public override void Dispose()
     {

@@ -88,24 +88,11 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         }
     }
 
-    protected override async ValueTask OnBeforeStart()
+    protected override async ValueTask OnBeforeStart(CancellationToken cancellationToken)
     {
         _instruments = await _tradingGateway.GetAllInstruments();
-        _tokenSource = new CancellationTokenSource();
+        _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _channelConsumerTask = ConsumeChannelAsync(_tokenSource.Token);
-    }
-
-    protected override async ValueTask OnBeforeStop()
-    {
-        // TODO: Use settings
-        await _portfolioManager.CloseAllPositions();
-
-        if (_tokenSource != null)
-        {
-            await _tokenSource.CancelAsync();
-        }
-
-        await base.OnBeforeStop();
     }
 
     public override void Dispose()

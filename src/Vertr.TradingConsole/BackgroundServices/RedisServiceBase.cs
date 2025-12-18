@@ -41,7 +41,7 @@ internal abstract class RedisServiceBase : BackgroundService
                 return;
             }
 
-            await OnBeforeStart();
+            await OnBeforeStart(stoppingToken);
             _subscriber = Redis.GetSubscriber();
             await _subscriber.SubscribeAsync(RedisChannel, (channel, message) =>
             {
@@ -66,7 +66,7 @@ internal abstract class RedisServiceBase : BackgroundService
 
     public abstract void HandleSubscription(RedisChannel channel, RedisValue message);
 
-    protected virtual ValueTask OnBeforeStart()
+    protected virtual ValueTask OnBeforeStart(CancellationToken cancellationToken)
     {
         return ValueTask.CompletedTask;
     }

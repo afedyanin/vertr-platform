@@ -3,7 +3,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.Extensions;
 
-internal static class PortfolioExtensions
+public static class PortfolioExtensions
 {
     public static string Dump(this Portfolio porftolio, string name, Instrument[] instruments)
     {

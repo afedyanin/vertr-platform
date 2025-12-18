@@ -6,6 +6,7 @@ using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 using Vertr.Common.Application.Extensions;
 using static StackExchange.Redis.RedisChannel;
+using System.Threading.Channels;
 
 namespace Vertr.TradingConsole.BackgroundServices;
 
@@ -15,6 +16,10 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     private readonly ICandlesLocalStorage _candleRepository;
     private readonly ITradingGateway _tradingGateway;
     private readonly IEventHandler<CandleReceivedEvent>[] _pipeline;
+
+    private readonly Channel<Candle> _candlesChannel;
+    private Task? _channelConsumerTask;
+    private CancellationTokenSource? _tokenSource;
 
     private Instrument[] _instruments = [];
     private long _sequence;
@@ -32,6 +37,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
         _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
         _pipeline = ApplicationRegistrar.CreateCandleReceivedPipeline(serviceProvider);
         _sequence = 0L;
+        _candlesChannel = Channel.CreateUnbounded<Candle>();
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)
@@ -48,28 +54,64 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
 
         _candleRepository.Update(candle);
 
-        var evt = new CandleReceivedEvent
+        if (!_candlesChannel.Writer.TryWrite(candle))
         {
-            Sequence = _sequence++,
-            Candle = candle,
-            Instrument = _instruments.GetById(candle.InstrumentId)!,
-        };
+            Logger.LogError("Cannot write candle to channel Candle={Candle}", candle);
+            return;
+        }
+    }
 
-        foreach (var handler in _pipeline)
+    public async Task ConsumeChannelAsync(CancellationToken cancellationToken = default)
+    {
+        await foreach (var candle in _candlesChannel.Reader.ReadAllAsync(cancellationToken))
         {
-            await handler.OnEvent(evt);
+            try
+            {
+                var evt = new CandleReceivedEvent
+                {
+                    Sequence = _sequence++,
+                    Candle = candle,
+                    Instrument = _instruments.GetById(candle.InstrumentId)!,
+                };
+
+                foreach (var handler in _pipeline)
+                {
+                    await handler.OnEvent(evt);
+                }
+
+                Logger.LogWarning(evt.Dump());
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Candles Channel comnsumer error. Message={Message}", ex.Message);
+            }
         }
     }
 
     protected override async ValueTask OnBeforeStart()
     {
         _instruments = await _tradingGateway.GetAllInstruments();
+        _tokenSource = new CancellationTokenSource();
+        _channelConsumerTask = ConsumeChannelAsync(_tokenSource.Token);
     }
 
     protected override async ValueTask OnBeforeStop()
     {
         // TODO: Use settings
         await _portfolioManager.CloseAllPositions();
+
+        if (_tokenSource != null)
+        {
+            await _tokenSource.CancelAsync();
+        }
+
         await base.OnBeforeStop();
+    }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        _tokenSource?.Dispose();
+        _channelConsumerTask?.Dispose();
     }
 }

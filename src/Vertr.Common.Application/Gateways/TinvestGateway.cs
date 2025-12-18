@@ -31,7 +31,7 @@ public interface ITinvestGatewayClient
     [Get("/api/instruments/all")]
     public Task<Instrument[]> GetAllInstruments();
 
-    [Get("api/candles/{instrumentId}")]
+    [Get("/api/candles/{instrumentId}")]
     public Task<Candle[]> GetCandles(Guid instrumentId, [Query] int maxItems = -1);
 }
 

@@ -42,7 +42,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
         _sequence = 0L;
     }
 
-    public virtual void Handle(Candle candle)
+    public void Handle(Candle candle)
     {
         if (!_candlesChannel.Writer.TryWrite(candle))
         {
@@ -51,23 +51,23 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
         }
     }
 
-    public virtual async ValueTask OnBeforeStart(CancellationToken cancellationToken = default)
+    public async Task OnBeforeStart(CancellationToken cancellationToken = default)
     {
         _instruments = await _tradingGateway.GetAllInstruments();
         _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         _channelConsumerTask = ConsumeChannelAsync(_tokenSource.Token);
     }
 
-    public virtual async ValueTask OnBeforeStop()
+    public async Task OnBeforeStop(bool verbose = false)
     {
         _logger.LogWarning("Closing portfolios...");
         await _portfolioManager.CloseAllPositions();
 
-        var dump = await DumpPortfolios();
+        var dump = await DumpPortfolios(verbose);
         _logger.LogWarning(dump);
     }
 
-    protected virtual async Task ConsumeChannelAsync(CancellationToken cancellationToken = default)
+    private async Task ConsumeChannelAsync(CancellationToken cancellationToken = default)
     {
         await foreach (var candle in _candlesChannel.Reader.ReadAllAsync(cancellationToken))
         {
@@ -88,7 +88,11 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
                     await handler.OnEvent(evt);
                 }
 
-                _logger.LogWarning(evt.Dump());
+                _logger.LogInformation(evt.Dump());
+
+                var dump = await DumpPortfolios(true);
+                _logger.LogWarning(dump);
+
             }
             catch (Exception ex)
             {
@@ -119,7 +123,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
         return pipeline;
     }
 
-    private async Task<string> DumpPortfolios()
+    private async Task<string> DumpPortfolios(bool verbose = false)
     {
         var portfolios = _portfoliosLocalStorage.GetAll();
 
@@ -127,7 +131,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
 
         foreach (var kvp in portfolios)
         {
-            sb.AppendLine(kvp.Value.Dump(kvp.Key, _instruments, verbose: false));
+            sb.AppendLine(kvp.Value.Dump(kvp.Key, _instruments, verbose));
         }
 
         return sb.ToString();

@@ -33,10 +33,10 @@ internal static class Program
 
         logger.LogInformation($"Init Random Walk portfolio...");
         portfolioRepo.Init(["RandomWalk"]);
-        await RunBacktest(serviceProvider, logger, steps: 1000);
+        await RunBacktest(serviceProvider, logger, steps: 10);
         logger.LogInformation("Execution completed.");
 
-        await Task.Delay(100);
+        await Task.Delay(1000);
     }
 
     public static async Task RunBacktest(
@@ -63,7 +63,7 @@ internal static class Program
             pipeline.Handle(candle);
         }
 
-        await pipeline.OnBeforeStop();
+        await pipeline.OnBeforeStop(true);
 
         logger.LogInformation("Backtest completed.");
     }

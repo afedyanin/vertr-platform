@@ -17,6 +17,7 @@ public static class ApplicationRegistrar
         services.AddSingleton<TradingSignalsGenerator>();
         services.AddSingleton<PortfolioPositionHandler>();
         services.AddSingleton<OrderExecutionHandler>();
+        services.AddSingleton<ICandleProcessingPipeline, CandleProcessingPipeline>();
 
         services.AddSingleton<IPortfoliosLocalStorage, PortfoliosLocalStorage>();
         services.AddSingleton<IInstrumentsLocalStorage, InstrumentsLocalStorage>();
@@ -28,12 +29,6 @@ public static class ApplicationRegistrar
         // TODO: Implement this
         services.AddSingleton<IPredictorGateway, PredictorGatewayStub>();
 
-        return services;
-    }
-
-    public static IServiceCollection AddCandleProcessingPipeline(this IServiceCollection services)
-    {
-        services.AddSingleton<ICandleProcessingPipeline, CandleProcessingPipeline>();
         return services;
     }
 

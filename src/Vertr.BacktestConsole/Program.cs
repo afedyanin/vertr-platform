@@ -35,8 +35,7 @@ internal static class Program
         logger.LogInformation($"Init Random Walk portfolio...");
         portfolioRepo.Init(["RandomWalk"]);
 
-        var steps = 10000;
-
+        var steps = 10;
         var candles = RandomCandleGenerator.GetRandomCandles(
             SberId,
             DateTime.UtcNow.AddHours(-30),
@@ -48,7 +47,7 @@ internal static class Program
         await RunBacktest(candles, serviceProvider);
         logger.LogInformation("Execution completed.");
 
-        await Task.Delay(1000);
+        await Task.Delay(2000);
     }
 
     public static async Task RunBacktest(IEnumerable<Candle> candles, IServiceProvider serviceProvider)

@@ -30,6 +30,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline
         _candlesLocalStorage = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
         _portfoliosLocalStorage = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
+
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         _logger = loggerFactory.CreateLogger<CandleProcessingPipeline>();
 
@@ -67,6 +68,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline
                 try
                 {
                     await LoadHistoricCandlesIfReq(candle.InstrumentId);
+
                     _candlesLocalStorage.Update(candle);
 
                     var evt = new CandleReceivedEvent
@@ -85,8 +87,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline
 
                     if (dumpPortfolios)
                     {
-                        var dump = await DumpPortfolios();
-                        _logger.LogInformation(dump);
+                        _logger.LogInformation(DumpPortfolios());
                     }
                 }
                 catch (Exception ex)
@@ -100,8 +101,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline
             _logger.LogWarning("Closing portfolios...");
             await _portfolioManager.CloseAllPositions();
 
-            var dump = await DumpPortfolios();
-            _logger.LogWarning(dump);
+            _logger.LogWarning(DumpPortfolios());
         }
     }
 
@@ -127,7 +127,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline
         return pipeline;
     }
 
-    private async Task<string> DumpPortfolios()
+    private string DumpPortfolios()
     {
         var portfolios = _portfoliosLocalStorage.GetAll();
 

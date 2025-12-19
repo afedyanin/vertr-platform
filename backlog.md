@@ -11,7 +11,7 @@
 ## 2025-12-18
 
 - [x] Paper trading in real time - restore trading console
-- BT - load candles from CSV
+- [x] BT - load candles from CSV
 - [x] BT - проверить валидность работы RW - генерация ревенью
 - Телеметрия в графану для BT
 - Пофисксить TODO

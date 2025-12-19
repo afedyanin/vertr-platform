@@ -58,8 +58,9 @@ public static class ApplicationRegistrar
 
     public static IServiceCollection AddBacktest(this IServiceCollection services)
     {
-        services.AddSingleton<ITradingGateway, BacktestGateway>();
+        services.AddSingleton<IHistoricCandlesProvider, CsvHistoricCandlesProvider>();
         services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<CandlesLocalStorage>());
+        services.AddSingleton<ITradingGateway, BacktestGateway>();
 
         return services;
     }

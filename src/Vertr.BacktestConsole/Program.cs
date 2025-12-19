@@ -1,10 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Application.Services;
-using Vertr.Common.Contracts;
+using Vertr.Common.Application.Extensions;
 
 namespace Vertr.BacktestConsole;
 
@@ -16,9 +14,6 @@ internal static class Program
     {
         var services = new ServiceCollection();
 
-        services.AddSingleton<IConnectionMultiplexer>((sp) =>
-        ConnectionMultiplexer.Connect("localhost"));
-
         services.AddApplication();
         services.AddBacktest();
 
@@ -29,31 +24,21 @@ internal static class Program
 
         var serviceProvider = services.BuildServiceProvider();
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-        var logger = loggerFactory.CreateLogger(nameof(RunBacktest));
+        var logger = loggerFactory.CreateLogger(nameof(Program));
+
         var portfolioRepo = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
+        var historicCandlesProvider = serviceProvider.GetRequiredService<IHistoricCandlesProvider>();
+        var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
 
         logger.LogInformation($"Init Random Walk portfolio...");
         portfolioRepo.Init(["RandomWalk"]);
 
         var steps = 10;
-        var candles = RandomCandleGenerator.GetRandomCandles(
-            SberId,
-            DateTime.UtcNow.AddHours(-30),
-            100.0m,
-            TimeSpan.FromMinutes(1),
-            count: steps);
+        await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
+        var candles = historicCandlesProvider.Get(SberId, skip: 100, take: steps);
+        logger.LogWarning($"Init historic candles. {candles.GetCandlesRange()}");
 
-        logger.LogInformation("Starting backtest Steps={Steps}.", steps);
-        await RunBacktest(candles, serviceProvider);
-        logger.LogInformation("Execution completed.");
-
-        await Task.Delay(2000);
-    }
-
-    public static async Task RunBacktest(IEnumerable<Candle> candles, IServiceProvider serviceProvider)
-    {
-        var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
-
+        logger.LogInformation("Starting backtest...");
         await pipeline.Start(dumpPortfolios: true);
 
         foreach (var candle in candles)
@@ -62,5 +47,8 @@ internal static class Program
         }
 
         await pipeline.Stop();
+        logger.LogInformation("Backtest completed.");
+
+        await Task.Delay(1000);
     }
 }

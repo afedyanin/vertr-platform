@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.EventHandlers;
 using Vertr.Common.Application.Extensions;
+using Vertr.Common.Application.LocalStorage;
 using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.Services;
@@ -107,13 +108,13 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline
 
     private async ValueTask LoadHistoricCandlesIfReq(Guid instrumentId)
     {
-        if (_candlesLocalStorage.GetCount(instrumentId) >= _candlesLocalStorage.CandlesBufferLength)
+        if (_candlesLocalStorage.Any(instrumentId))
         {
             return;
         }
 
-        var historicCandles = await _tradingGateway.GetCandles(instrumentId, _candlesLocalStorage.CandlesBufferLength);
-        _candlesLocalStorage.Load(historicCandles);
+        var historicCandles = await _tradingGateway.GetCandles(instrumentId, CandlesLocalStorage.CandlesBufferLength);
+        _candlesLocalStorage.Fill(historicCandles);
     }
 
     private IEventHandler<CandleReceivedEvent>[] CreatePipeline(IServiceProvider serviceProvider)

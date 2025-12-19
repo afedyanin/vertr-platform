@@ -5,13 +5,11 @@ namespace Vertr.Common.Application.Abstractions;
 
 public interface ICandlesLocalStorage
 {
-    public int CandlesBufferLength { get; set; }
+    public void Fill(IEnumerable<Candle> candles);
 
-    public void Load(IEnumerable<Candle> candles);
+    public bool Any(Guid instrumentId);
 
-    public void Update(Candle candle, bool recalculateStats = true);
+    public void Update(Candle candle);
 
     public Candle[] Get(Guid instrumentId);
-
-    public int GetCount(Guid instrumentId);
 }

@@ -7,16 +7,13 @@ namespace Vertr.Common.Application.Gateways;
 
 internal sealed class BacktestGateway : ITradingGateway
 {
-    private static readonly Guid SberId = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
-    private static readonly Guid RubId = new Guid("a92e2e25-a698-45cc-a781-167cf465257c");
-
     private const decimal CommissionPercent = 0.005m;
 
     private static readonly Instrument[] Instruments =
     [
         new Instrument
         {
-            Id = SberId,
+            Id = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13"),
             Name = "Сбербанк",
             ClassCode = "TQBR",
             Ticker ="SBER",
@@ -26,7 +23,7 @@ internal sealed class BacktestGateway : ITradingGateway
         },
         new Instrument
         {
-            Id = RubId,
+            Id = new Guid("a92e2e25-a698-45cc-a781-167cf465257c"),
             Name = "Российский рубль",
             ClassCode = "CETS",
             Ticker ="RUB",
@@ -38,13 +35,16 @@ internal sealed class BacktestGateway : ITradingGateway
 
     private readonly IPortfoliosLocalStorage _portfoliosLocalStorage;
     private readonly IMarketQuoteProvider _marketQuoteProvider;
+    private readonly IHistoricCandlesProvider _historicCandlesProvider;
 
     public BacktestGateway(
         IPortfoliosLocalStorage portfoliosLocalStorage,
-        IMarketQuoteProvider marketQuoteProvider)
+        IMarketQuoteProvider marketQuoteProvider,
+        IHistoricCandlesProvider historicCandlesProvider)
     {
         _portfoliosLocalStorage = portfoliosLocalStorage;
         _marketQuoteProvider = marketQuoteProvider;
+        _historicCandlesProvider = historicCandlesProvider;
     }
 
     public Task<Instrument[]> GetAllInstruments()
@@ -52,15 +52,7 @@ internal sealed class BacktestGateway : ITradingGateway
 
     public Task<Candle[]> GetCandles(Guid instrumentId, int maxItems = -1)
     {
-        // TODO: Load data from CSV
-        var count = maxItems < 0 ? 100 : maxItems;
-        var candles = RandomCandleGenerator.GetRandomCandles(
-            instrumentId,
-            DateTime.UtcNow.AddDays(-10),
-            100.0m,
-            TimeSpan.FromMinutes(1),
-            count);
-
+        var candles = _historicCandlesProvider.Get(instrumentId, skip: 0, take: maxItems > 0 ? maxItems : 0);
         return Task.FromResult(candles.ToArray());
     }
 

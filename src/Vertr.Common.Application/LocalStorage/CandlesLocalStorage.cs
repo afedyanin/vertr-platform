@@ -7,17 +7,9 @@ internal sealed class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuotePr
 {
     private readonly Dictionary<Guid, SortedList<DateTime, Candle>> _candles = [];
 
-    public int CandlesBufferLength { get; set; } = 100;
+    public const int CandlesBufferLength = 100;
 
-    public void Load(IEnumerable<Candle> candles)
-    {
-        foreach (var candle in candles.OrderBy(c => c.TimeUtc))
-        {
-            Update(candle, recalculateStats: false);
-        }
-    }
-
-    public void Update(Candle candle, bool recalculateStats = true)
+    public void Update(Candle candle)
     {
         if (!_candles.TryGetValue(candle.InstrumentId, out var list))
         {
@@ -32,9 +24,6 @@ internal sealed class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuotePr
             list.Remove(list.First().Key);
         }
     }
-
-    public int GetCount(Guid instrumentId)
-        => _candles.TryGetValue(instrumentId, out var candleList) ? candleList.Count : 0;
 
     public Candle[] Get(Guid instrumentId)
         => _candles.TryGetValue(instrumentId, out var candleList) ? [.. candleList.Values] : [];
@@ -73,4 +62,15 @@ internal sealed class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuotePr
             Ask = prices.Max()
         };
     }
+
+    public void Fill(IEnumerable<Candle> candles)
+    {
+        foreach (var candle in candles.OrderBy(c => c.TimeUtc))
+        {
+            Update(candle);
+        }
+    }
+
+    public bool Any(Guid instrumentId)
+        => _candles.TryGetValue(instrumentId, out var candleList) ? candleList.Any() : false;
 }

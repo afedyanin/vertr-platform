@@ -15,7 +15,7 @@ public class CandlesLocalStorageTests
         var candles = CreateCandles(SberId, 1);
         storage.Update(candles[0]);
 
-        Assert.That(storage.GetCount(SberId), Is.EqualTo(1));
+        Assert.That(storage.Any(SberId), Is.True);
     }
 
     private static Candle[] CreateCandles(Guid instrumentId, [Query] long maxItems = -1)

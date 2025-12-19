@@ -9,6 +9,8 @@ public interface IPortfoliosLocalStorage
 
     public Portfolio? GetById(Guid portfolioId);
 
+    public string GetPredictor(Guid portfolioId);
+
     public Portfolio? GetByPredictor(string predictor);
 
     public void Update(Portfolio portfolio);

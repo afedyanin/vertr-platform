@@ -44,6 +44,20 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
         return res.AsReadOnly();
     }
 
+    public string GetPredictor(Guid portfolioId)
+    {
+        foreach (var kvp in _predictors)
+        {
+            if (kvp.Value == portfolioId)
+            {
+                return kvp.Key;
+            }
+        }
+
+        return string.Empty;
+    }
+
+
     public void Init(string[] precitors)
     {
         foreach (var precitor in precitors.Distinct())

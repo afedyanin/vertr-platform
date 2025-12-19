@@ -10,16 +10,16 @@ namespace Vertr.TradingConsole.BackgroundServices;
 internal sealed class MarketOrderBookSubscriber : RedisServiceBase
 {
     private readonly IOrderBooksLocalStorage _orderBookRepository;
+    private readonly ILogger<MarketOrderBookSubscriber> _logger;
 
     // TODO: Get from settings
     protected override RedisChannel RedisChannel => new RedisChannel("market.orderBooks", PatternMode.Pattern);
     protected override bool IsEnabled => true;
 
-    public MarketOrderBookSubscriber(
-        IServiceProvider serviceProvider,
-        ILogger logger) : base(serviceProvider, logger)
+    public MarketOrderBookSubscriber(IServiceProvider serviceProvider) : base(serviceProvider)
     {
         _orderBookRepository = serviceProvider.GetRequiredService<IOrderBooksLocalStorage>();
+        _logger = LoggerFactory.CreateLogger<MarketOrderBookSubscriber>();
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)
@@ -28,12 +28,11 @@ internal sealed class MarketOrderBookSubscriber : RedisServiceBase
 
         if (orderBook == null)
         {
-            Logger.LogWarning("Cannot deserialize Order Book from message={Message}", message);
+            _logger.LogWarning("Cannot deserialize Order Book from message={Message}", message);
             return;
         }
 
         _orderBookRepository.Update(orderBook);
-
-        Logger.LogDebug("Received order book from cahnnel={Channel}", channel);
+        _logger.LogDebug("Received order book from cahnnel={Channel}", channel);
     }
 }

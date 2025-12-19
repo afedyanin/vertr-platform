@@ -10,27 +10,28 @@ namespace Vertr.TradingConsole.BackgroundServices;
 internal sealed class MarketCandlesSubscriber : RedisServiceBase
 {
     private readonly ICandleProcessingPipeline _candleProcessingPipeline;
+    private readonly ILogger<RedisServiceBase> _logger;
 
     // TODO: Get from settings
     protected override RedisChannel RedisChannel => new RedisChannel("market.candles.*", PatternMode.Pattern);
     protected override bool IsEnabled => true;
 
-    public MarketCandlesSubscriber(
-        IServiceProvider serviceProvider,
-        ILogger logger) : base(serviceProvider, logger)
+
+    public MarketCandlesSubscriber(IServiceProvider serviceProvider) : base(serviceProvider)
     {
         _candleProcessingPipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
+        _logger = LoggerFactory.CreateLogger<MarketCandlesSubscriber>();
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)
     {
-        Logger.LogInformation("Received candle from cahnnel={Channel}", channel);
+        _logger.LogDebug("Received candle from cahnnel={Channel}", channel);
 
         var candle = Candle.FromJson(message.ToString());
 
         if (candle == null)
         {
-            Logger.LogWarning("Cannot deserialize candle from message={Message}", message);
+            _logger.LogWarning("Cannot deserialize candle from message={Message}", message);
             return;
         }
 
@@ -40,7 +41,9 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     protected override async ValueTask OnBeforeStart(CancellationToken cancellationToken)
     {
         await base.OnBeforeStart(cancellationToken);
-        await _candleProcessingPipeline.Start(verbose: true, cancellationToken);
+
+        // dumpPortfolios = false due to order exec delay
+        await _candleProcessingPipeline.Start(dumpPortfolios: false, cancellationToken);
     }
 
     protected override async ValueTask OnBeforeStop()

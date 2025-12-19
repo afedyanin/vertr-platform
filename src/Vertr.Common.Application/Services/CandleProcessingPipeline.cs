@@ -9,7 +9,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.Services;
 
-internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
+internal class CandleProcessingPipeline : ICandleProcessingPipeline
 {
     private readonly ITradingGateway _tradingGateway;
     private readonly ICandlesLocalStorage _candlesLocalStorage;
@@ -47,10 +47,10 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
         }
     }
 
-    public async Task Start(bool verbose = true, CancellationToken cancellationToken = default)
+    public async Task Start(bool dumpPortfolios = false, CancellationToken cancellationToken = default)
     {
         _instruments = await _tradingGateway.GetAllInstruments();
-        _channelConsumerTask = ConsumeChannelAsync(verbose, cancellationToken);
+        _channelConsumerTask = ConsumeChannelAsync(dumpPortfolios, cancellationToken);
     }
 
     public async Task Stop()
@@ -58,7 +58,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
         _candlesChannel.Writer.Complete();
     }
 
-    private async Task ConsumeChannelAsync(bool verbose = true, CancellationToken cancellationToken = default)
+    private async Task ConsumeChannelAsync(bool dumpPortfolios = false, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -81,11 +81,12 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
                         await handler.OnEvent(evt);
                     }
 
-                    if (verbose)
+                    _logger.LogInformation(evt.Dump());
+
+                    if (dumpPortfolios)
                     {
-                        _logger.LogInformation(evt.Dump());
                         var dump = await DumpPortfolios();
-                        _logger.LogWarning(dump);
+                        _logger.LogInformation(dump);
                     }
                 }
                 catch (Exception ex)
@@ -138,11 +139,5 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
         }
 
         return sb.ToString();
-    }
-
-
-    public void Dispose()
-    {
-        _channelConsumerTask?.Dispose();
     }
 }

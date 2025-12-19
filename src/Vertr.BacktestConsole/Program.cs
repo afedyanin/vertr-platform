@@ -55,7 +55,7 @@ internal static class Program
     {
         var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
 
-        await pipeline.Start(verbose: false);
+        await pipeline.Start(dumpPortfolios: true);
 
         foreach (var candle in candles)
         {

@@ -4,7 +4,7 @@ namespace Vertr.Common.Application.Abstractions;
 
 public interface ICandleProcessingPipeline
 {
-    public Task Start(bool verbose = true, CancellationToken cancellationToken = default);
+    public Task Start(bool dumpPortfolios = false, CancellationToken cancellationToken = default);
 
     public void Handle(Candle candle);
 

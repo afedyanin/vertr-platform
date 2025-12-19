@@ -31,15 +31,10 @@ public static class ApplicationRegistrar
         return services;
     }
 
-    public static IEventHandler<CandleReceivedEvent>[] CreateCandleReceivedPipeline(IServiceProvider serviceProvider)
+    public static IServiceCollection AddCandleProcessingPipeline(this IServiceCollection services)
     {
-        var pipeline = new IEventHandler<CandleReceivedEvent>[4];
-        pipeline[0] = serviceProvider.GetRequiredService<MarketDataPredictor>();
-        pipeline[1] = serviceProvider.GetRequiredService<TradingSignalsGenerator>();
-        pipeline[2] = serviceProvider.GetRequiredService<PortfolioPositionHandler>();
-        pipeline[3] = serviceProvider.GetRequiredService<OrderExecutionHandler>();
-
-        return pipeline;
+        services.AddSingleton<ICandleProcessingPipeline, CandleProcessingPipeline>();
+        return services;
     }
 
     public static IServiceCollection AddTinvestGateway(this IServiceCollection services, string baseAddress)
@@ -66,7 +61,7 @@ public static class ApplicationRegistrar
     }
 
 
-    public static IServiceCollection AddBacktestGateway(this IServiceCollection services)
+    public static IServiceCollection AddBacktest(this IServiceCollection services)
     {
         services.AddSingleton<ITradingGateway, BacktestGateway>();
         services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<CandlesLocalStorage>());

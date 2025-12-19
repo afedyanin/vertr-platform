@@ -34,7 +34,7 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandleReceivedEve
             }
         }
 
-        _logger.LogInformation("#{Sequence} PortfolioPositionHandler executed. {SignalsCount} signals added.", data.Sequence, data.TradingSignals.Count);
+        _logger.LogDebug("#{Sequence} PortfolioPositionHandler executed. {SignalsCount} signals added.", data.Sequence, data.TradingSignals.Count);
         return ValueTask.CompletedTask;
     }
 }

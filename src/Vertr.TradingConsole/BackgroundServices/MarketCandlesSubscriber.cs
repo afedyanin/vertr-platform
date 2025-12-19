@@ -39,13 +39,13 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
 
     protected override async ValueTask OnBeforeStart(CancellationToken cancellationToken)
     {
-        await _candleProcessingPipeline.OnBeforeStart(cancellationToken);
         await base.OnBeforeStart(cancellationToken);
+        await _candleProcessingPipeline.Start(verbose: true, cancellationToken);
     }
 
     protected override async ValueTask OnBeforeStop()
     {
-        await _candleProcessingPipeline.OnBeforeStop();
+        await _candleProcessingPipeline.Stop();
         await base.OnBeforeStop();
     }
 }

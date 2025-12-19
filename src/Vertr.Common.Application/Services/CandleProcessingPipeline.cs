@@ -15,27 +15,23 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
     private readonly ICandlesLocalStorage _candlesLocalStorage;
     private readonly IPortfoliosLocalStorage _portfoliosLocalStorage;
     private readonly IPortfolioManager _portfolioManager;
-
-    private readonly IEventHandler<CandleReceivedEvent>[] _pipeline = [];
     private readonly ILogger<CandleProcessingPipeline> _logger;
 
+    private readonly IEventHandler<CandleReceivedEvent>[] _pipeline = [];
     private readonly Channel<Candle> _candlesChannel;
 
     private Task? _channelConsumerTask;
-    private CancellationTokenSource? _tokenSource;
-
-    private long _sequence;
     private Instrument[] _instruments = [];
+    private long _sequence;
 
-    public CandleProcessingPipeline(
-        IServiceProvider serviceProvider,
-        ILogger<CandleProcessingPipeline> logger)
+    public CandleProcessingPipeline(IServiceProvider serviceProvider)
     {
         _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
         _candlesLocalStorage = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
         _portfoliosLocalStorage = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
-        _logger = logger;
+        var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+        _logger = loggerFactory.CreateLogger<CandleProcessingPipeline>();
 
         _pipeline = CreatePipeline(serviceProvider);
         _candlesChannel = Channel.CreateUnbounded<Candle>();
@@ -51,53 +47,60 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
         }
     }
 
-    public async Task OnBeforeStart(CancellationToken cancellationToken = default)
+    public async Task Start(bool verbose = true, CancellationToken cancellationToken = default)
     {
         _instruments = await _tradingGateway.GetAllInstruments();
-        _tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        _channelConsumerTask = ConsumeChannelAsync(_tokenSource.Token);
+        _channelConsumerTask = ConsumeChannelAsync(verbose, cancellationToken);
     }
 
-    public async Task OnBeforeStop(bool verbose = false)
+    public async Task Stop()
     {
-        _logger.LogWarning("Closing portfolios...");
-        await _portfolioManager.CloseAllPositions();
-
-        var dump = await DumpPortfolios(verbose);
-        _logger.LogWarning(dump);
+        _candlesChannel.Writer.Complete();
     }
 
-    private async Task ConsumeChannelAsync(CancellationToken cancellationToken = default)
+    private async Task ConsumeChannelAsync(bool verbose = true, CancellationToken cancellationToken = default)
     {
-        await foreach (var candle in _candlesChannel.Reader.ReadAllAsync(cancellationToken))
+        try
         {
-            try
+            await foreach (var candle in _candlesChannel.Reader.ReadAllAsync(cancellationToken))
             {
-                await LoadHistoricCandlesIfReq(candle.InstrumentId);
-                _candlesLocalStorage.Update(candle);
-
-                var evt = new CandleReceivedEvent
+                try
                 {
-                    Sequence = _sequence++,
-                    Candle = candle,
-                    Instrument = _instruments.GetById(candle.InstrumentId)!,
-                };
+                    await LoadHistoricCandlesIfReq(candle.InstrumentId);
+                    _candlesLocalStorage.Update(candle);
 
-                foreach (var handler in _pipeline)
-                {
-                    await handler.OnEvent(evt);
+                    var evt = new CandleReceivedEvent
+                    {
+                        Sequence = _sequence++,
+                        Candle = candle,
+                        Instrument = _instruments.GetById(candle.InstrumentId)!,
+                    };
+
+                    foreach (var handler in _pipeline)
+                    {
+                        await handler.OnEvent(evt);
+                    }
+
+                    if (verbose)
+                    {
+                        _logger.LogInformation(evt.Dump());
+                        var dump = await DumpPortfolios();
+                        _logger.LogWarning(dump);
+                    }
                 }
-
-                _logger.LogInformation(evt.Dump());
-
-                var dump = await DumpPortfolios(true);
-                _logger.LogWarning(dump);
-
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Candles Channel comnsumer error. Message={Message}", ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Candles Channel comnsumer error. Message={Message}", ex.Message);
-            }
+        }
+        finally
+        {
+            _logger.LogWarning("Closing portfolios...");
+            await _portfolioManager.CloseAllPositions();
+
+            var dump = await DumpPortfolios();
+            _logger.LogWarning(dump);
         }
     }
 
@@ -123,7 +126,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
         return pipeline;
     }
 
-    private async Task<string> DumpPortfolios(bool verbose = false)
+    private async Task<string> DumpPortfolios()
     {
         var portfolios = _portfoliosLocalStorage.GetAll();
 
@@ -131,7 +134,7 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
 
         foreach (var kvp in portfolios)
         {
-            sb.AppendLine(kvp.Value.Dump(kvp.Key, _instruments, verbose));
+            sb.AppendLine(kvp.Value.Dump(kvp.Key, _instruments));
         }
 
         return sb.ToString();
@@ -140,7 +143,6 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline, IDisposable
 
     public void Dispose()
     {
-        _tokenSource?.Dispose();
         _channelConsumerTask?.Dispose();
     }
 }

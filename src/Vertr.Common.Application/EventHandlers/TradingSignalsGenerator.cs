@@ -60,7 +60,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
             data.TradingSignals.Add(signal);
         }
 
-        _logger.LogInformation("#{Sequence} TradingSignalsGenerator executed. {SignalsCount} signals added.", data.Sequence, data.TradingSignals.Count);
+        _logger.LogDebug("#{Sequence} TradingSignalsGenerator executed. {SignalsCount} signals added.", data.Sequence, data.TradingSignals.Count);
 
         return ValueTask.CompletedTask;
     }

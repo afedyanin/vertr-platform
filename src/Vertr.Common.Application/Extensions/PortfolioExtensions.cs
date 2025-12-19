@@ -5,16 +5,12 @@ namespace Vertr.Common.Application.Extensions;
 
 public static class PortfolioExtensions
 {
-    public static string Dump(this Portfolio porftolio, string name, Instrument[] instruments, bool verbose = true)
+    public static string Dump(this Portfolio porftolio, string name, Instrument[] instruments)
     {
         var sb = new StringBuilder();
         sb.AppendLine($"Portfolio:{name} ID={porftolio.Id}");
-
-        if (verbose)
-        {
-            sb.Append($"Positions:[{porftolio.Positions.DumpPositions(instruments)}] ");
-            sb.Append($"Commissions:[{porftolio.Comissions.DumpPositions(instruments)}]\n");
-        }
+        sb.Append($"Positions:[{porftolio.Positions.DumpPositions(instruments)}] ");
+        sb.Append($"Commissions:[{porftolio.Comissions.DumpPositions(instruments)}]\n");
 
         return sb.ToString();
     }

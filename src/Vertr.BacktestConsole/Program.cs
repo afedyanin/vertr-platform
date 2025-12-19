@@ -4,6 +4,7 @@ using StackExchange.Redis;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Services;
+using Vertr.Common.Contracts;
 
 namespace Vertr.BacktestConsole;
 
@@ -23,7 +24,7 @@ internal static class Program
 
         services.AddLogging(builder => builder
             .AddConsole()
-            .SetMinimumLevel(LogLevel.Warning)
+            .SetMinimumLevel(LogLevel.Information)
         );
 
         var serviceProvider = services.BuildServiceProvider();
@@ -33,38 +34,34 @@ internal static class Program
 
         logger.LogInformation($"Init Random Walk portfolio...");
         portfolioRepo.Init(["RandomWalk"]);
-        await RunBacktest(serviceProvider, logger, steps: 10);
-        logger.LogInformation("Execution completed.");
 
-        await Task.Delay(1000);
-    }
+        var steps = 10000;
 
-    public static async Task RunBacktest(
-        IServiceProvider serviceProvider,
-        ILogger logger,
-        int steps = 10)
-    {
-        logger.LogInformation("Starting backtest Steps={Steps}.", steps);
-
-        // Create Backtest candles
         var candles = RandomCandleGenerator.GetRandomCandles(
             SberId,
             DateTime.UtcNow.AddHours(-30),
             100.0m,
             TimeSpan.FromMinutes(1),
-            steps);
+            count: steps);
 
+        logger.LogInformation("Starting backtest Steps={Steps}.", steps);
+        await RunBacktest(candles, serviceProvider);
+        logger.LogInformation("Execution completed.");
+
+        await Task.Delay(1000);
+    }
+
+    public static async Task RunBacktest(IEnumerable<Candle> candles, IServiceProvider serviceProvider)
+    {
         var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
 
-        await pipeline.OnBeforeStart();
+        await pipeline.Start(verbose: false);
 
         foreach (var candle in candles)
         {
             pipeline.Handle(candle);
         }
 
-        await pipeline.OnBeforeStop(true);
-
-        logger.LogInformation("Backtest completed.");
+        await pipeline.Stop();
     }
 }

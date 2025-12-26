@@ -1,0 +1,3 @@
+[submodule "vertr-forecast"]
+	path = vertr-forecast
+	url = https://gitlab.com/vertr/vertr-forecast.git

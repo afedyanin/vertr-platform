@@ -1,0 +1,38 @@
+# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+# This stage is used when running from VS in fast mode (Default for Debug configuration)
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+USER $APP_UID
+WORKDIR /app
+EXPOSE 8085
+
+# This stage is used to build the service project
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+ARG BUILD_CONFIGURATION=Release
+
+WORKDIR /src
+
+COPY Directory.Build.props ./ 
+COPY ["src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj", "Vertr.Common.Contracts/"]
+COPY ["src/Vertr.Common.Application/Vertr.Common.Application.csproj", "Vertr.Common.Application/"]
+COPY ["src/Vertr.Common.DataAccess/Vertr.Common.DataAccess.csproj", "Vertr.Common.DataAccess/"]
+COPY ["src/Vertr.Common.DataAccess.Redis/Vertr.Common.DataAccess.Redis.csproj", "Vertr.Common.DataAccess.Redis/"]
+COPY ["src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj", "Vertr.TinvestGateway/"]
+COPY ["src/Vertr.TinvestGateway.DataAccess.Redis/Vertr.TinvestGateway.DataAccess.Redis.csproj", "Vertr.TinvestGateway.DataAccess.Redis/"]
+COPY ["src/Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.csproj", "Vertr.TinvestGateway.Host/"]
+
+RUN dotnet restore "Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.csproj"
+COPY . .
+
+RUN dotnet build "src/Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "src/Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Vertr.TinvestGateway.Host.dll", "--urls", "http://localhost:8085"]
+

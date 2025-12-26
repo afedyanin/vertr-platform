@@ -19,7 +19,7 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
     // TODO: Get predictors from config or args
     private readonly string[] _predictors = ["RandomWalk"];
 
-    protected override bool IsEnabled => true;
+    protected override bool IsEnabled => false;
     protected override RedisChannel RedisChannel => new RedisChannel("portfolios", PatternMode.Literal);
 
     public PortfolioSubscriber(IServiceProvider serviceProvider) : base(serviceProvider)

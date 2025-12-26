@@ -7,4 +7,10 @@ services:
       dockerfile: Dockerfile.TinvestGateway
     ports:
       - "8085:8085"
+    networks:
+      - infra_default
 
+networks:
+  infra_default:
+    external: true
+    driver: bridge

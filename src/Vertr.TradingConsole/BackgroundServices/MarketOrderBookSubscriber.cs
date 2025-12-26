@@ -14,7 +14,7 @@ internal sealed class MarketOrderBookSubscriber : RedisServiceBase
 
     // TODO: Get from settings
     protected override RedisChannel RedisChannel => new RedisChannel("market.orderBooks", PatternMode.Pattern);
-    protected override bool IsEnabled => true;
+    protected override bool IsEnabled => false;
 
     public MarketOrderBookSubscriber(IServiceProvider serviceProvider) : base(serviceProvider)
     {

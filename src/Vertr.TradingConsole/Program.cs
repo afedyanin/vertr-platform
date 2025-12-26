@@ -17,7 +17,7 @@ internal sealed class Program
                  services.AddSingleton<IConnectionMultiplexer>((sp) =>
                     ConnectionMultiplexer.Connect("localhost"));
 
-                 services.AddTinvestGateway("http://localhost:5099");
+                 services.AddTinvestGateway("http://localhost:8085");
 
                  services.AddApplication();
 

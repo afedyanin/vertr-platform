@@ -2,8 +2,9 @@
   <Folder Name="/common/">
     <File Path=".editorconfig" />
     <File Path="backlog.md" />
+    <File Path="compose.yaml" />
     <File Path="Directory.Build.props" />
-    <File Path="Dockerfile.sample" />
+    <File Path="Dockerfile.TinvestGateway" />
     <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>
@@ -14,10 +15,7 @@
   <Folder Name="/infra/">
     <File Path="vertr-infra/compose.yaml" />
   </Folder>
-  <Folder Name="/src/">
-    <File Path="src/compose.yaml" />
-    <File Path="src/Dockerfile.TinvestGateway" />
-  </Folder>
+  <Folder Name="/src/" />
   <Folder Name="/src/Common/">
     <Project Path="src/Vertr.Common.Application/Vertr.Common.Application.csproj" Id="ef22c87e-62cd-4d9e-a383-b50735021013" />
     <Project Path="src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj" Id="f48a86ef-276f-42d6-b9fb-1c39916da738" />

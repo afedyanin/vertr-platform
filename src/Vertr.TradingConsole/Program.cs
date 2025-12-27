@@ -37,7 +37,6 @@ internal sealed class Program
         builder.Services.AddHostedService<PortfolioSubscriber>();
 
         var host = builder.Build();
-
         await host.RunAsync();
     }
 }

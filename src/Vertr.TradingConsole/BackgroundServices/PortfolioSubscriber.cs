@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,7 +28,9 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
     {
         _portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
-        _predictors = configuration.GetValue<string[]>("Predictors") ?? [];
+
+        _predictors = configuration.GetSection("Predictors").Get<string[]>() ?? [];
+        Debug.Assert(_predictors.Length > 0);
 
         _logger = LoggerFactory.CreateLogger<PortfolioSubscriber>();
     }

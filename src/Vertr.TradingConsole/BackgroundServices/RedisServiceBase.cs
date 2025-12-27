@@ -1,7 +1,9 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using Vertr.TradingConsole.Configuration;
 
 namespace Vertr.TradingConsole.BackgroundServices;
 
@@ -12,6 +14,8 @@ internal abstract class RedisServiceBase : BackgroundService
 
     protected ILoggerFactory LoggerFactory { get; private set; }
 
+    protected SubscriptionSettings Subscriptions { get; private set; }
+
     protected abstract RedisChannel RedisChannel { get; }
 
     protected abstract bool IsEnabled { get; }
@@ -20,15 +24,20 @@ internal abstract class RedisServiceBase : BackgroundService
 
     private ISubscriber? _subscriber;
 
-    private readonly ILogger<RedisServiceBase> _logger;
+    private readonly ILogger _logger;
 
-    protected RedisServiceBase(IServiceProvider serviceProvider)
+    protected RedisServiceBase(IServiceProvider serviceProvider, IConfiguration configuration)
     {
+        Subscriptions = configuration
+            .GetRequiredSection(nameof(SubscriptionSettings))
+            .Get<SubscriptionSettings>() ?? new SubscriptionSettings();
+
         ServiceProvider = serviceProvider;
         LoggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         Redis = serviceProvider.GetRequiredService<IConnectionMultiplexer>();
+
         _serviceName = GetType().Name;
-        _logger = LoggerFactory.CreateLogger<RedisServiceBase>();
+        _logger = LoggerFactory.CreateLogger(_serviceName);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

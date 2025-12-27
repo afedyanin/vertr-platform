@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Vertr.Common.Application.Abstractions;
@@ -12,11 +13,10 @@ internal sealed class MarketOrderBookSubscriber : RedisServiceBase
     private readonly IOrderBooksLocalStorage _orderBookRepository;
     private readonly ILogger<MarketOrderBookSubscriber> _logger;
 
-    // TODO: Get from settings
-    protected override RedisChannel RedisChannel => new RedisChannel("market.orderBooks", PatternMode.Pattern);
-    protected override bool IsEnabled => true;
+    protected override RedisChannel RedisChannel => new RedisChannel(Subscriptions.OrderBooks.Channel, PatternMode.Pattern);
+    protected override bool IsEnabled => Subscriptions.OrderBooks.IsEnabled;
 
-    public MarketOrderBookSubscriber(IServiceProvider serviceProvider) : base(serviceProvider)
+    public MarketOrderBookSubscriber(IServiceProvider serviceProvider, IConfiguration configuration) : base(serviceProvider, configuration)
     {
         _orderBookRepository = serviceProvider.GetRequiredService<IOrderBooksLocalStorage>();
         _logger = LoggerFactory.CreateLogger<MarketOrderBookSubscriber>();

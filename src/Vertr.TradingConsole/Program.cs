@@ -18,13 +18,11 @@ internal sealed class Program
 
         var redisConnectionString = configuration.GetConnectionString("RedisConnection");
         Debug.Assert(!string.IsNullOrEmpty(redisConnectionString));
-
         builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
             ConnectionMultiplexer.Connect(redisConnectionString));
 
         var baseAddress = configuration.GetValue<string>("TinvestGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(baseAddress));
-
         builder.Services.AddTinvestGateway(baseAddress);
 
         builder.Services.AddApplication();

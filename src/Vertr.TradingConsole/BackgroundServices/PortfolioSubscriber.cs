@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -19,10 +20,11 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
     // TODO: Get predictors from config or args
     private readonly string[] _predictors = ["RandomWalk"];
 
-    protected override bool IsEnabled => true;
-    protected override RedisChannel RedisChannel => new RedisChannel("portfolios", PatternMode.Literal);
+    protected override RedisChannel RedisChannel => new RedisChannel(Subscriptions.Portfolios.Channel, PatternMode.Literal);
 
-    public PortfolioSubscriber(IServiceProvider serviceProvider) : base(serviceProvider)
+    protected override bool IsEnabled => Subscriptions.Portfolios.IsEnabled;
+
+    public PortfolioSubscriber(IServiceProvider serviceProvider, IConfiguration configuration) : base(serviceProvider, configuration)
     {
         _portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();

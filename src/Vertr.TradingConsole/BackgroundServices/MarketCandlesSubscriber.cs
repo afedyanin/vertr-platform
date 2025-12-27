@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -12,12 +13,10 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     private readonly ICandleProcessingPipeline _candleProcessingPipeline;
     private readonly ILogger<RedisServiceBase> _logger;
 
-    // TODO: Get from settings
-    protected override RedisChannel RedisChannel => new RedisChannel("market.candles.*", PatternMode.Pattern);
-    protected override bool IsEnabled => true;
+    protected override RedisChannel RedisChannel => new RedisChannel(Subscriptions.Candles.Channel, PatternMode.Pattern);
+    protected override bool IsEnabled => Subscriptions.Candles.IsEnabled;
 
-
-    public MarketCandlesSubscriber(IServiceProvider serviceProvider) : base(serviceProvider)
+    public MarketCandlesSubscriber(IServiceProvider serviceProvider, IConfiguration configuration) : base(serviceProvider, configuration)
     {
         _candleProcessingPipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
         _logger = LoggerFactory.CreateLogger<MarketCandlesSubscriber>();

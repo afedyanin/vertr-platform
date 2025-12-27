@@ -16,18 +16,19 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
     private readonly ILogger<PortfolioSubscriber> _logger;
 
     private Instrument[] _instruments = [];
-
-    // TODO: Get predictors from config or args
-    private readonly string[] _predictors = ["RandomWalk"];
+    private readonly string[] _predictors;
 
     protected override RedisChannel RedisChannel => new RedisChannel(Subscriptions.Portfolios.Channel, PatternMode.Literal);
-
     protected override bool IsEnabled => Subscriptions.Portfolios.IsEnabled;
 
-    public PortfolioSubscriber(IServiceProvider serviceProvider, IConfiguration configuration) : base(serviceProvider, configuration)
+    public PortfolioSubscriber(
+        IServiceProvider serviceProvider,
+        IConfiguration configuration) : base(serviceProvider, configuration)
     {
         _portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
+        _predictors = configuration.GetValue<string[]>("Predictors") ?? [];
+
         _logger = LoggerFactory.CreateLogger<PortfolioSubscriber>();
     }
 

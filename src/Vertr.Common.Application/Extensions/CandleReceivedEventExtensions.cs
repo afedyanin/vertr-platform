@@ -42,7 +42,7 @@ public static class CandleReceivedEventExtensions
         => quote == null ? string.Empty : $"B={quote.Value.Bid:N} A={quote.Value.Ask:N} M={quote.Value.Mid:N} T={quote.Value.Time:s}";
 
     internal static string Dump(this Prediction prediction)
-        => $"{prediction.Predictor}:{prediction.Price:N}";
+        => $"{prediction.Predictor}:{prediction.Value:N}";
 
     internal static string Dump(this IEnumerable<Prediction> predictions)
         => string.Join(", ", predictions.Select(p => p.Dump()));

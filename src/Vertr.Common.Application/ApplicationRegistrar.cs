@@ -26,8 +26,8 @@ public static class ApplicationRegistrar
         services.AddSingleton<CandlesLocalStorage>();
         services.AddSingleton<ICandlesLocalStorage>(sp => sp.GetRequiredService<CandlesLocalStorage>());
 
-        // TODO: Implement this
-        services.AddSingleton<IPredictorGateway, PredictorGatewayStub>();
+        // services.AddSingleton<IPredictorGateway, PredictorGatewayStub>();
+        services.AddSingleton<IPredictorGateway, PredictorGateway>();
 
         return services;
     }

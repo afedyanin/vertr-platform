@@ -5,43 +5,83 @@ namespace Vertr.Common.ForecastClient.Tests;
 
 public class ForecastApiTests
 {
-    [Test]
-    public async Task CanGetAllKeys()
+    private const string BaseUrl = "http://localhost:8081";
+
+    private IVertrForecastClient _api;
+
+    [OneTimeSetUp]
+    public void OneTimeSetup()
     {
-        var api = RestService.For<IVertrForecastClient>("http://localhost:8081");
+        _api = RestService.For<IVertrForecastClient>(BaseUrl);
+    }
 
-        var allKeys = await api.GetKeysStats();
-
+    [Test]
+    public async Task CanGetKeysStats()
+    {
+        var allKeys = await _api.GetKeysStats();
         Assert.That(allKeys, Is.Not.Empty);
         Console.WriteLine(string.Join(',', allKeys));
     }
 
     [Test]
-    public async Task CanForecastSomeValue()
+    public async Task CanForecastStats()
     {
-        var api = RestService.For<IVertrForecastClient>("http://localhost:8081");
-
         var request = new ForecastRequest()
         {
-            Models =
-            [
-                "naive",
-                "auto_arima",
-                "auto_ets",
-                "auto_ces",
-                "auto_theta",
-                "random_walk",
-                "history_average"
-            ],
-
+            Models = StatModelNames,
             Series = GenerateSeries("SBER", DateTime.UtcNow).ToArray()
         };
 
-        var response = await api.ForecastStats(request);
+        var response = await _api.ForecastStats(request);
 
         Assert.That(response, Is.Not.Empty);
         Console.WriteLine(string.Join("\n", response));
     }
+
+    [Test]
+    public async Task CanForecastMl()
+    {
+        var request = new ForecastRequest()
+        {
+            Models = MlModelNames,
+            Series = GenerateSeries("SBER", DateTime.UtcNow).ToArray()
+        };
+
+        var response = await _api.ForecastMl(request);
+
+        Assert.That(response, Is.Not.Empty);
+        Console.WriteLine(string.Join("\n", response));
+    }
+
+    [Test]
+    public async Task CanForecastAutoLSTM()
+    {
+        var series = GenerateSeries("SBER", DateTime.UtcNow).ToArray();
+        var response = await _api.AutoLSTM(series);
+        Console.WriteLine(response);
+    }
+
+    public string[] StatModelNames =>
+        [
+            "naive",
+            "auto_arima",
+            "auto_ets",
+            "auto_ces",
+            "auto_theta",
+            "random_walk",
+            "history_average"
+        ];
+
+    public string[] MlModelNames =>
+        [
+            "lgbm",
+            "lasso",
+            "lin_reg",
+            "ridge",
+            "knn",
+            "mlp",
+            "rf"
+        ];
 
     public static IEnumerable<SeriesItem> GenerateSeries(string ticker, DateTime startTime, int count = 10)
     {

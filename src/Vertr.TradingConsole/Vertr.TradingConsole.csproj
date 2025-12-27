@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
+      <ProjectReference Include="..\Vertr.Common.ForecastClient\Vertr.Common.ForecastClient.csproj" />
     </ItemGroup>
 
     <ItemGroup>

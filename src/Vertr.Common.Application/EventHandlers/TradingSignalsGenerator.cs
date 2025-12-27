@@ -24,7 +24,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
     {
         foreach (var prediction in data.Predictions)
         {
-            if (prediction.Price == null || prediction.Price.Value == default)
+            if (prediction.Value == null || prediction.Value.Value == default)
             {
                 _logger.LogWarning("PredictedPrice is not defined for Predictor={Predictor}", prediction.Predictor);
                 continue;
@@ -43,7 +43,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
             // data.PriceThreshold = stats.StdDev / stats.Mean * ThresholdSigma;
             data.PriceThreshold = DefaultThreshold * ThresholdSigma;
 
-            var direction = GetTradingDirection(prediction.Price.Value, data.MarketQuote.Value, data.PriceThreshold);
+            var direction = GetTradingDirection(prediction.Value.Value, data.MarketQuote.Value, data.PriceThreshold);
 
             if (direction == TradingDirection.Hold)
             {

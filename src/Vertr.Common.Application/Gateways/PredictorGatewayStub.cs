@@ -23,7 +23,7 @@ internal sealed class PredictorGatewayStub : IPredictorGateway
             {
                 Predictor = predictor,
                 InstrumentId = candles.First().InstrumentId,
-                Price = RandomCandleGenerator.GetNextValue(candles.Last().Close, 0.05),
+                Value = RandomCandleGenerator.GetNextValue(candles.Last().Close, 0.05),
             };
 
             predictions.Add(p);

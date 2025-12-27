@@ -6,5 +6,5 @@ public record class Prediction
 
     public Guid InstrumentId { get; set; }
 
-    public decimal? Price { get; set; }
+    public decimal? Value { get; set; }
 }

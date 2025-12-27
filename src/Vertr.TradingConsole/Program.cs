@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 using Vertr.Common.Application;
+using Vertr.Common.ForecastClient;
 using Vertr.TradingConsole.BackgroundServices;
 
 namespace Vertr.TradingConsole;
@@ -21,9 +22,13 @@ internal sealed class Program
         builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
             ConnectionMultiplexer.Connect(redisConnectionString));
 
-        var baseAddress = configuration.GetValue<string>("TinvestGateway:BaseAddress");
-        Debug.Assert(!string.IsNullOrEmpty(baseAddress));
-        builder.Services.AddTinvestGateway(baseAddress);
+        var tinvestGatewayUrl = configuration.GetValue<string>("TinvestGateway:BaseAddress");
+        Debug.Assert(!string.IsNullOrEmpty(tinvestGatewayUrl));
+        builder.Services.AddTinvestGateway(tinvestGatewayUrl);
+
+        var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
+        Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
+        builder.Services.AddVertrForecastClient(forecastGatewayUrl);
 
         builder.Services.AddApplication();
 

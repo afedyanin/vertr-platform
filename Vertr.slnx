@@ -21,6 +21,7 @@
     <Project Path="src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj" Id="f48a86ef-276f-42d6-b9fb-1c39916da738" />
     <Project Path="src/Vertr.Common.DataAccess.Redis/Vertr.Common.DataAccess.Redis.csproj" Id="00b4a502-70fa-44de-ab8b-b00fb379ffcf" />
     <Project Path="src/Vertr.Common.DataAccess/Vertr.Common.DataAccess.csproj" Id="9439fcff-b711-48be-9843-23cfd1c1b727" />
+    <Project Path="src/Vertr.Common.ForecastClient/Vertr.Common.ForecastClient.csproj" Id="aa5e6588-a15c-4513-a6e6-0693b8c3dab9" />
   </Folder>
   <Folder Name="/src/TinvestGateway/">
     <Project Path="src/Vertr.TinvestGateway.DataAccess.Redis/Vertr.TinvestGateway.DataAccess.Redis.csproj" />
@@ -34,6 +35,7 @@
   <Folder Name="/tests/" />
   <Folder Name="/tests/Common/">
     <Project Path="tests/Vertr.Common.Aplication.Tests/Vertr.Common.Aplication.Tests.csproj" Id="6f5b8d2e-cfd6-4e11-b88e-1637e59f945d" />
+    <Project Path="tests/Vertr.Common.ForecastClient.Tests/Vertr.Common.ForecastClient.Tests.csproj" Id="5148c12a-fb3d-42f7-8c63-6cdd689f1b05" />
     <Project Path="tests/Vertr.Common.Tests/Vertr.Common.Tests.csproj" />
   </Folder>
   <Folder Name="/tests/TinvestGateway/">

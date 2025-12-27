@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Refit" Version="9.0.2" />
+  </ItemGroup>
+</Project>

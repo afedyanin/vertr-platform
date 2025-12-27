@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile.TinvestGateway
     ports:
-      - "8085:8085"
+      - "8080:8080"
     networks:
       - infra_default
 

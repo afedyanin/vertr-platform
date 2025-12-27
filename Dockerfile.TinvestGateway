@@ -4,7 +4,7 @@
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8085
+EXPOSE 8080
 
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
@@ -34,5 +34,5 @@ RUN dotnet publish "src/Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.cspr
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Vertr.TinvestGateway.Host.dll", "--urls", "http://localhost:8085"]
+ENTRYPOINT ["dotnet", "Vertr.TinvestGateway.Host.dll"]
 

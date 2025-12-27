@@ -1,6 +1,7 @@
+using System.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Vertr.Common.Application;
 using Vertr.TradingConsole.BackgroundServices;
@@ -11,25 +12,28 @@ internal sealed class Program
 {
     public static async Task Main(string[] args)
     {
-        var host = Host.CreateDefaultBuilder(args)
-             .ConfigureServices((hostContext, services) =>
-             {
-                 services.AddSingleton<IConnectionMultiplexer>((sp) =>
-                    ConnectionMultiplexer.Connect("localhost"));
+        var builder = Host.CreateApplicationBuilder(args);
 
-                 services.AddTinvestGateway("http://localhost:8080");
+        var configuration = builder.Configuration;
 
-                 services.AddApplication();
+        var redisConnectionString = configuration.GetConnectionString("RedisConnection");
+        Debug.Assert(!string.IsNullOrEmpty(redisConnectionString));
 
-                 services.AddHostedService<MarketCandlesSubscriber>();
-                 services.AddHostedService<MarketOrderBookSubscriber>();
-                 services.AddHostedService<PortfolioSubscriber>();
+        builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+            ConnectionMultiplexer.Connect(redisConnectionString));
 
-                 services.AddSingleton(provider =>
-                    provider.GetRequiredService<ILoggerFactory>()
-                        .CreateLogger("TradingConsole"));
-             })
-             .Build();
+        var baseAddress = configuration.GetValue<string>("TinvestGateway:BaseAddress");
+        Debug.Assert(!string.IsNullOrEmpty(baseAddress));
+
+        builder.Services.AddTinvestGateway(baseAddress);
+
+        builder.Services.AddApplication();
+
+        builder.Services.AddHostedService<MarketCandlesSubscriber>();
+        builder.Services.AddHostedService<MarketOrderBookSubscriber>();
+        builder.Services.AddHostedService<PortfolioSubscriber>();
+
+        var host = builder.Build();
 
         await host.RunAsync();
     }

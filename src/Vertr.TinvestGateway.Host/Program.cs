@@ -34,6 +34,11 @@ public static class Program
         builder.Services.AddHostedService<OrderTradesStreamService>();
         builder.Services.AddHostedService<OrderStateStreamService>();
 
+        Console.WriteLine($"Application Name: {builder.Environment.ApplicationName}");
+        Console.WriteLine($"Environment Name: {builder.Environment.EnvironmentName}");
+        Console.WriteLine($"ContentRoot Path: {builder.Environment.ContentRootPath}");
+        Console.WriteLine($"WebRootPath: {builder.Environment.WebRootPath}");
+
         var app = builder.Build();
 
         app.UseSwagger();

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Extensions;
+using Vertr.Common.ForecastClient;
 
 namespace Vertr.BacktestConsole;
 
@@ -14,6 +15,7 @@ internal static class Program
     {
         var services = new ServiceCollection();
 
+        services.AddVertrForecastClient("http://localhost:8081");
         services.AddApplication();
         services.AddBacktest();
 
@@ -31,9 +33,13 @@ internal static class Program
         var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
 
         logger.LogInformation($"Init Random Walk portfolio...");
-        portfolioRepo.Init(["RandomWalk"]);
+        portfolioRepo.Init(
+            [
+                Predictors.Stats.HistoryAverage,
+                Predictors.Stats.RandomWalk
+            ]);
 
-        var steps = 10;
+        var steps = 1000;
         await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
         var candles = historicCandlesProvider.Get(SberId, skip: 100, take: steps);
         logger.LogWarning($"Init historic candles. {candles.GetCandlesRange()}");

@@ -10,12 +10,10 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
+	  <ProjectReference Include="..\Vertr.Common.ForecastClient\Vertr.Common.ForecastClient.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="appsettings.json">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
 	  <None Update="Data\SBER_251001_251109.csv">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

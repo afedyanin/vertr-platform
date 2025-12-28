@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
@@ -15,16 +17,26 @@ internal static class Program
     {
         var services = new ServiceCollection();
 
-        services.AddVertrForecastClient("http://localhost:8081");
+        var configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json")
+            .AddEnvironmentVariables()
+            .Build();
+
+
+        var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
+        Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
+        services.AddVertrForecastClient(forecastGatewayUrl);
+
         services.AddApplication();
         services.AddBacktest();
 
+        var loggingConfig = configuration.GetSection("Logging");
         services.AddLogging(builder => builder
-            .AddConsole()
-            .SetMinimumLevel(LogLevel.Information)
-        );
+            .AddConfiguration(loggingConfig)
+            .AddConsole());
 
         var serviceProvider = services.BuildServiceProvider();
+
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger(nameof(Program));
 
@@ -32,12 +44,9 @@ internal static class Program
         var historicCandlesProvider = serviceProvider.GetRequiredService<IHistoricCandlesProvider>();
         var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
 
-        logger.LogInformation($"Init Random Walk portfolio...");
-        portfolioRepo.Init(
-            [
-                Predictors.Stats.HistoryAverage,
-                Predictors.Stats.RandomWalk
-            ]);
+        var predictors = configuration.GetSection("Predictors").Get<string[]>() ?? [];
+        Debug.Assert(predictors.Length > 0);
+        portfolioRepo.Init(predictors);
 
         var steps = 1000;
         await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
@@ -45,16 +54,19 @@ internal static class Program
         logger.LogWarning($"Init historic candles. {candles.GetCandlesRange()}");
 
         logger.LogInformation("Starting backtest...");
+
         await pipeline.Start(dumpPortfolios: true);
 
         foreach (var candle in candles)
         {
+            // TODO: Нужен сигнал об окончании бэктеста. TCS?
             pipeline.Handle(candle);
         }
 
         await pipeline.Stop();
+
         logger.LogInformation("Backtest completed.");
 
-        await Task.Delay(1000);
+        await Task.Delay(10000);
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Extensions;
+using Vertr.Common.Contracts;
 using Vertr.Common.ForecastClient;
 
 namespace Vertr.BacktestConsole;
@@ -22,6 +23,9 @@ internal static class Program
             .AddEnvironmentVariables()
             .Build();
 
+        services
+            .AddOptionsWithValidateOnStart<ThresholdSettings>()
+            .Bind(configuration.GetSection(nameof(ThresholdSettings)));
 
         var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
@@ -48,7 +52,7 @@ internal static class Program
         Debug.Assert(predictors.Length > 0);
         portfolioRepo.Init(predictors);
 
-        var steps = 1000;
+        var steps = 100;
         await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
         var candles = historicCandlesProvider.Get(SberId, skip: 100, take: steps);
         logger.LogWarning($"Init historic candles. {candles.GetCandlesRange()}");
@@ -65,7 +69,5 @@ internal static class Program
         await pipeline.Stop();
 
         logger.LogInformation("Backtest completed.");
-
-        await Task.Delay(10000);
     }
 }

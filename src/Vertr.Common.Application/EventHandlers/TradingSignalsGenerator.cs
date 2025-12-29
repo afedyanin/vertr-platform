@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
@@ -6,18 +7,18 @@ namespace Vertr.Common.Application.EventHandlers;
 
 internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEvent>
 {
-    private const int ThresholdSigma = 1;
-    private const double DefaultThreshold = 0.001;
-
     private readonly IMarketQuoteProvider _marketQuoteProvider;
     private readonly ILogger<TradingSignalsGenerator> _logger;
+    private readonly ThresholdSettings _thresholdSettings;
 
     public TradingSignalsGenerator(
         ILogger<TradingSignalsGenerator> logger,
-        IMarketQuoteProvider marketQuoteProvider)
+        IMarketQuoteProvider marketQuoteProvider,
+        IOptions<ThresholdSettings> thresholdOptions)
     {
         _logger = logger;
         _marketQuoteProvider = marketQuoteProvider;
+        _thresholdSettings = thresholdOptions.Value;
     }
 
     public ValueTask OnEvent(CandleReceivedEvent data)
@@ -38,10 +39,15 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
                 continue;
             }
 
-            // TODO: Use fixed or floating threshold? - move to Hyperparams
-            // var stats = data.PredictionSampleInfo.ClosePriceStats;
-            // data.PriceThreshold = stats.StdDev / stats.Mean * ThresholdSigma;
-            data.PriceThreshold = DefaultThreshold * ThresholdSigma;
+            if (_thresholdSettings.UseStatsThreshold)
+            {
+                var stats = data.PredictionSampleInfo.ClosePriceStats;
+                data.PriceThreshold = stats.StdDev / stats.Mean * _thresholdSettings.ThresholdSigma;
+            }
+            else
+            {
+                data.PriceThreshold = _thresholdSettings.ThresholdValue * _thresholdSettings.ThresholdSigma;
+            }
 
             var direction = GetTradingDirection(prediction.Value.Value, data.MarketQuote.Value, data.PriceThreshold);
 

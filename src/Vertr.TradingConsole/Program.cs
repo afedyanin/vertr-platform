@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 using Vertr.Common.Application;
+using Vertr.Common.Contracts;
 using Vertr.Common.ForecastClient;
 using Vertr.TradingConsole.BackgroundServices;
 
@@ -29,6 +30,10 @@ internal sealed class Program
         var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
         builder.Services.AddVertrForecastClient(forecastGatewayUrl);
+
+        builder.Services
+            .AddOptionsWithValidateOnStart<ThresholdSettings>()
+            .Bind(configuration.GetSection(nameof(ThresholdSettings)));
 
         builder.Services.AddApplication();
 

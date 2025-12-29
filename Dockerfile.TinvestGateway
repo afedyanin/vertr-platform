@@ -16,6 +16,7 @@ COPY ["src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj", "Vertr.Common.
 COPY ["src/Vertr.Common.Application/Vertr.Common.Application.csproj", "Vertr.Common.Application/"]
 COPY ["src/Vertr.Common.DataAccess/Vertr.Common.DataAccess.csproj", "Vertr.Common.DataAccess/"]
 COPY ["src/Vertr.Common.DataAccess.Redis/Vertr.Common.DataAccess.Redis.csproj", "Vertr.Common.DataAccess.Redis/"]
+COPY ["src/Vertr.Common.ForecastClient/Vertr.Common.ForecastClient.csproj", "Vertr.Common.ForecastClient/"]
 COPY ["src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj", "Vertr.TinvestGateway/"]
 COPY ["src/Vertr.TinvestGateway.DataAccess.Redis/Vertr.TinvestGateway.DataAccess.Redis.csproj", "Vertr.TinvestGateway.DataAccess.Redis/"]
 COPY ["src/Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.csproj", "Vertr.TinvestGateway.Host/"]

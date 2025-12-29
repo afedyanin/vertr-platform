@@ -55,9 +55,10 @@ internal class CandleProcessingPipeline : ICandleProcessingPipeline
         _channelConsumerTask = ConsumeChannelAsync(dumpPortfolios, cancellationToken);
     }
 
-    public async Task Stop()
+    public Task Stop()
     {
         _candlesChannel.Writer.Complete();
+        return _channelConsumerTask ?? Task.CompletedTask;
     }
 
     private async Task ConsumeChannelAsync(bool dumpPortfolios = false, CancellationToken cancellationToken = default)

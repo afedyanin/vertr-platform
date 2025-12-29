@@ -59,7 +59,6 @@ internal static class Program
 
         foreach (var candle in candles)
         {
-            // TODO: Нужен сигнал об окончании бэктеста. TCS?
             pipeline.Handle(candle);
         }
 

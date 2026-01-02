@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,6 +43,14 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
         _portfolioRepository.Init(_predictors);
     }
 
+    protected override ValueTask OnBeforeStop()
+    {
+        var dump = DumpPortfolios(_portfolioRepository, _instruments);
+        _logger.LogWarning(dump);
+
+        return base.OnBeforeStop();
+    }
+
     public override void HandleSubscription(RedisChannel channel, RedisValue message)
     {
         var portfolio = Portfolio.FromJson(message.ToString());
@@ -55,5 +64,20 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
         _portfolioRepository.Update(portfolio);
         var predictor = _portfolioRepository.GetPredictor(portfolio.Id);
         _logger.LogInformation(portfolio.Dump(predictor, _instruments));
+    }
+
+    private static string DumpPortfolios(
+        IPortfoliosLocalStorage portfoliosLocalStorage,
+        Instrument[] instruments)
+    {
+        var portfolios = portfoliosLocalStorage.GetAll();
+        var sb = new StringBuilder();
+
+        foreach (var kvp in portfolios)
+        {
+            sb.AppendLine(kvp.Value.Dump(kvp.Key, instruments));
+        }
+
+        return sb.ToString();
     }
 }

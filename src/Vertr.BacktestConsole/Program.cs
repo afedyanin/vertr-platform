@@ -45,26 +45,46 @@ internal static class Program
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger(nameof(Program));
 
-        var portfolioRepo = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         var historicCandlesProvider = serviceProvider.GetRequiredService<IHistoricCandlesProvider>();
-        var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
+
         var tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
-        var portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
+        var instruments = await tradingGateway.GetAllInstruments();
 
         var predictors = configuration.GetSection("Predictors").Get<string[]>() ?? [];
         Debug.Assert(predictors.Length > 0);
-        portfolioRepo.Init(predictors);
+
+        await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
 
         var steps = 100;
-        await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
         var candles = historicCandlesProvider.Get(SberId, skip: 100, take: steps);
         logger.LogWarning($"Init historic candles. {candles.GetCandlesRange()}");
 
-        var instruments = await tradingGateway.GetAllInstruments();
+        logger.LogInformation("Starting backtest...");
+
+        var portfolios = await ExecuteBacktest(
+            serviceProvider,
+            instruments,
+            predictors,
+            candles,
+            logger);
+
+        logger.LogInformation("Backtest completed.");
+    }
+
+    private static async Task<IReadOnlyDictionary<string, Portfolio>> ExecuteBacktest(
+        IServiceProvider serviceProvider,
+        Instrument[] instruments,
+        string[] predictors,
+        IEnumerable<Candle> candles,
+        ILogger logger)
+    {
+        var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
+        var portfolioRepo = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
+        var portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
+
+        portfolioRepo.Init(predictors);
 
         pipeline.OnCandleEvent = (evt) => OnCandleEvent(evt, portfolioRepo, instruments, logger);
-
-        logger.LogInformation("Starting backtest...");
 
         await pipeline.Start();
 
@@ -76,8 +96,7 @@ internal static class Program
         await pipeline.Stop();
         await portfolioManager.CloseAllPositions();
 
-        logger.LogWarning(DumpPortfolios(portfolioRepo, instruments));
-        logger.LogInformation("Backtest completed.");
+        return portfolioRepo.GetAll();
     }
 
     private static ValueTask OnCandleEvent(
@@ -87,16 +106,17 @@ internal static class Program
         ILogger logger)
     {
         logger.LogInformation(candleReceivedEvent.Dump());
-        logger.LogInformation(DumpPortfolios(portfoliosLocalStorage, instruments));
+
+        var portfolios = portfoliosLocalStorage.GetAll();
+        logger.LogInformation(DumpPortfolios(portfolios, instruments));
 
         return ValueTask.CompletedTask;
     }
 
     private static string DumpPortfolios(
-        IPortfoliosLocalStorage portfoliosLocalStorage,
+        IReadOnlyDictionary<string, Portfolio> portfolios,
         Instrument[] instruments)
     {
-        var portfolios = portfoliosLocalStorage.GetAll();
         var sb = new StringBuilder();
 
         foreach (var kvp in portfolios)

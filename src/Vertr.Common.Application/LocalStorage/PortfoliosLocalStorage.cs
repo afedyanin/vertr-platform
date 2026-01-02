@@ -60,6 +60,9 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
 
     public void Init(string[] precitors)
     {
+        _portfolios.Clear();
+        _predictors.Clear();
+
         foreach (var precitor in precitors.Distinct())
         {
             var portfolio = new Portfolio

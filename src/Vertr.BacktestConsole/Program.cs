@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
 using System.Text;
+using Microsoft.Data.Analysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -54,8 +56,18 @@ internal static class Program
         var predictors = configuration.GetSection("Predictors").Get<string[]>() ?? [];
         Debug.Assert(predictors.Length > 0);
 
-        var steps = 100;
-        var tests = 5;
+        var steps = 60 * 8;
+        var testCounts = new int[]
+        {
+            3,
+            5,
+            10,
+            20,
+            40,
+            100,
+            200,
+            300
+        };
 
         await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
         var totalRange = historicCandlesProvider.GetRange(SberId);
@@ -67,46 +79,62 @@ internal static class Program
             return;
         }
 
-        var portfoliosByPredictor = new Dictionary<string, List<Portfolio>>();
+        var btStatsDict = new Dictionary<int, Dictionary<string, PortfolioInstrumentStats>>();
 
-        for (var i = 0; i < tests; i++)
+        foreach (var testSize in testCounts)
         {
-            var maxSeed = CandlesLocalStorage.CandlesBufferLength + steps;
-            var randomSeed = Random.Shared.Next(0, maxSeed);
+            logger.LogInformation("Executing test size={TestSize}.", testSize);
 
-            var portfolios = await ExecuteBacktest(
-                serviceProvider,
-                steps,
-                instruments,
-                predictors,
-                logger,
-                randomSeed);
+            var portfoliosByPredictor = new Dictionary<string, List<Portfolio>>();
 
-            foreach (var item in portfolios)
+            for (var i = 0; i < testSize; i++)
             {
-                portfoliosByPredictor.TryGetValue(item.Key, out var portfolioList);
+                var maxSeed = CandlesLocalStorage.CandlesBufferLength + steps;
+                var randomSeed = Random.Shared.Next(0, maxSeed);
 
-                if (portfolioList == null)
+                var portfolios = await ExecuteBacktest(
+                    serviceProvider,
+                    steps,
+                    instruments,
+                    predictors,
+                    logger,
+                    randomSeed);
+
+                foreach (var item in portfolios)
                 {
-                    portfolioList = [];
-                    portfoliosByPredictor[item.Key] = portfolioList;
-                }
+                    portfoliosByPredictor.TryGetValue(item.Key, out var portfolioList);
 
-                portfolioList.Add(item.Value);
+                    if (portfolioList == null)
+                    {
+                        portfolioList = [];
+                        portfoliosByPredictor[item.Key] = portfolioList;
+                    }
+
+                    portfolioList.Add(item.Value);
+                }
+            }
+
+            var statsDict = new Dictionary<string, PortfolioInstrumentStats>();
+
+            foreach (var kvp in portfoliosByPredictor)
+            {
+                statsDict[kvp.Key] = kvp.Value.StatsByInstrument(RubId);
+            }
+
+            btStatsDict[testSize] = statsDict;
+
+            logger.LogInformation("Test result for test size={TestSize}", testSize);
+
+            foreach (var kvp in statsDict)
+            {
+                logger.LogInformation($"{kvp.Key}: {kvp.Value}");
             }
         }
 
-        var statsDict = new Dictionary<string, PortfolioInstrumentStats>();
+        var df = CreateDataFrame(btStatsDict);
+        DataFrame.SaveCsv(df, "Data\\bt_stats.csv");
 
-        foreach (var kvp in portfoliosByPredictor)
-        {
-            statsDict[kvp.Key] = kvp.Value.StatsByInstrument(RubId);
-        }
-
-        foreach (var kvp in statsDict)
-        {
-            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
-        }
+        logger.LogInformation("Backtest completed.");
     }
 
     private static async Task<IReadOnlyDictionary<string, Portfolio>> ExecuteBacktest(
@@ -139,7 +167,7 @@ internal static class Program
 
         portfolioRepo.Init(predictors);
 
-        pipeline.OnCandleEvent = (evt) => OnCandleEvent(evt, portfolioRepo, instruments, logger);
+        //pipeline.OnCandleEvent = (evt) => OnCandleEvent(evt, portfolioRepo, instruments, logger);
 
         await pipeline.Start();
 
@@ -152,6 +180,50 @@ internal static class Program
         await portfolioManager.CloseAllPositions();
 
         return portfolioRepo.GetAll();
+    }
+
+    // https://swharden.com/blog/2022-05-01-dotnet-dataframe/
+    private static DataFrame CreateDataFrame(Dictionary<int, Dictionary<string, PortfolioInstrumentStats>> btStatsDict)
+    {
+        var columns = new Dictionary<string, List<double>>()
+        {
+            { "batch_size", new List<double>() }
+        };
+
+        foreach (var kvBatch in btStatsDict)
+        {
+            columns["batch_size"].Add(kvBatch.Key);
+
+            foreach ((var colName, var colValue) in ToColumns(kvBatch.Value))
+            {
+                columns.TryGetValue(colName, out var colValues);
+
+                if (colValues == null)
+                {
+                    colValues = [];
+                    columns[colName] = colValues;
+                }
+
+                colValues.Add(colValue);
+            }
+        }
+
+        var dfCols = columns.Select(kvp => new DoubleDataFrameColumn(kvp.Key, kvp.Value));
+        var df = new DataFrame(dfCols);
+
+        return df;
+    }
+
+    private static IEnumerable<(string, double)> ToColumns(Dictionary<string, PortfolioInstrumentStats> statsDict)
+    {
+        var cols = new List<(string, double)>();
+
+        foreach (var kvp in statsDict)
+        {
+            cols.AddRange(kvp.Value.ToColumns(kvp.Key));
+        }
+
+        return cols;
     }
 
     private static ValueTask OnCandleEvent(

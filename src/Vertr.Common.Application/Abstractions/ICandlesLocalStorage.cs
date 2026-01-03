@@ -12,4 +12,6 @@ public interface ICandlesLocalStorage
     public void Update(Candle candle);
 
     public Candle[] Get(Guid instrumentId);
+
+    public void Clear();
 }

@@ -15,6 +15,14 @@ public static class PortfolioExtensions
         return sb.ToString();
     }
 
+    public static string Stats(this IEnumerable<Portfolio> porftolios, string name, Instrument[] instruments)
+    {
+        var sb = new StringBuilder();
+        // TODO: Implement this
+
+        return sb.ToString();
+    }
+
     private static string DumpPositions(this IList<Position> positions, Instrument[] instruments)
     {
         var sb = new StringBuilder();

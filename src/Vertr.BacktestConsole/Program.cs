@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Extensions;
+using Vertr.Common.Application.LocalStorage;
 using Vertr.Common.Contracts;
 using Vertr.Common.ForecastClient;
 
@@ -46,38 +47,75 @@ internal static class Program
         var logger = loggerFactory.CreateLogger(nameof(Program));
 
         var historicCandlesProvider = serviceProvider.GetRequiredService<IHistoricCandlesProvider>();
-
         var tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
         var instruments = await tradingGateway.GetAllInstruments();
 
         var predictors = configuration.GetSection("Predictors").Get<string[]>() ?? [];
         Debug.Assert(predictors.Length > 0);
 
-        await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
-
         var steps = 100;
-        var candles = historicCandlesProvider.Get(SberId, skip: 100, take: steps);
-        logger.LogWarning($"Init historic candles. {candles.GetCandlesRange()}");
+        var tests = 2;
 
-        logger.LogInformation("Starting backtest...");
+        await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
+        var totalRange = historicCandlesProvider.GetRange(SberId);
 
-        var portfolios = await ExecuteBacktest(
-            serviceProvider,
-            instruments,
-            predictors,
-            candles,
-            logger);
+        if (totalRange == null ||
+            totalRange.Value.Count < (CandlesLocalStorage.CandlesBufferLength + steps * 2))
+        {
+            logger.LogError("Insufficient historic candles for backtest.");
+            return;
+        }
 
-        logger.LogInformation("Backtest completed.");
+        var portfolioStats = new Dictionary<string, List<Portfolio>>();
+
+        for (var i = 0; i < tests; i++)
+        {
+            var maxSeed = CandlesLocalStorage.CandlesBufferLength + steps;
+            var randomSeed = Random.Shared.Next(0, maxSeed);
+
+            var portfolios = await ExecuteBacktest(
+                serviceProvider,
+                steps,
+                instruments,
+                predictors,
+                logger,
+                randomSeed);
+
+            foreach (var item in portfolios)
+            {
+                portfolioStats.TryGetValue(item.Key, out var portfolioList);
+                portfolioList ??= [];
+                portfolioList.Add(item.Value);
+            }
+        }
+
+        // TODO: Dump portfolioStats
     }
 
     private static async Task<IReadOnlyDictionary<string, Portfolio>> ExecuteBacktest(
         IServiceProvider serviceProvider,
+        int steps,
         Instrument[] instruments,
         string[] predictors,
-        IEnumerable<Candle> candles,
-        ILogger logger)
+        ILogger logger,
+        int? seed = null)
     {
+        var candlesLocalStorage = serviceProvider.GetRequiredService<ICandlesLocalStorage>();
+        var historicCandlesProvider = serviceProvider.GetRequiredService<IHistoricCandlesProvider>();
+
+        seed ??= 0;
+
+        var bufferCandles = historicCandlesProvider.Get(
+            SberId, skip: seed.Value, take: CandlesLocalStorage.CandlesBufferLength);
+
+        candlesLocalStorage.Clear();
+        candlesLocalStorage.Fill(bufferCandles);
+
+        var candles = historicCandlesProvider.Get(
+            SberId, skip: seed.Value + CandlesLocalStorage.CandlesBufferLength, take: steps);
+
+        logger.LogDebug($"Init historic candles. {candles.GetCandlesRange()}");
+
         var pipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
         var portfolioRepo = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         var portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
@@ -105,10 +143,14 @@ internal static class Program
         Instrument[] instruments,
         ILogger logger)
     {
-        logger.LogInformation(candleReceivedEvent.Dump());
 
-        var portfolios = portfoliosLocalStorage.GetAll();
-        logger.LogInformation(DumpPortfolios(portfolios, instruments));
+        if (candleReceivedEvent.OrderRequests.Any())
+        {
+            logger.LogInformation(candleReceivedEvent.Dump());
+        }
+
+        //var portfolios = portfoliosLocalStorage.GetAll();
+        //logger.LogInformation(DumpPortfolios(portfolios, instruments));
 
         return ValueTask.CompletedTask;
     }

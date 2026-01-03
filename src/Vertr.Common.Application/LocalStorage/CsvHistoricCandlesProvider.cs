@@ -1,4 +1,5 @@
 ﻿using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Application.Extensions;
 using Vertr.Common.Application.Helpers;
 using Vertr.Common.Contracts;
 
@@ -13,6 +14,12 @@ internal class CsvHistoricCandlesProvider : IHistoricCandlesProvider
         var candles = CsvImporter.LoadCandles(pathToCsv, instrumentId);
         _candlesDict[instrumentId] = candles.OrderBy(c => c.TimeUtc);
     }
+
+    public CandleRangeInfo? GetRange(Guid instrumentId)
+    {
+        return !_candlesDict.TryGetValue(instrumentId, out var items) ? null : items.GetCandlesRange();
+    }
+
     public IEnumerable<Candle> Get(Guid instrumentId, int skip = 0, int take = 0)
     {
         if (!_candlesDict.TryGetValue(instrumentId, out var items))

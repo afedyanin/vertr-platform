@@ -9,6 +9,8 @@ internal sealed class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuotePr
 
     public const int CandlesBufferLength = 100;
 
+    public void Clear() => _candles.Clear();
+
     public void Update(Candle candle)
     {
         if (!_candles.TryGetValue(candle.InstrumentId, out var list))

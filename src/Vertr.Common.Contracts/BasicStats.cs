@@ -1,6 +1,6 @@
 ﻿namespace Vertr.Common.Contracts;
 
-public record struct PriceStats
+public record struct BasicStats
 {
     public double Mean { get; set; }
 

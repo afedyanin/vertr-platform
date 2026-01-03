@@ -15,22 +15,38 @@ public static class PortfolioExtensions
         return sb.ToString();
     }
 
-    public static string Stats(this IEnumerable<Portfolio> porftolios, string name, Instrument[] instruments)
+    public static PortfolioInstrumentStats StatsByInstrument(this IEnumerable<Portfolio> porftolios, Guid instrumentId)
     {
-        var sb = new StringBuilder();
-        // TODO: Implement this
+        var positionsStats = porftolios
+            .SelectMany(p => p.Positions)
+            .Where(pos => pos.InstrumentId == instrumentId)
+            .Select(p => p.Amount)
+            .GetStats();
 
-        return sb.ToString();
+        var commissionsStats = porftolios
+            .SelectMany(p => p.Comissions)
+            .Where(pos => pos.InstrumentId == instrumentId)
+            .Select(p => p.Amount)
+            .GetStats();
+
+        var stats = new PortfolioInstrumentStats
+        {
+            InstrumentId = instrumentId,
+            PositionsStats = positionsStats,
+            CommissionsStats = commissionsStats
+        };
+
+        return stats;
     }
 
     private static string DumpPositions(this IList<Position> positions, Instrument[] instruments)
     {
         var sb = new StringBuilder();
 
-        foreach (var commission in positions)
+        foreach (var pos in positions)
         {
-            var ticker = instruments.GetTicker(commission.InstrumentId);
-            sb.Append($"{ticker}={commission.Amount};");
+            var ticker = instruments.GetTicker(pos.InstrumentId);
+            sb.Append($"{ticker}={pos.Amount};");
         }
 
         return sb.ToString().TrimEnd(';');

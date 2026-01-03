@@ -40,7 +40,7 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
             Count = candles.Length,
             From = candles.First().TimeUtc,
             To = candles.Last().TimeUtc,
-            ClosePriceStats = candles.Select(c => c.Close).GetPriceStats()
+            ClosePriceStats = candles.Select(c => c.Close).GetStats()
         };
 
         var predictors = _portfolioRepository.GetAll().Keys;

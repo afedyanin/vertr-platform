@@ -15,6 +15,7 @@ namespace Vertr.BacktestConsole;
 internal static class Program
 {
     private static readonly Guid SberId = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
+    private static readonly Guid RubId = new Guid("a92e2e25-a698-45cc-a781-167cf465257c");
 
     public static async Task Main(string[] args)
     {
@@ -66,7 +67,7 @@ internal static class Program
             return;
         }
 
-        var portfolioStats = new Dictionary<string, List<Portfolio>>();
+        var portfoliosByPredictor = new Dictionary<string, List<Portfolio>>();
 
         for (var i = 0; i < tests; i++)
         {
@@ -83,13 +84,25 @@ internal static class Program
 
             foreach (var item in portfolios)
             {
-                portfolioStats.TryGetValue(item.Key, out var portfolioList);
+                portfoliosByPredictor.TryGetValue(item.Key, out var portfolioList);
                 portfolioList ??= [];
                 portfolioList.Add(item.Value);
             }
         }
 
-        // TODO: Dump portfolioStats
+        var statsDict = new Dictionary<string, PortfolioInstrumentStats>();
+
+        foreach (var kvp in portfoliosByPredictor)
+        {
+            statsDict[kvp.Key] = kvp.Value.StatsByInstrument(RubId);
+        }
+
+        foreach (var kvp in statsDict)
+        {
+            var stats = kvp.Value;
+            Console.WriteLine($"{kvp.Key}: Trading={stats.PositionsStats.Mean} ({stats.PositionsStats.StdDev}) Commission={}");
+        }
+        // TODO: Dump statsDict
     }
 
     private static async Task<IReadOnlyDictionary<string, Portfolio>> ExecuteBacktest(

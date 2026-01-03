@@ -8,5 +8,5 @@ public record struct PredictionSampleInfo
 
     public int Count { get; set; }
 
-    public PriceStats ClosePriceStats { get; set; }
+    public BasicStats ClosePriceStats { get; set; }
 }

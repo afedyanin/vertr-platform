@@ -4,14 +4,14 @@ namespace Vertr.Common.Application.Extensions;
 
 public static class PriceStatsExtensions
 {
-    public static PriceStats GetPriceStats(this IEnumerable<decimal> values)
+    public static BasicStats GetStats(this IEnumerable<decimal> values)
     {
         var count = values.Count();
         var avg = values.Average();
 
         if (count <= 1)
         {
-            return new PriceStats
+            return new BasicStats
             {
                 Count = count,
                 Mean = (double)avg,
@@ -22,7 +22,7 @@ public static class PriceStatsExtensions
         var sum = values.Sum(d => (d - avg) * (d - avg));
         var dev = Math.Sqrt((double)sum / (count - 1));
 
-        return new PriceStats
+        return new BasicStats
         {
             Count = count,
             Mean = (double)avg,

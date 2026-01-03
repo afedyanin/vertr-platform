@@ -7,9 +7,20 @@ public static class PriceStatsExtensions
     public static BasicStats GetStats(this IEnumerable<decimal> values)
     {
         var count = values.Count();
+
+        if (count == 0)
+        {
+            return new BasicStats
+            {
+                Count = 0,
+                Mean = 0,
+                StdDev = 0,
+            };
+        }
+
         var avg = values.Average();
 
-        if (count <= 1)
+        if (count == 1)
         {
             return new BasicStats
             {

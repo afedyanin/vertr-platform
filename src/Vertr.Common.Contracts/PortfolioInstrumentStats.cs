@@ -7,4 +7,9 @@ public record class PortfolioInstrumentStats
     public BasicStats PositionsStats { get; init; }
 
     public BasicStats CommissionsStats { get; init; }
+
+    public override string? ToString()
+    {
+        return $"Pos=[{PositionsStats.Mean} +-{PositionsStats.StdDev} N={PositionsStats.Count}] Com=[{CommissionsStats.Mean} +-{CommissionsStats.StdDev} N={CommissionsStats.Count}]";
+    }
 }

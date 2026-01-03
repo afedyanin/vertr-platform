@@ -55,7 +55,7 @@ internal static class Program
         Debug.Assert(predictors.Length > 0);
 
         var steps = 100;
-        var tests = 2;
+        var tests = 5;
 
         await historicCandlesProvider.Load("Data\\SBER_251101_251109.csv", SberId);
         var totalRange = historicCandlesProvider.GetRange(SberId);
@@ -85,7 +85,13 @@ internal static class Program
             foreach (var item in portfolios)
             {
                 portfoliosByPredictor.TryGetValue(item.Key, out var portfolioList);
-                portfolioList ??= [];
+
+                if (portfolioList == null)
+                {
+                    portfolioList = [];
+                    portfoliosByPredictor[item.Key] = portfolioList;
+                }
+
                 portfolioList.Add(item.Value);
             }
         }
@@ -99,10 +105,8 @@ internal static class Program
 
         foreach (var kvp in statsDict)
         {
-            var stats = kvp.Value;
-            Console.WriteLine($"{kvp.Key}: Trading={stats.PositionsStats.Mean} ({stats.PositionsStats.StdDev}) Commission={}");
+            Console.WriteLine($"{kvp.Key}: {kvp.Value}");
         }
-        // TODO: Dump statsDict
     }
 
     private static async Task<IReadOnlyDictionary<string, Portfolio>> ExecuteBacktest(

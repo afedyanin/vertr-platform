@@ -26,13 +26,13 @@ internal class PredictorGateway : IPredictorGateway
 
                 if (Predictors.Ml.AllKeys.Contains(predictor))
                 {
-                    StatsPredictors.Add(predictor);
+                    MlPredictors.Add(predictor);
                     continue;
                 }
 
                 if (Predictors.Neural.AllKeys.Contains(predictor))
                 {
-                    StatsPredictors.Add(predictor);
+                    NeuralPredictors.Add(predictor);
                     continue;
                 }
             }
@@ -57,7 +57,7 @@ internal class PredictorGateway : IPredictorGateway
         {
             var request = new ForecastRequest
             {
-                Models = predictorsByCategory.StatsPredictors.ToArray(),
+                Models = [.. predictorsByCategory.StatsPredictors],
                 Series = series,
             };
 
@@ -69,7 +69,7 @@ internal class PredictorGateway : IPredictorGateway
         {
             var request = new ForecastRequest
             {
-                Models = predictorsByCategory.StatsPredictors.ToArray(),
+                Models = [.. predictorsByCategory.MlPredictors],
                 Series = series,
             };
 

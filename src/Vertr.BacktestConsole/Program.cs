@@ -60,11 +60,10 @@ internal static class Program
         var testCounts = new int[]
         {
             100,
-            200,
-            300
         };
 
         await historicCandlesProvider.Load("Data\\SBER_251112_251226.csv", SberId);
+        //await historicCandlesProvider.Load("Data\\SBER_251001_251109.csv", SberId);
         var totalRange = historicCandlesProvider.GetRange(SberId);
 
         if (totalRange == null ||
@@ -127,7 +126,7 @@ internal static class Program
         }
 
         var df = CreateDataFrame(btStatsDict);
-        DataFrame.SaveCsv(df, "Data\\bt_ml_251112_251226.csv");
+        DataFrame.SaveCsv(df, "Data\\bt_mixed_251112_251226.csv");
 
         logger.LogInformation("Backtest completed.");
     }

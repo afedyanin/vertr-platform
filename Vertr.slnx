@@ -13,6 +13,7 @@
     <File Path="vertr-forecast/Dockerfile" />
   </Folder>
   <Folder Name="/infra/">
+    <File Path="tech.md" />
     <File Path="vertr-infra/compose.yaml" />
   </Folder>
   <Folder Name="/src/" />

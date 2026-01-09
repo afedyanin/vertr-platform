@@ -1,0 +1,14 @@
+global:
+  scrape_interval: 15s # Частота сбора метрик
+
+# Настройки для OTLP
+otlp:
+  promote_resource_attributes:
+    - service.name
+    - service.instance.id
+    - deployment.environment
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

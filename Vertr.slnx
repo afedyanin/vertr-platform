@@ -15,6 +15,7 @@
   <Folder Name="/infra/">
     <File Path="tech.md" />
     <File Path="vertr-infra/compose.yaml" />
+    <File Path="vertr-infra/prometheus.yml" />
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/Common/">
@@ -31,6 +32,7 @@
   </Folder>
   <Folder Name="/src/Trading/">
     <Project Path="src/Vertr.BacktestConsole/Vertr.BacktestConsole.csproj" Id="218fb4a4-1246-4977-873d-7f9c3b554fdb" />
+    <Project Path="src/Vertr.TelemetryCosole/Vertr.TelemetryCosole.csproj" Id="171f80e4-93c6-48ec-9be8-ef73eef5f8a5" />
     <Project Path="src/Vertr.TradingConsole/Vertr.TradingConsole.csproj" />
   </Folder>
   <Folder Name="/tests/" />

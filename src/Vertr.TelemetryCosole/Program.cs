@@ -2,6 +2,7 @@
 using OpenTelemetry;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
 namespace Vertr.TelemetryCosole;
 
 internal sealed class Program
@@ -11,7 +12,18 @@ internal sealed class Program
         var myMeter = new Meter("MyCompany.MyConsoleApp", "1.0.0");
         var myCounter = myMeter.CreateCounter<long>("orders_processed_total", description: "Total number of processed orders");
 
+        var resourceBuilder = ResourceBuilder.CreateDefault()
+            .AddService("Vertr.TelemetryConsole", serviceVersion: "1.0.0");
+
         using var meterProvider = Sdk.CreateMeterProviderBuilder()
+            .SetResourceBuilder(resourceBuilder)
+            // Метрики среды выполнения (GC, CPU, ThreadPool)
+            .AddRuntimeInstrumentation()
+            // Метрики системных процессов
+            .AddProcessInstrumentation()
+            // Метрики исходящих HTTP-запросов (HttpClient)
+            .AddHttpClientInstrumentation()
+            // Кастомные метрики
             .AddMeter("MyCompany.MyConsoleApp") // Подписываемся на наш Meter
             .AddOtlpExporter((options, metricReadeOptions) =>
             {

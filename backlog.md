@@ -1,5 +1,10 @@
 # Backlog
 
+## 2026-01-11
+
+- https://learn.microsoft.com/ru-ru/dotnet/core/diagnostics/metrics-instrumentation
+- https://habr.com/ru/companies/kaspersky/articles/826038/
+
 ## 2026-01-02
 
 - https://learn.microsoft.com/en-us/dotnet/core/extensions/generic-host?tabs=appbuilder#host-shutdown

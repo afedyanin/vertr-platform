@@ -6,11 +6,11 @@ services:
     ports:
       - "8085:8080"
     networks:
-      - infra_default
+      - vertr-infra_infra
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker 
 
 networks:
-  infra_default:
+  vertr-infra_infra:
     external: true
     driver: bridge

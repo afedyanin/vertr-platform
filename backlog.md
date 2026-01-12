@@ -10,8 +10,6 @@
 - https://learn.microsoft.com/en-us/dotnet/core/extensions/generic-host?tabs=appbuilder#host-shutdown
 - https://learn.microsoft.com/en-us/dotnet/core/extensions/generic-host?tabs=appbuilder#ihostapplicationlifetime
 
-
-
 ## 2025-12-28
 
 - Нужен сигнал об окончании бэктеста. TCS?
@@ -20,7 +18,6 @@
 - передача параметров портфеля в консоль, вывод метрик портфеля?
 - телеметрия в графану для BT
 - объеденить DAL Common и Gateway? Используется редис напрямую без Gateway?
-
 
 ## 2025-12-27
 

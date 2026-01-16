@@ -15,6 +15,8 @@ public static class RedisDataAccessRegistrar
         services.AddTransient<IInstrumentRepository, InstrumentRepository>();
         services.AddTransient<IPortfolioRepository, PortfolioRepository>();
         services.AddTransient<IOrderBookRepository, OrderBookRepository>();
+        services.AddTransient<IMarketTradeRepository, MarketTradeRepository>();
+        services.AddTransient<IOpenInterestRepository, OpenInterestRepository>();
 
         var redisConnectionString = configuration.GetConnectionString("RedisConnection");
 

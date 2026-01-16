@@ -97,6 +97,8 @@ public class MarketDataStreamService : StreamServiceBase
         var investApiClient = scope.ServiceProvider.GetRequiredService<InvestApiClient>();
         var candlestickRepository = scope.ServiceProvider.GetRequiredService<ICandlestickRepository>();
         var orderBookRepository = scope.ServiceProvider.GetRequiredService<IOrderBookRepository>();
+        var marketTradeRepository = scope.ServiceProvider.GetRequiredService<IMarketTradeRepository>();
+        var openInterestRepository = scope.ServiceProvider.GetRequiredService<IOpenInterestRepository>();
 
         var candleRequest = new Tinkoff.InvestApi.V1.SubscribeCandlesRequest
         {
@@ -107,6 +109,12 @@ public class MarketDataStreamService : StreamServiceBase
         var orderBookRequest = new Tinkoff.InvestApi.V1.SubscribeOrderBookRequest
         {
             SubscriptionAction = Tinkoff.InvestApi.V1.SubscriptionAction.Subscribe,
+        };
+
+        var tradesRequest = new Tinkoff.InvestApi.V1.SubscribeTradesRequest
+        {
+            SubscriptionAction = Tinkoff.InvestApi.V1.SubscriptionAction.Subscribe,
+            WithOpenInterest = true,
         };
 
         foreach (var sub in TinvestSettings.Subscriptions)
@@ -131,12 +139,18 @@ public class MarketDataStreamService : StreamServiceBase
                 Depth = sub.OrderBookDepth,
                 OrderBookType = Tinkoff.InvestApi.V1.OrderBookType.All,
             });
+
+            tradesRequest.Instruments.Add(new Tinkoff.InvestApi.V1.TradeInstrument()
+            {
+                InstrumentId = sub.InstrumentId.ToString(),
+            });
         }
 
         var request = new Tinkoff.InvestApi.V1.MarketDataServerSideStreamRequest()
         {
             SubscribeCandlesRequest = candleRequest,
             SubscribeOrderBookRequest = orderBookRequest,
+            SubscribeTradesRequest = tradesRequest
         };
 
         using var stream = investApiClient.MarketDataStream.MarketDataServerSideStream(request, headers: null, deadline, stoppingToken);
@@ -176,6 +190,26 @@ public class MarketDataStreamService : StreamServiceBase
 
                 logger.LogInformation($"Order book subscriptions received: TrackingId={subs.TrackingId} Details={string.Join(',',
                     [.. all.Select(s => $"Id={s.SubscriptionId} Status={s.SubscriptionStatus} Instrument={s.InstrumentUid} Depth={s.Depth}")])}");
+            }
+            else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.Trade)
+            {
+                var marketTrade = response.Trade.Convert();
+                await marketTradeRepository.Save(marketTrade);
+                logger.LogDebug("Trade received: {Trade}", marketTrade);
+            }
+            else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.OpenInterest)
+            {
+                var openInterest = response.OpenInterest.Convert();
+                await openInterestRepository.Save(openInterest);
+                logger.LogDebug("Open interest received: {OpenInterest}", response.OpenInterest);
+            }
+            else if (response.PayloadCase == Tinkoff.InvestApi.V1.MarketDataResponse.PayloadOneofCase.SubscribeTradesResponse)
+            {
+                var subs = response.SubscribeTradesResponse;
+                var all = subs.TradeSubscriptions.ToArray();
+
+                logger.LogInformation($"Trade subscriptions received: TrackingId={subs.TrackingId} Details={string.Join(',',
+                    [.. all.Select(s => $"Id={s.SubscriptionId} Status={s.SubscriptionStatus} Instrument={s.InstrumentUid} WithOpenInterest={s.WithOpenInterest}")])}");
             }
         }
     }

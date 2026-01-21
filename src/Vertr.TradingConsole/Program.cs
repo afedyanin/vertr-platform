@@ -40,6 +40,7 @@ internal sealed class Program
         builder.Services.AddHostedService<MarketCandlesSubscriber>();
         builder.Services.AddHostedService<MarketOrderBookSubscriber>();
         builder.Services.AddHostedService<PortfolioSubscriber>();
+        builder.Services.AddHostedService<OrderBookWatcher>();
 
         var host = builder.Build();
         await host.RunAsync();

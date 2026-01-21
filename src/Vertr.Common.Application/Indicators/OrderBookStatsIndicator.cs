@@ -4,7 +4,7 @@ namespace Vertr.Common.Application.Indicators;
 
 public class OrderBookStatsIndicator
 {
-    private const int SigmaCount = 1;
+    private readonly int _sigmas;
 
     private readonly BasicStatsCounter _midPriceChangeStats = new BasicStatsCounter();
     private readonly DiffTransformer _midPriceTransformer = new DiffTransformer();
@@ -29,6 +29,11 @@ public class OrderBookStatsIndicator
     public TradingDirection AskCountSignal { get; private set; }
     public TradingDirection AskValueSignal { get; private set; }
 
+    public OrderBookStatsIndicator(int sigmas = 1)
+    {
+        _sigmas = sigmas;
+    }
+
     public void Apply(OrderBook orderBook)
     {
         MidPriceSignal = GetTradingDirection((double)orderBook.MidPrice, _midPriceTransformer, _midPriceChangeStats);
@@ -39,7 +44,7 @@ public class OrderBookStatsIndicator
     }
 
     // Using basic stats to detect order book outliers
-    private static TradingDirection GetTradingDirection(double value, DiffTransformer diffTransformer, BasicStatsCounter basicStats)
+    private TradingDirection GetTradingDirection(double value, DiffTransformer diffTransformer, BasicStatsCounter basicStats)
     {
         var change = diffTransformer.Diff(value);
 
@@ -60,6 +65,11 @@ public class OrderBookStatsIndicator
         var statsValue = stats.Value;
         var zScore = (changeValue - statsValue.Mean) / statsValue.StdDev;
 
-        return Math.Abs(zScore) >= SigmaCount ? change > 0 ? TradingDirection.Buy : TradingDirection.Sell : TradingDirection.Hold;
+        return Math.Abs(zScore) >= _sigmas ? change > 0 ? TradingDirection.Buy : TradingDirection.Sell : TradingDirection.Hold;
+    }
+
+    public override string? ToString()
+    {
+        return $"MidPriceSignal={MidPriceSignal} BidCountSignal={BidCountSignal} BidValueSignal={BidValueSignal} AskCountSignal={AskCountSignal} AskValueSignal={AskValueSignal}";
     }
 }

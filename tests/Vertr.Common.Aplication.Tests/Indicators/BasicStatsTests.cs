@@ -2,12 +2,12 @@
 
 namespace Vertr.Common.Aplication.Tests.Indicators;
 
-public class BasicStatsGaugeTests
+public class BasicStatsTests
 {
     [Test]
     public void CanAddNewValue()
     {
-        var gauge = new BasicStatsGauge();
+        var gauge = new BasicStatsCounter();
 
         var value = 156;
         gauge.Add(value);
@@ -24,7 +24,7 @@ public class BasicStatsGaugeTests
     [Test]
     public void CanAddNewValues()
     {
-        var gauge = new BasicStatsGauge();
+        var gauge = new BasicStatsCounter();
 
         gauge.Add(2);
         gauge.Add(4);

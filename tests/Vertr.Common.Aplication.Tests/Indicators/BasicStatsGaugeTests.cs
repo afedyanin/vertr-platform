@@ -15,7 +15,7 @@ public class BasicStatsGaugeTests
         using (Assert.EnterMultipleScope())
         {
             Assert.That(gauge.Count, Is.EqualTo(1));
-            Assert.That(gauge.Mean, Is.EqualTo(value));
+            Assert.That(gauge.Average, Is.EqualTo(value));
             Assert.That(gauge.Last, Is.EqualTo(value));
             Assert.That(gauge.StdDev, Is.EqualTo(0));
         }
@@ -33,7 +33,7 @@ public class BasicStatsGaugeTests
         {
             Assert.That(gauge.Count, Is.EqualTo(2));
             Assert.That(gauge.Last, Is.EqualTo(4));
-            Assert.That(gauge.Mean, Is.EqualTo(3));
+            Assert.That(gauge.Average, Is.EqualTo(3));
             Assert.That(Math.Round(gauge.StdDev, 4), Is.EqualTo(1.4142));
         });
     }

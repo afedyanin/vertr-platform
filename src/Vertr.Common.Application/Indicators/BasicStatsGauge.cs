@@ -10,9 +10,9 @@ public class BasicStatsGauge
 
     public int Count => _values.Count;
 
-    public double Last => _values.Last?.Value ?? 0;
+    public double? Last => _values.Last?.Value;
 
-    public double Mean { get; private set; }
+    public double Average { get; private set; }
 
     public double StdDev { get; private set; }
 
@@ -30,13 +30,13 @@ public class BasicStatsGauge
         }
 
         _values.AddLast(nextValue);
-
         CalculateStats();
     }
 
     public void Reset()
     {
         _values.Clear();
+        CalculateStats();
     }
 
     private void CalculateStats()
@@ -45,17 +45,19 @@ public class BasicStatsGauge
 
         if (count == 0)
         {
+            Average = 0;
+            StdDev = 0;
             return;
         }
 
-        Mean = _values.Average();
+        Average = _values.Average();
 
         if (count < 2)
         {
             return;
         }
 
-        var sum = _values.Sum(d => (d - Mean) * (d - Mean));
+        var sum = _values.Sum(d => (d - Average) * (d - Average));
         StdDev = Math.Sqrt(sum / (count - 1));
     }
 }

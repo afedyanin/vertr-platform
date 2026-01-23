@@ -34,7 +34,7 @@ services:
       POSTGRES_PASSWORD: "admin"
     restart: always        
     volumes:
-      - pgsql-data:/var/lib/postgresql/data
+      - pgsql-data:/var/lib/postgresql
     networks:
       - infra
 

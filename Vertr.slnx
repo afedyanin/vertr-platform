@@ -5,6 +5,7 @@
     <File Path="compose.yaml" />
     <File Path="Directory.Build.props" />
     <File Path="Dockerfile.TinvestGateway" />
+    <File Path="iss-api-rus-v14.pdf" />
     <File Path="LICENSE" />
     <File Path="README.md" />
   </Folder>

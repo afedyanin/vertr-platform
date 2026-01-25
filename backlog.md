@@ -1,5 +1,83 @@
 # Backlog
 
+## 2026-01-25
+
+### Common.Contracts
+
+``` csharp
+
+IRatesRepository
+Rate[] GetAll(string ticker);
+Rate GetLast(string ticker, DateTime date = null);
+Task Load(Ticker[], interval?);
+string ToJson()
+Task FromJson();
+
+// Implementation: Dictionary<Ticker, SortedList<DateTime>>
+// Проверить и поисследовать SortedList
+// Имплементация внутри MoexClient
+
+IFutureInfoRepository
+FutureInfo[] GetAll(tickerWildCard);
+FutureInfo Get(string ticker);
+Task Load(Ticker[]);
+string ToJson()
+Task FromJson();
+
+// модели
+
+InterestRate
+- Ticker
+- DateTime
+- Value (or OHLC?)
+
+FutureInfo
+- Ticker
+- ClassCode
+- ExpDate
+- LastTradeDate
+- LotSize
+- PriceStep?
+
+```
+
+### Moex.Client
+
+- имплементация IRatesRepository, IFutureInfoRepository
+- использовать HttpClient (vs HttpClientFactory)
+- набор нативных DTO моделей
+- конвертеры DTO моделей в модели Common контрактов
+	- Rate
+	- FututeInfo
+
+### Trading Console
+
+- backgroundservice MoexLoaderService
+- quartz (12.25/12.30/12.35... по будням)
+- первоначальная загрузка из JSON
+- вызгузка в JSON при апдейтах репозитория
+- проверить задержку MOEX при выдаче RUSFAR (12.30 -> 12.45)
+
+### Vertr.QuantLib
+
+- либа прайсинга
+
+``` scharp
+
+static decimal Future.Price(decimal spotPrice, decimal rate (rate[]?), DateTime expDate, DayCount daycount);
+
+```
+
+### Пайплайн арбитража
+
+- статистика по индикативному стакану (базовый актив) -> Spot.MidPrice
+- расчет теоретической цены -> FairPrice = Future.Price(Spot.MidPrice, ...)
+- получение текущей квоты из стакана -> ActualPrice
+	- если есть открытая позиция - сравнение и анализ FairPrice с текущей открытой позицией (!)
+- если |ActualPrice - FairPrice| > threshhold -> Сигнал на покупку/продажу
+- order execution -> анализ текущей позиции и выставление маркет ордера на открытие и/или разворот
+
+
 ## 2026-01-16
 
 ### Trading Console

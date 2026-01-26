@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Application.EventHandlers;
+using Vertr.Common.Application.EventHandlers.CandlesForecast;
 using Vertr.Common.Application.Extensions;
 using Vertr.Common.Application.LocalStorage;
 using Vertr.Common.Contracts;

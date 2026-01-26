@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 
-namespace Vertr.Common.Application.EventHandlers;
+namespace Vertr.Common.Application.EventHandlers.CandlesForecast;
 
 internal sealed class OrderExecutionHandler : IEventHandler<CandleReceivedEvent>
 {

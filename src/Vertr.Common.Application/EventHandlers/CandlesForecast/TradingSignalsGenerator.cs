@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.EventHandlers;
+namespace Vertr.Common.Application.EventHandlers.CandlesForecast;
 
 internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEvent>
 {

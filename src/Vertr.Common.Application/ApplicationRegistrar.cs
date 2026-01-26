@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Application.EventHandlers;
+using Vertr.Common.Application.EventHandlers.CandlesForecast;
 using Vertr.Common.Application.Gateways;
 using Vertr.Common.Application.LocalStorage;
 using Vertr.Common.Application.Services;

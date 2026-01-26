@@ -3,7 +3,7 @@ using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Extensions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.EventHandlers;
+namespace Vertr.Common.Application.EventHandlers.CandlesForecast;
 
 internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
 {

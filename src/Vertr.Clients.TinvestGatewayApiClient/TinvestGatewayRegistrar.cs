@@ -3,7 +3,7 @@ using Refit;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Clients.TinvestApiClient;
+namespace Vertr.Clients.TinvestGatewayApiClient;
 
 public static class TinvestGatewayRegistrar
 {

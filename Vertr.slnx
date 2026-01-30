@@ -20,9 +20,9 @@
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/Clients/">
-    <Project Path="src/Vertr.Common.ForecastClient/Vertr.Common.ForecastClient.csproj" Id="aa5e6588-a15c-4513-a6e6-0693b8c3dab9" />
-    <Project Path="src/Vertr.Moex.ApiClient/Vertr.Moex.ApiClient.csproj" Id="88255308-46b2-4a29-b7d7-c2be525a57da" />
-    <Project Path="Vertr.Clients.TinvestApiClient/Vertr.Clients.TinvestApiClient.csproj" Id="ac6abfba-1f3b-4572-8adf-c22018c61957" />
+    <Project Path="src/Vertr.Clients.ForecastApiClient/Vertr.Clients.ForecastApiClient.csproj" />
+    <Project Path="src/Vertr.Clients.MoexApiClient/Vertr.Clients.MoexApiClient.csproj" />
+    <Project Path="src/Vertr.Clients.TinvestGatewayApiClient/Vertr.Clients.TinvestGatewayApiClient.csproj" />
   </Folder>
   <Folder Name="/src/Common/">
     <Project Path="src/Vertr.Common.Application/Vertr.Common.Application.csproj" Id="ef22c87e-62cd-4d9e-a383-b50735021013" />
@@ -41,15 +41,13 @@
     <Project Path="src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj" />
   </Folder>
   <Folder Name="/tests/" />
-  <Folder Name="/tests/Common/">
-    <Project Path="tests/Vertr.Common.Aplication.Tests/Vertr.Common.Aplication.Tests.csproj" Id="6f5b8d2e-cfd6-4e11-b88e-1637e59f945d" />
+  <Folder Name="/tests/Clients/">
     <Project Path="tests/Vertr.Common.ForecastClient.Tests/Vertr.Common.ForecastClient.Tests.csproj" Id="5148c12a-fb3d-42f7-8c63-6cdd689f1b05" />
-    <Project Path="tests/Vertr.Common.Tests/Vertr.Common.Tests.csproj" />
-  </Folder>
-  <Folder Name="/tests/Moex/">
+    <Project Path="tests/Vertr.TinvestGateway.Tests/Vertr.TinvestGateway.Tests.csproj" />
     <Project Path="tests/Vetr.Moex.ApiClient.Tests/Vetr.Moex.ApiClient.Tests.csproj" Id="6660634c-9f0b-4395-b292-4715158459db" />
   </Folder>
-  <Folder Name="/tests/TinvestGateway/">
-    <Project Path="tests/Vertr.TinvestGateway.Tests/Vertr.TinvestGateway.Tests.csproj" />
+  <Folder Name="/tests/Common/">
+    <Project Path="tests/Vertr.Common.Aplication.Tests/Vertr.Common.Aplication.Tests.csproj" Id="6f5b8d2e-cfd6-4e11-b88e-1637e59f945d" />
+    <Project Path="tests/Vertr.Common.Tests/Vertr.Common.Tests.csproj" />
   </Folder>
 </Solution>

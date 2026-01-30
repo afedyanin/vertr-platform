@@ -1,5 +1,5 @@
 ﻿using Refit;
-using Vertr.Moex.ApiClient;
+using Vertr.Clients.MoexApiClient;
 
 namespace Vetr.Moex.ApiClient.Tests;
 

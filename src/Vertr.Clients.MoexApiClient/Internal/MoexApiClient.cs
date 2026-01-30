@@ -1,5 +1,4 @@
-﻿
-namespace Vertr.Moex.ApiClient.Internal;
+﻿namespace Vertr.Clients.MoexApiClient.Internal;
 
 internal sealed class MoexApiClient : IMoexApiClient
 {

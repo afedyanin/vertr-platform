@@ -1,7 +1,7 @@
 ﻿using Refit;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Clients.TinvestApiClient;
+namespace Vertr.Clients.TinvestGatewayApiClient;
 
 public interface ITinvestGatewayClient
 {

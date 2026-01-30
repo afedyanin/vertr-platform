@@ -8,7 +8,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Vertr.Common.Contracts\Vertr.Common.Contracts.csproj" />
-	  <ProjectReference Include="..\Vertr.Common.ForecastClient\Vertr.Common.ForecastClient.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

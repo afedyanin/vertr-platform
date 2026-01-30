@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Vertr.Common.ForecastClient.Models;
+using Vertr.Clients.ForecastApiClient.Models;
 
 namespace Vertr.Common.ForecastClient.Tests;
 

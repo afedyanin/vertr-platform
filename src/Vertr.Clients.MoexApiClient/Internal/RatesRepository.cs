@@ -1,21 +1,21 @@
 ﻿using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Moex.ApiClient.Internal;
+namespace Vertr.Clients.MoexApiClient.Internal;
 
-internal sealed class FutureInfoRepository : IFutureInfoRepository
+internal sealed class RatesRepository : IRatesRepository
 {
     public Task FromJson(string json)
     {
         throw new NotImplementedException();
     }
 
-    public FutureInfo Get(string ticker)
+    public InterestRate[] GetAll(string ticker)
     {
         throw new NotImplementedException();
     }
 
-    public FutureInfo[] GetAll(string? tickerWildCard = null)
+    public InterestRate GetLast(string ticker, DateTime? time = null)
     {
         throw new NotImplementedException();
     }

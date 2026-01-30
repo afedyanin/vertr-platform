@@ -1,9 +1,9 @@
 ﻿using Refit;
-using Vertr.Common.ForecastClient.Models;
+using Vertr.Clients.ForecastApiClient.Models;
 
-namespace Vertr.Common.ForecastClient;
+namespace Vertr.Clients.ForecastApiClient;
 
-public interface IVertrForecastClient
+public interface IForecastApiClient
 {
     [Get("/stats-forecast/all-keys")]
     Task<string[]> GetKeysStats();

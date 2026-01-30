@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.Moex.ApiClient\Vertr.Moex.ApiClient.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Clients.MoexApiClient\Vertr.Clients.MoexApiClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>

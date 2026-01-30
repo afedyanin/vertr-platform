@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Vertr.Moex.ApiClient;
+namespace Vertr.Clients.MoexApiClient;
 
 internal static class JsonOptions
 {

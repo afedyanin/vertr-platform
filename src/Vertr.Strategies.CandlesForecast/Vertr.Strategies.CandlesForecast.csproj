@@ -4,6 +4,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	    <ProjectReference Include="..\Vertr.Clients.ForecastApiClient\Vertr.Clients.ForecastApiClient.csproj" />
 	    <ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
   </ItemGroup>
 </Project>

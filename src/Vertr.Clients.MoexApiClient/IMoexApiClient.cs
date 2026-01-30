@@ -1,6 +1,6 @@
 ﻿using Refit;
 
-namespace Vertr.Moex.ApiClient;
+namespace Vertr.Clients.MoexApiClient;
 
 /// <summary>
 /// https://iss.moex.com/iss/reference/

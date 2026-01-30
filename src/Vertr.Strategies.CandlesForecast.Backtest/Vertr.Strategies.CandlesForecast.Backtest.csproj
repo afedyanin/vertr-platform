@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+	  <ProjectReference Include="..\Vertr.Clients.ForecastApiClient\Vertr.Clients.ForecastApiClient.csproj" />
 	  <ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
-	  <ProjectReference Include="..\Vertr.Common.ForecastClient\Vertr.Common.ForecastClient.csproj" />
 	  <ProjectReference Include="..\Vertr.Strategies.CandlesForecast\Vertr.Strategies.CandlesForecast.csproj" />
   </ItemGroup>
 

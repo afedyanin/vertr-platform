@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Vertr.Common.ForecastClient.Models;
+namespace Vertr.Clients.ForecastApiClient.Models;
 
 public record class ForecastRequest
 {

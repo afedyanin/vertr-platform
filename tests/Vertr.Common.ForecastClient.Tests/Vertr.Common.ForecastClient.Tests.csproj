@@ -13,7 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Vertr.Common.ForecastClient\Vertr.Common.ForecastClient.csproj" />
+	  <ProjectReference Include="..\..\src\Vertr.Clients.ForecastApiClient\Vertr.Clients.ForecastApiClient.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -6,7 +6,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\src\Vertr.Common.Application\Vertr.Common.Application.csproj" />
+	  <ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
 	</ItemGroup>
 
 </Project>

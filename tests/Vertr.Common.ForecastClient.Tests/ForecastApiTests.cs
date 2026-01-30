@@ -1,5 +1,6 @@
 ﻿using Refit;
-using Vertr.Common.ForecastClient.Models;
+using Vertr.Clients.ForecastApiClient;
+using Vertr.Clients.ForecastApiClient.Models;
 
 namespace Vertr.Common.ForecastClient.Tests;
 
@@ -7,12 +8,12 @@ public class ForecastApiTests
 {
     private const string BaseUrl = "http://localhost:8081";
 
-    private IVertrForecastClient _api;
+    private IForecastApiClient _api;
 
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-        _api = RestService.For<IVertrForecastClient>(BaseUrl);
+        _api = RestService.For<IForecastApiClient>(BaseUrl);
     }
 
     [Test]

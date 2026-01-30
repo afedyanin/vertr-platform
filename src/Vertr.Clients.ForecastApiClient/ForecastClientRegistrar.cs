@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Refit;
 
-namespace Vertr.Common.ForecastClient;
+namespace Vertr.Clients.ForecastApiClient;
 
 public static class ForecastClientRegistrar
 {
-    public static IServiceCollection AddVertrForecastClient(this IServiceCollection services, string baseAddress)
+    public static IServiceCollection AddForecastApiClient(this IServiceCollection services, string baseAddress)
     {
         services
-           .AddRefitClient<IVertrForecastClient>(
+           .AddRefitClient<IForecastApiClient>(
                new RefitSettings
                {
                    ContentSerializer = new SystemTextJsonContentSerializer(JsonOptions.DefaultOptions)

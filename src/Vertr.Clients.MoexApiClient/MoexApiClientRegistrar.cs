@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Refit;
 
-namespace Vertr.Moex.ApiClient;
+namespace Vertr.Clients.MoexApiClient;
 
 public static class MoexApiClientRegistrar
 {

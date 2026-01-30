@@ -3,10 +3,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
-using Vertr.Clients.TinvestApiClient;
+using Vertr.Clients.ForecastApiClient;
+using Vertr.Clients.TinvestGatewayApiClient;
 using Vertr.Common.Application;
 using Vertr.Common.Contracts;
-using Vertr.Common.ForecastClient;
 using Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
 
 namespace Vertr.Strategies.CandlesForecast.Trading;
@@ -32,7 +32,7 @@ internal sealed class Program
 
         var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
-        builder.Services.AddVertrForecastClient(forecastGatewayUrl);
+        builder.Services.AddForecastApiClient(forecastGatewayUrl);
 
         builder.Services
             .AddOptionsWithValidateOnStart<ThresholdSettings>()

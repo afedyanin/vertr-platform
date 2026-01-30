@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
+using Vertr.Clients.ForecastApiClient;
+using Vertr.Clients.ForecastApiClient.Models;
 using Vertr.Common.Contracts;
-using Vertr.Common.ForecastClient;
-using Vertr.Common.ForecastClient.Models;
 using Vertr.Strategies.CandlesForecast.Abstractions;
 
 namespace Vertr.Strategies.CandlesForecast.Gateways;
@@ -39,9 +39,9 @@ internal sealed class PredictorGateway : IPredictorGateway
         }
     }
 
-    private readonly IVertrForecastClient _forecastClient;
+    private readonly IForecastApiClient _forecastClient;
 
-    public PredictorGateway(IVertrForecastClient forecastClient)
+    public PredictorGateway(IForecastApiClient forecastClient)
     {
         _forecastClient = forecastClient;
     }

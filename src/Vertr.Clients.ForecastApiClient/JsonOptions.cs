@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Vertr.Common.ForecastClient;
+namespace Vertr.Clients.ForecastApiClient;
 
 internal static class JsonOptions
 {

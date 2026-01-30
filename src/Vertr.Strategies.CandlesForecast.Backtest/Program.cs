@@ -5,12 +5,12 @@ using Microsoft.Data.Analysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Vertr.Clients.ForecastApiClient;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Extensions;
 using Vertr.Common.Application.LocalStorage;
 using Vertr.Common.Contracts;
-using Vertr.Common.ForecastClient;
 using Vertr.Strategies.CandlesForecast.Abstractions;
 using Vertr.Strategies.CandlesForecast.Extensions;
 
@@ -36,7 +36,7 @@ internal static class Program
 
         var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
-        services.AddVertrForecastClient(forecastGatewayUrl);
+        services.AddForecastApiClient(forecastGatewayUrl);
 
         services.AddApplication();
         services.AddCandlesForecastBacktest();

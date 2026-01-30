@@ -1,4 +1,4 @@
-﻿namespace Vertr.Common.ForecastClient;
+﻿namespace Vertr.Clients.ForecastApiClient;
 
 public static class Predictors
 {

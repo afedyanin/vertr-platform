@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
-using Vertr.Common.DataAccess.Repositories;
 using Vertr.TinvestGateway.Abstractions;
 using Vertr.TinvestGateway.Models.Orders;
 using Vertr.TinvestGateway.Models.Orders.Enums;

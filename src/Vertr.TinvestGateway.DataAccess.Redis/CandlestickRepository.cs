@@ -1,7 +1,7 @@
 using StackExchange.Redis;
 using Vertr.Common.Contracts;
 using Vertr.Common.Contracts.Converters;
-using Vertr.Common.DataAccess.Repositories;
+using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.DataAccess.Redis;
 

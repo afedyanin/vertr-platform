@@ -1,6 +1,6 @@
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.DataAccess.Repositories;
+namespace Vertr.TinvestGateway.Repositories;
 
 public interface IInstrumentRepository
 {

@@ -29,15 +29,15 @@
   <Folder Name="/src/Moex/">
     <Project Path="src/Vertr.Moex.ApiClient/Vertr.Moex.ApiClient.csproj" Id="88255308-46b2-4a29-b7d7-c2be525a57da" />
   </Folder>
+  <Folder Name="/src/Strategies/">
+    <Project Path="src/Vertr.Strategies.CandlesForecast.Backtest/Vertr.Strategies.CandlesForecast.Backtest.csproj" Id="b6c66a60-d04c-4862-b2e8-d20ad363d20e" />
+    <Project Path="src/Vertr.Strategies.CandlesForecast.Trading/Vertr.Strategies.CandlesForecast.Trading.csproj" Id="f6387e18-2764-4064-8a01-115547adf854" />
+    <Project Path="src/Vertr.Strategies.CandlesForecast/Vertr.Strategies.CandlesForecast.csproj" Id="79e0d628-66ef-4841-964b-b64eae0bdfcc" />
+  </Folder>
   <Folder Name="/src/TinvestGateway/">
     <Project Path="src/Vertr.TinvestGateway.DataAccess.Redis/Vertr.TinvestGateway.DataAccess.Redis.csproj" />
     <Project Path="src/Vertr.TinvestGateway.Host/Vertr.TinvestGateway.Host.csproj" />
     <Project Path="src/Vertr.TinvestGateway/Vertr.TinvestGateway.csproj" />
-  </Folder>
-  <Folder Name="/src/Trading/">
-    <Project Path="src/Vertr.BacktestConsole/Vertr.BacktestConsole.csproj" Id="218fb4a4-1246-4977-873d-7f9c3b554fdb" />
-    <Project Path="src/Vertr.TelemetryCosole/Vertr.TelemetryCosole.csproj" Id="171f80e4-93c6-48ec-9be8-ef73eef5f8a5" />
-    <Project Path="src/Vertr.TradingConsole/Vertr.TradingConsole.csproj" />
   </Folder>
   <Folder Name="/tests/" />
   <Folder Name="/tests/Common/">

@@ -1,0 +1,9 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<PackageReference Include="CsvHelper" Version="33.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	    <ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
+  </ItemGroup>
+</Project>

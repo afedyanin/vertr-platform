@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Vertr.Common.Application\Vertr.Common.Application.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.Strategies.CandlesForecast\Vertr.Strategies.CandlesForecast.csproj" />
   </ItemGroup>
 
   <ItemGroup>

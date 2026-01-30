@@ -3,7 +3,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Moex.ApiClient.Internal;
 
-internal class FutureInfoRepository : IFutureInfoRepository
+internal sealed class FutureInfoRepository : IFutureInfoRepository
 {
     public Task FromJson(string json)
     {

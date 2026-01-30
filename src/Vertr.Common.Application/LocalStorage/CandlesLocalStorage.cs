@@ -3,7 +3,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.LocalStorage;
 
-internal sealed class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuoteProvider
+public class CandlesLocalStorage : ICandlesLocalStorage, IMarketQuoteProvider
 {
     private readonly Dictionary<Guid, SortedList<DateTime, Candle>> _candles = [];
 

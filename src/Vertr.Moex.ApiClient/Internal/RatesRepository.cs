@@ -3,7 +3,7 @@ using Vertr.Common.Contracts;
 
 namespace Vertr.Moex.ApiClient.Internal;
 
-internal class RatesRepository : IRatesRepository
+internal sealed class RatesRepository : IRatesRepository
 {
     public Task FromJson(string json)
     {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Refit;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Application.EventHandlers.CandlesForecast;
 using Vertr.Common.Application.Gateways;
 using Vertr.Common.Application.LocalStorage;
 using Vertr.Common.Application.Services;
@@ -13,21 +12,12 @@ public static class ApplicationRegistrar
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddSingleton<MarketDataPredictor>();
-        services.AddSingleton<TradingSignalsGenerator>();
-        services.AddSingleton<PortfolioPositionHandler>();
-        services.AddSingleton<OrderExecutionHandler>();
-        services.AddTransient<ICandleProcessingPipeline, CandleProcessingPipeline>();
-
         services.AddSingleton<IPortfoliosLocalStorage, PortfoliosLocalStorage>();
         services.AddSingleton<IInstrumentsLocalStorage, InstrumentsLocalStorage>();
         services.AddSingleton<IPortfolioManager, PortfolioManager>();
 
         services.AddSingleton<CandlesLocalStorage>();
         services.AddSingleton<ICandlesLocalStorage>(sp => sp.GetRequiredService<CandlesLocalStorage>());
-
-        // services.AddSingleton<IPredictorGateway, PredictorGatewayStub>();
-        services.AddSingleton<IPredictorGateway, PredictorGateway>();
 
         return services;
     }
@@ -52,16 +42,6 @@ public static class ApplicationRegistrar
         services.AddSingleton<OrderBooksLocalStorage>();
         services.AddSingleton<IOrderBooksLocalStorage>(sp => sp.GetRequiredService<OrderBooksLocalStorage>());
         services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<OrderBooksLocalStorage>());
-        return services;
-    }
-
-
-    public static IServiceCollection AddBacktest(this IServiceCollection services)
-    {
-        services.AddSingleton<IHistoricCandlesProvider, CsvHistoricCandlesProvider>();
-        services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<CandlesLocalStorage>());
-        services.AddSingleton<ITradingGateway, BacktestGateway>();
-
         return services;
     }
 }

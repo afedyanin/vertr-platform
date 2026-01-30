@@ -1,7 +1,7 @@
 ﻿
 namespace Vertr.Moex.ApiClient.Internal;
 
-internal class MoexApiClient : IMoexApiClient
+internal sealed class MoexApiClient : IMoexApiClient
 {
     public Task<string> GetAllSecurities()
     {

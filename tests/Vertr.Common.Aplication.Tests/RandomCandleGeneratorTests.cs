@@ -1,5 +1,6 @@
 ﻿using Vertr.Common.Application.Extensions;
-using Vertr.Common.Application.Services;
+using Vertr.Strategies.CandlesForecast.Services;
+using Vertr.Strategies.CandlesForecast.Extensions;
 
 namespace Vertr.Common.Aplication.Tests;
 

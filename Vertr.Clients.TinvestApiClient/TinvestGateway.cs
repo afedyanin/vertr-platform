@@ -2,7 +2,7 @@
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Gateways;
+namespace Vertr.Clients.TinvestApiClient;
 
 internal sealed class TinvestGateway : ITradingGateway
 {
@@ -22,18 +22,3 @@ internal sealed class TinvestGateway : ITradingGateway
     public Task PostMarketOrder(MarketOrderRequest request)
         => _gatewayClient.PostMarketOrder(request);
 }
-
-public interface ITinvestGatewayClient
-{
-    [Post("/api/tinvest/orders/market")]
-    public Task PostMarketOrder(MarketOrderRequest request);
-
-    [Get("/api/instruments/all")]
-    public Task<Instrument[]> GetAllInstruments();
-
-    [Get("/api/candles/{instrumentId}")]
-    public Task<Candle[]> GetCandles(Guid instrumentId, [Query] int maxItems = -1);
-}
-
-
-

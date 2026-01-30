@@ -19,15 +19,16 @@
     <File Path="vertr-infra/prometheus.yml" />
   </Folder>
   <Folder Name="/src/" />
+  <Folder Name="/src/Clients/">
+    <Project Path="src/Vertr.Common.ForecastClient/Vertr.Common.ForecastClient.csproj" Id="aa5e6588-a15c-4513-a6e6-0693b8c3dab9" />
+    <Project Path="src/Vertr.Moex.ApiClient/Vertr.Moex.ApiClient.csproj" Id="88255308-46b2-4a29-b7d7-c2be525a57da" />
+    <Project Path="Vertr.Clients.TinvestApiClient/Vertr.Clients.TinvestApiClient.csproj" Id="ac6abfba-1f3b-4572-8adf-c22018c61957" />
+  </Folder>
   <Folder Name="/src/Common/">
     <Project Path="src/Vertr.Common.Application/Vertr.Common.Application.csproj" Id="ef22c87e-62cd-4d9e-a383-b50735021013" />
     <Project Path="src/Vertr.Common.Contracts/Vertr.Common.Contracts.csproj" Id="f48a86ef-276f-42d6-b9fb-1c39916da738" />
     <Project Path="src/Vertr.Common.DataAccess.Redis/Vertr.Common.DataAccess.Redis.csproj" Id="00b4a502-70fa-44de-ab8b-b00fb379ffcf" />
     <Project Path="src/Vertr.Common.DataAccess/Vertr.Common.DataAccess.csproj" Id="9439fcff-b711-48be-9843-23cfd1c1b727" />
-    <Project Path="src/Vertr.Common.ForecastClient/Vertr.Common.ForecastClient.csproj" Id="aa5e6588-a15c-4513-a6e6-0693b8c3dab9" />
-  </Folder>
-  <Folder Name="/src/Moex/">
-    <Project Path="src/Vertr.Moex.ApiClient/Vertr.Moex.ApiClient.csproj" Id="88255308-46b2-4a29-b7d7-c2be525a57da" />
   </Folder>
   <Folder Name="/src/Strategies/">
     <Project Path="src/Vertr.Strategies.CandlesForecast.Backtest/Vertr.Strategies.CandlesForecast.Backtest.csproj" Id="b6c66a60-d04c-4862-b2e8-d20ad363d20e" />

@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
+using Vertr.Clients.TinvestApiClient;
 using Vertr.Common.Application;
 using Vertr.Common.Contracts;
 using Vertr.Common.ForecastClient;
@@ -27,6 +28,8 @@ internal sealed class Program
         Debug.Assert(!string.IsNullOrEmpty(tinvestGatewayUrl));
         builder.Services.AddTinvestGateway(tinvestGatewayUrl);
 
+
+
         var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
         builder.Services.AddVertrForecastClient(forecastGatewayUrl);
@@ -36,6 +39,7 @@ internal sealed class Program
             .Bind(configuration.GetSection(nameof(ThresholdSettings)));
 
         builder.Services.AddApplication();
+        builder.Services.AddOrderBookQuoteProvider();
 
         builder.Services.AddHostedService<MarketCandlesSubscriber>();
         builder.Services.AddHostedService<MarketOrderBookSubscriber>();

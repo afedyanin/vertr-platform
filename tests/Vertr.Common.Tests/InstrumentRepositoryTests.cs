@@ -1,6 +1,6 @@
 using StackExchange.Redis;
 using Vertr.Common.Contracts;
-using Vertr.Common.DataAccess.Redis;
+using Vertr.TinvestGateway.DataAccess.Redis;
 
 namespace Vertr.Common.Tests;
 

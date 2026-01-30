@@ -3,7 +3,7 @@ using Vertr.Common.Contracts;
 using Vertr.Common.Contracts.Converters;
 using Vertr.Common.DataAccess.Repositories;
 
-namespace Vertr.Common.DataAccess.Redis;
+namespace Vertr.TinvestGateway.DataAccess.Redis;
 
 internal sealed class CandlestickRepository : RedisRepositoryBase, ICandlestickRepository
 {

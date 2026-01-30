@@ -2,7 +2,7 @@
 using Vertr.Common.Contracts;
 using Vertr.Common.DataAccess.Repositories;
 
-namespace Vertr.Common.DataAccess.Redis;
+namespace Vertr.TinvestGateway.DataAccess.Redis;
 
 internal sealed class OrderBookRepository : RedisRepositoryBase, IOrderBookRepository
 {

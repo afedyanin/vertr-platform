@@ -1,6 +1,5 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Vertr.Common.DataAccess.Redis;
 using Vertr.TinvestGateway.DataAccess.Redis;
 using Vertr.TinvestGateway.Host.BackgroundServices;
 
@@ -26,7 +25,6 @@ public static class Program
         builder.Services.AddSwaggerGen();
 
         // Add modules
-        builder.Services.AddCommonRedisDataAccess(configuration);
         builder.Services.AddTinvestGateways(configuration);
         builder.Services.AddTinvestRedisDataAccess(configuration);
 

@@ -1,5 +1,4 @@
 using StackExchange.Redis;
-using Vertr.Common.DataAccess.Redis;
 using Vertr.TinvestGateway.Models.Orders;
 using Vertr.TinvestGateway.Repositories;
 

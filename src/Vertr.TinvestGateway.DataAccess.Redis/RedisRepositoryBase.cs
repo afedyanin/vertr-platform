@@ -1,6 +1,6 @@
 using StackExchange.Redis;
 
-namespace Vertr.Common.DataAccess.Redis;
+namespace Vertr.TinvestGateway.DataAccess.Redis;
 
 public abstract class RedisRepositoryBase
 {

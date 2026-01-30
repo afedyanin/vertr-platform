@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Vertr.Common.DataAccess.Redis\Vertr.Common.DataAccess.Redis.csproj" />
     <ProjectReference Include="..\..\src\Vertr.Common.DataAccess\Vertr.Common.DataAccess.csproj" />
+    <ProjectReference Include="..\..\src\Vertr.TinvestGateway.DataAccess.Redis\Vertr.TinvestGateway.DataAccess.Redis.csproj" />
   </ItemGroup>
 
 	

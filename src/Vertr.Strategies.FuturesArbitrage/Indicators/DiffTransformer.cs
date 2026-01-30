@@ -1,4 +1,4 @@
-﻿namespace Vertr.Common.Application.Indicators;
+﻿namespace Vertr.Strategies.FuturesArbitrage.Indicators;
 
 public class DiffTransformer
 {

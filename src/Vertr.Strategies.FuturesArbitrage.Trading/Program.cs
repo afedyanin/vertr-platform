@@ -7,9 +7,9 @@ using Vertr.Clients.ForecastApiClient;
 using Vertr.Clients.TinvestGatewayApiClient;
 using Vertr.Common.Application;
 using Vertr.Common.Contracts;
-using Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
+using Vertr.Strategies.FuturesArbitrage.Trading.BackgroundServices;
 
-namespace Vertr.Strategies.CandlesForecast.Trading;
+namespace Vertr.Strategies.FuturesArbitrage.Trading;
 
 internal sealed class Program
 {
@@ -41,9 +41,11 @@ internal sealed class Program
         builder.Services.AddApplication();
         builder.Services.AddOrderBookQuoteProvider();
 
-        builder.Services.AddHostedService<MarketCandlesSubscriber>();
-        builder.Services.AddHostedService<MarketOrderBookSubscriber>();
-        builder.Services.AddHostedService<PortfolioSubscriber>();
+        // TODO: Move it to common?
+        //builder.Services.AddHostedService<MarketCandlesSubscriber>();
+        //builder.Services.AddHostedService<MarketOrderBookSubscriber>();
+        //builder.Services.AddHostedService<PortfolioSubscriber>();
+        builder.Services.AddHostedService<OrderBookWatcher>();
 
         var host = builder.Build();
         await host.RunAsync();

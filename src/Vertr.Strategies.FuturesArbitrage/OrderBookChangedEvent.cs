@@ -1,4 +1,4 @@
-﻿namespace Vertr.Common.Application;
+﻿namespace Vertr.Strategies.FuturesArbitrage;
 
 public record class OrderBookChangedEvent
 {

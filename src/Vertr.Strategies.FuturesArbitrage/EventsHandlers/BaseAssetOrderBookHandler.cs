@@ -1,8 +1,8 @@
 ﻿using Vertr.Common.Application.Abstractions;
 
-namespace Vertr.Common.Application.EventHandlers.OrderBookStatArb;
+namespace Vertr.Strategies.FuturesArbitrage.EventsHandlers;
 
-internal class BaseAssetOrderBookHandler : IEventHandler<OrderBookChangedEvent>
+internal sealed class BaseAssetOrderBookHandler : IEventHandler<OrderBookChangedEvent>
 {
     public ValueTask OnEvent(OrderBookChangedEvent data)
     {

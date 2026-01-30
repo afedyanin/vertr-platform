@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Application.Indicators;
+using Vertr.Strategies.FuturesArbitrage.Indicators;
 
-namespace Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
+namespace Vertr.Strategies.FuturesArbitrage.Trading.BackgroundServices;
 
 public class OrderBookWatcher : BackgroundService
 {

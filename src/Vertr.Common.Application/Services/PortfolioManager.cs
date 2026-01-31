@@ -34,11 +34,11 @@ internal sealed class PortfolioManager : IPortfolioManager
             return null;
         }
 
-        var portfolio = _portfolioRepository.GetByPredictor(signal.Predictor);
+        var portfolio = _portfolioRepository.GetByName(signal.Name);
 
         if (portfolio == null)
         {
-            _logger.LogWarning("Portfolio is not found for predictor={Predictor}", signal.Predictor);
+            _logger.LogWarning("Portfolio is not found for name={Name}", signal.Name);
             return null;
         }
 
@@ -62,7 +62,7 @@ internal sealed class PortfolioManager : IPortfolioManager
             var openRequest = new MarketOrderRequest
             {
                 RequestId = Guid.NewGuid(),
-                Predictor = signal.Predictor,
+                TradingSignal = signal.Name,
                 InstrumentId = instrumentId,
                 PortfolioId = portfolio.Id,
                 QuantityLots = DefaultQtyLots,
@@ -79,7 +79,7 @@ internal sealed class PortfolioManager : IPortfolioManager
         var reverseRequest = new MarketOrderRequest
         {
             RequestId = Guid.NewGuid(),
-            Predictor = signal.Predictor,
+            TradingSignal = signal.Name,
             InstrumentId = instrumentId,
             PortfolioId = portfolio.Id,
             QuantityLots = Math.Abs(positionQtyLots) * 2,
@@ -128,7 +128,7 @@ internal sealed class PortfolioManager : IPortfolioManager
                 var closeRequest = new MarketOrderRequest
                 {
                     RequestId = Guid.NewGuid(),
-                    Predictor = kvp.Key,
+                    TradingSignal = kvp.Key,
                     InstrumentId = position.InstrumentId,
                     PortfolioId = kvp.Value.Id,
                     QuantityLots = Math.Abs(positionQtyLots),

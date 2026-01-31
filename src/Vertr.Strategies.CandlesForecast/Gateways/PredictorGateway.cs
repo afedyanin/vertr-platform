@@ -3,6 +3,7 @@ using Vertr.Clients.ForecastApiClient;
 using Vertr.Clients.ForecastApiClient.Models;
 using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Abstractions;
+using Vertr.Strategies.CandlesForecast.Models;
 
 namespace Vertr.Strategies.CandlesForecast.Gateways;
 

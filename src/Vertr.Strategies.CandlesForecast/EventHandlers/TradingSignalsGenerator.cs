@@ -59,7 +59,7 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
 
             var signal = new TradingSignal
             {
-                Predictor = prediction.Predictor,
+                Name = prediction.Predictor,
                 Instrument = data.Instrument,
                 Direction = direction,
             };

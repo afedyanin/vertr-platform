@@ -1,4 +1,5 @@
 ﻿using Vertr.Common.Contracts;
+using Vertr.Strategies.CandlesForecast.Models;
 
 namespace Vertr.Strategies.CandlesForecast;
 

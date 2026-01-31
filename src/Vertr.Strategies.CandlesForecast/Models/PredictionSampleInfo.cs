@@ -1,4 +1,6 @@
-﻿namespace Vertr.Common.Contracts;
+﻿using Vertr.Common.Contracts;
+
+namespace Vertr.Strategies.CandlesForecast.Models;
 
 public record struct PredictionSampleInfo
 {

@@ -6,7 +6,7 @@ namespace Vertr.Common.Application.LocalStorage;
 
 internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
 {
-    private readonly Dictionary<string, Guid> _predictors = [];
+    private readonly Dictionary<string, Guid> _names = [];
     private readonly Dictionary<Guid, Portfolio> _portfolios = [];
 
     public Portfolio? GetById(Guid portfolioId)
@@ -15,9 +15,9 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
         return portfolio;
     }
 
-    public Portfolio? GetByPredictor(string predictor)
+    public Portfolio? GetByName(string name)
     {
-        if (!_predictors.TryGetValue(predictor, out var portfolioId))
+        if (!_names.TryGetValue(name, out var portfolioId))
         {
             return null;
         }
@@ -31,7 +31,7 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
     {
         var res = new Dictionary<string, Portfolio>();
 
-        foreach (var kvp in _predictors)
+        foreach (var kvp in _names)
         {
             _portfolios.TryGetValue(kvp.Value, out var pfolio);
 
@@ -44,9 +44,9 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
         return res.AsReadOnly();
     }
 
-    public string GetPredictor(Guid portfolioId)
+    public string GetNameById(Guid portfolioId)
     {
-        foreach (var kvp in _predictors)
+        foreach (var kvp in _names)
         {
             if (kvp.Value == portfolioId)
             {
@@ -58,12 +58,12 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
     }
 
 
-    public void Init(string[] precitors)
+    public void Init(string[] names)
     {
         _portfolios.Clear();
-        _predictors.Clear();
+        _names.Clear();
 
-        foreach (var precitor in precitors.Distinct())
+        foreach (var name in names.Distinct())
         {
             var portfolio = new Portfolio
             {
@@ -72,7 +72,7 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
             };
 
             _portfolios[portfolio.Id] = portfolio;
-            _predictors[precitor] = portfolio.Id;
+            _names[name] = portfolio.Id;
         }
     }
 

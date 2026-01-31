@@ -1,5 +1,6 @@
 ﻿using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Abstractions;
+using Vertr.Strategies.CandlesForecast.Models;
 using Vertr.Strategies.CandlesForecast.Services;
 
 namespace Vertr.Strategies.CandlesForecast.Gateways;

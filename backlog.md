@@ -18,7 +18,7 @@
 - [ ] (?) Ќужны ли хендлеры? «аменить стратегией?
 - [ ] добавить расчет средней цены актива в позиции ?
 - [ ] добавить в Registrar возможность выбора пайплайна и хендлеров
-- [ ] PortfoliosLocalStorage, PortfolioManager сделать универсальными, убрать информацию о предикторе, заменить на Key или Name
+- [x] PortfoliosLocalStorage, PortfolioManager сделать универсальными, убрать информацию о предикторе, заменить на Key или Name
 
 
 ### Future Arbitrage Pipeline

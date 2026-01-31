@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Vertr.Common.Contracts;
+using Vertr.Strategies.CandlesForecast.Models;
 
 namespace Vertr.Strategies.CandlesForecast.Extensions;
 
@@ -48,13 +49,13 @@ public static class CandleReceivedEventExtensions
         => string.Join(", ", predictions.Select(p => p.Dump()));
 
     internal static string Dump(this TradingSignal signal)
-        => $"{signal.Predictor}:{signal.Direction}";
+        => $"{signal.Name}:{signal.Direction}";
 
     internal static string Dump(this IEnumerable<TradingSignal> signals)
         => string.Join(", ", signals.Select(p => p.Dump()));
 
     internal static string Dump(this MarketOrderRequest request)
-        => $"{request.Predictor}: D={request.Direction} Q={request.QuantityLots} ReqID={request.RequestId}";
+        => $"{request.TradingSignal}: D={request.Direction} Q={request.QuantityLots} ReqID={request.RequestId}";
 
     internal static string Dump(this IEnumerable<MarketOrderRequest> requests)
         => string.Join(", ", requests.Select(p => p.Dump()));

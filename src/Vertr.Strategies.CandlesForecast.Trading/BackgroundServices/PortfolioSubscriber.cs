@@ -62,7 +62,7 @@ internal sealed class PortfolioSubscriber : RedisServiceBase
         }
 
         _portfolioRepository.Update(portfolio);
-        var predictor = _portfolioRepository.GetPredictor(portfolio.Id);
+        var predictor = _portfolioRepository.GetNameById(portfolio.Id);
         _logger.LogInformation(portfolio.Dump(predictor, _instruments));
     }
 

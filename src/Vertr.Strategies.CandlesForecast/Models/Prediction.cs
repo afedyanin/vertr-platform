@@ -1,4 +1,4 @@
-﻿namespace Vertr.Common.Contracts;
+﻿namespace Vertr.Strategies.CandlesForecast.Models;
 
 public record class Prediction
 {

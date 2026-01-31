@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Extensions;
-using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Abstractions;
+using Vertr.Strategies.CandlesForecast.Models;
 
 namespace Vertr.Strategies.CandlesForecast.EventHandlers;
 

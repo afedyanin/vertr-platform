@@ -6,7 +6,7 @@ internal sealed class BaseAssetOrderBookHandler : IEventHandler<OrderBookChanged
 {
     public ValueTask OnEvent(OrderBookChangedEvent data)
     {
-        // Calculate stats
+        // получение спот цены из стакана базового актива->Spot.MidPrice
         throw new NotImplementedException();
     }
 }

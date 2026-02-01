@@ -72,6 +72,8 @@ public class OrderBookWatcher : BackgroundService
             return book.UpdatedAt;
         }
 
+        // создать сигнал и отправить по пайплайну
+
         _sberIndicator.Apply(book);
         _logger.LogInformation("Book: {Book}", book);
 

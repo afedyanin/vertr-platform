@@ -18,7 +18,7 @@ public static class StrategyRegistrar
         services.AddSingleton<PortfolioPositionHandler>();
         services.AddSingleton<OrderExecutionHandler>();
 
-        services.AddTransient<ICandleProcessingPipeline, CandleProcessingPipeline>();
+        services.AddSingleton<ICandleProcessingPipeline, CandleProcessingPipeline>();
 
         // services.AddSingleton<IPredictorGateway, PredictorGatewayStub>();
         services.AddSingleton<IPredictorGateway, PredictorGateway>();

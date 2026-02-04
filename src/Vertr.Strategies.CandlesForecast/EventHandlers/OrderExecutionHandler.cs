@@ -9,6 +9,8 @@ internal sealed class OrderExecutionHandler : IEventHandler<CandleReceivedEvent>
 
     private readonly ITradingGateway _tinvestGateway;
 
+    public int HandlingOrder => 40;
+
     public OrderExecutionHandler(
         ITradingGateway tinvestGateway,
         ILogger<OrderExecutionHandler> logger)

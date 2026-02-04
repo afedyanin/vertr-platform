@@ -1,13 +1,8 @@
 ﻿namespace Vertr.Common.Application.Abstractions;
 
-public interface IEventProcessingPipeline<T>
+public interface IEventProcessingPipeline<T> where T : IMarketDataEvent
 {
     public Task Start(CancellationToken cancellationToken = default);
 
-    public Task Stop();
-
-    public void Handle(T tEvent);
-
-    // optional external handler
-    public Func<T, ValueTask>? OnEventReceived { get; set; }
+    public Task Handle(T tEvent);
 }

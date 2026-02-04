@@ -9,6 +9,8 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandleReceivedEve
     private readonly IPortfolioManager _portfolioManager;
     private readonly ILogger<PortfolioPositionHandler> _logger;
 
+    public int HandlingOrder => 30;
+
     public PortfolioPositionHandler(
         IPortfolioManager portfolioManager,
         ILogger<PortfolioPositionHandler> logger)

@@ -1,3 +1,4 @@
+using System.Threading.Channels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,6 +17,10 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     private readonly ICandleProcessingPipeline _candleProcessingPipeline;
     private readonly IPortfolioManager _portfolioManager;
     private readonly ILogger<RedisServiceBase> _logger;
+    private readonly Channel<CandleReceivedEvent> _eventChannel = Channel.CreateUnbounded<CandleReceivedEvent>();
+
+    private Task? _channelConsumerTask;
+    private int _eventSequence;
 
     protected override RedisChannel RedisChannel => new RedisChannel(Subscriptions.Candles.Channel, PatternMode.Pattern);
     protected override bool IsEnabled => Subscriptions.Candles.IsEnabled;
@@ -40,25 +45,41 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
             return;
         }
 
-        _candleProcessingPipeline.Handle(candle);
+        var evt = new CandleReceivedEvent
+        {
+            Sequence = _eventSequence++,
+            Candle = candle,
+        };
+
+        _logger.LogInformation(evt.Dump());
+        _eventChannel.Writer.TryWrite(evt);
+    }
+
+    private async Task ConsumeChannelAsync(CancellationToken cancellationToken = default)
+    {
+        await foreach (var tEvent in _eventChannel.Reader.ReadAllAsync(cancellationToken))
+        {
+            try
+            {
+                await _candleProcessingPipeline.Handle(tEvent);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing event={Event} Message={Message}", tEvent, ex.Message);
+            }
+        }
     }
 
     protected override async ValueTask OnBeforeStart(CancellationToken cancellationToken)
     {
         await base.OnBeforeStart(cancellationToken);
-
-        _candleProcessingPipeline.OnCandleEvent = (evt) =>
-        {
-            _logger.LogInformation(evt.Dump());
-            return ValueTask.CompletedTask;
-        };
-
+        _eventSequence = 0;
+        _channelConsumerTask = ConsumeChannelAsync(cancellationToken);
         await _candleProcessingPipeline.Start(cancellationToken);
     }
 
     protected override async ValueTask OnBeforeStop()
     {
-        await _candleProcessingPipeline.Stop();
         await _portfolioManager.CloseAllPositions();
         await base.OnBeforeStop();
     }

@@ -1,15 +1,16 @@
-﻿using Vertr.Common.Contracts;
+﻿using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Models;
 
 namespace Vertr.Strategies.CandlesForecast;
 
-public record class CandleReceivedEvent
+public record class CandleReceivedEvent : IMarketDataEvent
 {
-    public long Sequence { get; set; }
+    public int Sequence { get; init; }
 
     public required Candle Candle { get; set; }
 
-    public required Instrument Instrument { get; set; }
+    public Instrument? Instrument { get; set; }
 
     public PredictionSampleInfo PredictionSampleInfo { get; set; }
 

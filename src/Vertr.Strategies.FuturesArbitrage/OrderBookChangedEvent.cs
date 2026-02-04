@@ -1,6 +1,8 @@
-﻿namespace Vertr.Strategies.FuturesArbitrage;
+﻿using Vertr.Common.Application.Abstractions;
 
-public record class OrderBookChangedEvent
+namespace Vertr.Strategies.FuturesArbitrage;
+
+public record class OrderBookChangedEvent : IMarketDataEvent
 {
-    public long Sequence { get; set; }
+    public int Sequence { get; init; }
 }

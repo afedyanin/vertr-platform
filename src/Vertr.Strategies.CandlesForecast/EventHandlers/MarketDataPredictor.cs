@@ -25,6 +25,8 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
         _logger = logger;
     }
 
+    public int HandlingOrder => 10;
+
     public async ValueTask OnEvent(CandleReceivedEvent data)
     {
         var instrumentId = data.Instrument!.Id;

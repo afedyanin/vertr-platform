@@ -163,16 +163,18 @@ internal static class Program
 
         portfolioRepo.Init(predictors);
 
-        //pipeline.OnCandleEvent = (evt) => OnCandleEvent(evt, portfolioRepo, instruments, logger);
-
         await pipeline.Start();
 
         foreach (var candle in candles)
         {
-            pipeline.Handle(candle);
+            var evt = new CandleReceivedEvent
+            {
+                Candle = candle,
+            };
+
+            await pipeline.Handle(evt);
         }
 
-        await pipeline.Stop();
         await portfolioManager.CloseAllPositions();
 
         return portfolioRepo.GetAll();

@@ -11,6 +11,8 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
     private readonly ILogger<TradingSignalsGenerator> _logger;
     private readonly ThresholdSettings _thresholdSettings;
 
+    public int HandlingOrder => 20;
+
     public TradingSignalsGenerator(
         ILogger<TradingSignalsGenerator> logger,
         IMarketQuoteProvider marketQuoteProvider,

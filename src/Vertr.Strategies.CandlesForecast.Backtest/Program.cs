@@ -21,6 +21,8 @@ internal static class Program
     private static readonly Guid SberId = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
     private static readonly Guid RubId = new Guid("a92e2e25-a698-45cc-a781-167cf465257c");
 
+    private static int _sequence;
+
     public static async Task Main(string[] args)
     {
         var services = new ServiceCollection();
@@ -39,6 +41,7 @@ internal static class Program
         services.AddForecastApiClient(forecastGatewayUrl);
 
         services.AddApplication();
+        services.AddCandlesForecastStrategy();
         services.AddCandlesForecastBacktest();
 
         var loggingConfig = configuration.GetSection("Logging");
@@ -61,7 +64,7 @@ internal static class Program
         var steps = 60 * 8;
         var testCounts = new int[]
         {
-            100,
+            3,
         };
 
         await historicCandlesProvider.Load("Data\\SBER_251112_251226.csv", SberId);
@@ -169,10 +172,13 @@ internal static class Program
         {
             var evt = new CandleReceivedEvent
             {
+                Sequence = _sequence++,
                 Candle = candle,
             };
 
             await pipeline.Handle(evt);
+
+            await OnCandleEvent(evt, portfolioRepo, instruments, logger);
         }
 
         await portfolioManager.CloseAllPositions();

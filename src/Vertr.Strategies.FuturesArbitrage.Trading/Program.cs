@@ -28,8 +28,6 @@ internal sealed class Program
         Debug.Assert(!string.IsNullOrEmpty(tinvestGatewayUrl));
         builder.Services.AddTinvestGateway(tinvestGatewayUrl);
 
-
-
         var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
         builder.Services.AddForecastApiClient(forecastGatewayUrl);

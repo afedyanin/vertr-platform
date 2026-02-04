@@ -9,6 +9,7 @@ using Vertr.Common.Application;
 using Vertr.Common.Application.Configuration;
 using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
+using Vertr.Strategies.Hosting.BackgroundServices;
 
 namespace Vertr.Strategies.CandlesForecast.Trading;
 

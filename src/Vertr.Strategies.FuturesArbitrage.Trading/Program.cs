@@ -6,8 +6,10 @@ using StackExchange.Redis;
 using Vertr.Clients.ForecastApiClient;
 using Vertr.Clients.TinvestGatewayApiClient;
 using Vertr.Common.Application;
+using Vertr.Common.Application.Configuration;
 using Vertr.Common.Contracts;
 using Vertr.Strategies.FuturesArbitrage.Trading.BackgroundServices;
+using Vertr.Strategies.Hosting.BackgroundServices;
 
 namespace Vertr.Strategies.FuturesArbitrage.Trading;
 
@@ -36,14 +38,18 @@ internal sealed class Program
             .AddOptionsWithValidateOnStart<ThresholdSettings>()
             .Bind(configuration.GetSection(nameof(ThresholdSettings)));
 
+        builder.Services
+            .AddOptionsWithValidateOnStart<InstrumentSettings>()
+            .Bind(configuration.GetSection(nameof(InstrumentSettings)));
+
         builder.Services.AddApplication();
         builder.Services.AddOrderBookQuoteProvider();
+        builder.Services.AddFutureArbitrageStrategy();
 
-        // TODO: Move it to common?
-        //builder.Services.AddHostedService<MarketCandlesSubscriber>();
-        //builder.Services.AddHostedService<MarketOrderBookSubscriber>();
-        //builder.Services.AddHostedService<PortfolioSubscriber>();
+        builder.Services.AddHostedService<MarketOrderBookSubscriber>();
+        builder.Services.AddHostedService<PortfolioSubscriber>();
         builder.Services.AddHostedService<OrderBookWatcher>();
+        builder.Services.AddHostedService<MoexLoaderService>();
 
         var host = builder.Build();
         await host.RunAsync();

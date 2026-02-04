@@ -1,6 +1,7 @@
-﻿namespace Vertr.Strategies.FuturesArbitrage.Abstractions;
+﻿using Vertr.Common.Application.Abstractions;
 
-public interface IFuturesProcessingPipeline
+namespace Vertr.Strategies.FuturesArbitrage.Abstractions;
+
+public interface IFuturesProcessingPipeline : IEventProcessingPipeline<OrderBookChangedEvent>
 {
-
 }

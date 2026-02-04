@@ -9,6 +9,7 @@ using Vertr.Common.Application.Configuration;
 using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Abstractions;
 using Vertr.Strategies.CandlesForecast.Extensions;
+using Vertr.Strategies.Hosting.BackgroundServices;
 using static StackExchange.Redis.RedisChannel;
 
 namespace Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
@@ -47,7 +48,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
             return;
         }
 
-        if (!_instrumentSettings.Instruments.Contains(candle.InstrumentId))
+        if (_instrumentSettings.BasicAsset != candle.InstrumentId)
         {
             _logger.LogDebug("Skipping InstrumentId={InstrumentId}", candle.InstrumentId);
             return;

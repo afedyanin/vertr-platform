@@ -1,32 +1,33 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Application.Abstractions.Handlers;
+using Vertr.Strategies.FuturesArbitrage.Abstractions;
+using Vertr.Strategies.FuturesArbitrage.EventHandlers;
+using Vertr.Strategies.FuturesArbitrage.Services;
 
 namespace Vertr.Strategies.FuturesArbitrage;
 
 public static class StrategyRegistrar
 {
-    public static IServiceCollection AddCandlesForecastStrategy(this IServiceCollection services)
+    public static IServiceCollection AddFutureArbitrageStrategy(this IServiceCollection services)
     {
-        /*
-        services.AddSingleton<IEventHandler<CandleReceivedEvent>, MarketDataPredictor>();
-        services.AddSingleton<TradingSignalsGenerator>();
-        services.AddSingleton<PortfolioPositionHandler>();
-        services.AddSingleton<OrderExecutionHandler>();
+        // проверить, что Mid цена в стакане вышла за пределы стат. погрешности. Заполнить TradingDirection
+        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, BaseAssetOrderBookHandler>();
 
-        services.AddTransient<ICandleProcessingPipeline, CandleProcessingPipeline>();
+        // расчет теоретической цены набора фьючей
+        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, FuturePriceCalculationHandler>();
 
-        // services.AddSingleton<IPredictorGateway, PredictorGatewayStub>();
-        services.AddSingleton<IPredictorGateway, PredictorGateway>();
-        */
-        return services;
-    }
+        // сравнение теор. цены с ценами в стаканах по фьючам, генерация торговых сигналов
+        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, FuturePriceCalculationHandler>();
 
-    public static IServiceCollection AddCandlesForecastBacktest(this IServiceCollection services)
-    {
-        /*
-        services.AddSingleton<IHistoricCandlesProvider, CsvHistoricCandlesProvider>();
-        services.AddSingleton<IMarketQuoteProvider>(sp => sp.GetRequiredService<CandlesLocalStorage>());
-        services.AddSingleton<ITradingGateway, BacktestGateway>();
-        */
+        // проверить позицию в портфеле на соответствие сигналу. Создать реквесты на открытие/разворот портфеля
+        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, PortfolioPositionHandler<OrderBookChangedEvent>>();
+
+        // отправить маркет ордера в гейтвей
+        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, OrderExecutionHandler<OrderBookChangedEvent>>();
+
+        services.AddSingleton<IFuturesProcessingPipeline, FuturesProcessingPipeline>();
+
         return services;
     }
 }

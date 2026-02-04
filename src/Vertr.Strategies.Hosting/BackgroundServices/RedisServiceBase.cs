@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using Vertr.Common.Application.Configuration;
 
-namespace Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
+namespace Vertr.Strategies.Hosting.BackgroundServices;
 
-internal abstract class RedisServiceBase : BackgroundService
+public abstract class RedisServiceBase : BackgroundService
 {
     protected IServiceProvider ServiceProvider { get; private set; }
     protected IConnectionMultiplexer Redis { get; private set; }

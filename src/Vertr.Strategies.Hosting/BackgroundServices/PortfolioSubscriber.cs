@@ -9,9 +9,9 @@ using Vertr.Common.Application.Extensions;
 using Vertr.Common.Contracts;
 using static StackExchange.Redis.RedisChannel;
 
-namespace Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
+namespace Vertr.Strategies.Hosting.BackgroundServices;
 
-internal sealed class PortfolioSubscriber : RedisServiceBase
+public class PortfolioSubscriber : RedisServiceBase
 {
     private readonly ITradingGateway _tradingGateway;
     private readonly IPortfoliosLocalStorage _portfolioRepository;

@@ -6,9 +6,9 @@ using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 using static StackExchange.Redis.RedisChannel;
 
-namespace Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
+namespace Vertr.Strategies.Hosting.BackgroundServices;
 
-internal sealed class MarketOrderBookSubscriber : RedisServiceBase
+public class MarketOrderBookSubscriber : RedisServiceBase
 {
     private readonly IOrderBooksLocalStorage _orderBookRepository;
     private readonly ILogger<MarketOrderBookSubscriber> _logger;

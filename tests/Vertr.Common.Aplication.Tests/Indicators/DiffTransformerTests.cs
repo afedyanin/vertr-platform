@@ -1,4 +1,4 @@
-﻿using Vertr.Strategies.FuturesArbitrage.Indicators;
+﻿using Vertr.Strategies.FuturesArbitrage.Models;
 
 namespace Vertr.Common.Aplication.Tests.Indicators;
 

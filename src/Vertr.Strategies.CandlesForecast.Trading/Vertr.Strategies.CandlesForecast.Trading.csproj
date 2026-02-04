@@ -14,6 +14,7 @@
 		<ProjectReference Include="..\Vertr.Clients.TinvestGatewayApiClient\Vertr.Clients.TinvestGatewayApiClient.csproj" />
 		<ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
 		<ProjectReference Include="..\Vertr.Strategies.CandlesForecast\Vertr.Strategies.CandlesForecast.csproj" />
+		<ProjectReference Include="..\Vertr.Strategies.Hosting\Vertr.Strategies.Hosting.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

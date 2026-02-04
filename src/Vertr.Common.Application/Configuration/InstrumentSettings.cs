@@ -2,5 +2,7 @@
 
 public class InstrumentSettings
 {
-    public Guid[] Instruments { get; set; } = [];
+    public Guid BasicAsset { get; set; }
+
+    public Guid[] DerivedAssets { get; set; } = [];
 }

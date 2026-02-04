@@ -34,6 +34,7 @@
     <Project Path="src/Vertr.Strategies.CandlesForecast/Vertr.Strategies.CandlesForecast.csproj" Id="79e0d628-66ef-4841-964b-b64eae0bdfcc" />
     <Project Path="src/Vertr.Strategies.FuturesArbitrage.Trading/Vertr.Strategies.FuturesArbitrage.Trading.csproj" Id="8848d93d-10ee-4633-bef1-c62da1732fca" />
     <Project Path="src/Vertr.Strategies.FuturesArbitrage/Vertr.Strategies.FuturesArbitrage.csproj" Id="2ffb350c-43d5-4c6e-b68f-4e6c918ac109" />
+    <Project Path="src/Vertr.Strategies.Hosting/Vertr.Strategies.Hosting.csproj" Id="7fd6d130-a39f-4e6e-a952-00b27bc1f430" />
   </Folder>
   <Folder Name="/src/TinvestGateway/">
     <Project Path="src/Vertr.TinvestGateway.DataAccess.Redis/Vertr.TinvestGateway.DataAccess.Redis.csproj" />

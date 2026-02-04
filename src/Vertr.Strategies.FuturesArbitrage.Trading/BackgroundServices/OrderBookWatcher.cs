@@ -1,29 +1,33 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Strategies.FuturesArbitrage.Indicators;
+using Vertr.Common.Application.Configuration;
+using Vertr.Strategies.FuturesArbitrage.Abstractions;
 
 namespace Vertr.Strategies.FuturesArbitrage.Trading.BackgroundServices;
 
 public class OrderBookWatcher : BackgroundService
 {
-    private static readonly Guid SberId = new Guid("e6123145-9665-43e0-8413-cd61b8aa9b13");
-
     private readonly TimeSpan _watchInterval = TimeSpan.FromSeconds(2);
+    private readonly IFuturesProcessingPipeline _futuresProcessingPipeline;
     private readonly IOrderBooksLocalStorage _orderBookRepository;
     private readonly bool _isEnabled = true;
     private readonly string _serviceName;
     private readonly ILogger _logger;
+    private readonly InstrumentSettings _instrumentSettings;
 
-    private readonly OrderBookStatsIndicator _sberIndicator;
+    private int _eventSequence;
+
     public OrderBookWatcher(IServiceProvider serviceProvider)
     {
         _serviceName = GetType().Name;
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         _logger = loggerFactory.CreateLogger(_serviceName);
+        _futuresProcessingPipeline = serviceProvider.GetRequiredService<IFuturesProcessingPipeline>();
         _orderBookRepository = serviceProvider.GetRequiredService<IOrderBooksLocalStorage>();
-        _sberIndicator = new OrderBookStatsIndicator(2);
+        _instrumentSettings = serviceProvider.GetRequiredService<IOptions<InstrumentSettings>>().Value;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -39,7 +43,7 @@ public class OrderBookWatcher : BackgroundService
                     return;
                 }
 
-                lastUpdate = ExecuteWatchStep(lastUpdate);
+                lastUpdate = await ExecuteWatchStep(lastUpdate);
                 await Task.Delay(_watchInterval, stoppingToken);
             }
             catch (TaskCanceledException ex)
@@ -56,13 +60,14 @@ public class OrderBookWatcher : BackgroundService
         _logger.LogInformation($"{_serviceName} execution completed at {DateTime.UtcNow:O}");
     }
 
-    private DateTime? ExecuteWatchStep(DateTime? lastUpdate)
+    private async Task<DateTime?> ExecuteWatchStep(DateTime? lastUpdate)
     {
-        var book = _orderBookRepository.GetById(SberId);
+        var basicAssetId = _instrumentSettings.BasicAsset;
+        var book = _orderBookRepository.GetById(basicAssetId);
 
         if (book == null)
         {
-            _logger.LogInformation("No order books found by Id={SberId}", SberId);
+            _logger.LogInformation("No order books found by Id={BasicAsset}", basicAssetId);
             return null;
         }
 
@@ -72,15 +77,17 @@ public class OrderBookWatcher : BackgroundService
             return book.UpdatedAt;
         }
 
-        // создать сигнал и отправить по пайплайну
+        var derivedAssetPrices = _instrumentSettings.DerivedAssets.ToDictionary(item => item, _ => (decimal?)null);
 
-        _sberIndicator.Apply(book);
-        _logger.LogInformation("Book: {Book}", book);
-
-        if (_sberIndicator.MidPriceSignal != Common.Contracts.TradingDirection.Hold)
+        var evt = new OrderBookChangedEvent
         {
-            _logger.LogWarning("Signals: {Signals}", _sberIndicator);
-        }
+            Sequence = _eventSequence++,
+            OrderBook = book,
+            FairPrices = derivedAssetPrices,
+        };
+
+        _logger.LogInformation("#{Sequence} Book={Book}", evt.Sequence, evt.OrderBook);
+        await _futuresProcessingPipeline.Handle(evt);
 
         return book.UpdatedAt;
     }

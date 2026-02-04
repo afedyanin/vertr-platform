@@ -41,13 +41,12 @@ internal sealed class TradingSignalsGenerator : IEventHandler<CandleReceivedEven
                 continue;
             }
 
-            var stats = data.PredictionSampleInfo.ClosePriceStats;
-            _logger.LogWarning("ClosePriceStats: {Stats}", stats);
-
             if (_thresholdSettings.UseStatsThreshold)
             {
-                // TODO: Fix it and refactor
-                data.PriceThreshold = stats.StdDev / stats.Mean * _thresholdSettings.ThresholdSigma;
+                var stats = data.PredictionSampleInfo.ClosePriceStats;
+                var statsThresholdPercent = stats.StdDev / stats.Mean;
+                _logger.LogDebug("Close Price Stats: {Stats} StatsThresholdPercent={StatsThresholdPercent:N8}", stats, statsThresholdPercent);
+                data.PriceThreshold = statsThresholdPercent * _thresholdSettings.ThresholdSigma;
             }
             else
             {

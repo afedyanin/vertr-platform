@@ -6,10 +6,8 @@ using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Application.Configuration;
-using Vertr.Common.Application.Extensions;
 using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Abstractions;
-using Vertr.Strategies.CandlesForecast.Extensions;
 using static StackExchange.Redis.RedisChannel;
 
 namespace Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
@@ -60,7 +58,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
             Candle = candle,
         };
 
-        _logger.LogInformation(evt.Dump());
+        _logger.LogInformation("CandleReceivedEvent: Seq={Sequence} Candle={Candle}", evt.Sequence, evt.Candle);
         _eventChannel.Writer.TryWrite(evt);
     }
 

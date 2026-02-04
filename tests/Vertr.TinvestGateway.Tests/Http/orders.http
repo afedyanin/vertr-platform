@@ -31,14 +31,10 @@ Content-Type: application/json
 
 
 {
-  "predictor": "some",
-  "instrumentId": "e6123145-9665-43e0-8413-cd61b8aa9b13",
-  "requestId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "portfolioId": "4938651b-886c-4e8e-a7d0-371b74a7a0f3",
-  "quantityLots": 10,
-  "direction": "Buy"
+  "TradingSignal": "some",
+  "InstrumentId": "e6123145-9665-43e0-8413-cd61b8aa9b13",
+  "RequestId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "PortfolioId": "4938651b-886c-4e8e-a7d0-371b74a7a0f3",
+  "QuantityLots": 10,
+  "Direction": "Buy"
 }
-
-
-# { TradingSignal = mlp, InstrumentId = e6123145-9665-43e0-8413-cd61b8aa9b13, RequestId = c6cd42a6-0106-47f3-a54b-f10ecb245823, PortfolioId = 4938651b-886c-4e8e-a7d0-371b74a7a0f3, QuantityLots = 10, Direction = Sell }.
-[2026-02-04 17:35:00] fail: OrderExecutionHandler[0]

@@ -6,6 +6,7 @@ using StackExchange.Redis;
 using Vertr.Clients.ForecastApiClient;
 using Vertr.Clients.TinvestGatewayApiClient;
 using Vertr.Common.Application;
+using Vertr.Common.Application.Configuration;
 using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Trading.BackgroundServices;
 
@@ -28,8 +29,6 @@ internal sealed class Program
         Debug.Assert(!string.IsNullOrEmpty(tinvestGatewayUrl));
         builder.Services.AddTinvestGateway(tinvestGatewayUrl);
 
-
-
         var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
         builder.Services.AddForecastApiClient(forecastGatewayUrl);
@@ -38,8 +37,13 @@ internal sealed class Program
             .AddOptionsWithValidateOnStart<ThresholdSettings>()
             .Bind(configuration.GetSection(nameof(ThresholdSettings)));
 
+        builder.Services
+            .AddOptionsWithValidateOnStart<InstrumentSettings>()
+            .Bind(configuration.GetSection(nameof(InstrumentSettings)));
+
         builder.Services.AddApplication();
         builder.Services.AddOrderBookQuoteProvider();
+        builder.Services.AddCandlesForecastStrategy();
 
         builder.Services.AddHostedService<MarketCandlesSubscriber>();
         builder.Services.AddHostedService<MarketOrderBookSubscriber>();

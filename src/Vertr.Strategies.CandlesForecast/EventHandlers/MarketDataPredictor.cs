@@ -12,6 +12,7 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
     private readonly IPortfoliosLocalStorage _portfolioRepository;
     private readonly IPredictorGateway _predictorClient;
     private readonly ILogger<MarketDataPredictor> _logger;
+    public int HandlingOrder => 10;
 
     public MarketDataPredictor(
         ICandlesLocalStorage candleRepository,
@@ -24,8 +25,6 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
         _predictorClient = predictorClient;
         _logger = logger;
     }
-
-    public int HandlingOrder => 10;
 
     public async ValueTask OnEvent(CandleReceivedEvent data)
     {
@@ -54,6 +53,6 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
             data.Predictions.Add(prediction);
         }
 
-        _logger.LogDebug("#{Sequence} MarketDataPredictor executed.", data.Sequence);
+        _logger.LogDebug("#{Sequence} MarketDataPredictor executed. {PredictionsCount} predictions added.", data.Sequence, data.Predictions.Count);
     }
 }

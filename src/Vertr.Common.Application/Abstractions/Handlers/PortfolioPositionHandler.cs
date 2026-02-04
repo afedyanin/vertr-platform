@@ -1,25 +1,24 @@
 ﻿using Microsoft.Extensions.Logging;
-using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Strategies.CandlesForecast.EventHandlers;
+namespace Vertr.Common.Application.Abstractions.Handlers;
 
-internal sealed class PortfolioPositionHandler : IEventHandler<CandleReceivedEvent>
+public class PortfolioPositionHandler<TEvent> : IEventHandler<TEvent> where TEvent : IMarketDataEvent
 {
     private readonly IPortfolioManager _portfolioManager;
-    private readonly ILogger<PortfolioPositionHandler> _logger;
+    private readonly ILogger _logger;
 
-    public int HandlingOrder => 30;
+    public int HandlingOrder => 800;
 
     public PortfolioPositionHandler(
         IPortfolioManager portfolioManager,
-        ILogger<PortfolioPositionHandler> logger)
+        ILoggerFactory loggerFactory)
     {
         _portfolioManager = portfolioManager;
-        _logger = logger;
+        _logger = loggerFactory.CreateLogger("PortfolioPositionHandler");
     }
 
-    public ValueTask OnEvent(CandleReceivedEvent data)
+    public ValueTask OnEvent(TEvent data)
     {
         foreach (var signal in data.TradingSignals)
         {
@@ -36,7 +35,7 @@ internal sealed class PortfolioPositionHandler : IEventHandler<CandleReceivedEve
             }
         }
 
-        _logger.LogDebug("#{Sequence} PortfolioPositionHandler executed. {SignalsCount} signals added.", data.Sequence, data.TradingSignals.Count);
+        _logger.LogDebug("#{Sequence} PortfolioPositionHandler executed. {OrdersCount} order requests added.", data.Sequence, data.OrderRequests.Count);
         return ValueTask.CompletedTask;
     }
 }

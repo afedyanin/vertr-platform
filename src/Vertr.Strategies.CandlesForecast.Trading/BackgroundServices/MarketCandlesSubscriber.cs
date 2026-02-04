@@ -2,8 +2,10 @@ using System.Threading.Channels;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Application.Configuration;
 using Vertr.Common.Application.Extensions;
 using Vertr.Common.Contracts;
 using Vertr.Strategies.CandlesForecast.Abstractions;
@@ -18,6 +20,7 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     private readonly IPortfolioManager _portfolioManager;
     private readonly ILogger<RedisServiceBase> _logger;
     private readonly Channel<CandleReceivedEvent> _eventChannel = Channel.CreateUnbounded<CandleReceivedEvent>();
+    private readonly InstrumentSettings _instrumentSettings;
 
     private Task? _channelConsumerTask;
     private int _eventSequence;
@@ -29,19 +32,25 @@ internal sealed class MarketCandlesSubscriber : RedisServiceBase
     {
         _candleProcessingPipeline = serviceProvider.GetRequiredService<ICandleProcessingPipeline>();
         _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
-
         _logger = LoggerFactory.CreateLogger<MarketCandlesSubscriber>();
+        _instrumentSettings = serviceProvider.GetRequiredService<IOptions<InstrumentSettings>>().Value;
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)
     {
-        _logger.LogDebug("Received candle from cahnnel={Channel}", channel);
+        _logger.LogInformation("Received candle from cahnnel={Channel}", channel);
 
         var candle = Candle.FromJson(message.ToString());
 
         if (candle == null)
         {
             _logger.LogWarning("Cannot deserialize candle from message={Message}", message);
+            return;
+        }
+
+        if (!_instrumentSettings.Instruments.Contains(candle.InstrumentId))
+        {
+            _logger.LogDebug("Skipping InstrumentId={InstrumentId}", candle.InstrumentId);
             return;
         }
 

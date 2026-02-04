@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Application.Abstractions.Handlers;
 using Vertr.Common.Application.LocalStorage;
 using Vertr.Strategies.CandlesForecast.Abstractions;
 using Vertr.Strategies.CandlesForecast.EventHandlers;
@@ -13,10 +14,10 @@ public static class StrategyRegistrar
 {
     public static IServiceCollection AddCandlesForecastStrategy(this IServiceCollection services)
     {
-        services.AddSingleton<MarketDataPredictor>();
-        services.AddSingleton<TradingSignalsGenerator>();
-        services.AddSingleton<PortfolioPositionHandler>();
-        services.AddSingleton<OrderExecutionHandler>();
+        services.AddSingleton<IEventHandler<CandleReceivedEvent>, MarketDataPredictor>();
+        services.AddSingleton<IEventHandler<CandleReceivedEvent>, TradingSignalsGenerator>();
+        services.AddSingleton<IEventHandler<CandleReceivedEvent>, PortfolioPositionHandler<CandleReceivedEvent>>();
+        services.AddSingleton<IEventHandler<CandleReceivedEvent>, OrderExecutionHandler<CandleReceivedEvent>>();
 
         services.AddSingleton<ICandleProcessingPipeline, CandleProcessingPipeline>();
 

@@ -33,6 +33,6 @@ internal sealed class MarketOrderBookSubscriber : RedisServiceBase
         }
 
         _orderBookRepository.Update(orderBook);
-        _logger.LogDebug("Received order book from cahnnel={Channel}", channel);
+        // _logger.LogDebug("Received order book from cahnnel={Channel}", channel);
     }
 }

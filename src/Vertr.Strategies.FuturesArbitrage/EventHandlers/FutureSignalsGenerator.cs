@@ -1,37 +1,39 @@
 ﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
+using Vertr.Common.Contracts;
 
 namespace Vertr.Strategies.FuturesArbitrage.EventHandlers;
 
 internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEvent>
 {
     private readonly IOrderBooksLocalStorage _orderBooksLocalStorage;
+    private readonly IInstrumentsLocalStorage _instrumentsLocalStorage;
     private readonly ILogger<FutureSignalsGenerator> _logger;
 
     public int HandlingOrder => 30;
 
     public FutureSignalsGenerator(
         IOrderBooksLocalStorage orderBooksLocalStorage,
+        IInstrumentsLocalStorage instrumentsLocalStorage,
         ILogger<FutureSignalsGenerator> logger)
     {
         _orderBooksLocalStorage = orderBooksLocalStorage;
+        _instrumentsLocalStorage = instrumentsLocalStorage;
         _logger = logger;
     }
 
-    public ValueTask OnEvent(OrderBookChangedEvent data)
+    public async ValueTask OnEvent(OrderBookChangedEvent data)
     {
-        _logger.LogDebug("Processing event #{Sequence}", data.Sequence);
-
-        /*
-        if (data.TradingDirection == Common.Contracts.TradingDirection.Hold)
+        if (data.TradingDirection == TradingDirection.Hold)
         {
-            return ValueTask.CompletedTask;
+            return;
         }
 
         foreach (var kvp in data.FairPrices)
         {
             if (!kvp.Value.HasValue)
             {
+                _logger.LogWarning("#{Sequence} FairPrice is not found for InstrumentId={InstrumentId}", data.Sequence, kvp.Key);
                 continue;
             }
 
@@ -39,16 +41,60 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
 
             if (orderBook == null)
             {
+                _logger.LogWarning("#{Sequence} OrderBook is not found for InstrumentId={InstrumentId}", data.Sequence, kvp.Key);
                 continue;
             }
 
-            // var fairPrice = kvp.Value.Value;
-            // сравнить словарь fairPrice с Bid,Ask квотами в стаканах по фьючам
-            // проверить на значимость отклонений по threshold-ам
-            // сгенерить сигналы и положить в коллекцию TradingSignals
-        }
-        */
+            var instrument = await _instrumentsLocalStorage.GetById(kvp.Key);
+            if (instrument == null)
+            {
+                _logger.LogWarning("#{Sequence} Instrument is not found for InstrumentId={InstrumentId}", data.Sequence, kvp.Key);
+                continue;
+            }
 
-        return ValueTask.CompletedTask;
+            var fairPrice = kvp.Value.Value;
+            var quote = new Quote
+            {
+                Bid = orderBook.MaxBid,
+                Ask = orderBook.MinAsk,
+            };
+
+            _logger.LogInformation("#{Sequence} Fair={FairPrice:N4} B={Bid:N4} A={Ask:N4}", data.Sequence, fairPrice, quote.Bid, quote.Ask);
+
+            var direction = GetTradingDirection(fairPrice, quote, 0);
+
+            if (direction == TradingDirection.Hold)
+            {
+                continue;
+            }
+
+            var signal = new TradingSignal
+            {
+                Direction = direction,
+                Instrument = instrument,
+                PortfolioName = instrument.Ticker,
+            };
+
+            data.TradingSignals.Add(signal);
+        }
+
+        _logger.LogInformation("#{Sequence} Signals={SignalCount}", data.Sequence, data.TradingSignals.Count);
+    }
+
+    // TODO: Test it
+    // TODO: Move it to common lib
+    internal static TradingDirection GetTradingDirection(decimal fairPrice, Quote marketQuote, double threshold)
+    {
+        // цена будет выше минимальной цены предложения
+        var askDelta = (double)((fairPrice - marketQuote.Ask) / marketQuote.Ask);
+        if (askDelta >= threshold)
+        {
+
+            return TradingDirection.Buy;
+        }
+
+        // цена будет ниже максимальной цены спроса
+        var bidDelta = (double)((marketQuote.Bid - fairPrice) / fairPrice);
+        return bidDelta >= threshold ? TradingDirection.Sell : TradingDirection.Hold;
     }
 }

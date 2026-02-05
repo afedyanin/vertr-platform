@@ -18,23 +18,24 @@ public class OrderBookStatsInfo
         _sigmas = sigmas;
     }
 
-    public void Apply(OrderBook orderBook)
-    {
-        MidPriceSignal = GetTradingDirection((double)orderBook.MidPrice, _midPriceTransformer, _midPriceChangeStats);
-    }
+    public TradingDirection UpdateAndGetDirection(OrderBook orderBook)
+        => UpdateAndGetDirection((double)orderBook.MidPrice, _midPriceTransformer, _midPriceChangeStats);
 
     // Using basic stats to detect order book outliers
-    private TradingDirection GetTradingDirection(double value, DiffTransformer diffTransformer, BasicStatsCounter basicStats)
+    private TradingDirection UpdateAndGetDirection(double value, DiffTransformer diffTransformer, BasicStatsCounter basicStats)
     {
         var change = diffTransformer.Diff(value);
 
         if (!change.HasValue)
         {
+            // при первом добавлении дифа не будет
             return TradingDirection.Hold;
         }
 
-        var stats = basicStats.Get();
         var changeValue = change.Value;
+
+        // get stats before adding new item
+        var stats = basicStats.Get();
         basicStats.Add(changeValue);
 
         if (!stats.HasValue)

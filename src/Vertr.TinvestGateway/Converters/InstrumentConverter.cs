@@ -23,7 +23,7 @@ internal static class InstrumentConverter
             InstrumentType = instrument.InstrumentType,
             Name = instrument.Name,
             Currency = instrument.Currency,
-            LotSize = instrument.Lot
+            LotSize = instrument.Lot,
         };
 
     public static Instrument[] ToInstruments(this Tinkoff.InvestApi.V1.InstrumentShort[] instruments)

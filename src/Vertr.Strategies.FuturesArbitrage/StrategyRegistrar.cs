@@ -18,7 +18,7 @@ public static class StrategyRegistrar
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, FuturePriceCalculationHandler>();
 
         // сравнение теор. цены с ценами в стаканах по фьючам, генерация торговых сигналов
-        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, FuturePriceCalculationHandler>();
+        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, FutureSignalsGenerator>();
 
         // проверить позицию в портфеле на соответствие сигналу. Создать реквесты на открытие/разворот портфеля
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, PortfolioPositionHandler<OrderBookChangedEvent>>();

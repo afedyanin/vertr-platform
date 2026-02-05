@@ -1,11 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
+using Vertr.Strategies.FuturesArbitrage.Models;
 
 namespace Vertr.Strategies.FuturesArbitrage.EventHandlers;
 
 internal sealed class BaseAssetOrderBookHandler : IEventHandler<OrderBookChangedEvent>
 {
     private readonly ILogger<BaseAssetOrderBookHandler> _logger;
+
+    // Хранение истории для статистики
+    private readonly OrderBookStatsInfo _orderBookStats = new OrderBookStatsInfo(1);
 
     public int HandlingOrder => 10;
 
@@ -16,14 +20,12 @@ internal sealed class BaseAssetOrderBookHandler : IEventHandler<OrderBookChanged
 
     public ValueTask OnEvent(OrderBookChangedEvent data)
     {
-        _logger.LogDebug("Processing event #{Sequence}", data.Sequence);
+        data.TradingDirection = _orderBookStats.UpdateAndGetDirection(data.OrderBook);
 
-        // В индикаторе нужно хранить историю, вынести в приватное поле 
-        //var sberIndicator = new OrderBookStatsInfo(2);
-        //sberIndicator.Apply(data.OrderBook);
-
-        // если мид цена вышла за стат погрешность, включаем сигнал
-        //data.TradingDirection = sberIndicator.MidPriceSignal;
+        if (data.TradingDirection != Common.Contracts.TradingDirection.Hold)
+        {
+            _logger.LogInformation("#{Sequence} Direction={Direction}", data.Sequence, data.TradingDirection);
+        }
 
         return ValueTask.CompletedTask;
     }

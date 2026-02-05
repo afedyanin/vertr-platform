@@ -67,7 +67,7 @@ public class OrderBookWatcher : BackgroundService
 
         if (book == null)
         {
-            _logger.LogInformation("No order books found by Id={BasicAsset}", basicAssetId);
+            _logger.LogWarning("No order books found by Id={BasicAsset}", basicAssetId);
             return null;
         }
 
@@ -86,7 +86,7 @@ public class OrderBookWatcher : BackgroundService
             FairPrices = derivedAssetPrices,
         };
 
-        _logger.LogInformation("#{Sequence} Book={Book}", evt.Sequence, evt.OrderBook);
+        _logger.LogDebug("#{Sequence} Book={Book}", evt.Sequence, evt.OrderBook);
         await _futuresProcessingPipeline.Handle(evt);
 
         return book.UpdatedAt;

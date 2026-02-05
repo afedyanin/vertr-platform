@@ -34,11 +34,11 @@ internal sealed class PortfolioManager : IPortfolioManager
             return null;
         }
 
-        var portfolio = _portfolioRepository.GetByName(signal.Name);
+        var portfolio = _portfolioRepository.GetByName(signal.PortfolioName);
 
         if (portfolio == null)
         {
-            _logger.LogWarning("Portfolio is not found for name={Name}", signal.Name);
+            _logger.LogWarning("Portfolio is not found for name={Name}", signal.PortfolioName);
             return null;
         }
 
@@ -62,7 +62,7 @@ internal sealed class PortfolioManager : IPortfolioManager
             var openRequest = new MarketOrderRequest
             {
                 RequestId = Guid.NewGuid(),
-                TradingSignal = signal.Name,
+                TradingSignal = signal.PortfolioName,
                 InstrumentId = instrumentId,
                 PortfolioId = portfolio.Id,
                 QuantityLots = DefaultQtyLots,
@@ -79,7 +79,7 @@ internal sealed class PortfolioManager : IPortfolioManager
         var reverseRequest = new MarketOrderRequest
         {
             RequestId = Guid.NewGuid(),
-            TradingSignal = signal.Name,
+            TradingSignal = signal.PortfolioName,
             InstrumentId = instrumentId,
             PortfolioId = portfolio.Id,
             QuantityLots = Math.Abs(positionQtyLots) * 2,

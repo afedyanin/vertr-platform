@@ -49,7 +49,8 @@ internal sealed class Program
         builder.Services.AddHostedService<MarketOrderBookSubscriber>();
         builder.Services.AddHostedService<PortfolioSubscriber>();
         builder.Services.AddHostedService<OrderBookWatcher>();
-        builder.Services.AddHostedService<MoexLoaderService>();
+
+        // builder.Services.AddHostedService<MoexLoaderService>();
 
         var host = builder.Build();
         await host.RunAsync();

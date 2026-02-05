@@ -49,7 +49,7 @@ public static class CandleReceivedEventExtensions
         => string.Join(", ", predictions.Select(p => p.Dump()));
 
     internal static string Dump(this TradingSignal signal)
-        => $"{signal.Name}:{signal.Direction}";
+        => $"{signal.PortfolioName}:{signal.Direction}";
 
     internal static string Dump(this IEnumerable<TradingSignal> signals)
         => string.Join(", ", signals.Select(p => p.Dump()));

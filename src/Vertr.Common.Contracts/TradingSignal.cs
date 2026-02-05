@@ -2,7 +2,7 @@
 
 public record class TradingSignal
 {
-    public required string Name { get; set; }
+    public required string PortfolioName { get; set; }
 
     public required Instrument Instrument { get; set; }
 

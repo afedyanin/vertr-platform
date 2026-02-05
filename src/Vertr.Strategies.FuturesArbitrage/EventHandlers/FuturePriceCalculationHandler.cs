@@ -1,14 +1,24 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 
 namespace Vertr.Strategies.FuturesArbitrage.EventHandlers;
 
 internal sealed class FuturePriceCalculationHandler : IEventHandler<OrderBookChangedEvent>
 {
+    private readonly ILogger<FuturePriceCalculationHandler> _logger;
+
     public int HandlingOrder => 20;
+
+    public FuturePriceCalculationHandler(ILogger<FuturePriceCalculationHandler> logger)
+    {
+        _logger = logger;
+    }
 
     public ValueTask OnEvent(OrderBookChangedEvent data)
     {
+        _logger.LogDebug("Processing event #{Sequence}. Futures=[{Futures}]", data.Sequence, string.Join(',', data.FairPrices.Keys));
+
+        /*
         if (data.TradingDirection == Common.Contracts.TradingDirection.Hold)
         {
             return ValueTask.CompletedTask;
@@ -22,6 +32,7 @@ internal sealed class FuturePriceCalculationHandler : IEventHandler<OrderBookCha
             // получить рейт RUSFAR в соответствии с ExpDate (MOEX)
             // посчитать цену и положить в словарь
         }
+        */
 
         return ValueTask.CompletedTask;
     }

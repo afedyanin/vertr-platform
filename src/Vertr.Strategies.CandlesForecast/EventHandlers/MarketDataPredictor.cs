@@ -45,6 +45,7 @@ internal sealed class MarketDataPredictor : IEventHandler<CandleReceivedEvent>
             ClosePriceStats = candles.Select(c => c.Close).GetStats()
         };
 
+        // portfolio names must match predictor names !!!
         var predictors = _portfolioRepository.GetAll().Keys;
         var predictions = await _predictorClient.Predict([.. predictors], candles);
 

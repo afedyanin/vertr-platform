@@ -18,7 +18,7 @@ public class PortfolioSubscriber : RedisServiceBase
     private readonly ILogger<PortfolioSubscriber> _logger;
 
     private Instrument[] _instruments = [];
-    private readonly string[] _predictors;
+    private readonly string[] _portfolios;
 
     protected override RedisChannel RedisChannel => new RedisChannel(Subscriptions.Portfolios.Channel, PatternMode.Literal);
     protected override bool IsEnabled => Subscriptions.Portfolios.IsEnabled;
@@ -30,8 +30,8 @@ public class PortfolioSubscriber : RedisServiceBase
         _portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
 
-        _predictors = configuration.GetSection("Predictors").Get<string[]>() ?? [];
-        Debug.Assert(_predictors.Length > 0);
+        _portfolios = configuration.GetSection("Portfolios").Get<string[]>() ?? [];
+        Debug.Assert(_portfolios.Length > 0);
 
         _logger = LoggerFactory.CreateLogger<PortfolioSubscriber>();
     }
@@ -40,7 +40,7 @@ public class PortfolioSubscriber : RedisServiceBase
     {
         await base.OnBeforeStart(cancellationToken);
         _instruments = await _tradingGateway.GetAllInstruments();
-        _portfolioRepository.Init(_predictors);
+        _portfolioRepository.Init(_portfolios);
     }
 
     protected override ValueTask OnBeforeStop()
@@ -62,8 +62,8 @@ public class PortfolioSubscriber : RedisServiceBase
         }
 
         _portfolioRepository.Update(portfolio);
-        var predictor = _portfolioRepository.GetNameById(portfolio.Id);
-        _logger.LogInformation(portfolio.Dump(predictor, _instruments));
+        var portfolioName = _portfolioRepository.GetNameById(portfolio.Id);
+        _logger.LogInformation(portfolio.Dump(portfolioName, _instruments));
     }
 
     private static string DumpPortfolios(

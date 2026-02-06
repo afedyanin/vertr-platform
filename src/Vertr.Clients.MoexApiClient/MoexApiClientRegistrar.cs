@@ -1,19 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Refit;
+using Vertr.Clients.MoexApiClient.Internal;
 
 namespace Vertr.Clients.MoexApiClient;
 
 public static class MoexApiClientRegistrar
 {
-    public static IServiceCollection AddMoexApiClient(this IServiceCollection services, string baseAddress)
+    public static IServiceCollection AddMoexApiClient(this IServiceCollection services)
     {
-        services
-           .AddRefitClient<IMoexApiClient>(
-               new RefitSettings
-               {
-                   ContentSerializer = new SystemTextJsonContentSerializer(JsonOptions.DefaultOptions)
-               })
-           .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseAddress));
+        services.AddSingleton<IMoexApiClient, ApiClient>();
 
         return services;
     }

@@ -1,24 +1,14 @@
-﻿using Refit;
+﻿using Vertr.Clients.MoexApiClient.Models;
 
 namespace Vertr.Clients.MoexApiClient;
 
-/// <summary>
-/// https://iss.moex.com/iss/reference/
-/// </summary>
 public interface IMoexApiClient
 {
-    [Get("/securities.json")]
-    Task<string> GetAllSecurities();
+    public Task<IEnumerable<FutureInfo>> GetFutureInfo(params string[] tickers);
 
-    [Get("/index.json")]
-    Task<string> GetMetadata();
+    public Task<IEnumerable<IndexRate>> GetIndexRates(string ticker, DateOnly? from = null, DateOnly? to = null);
 
-    [Get("/engines/stock/markets/index/securities/RUSFAR.json")]
-    Task<string> GetRusfar();
+    internal Task<IEnumerable<SecurityInfoItem>> GetSecurityInfo(string ticker);
 
-    [Get("/statistics/engines/stock/markets/index/rusfar.json")]
-    Task<string> GetRusfarDetails();
-
-    [Get("/engines/stock/markets/index/securities/RUSFAR3M/candles.json?from=2025-12-01&till=2026-01-21&interval=24")]
-    Task<string> GetRusfarCandles();
+    internal Task<IEnumerable<CandleItem>> GetIndexCandles(string ticker, DateOnly? from = null, DateOnly? to = null);
 }

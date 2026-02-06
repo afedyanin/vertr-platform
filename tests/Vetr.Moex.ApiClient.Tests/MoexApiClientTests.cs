@@ -1,57 +1,78 @@
-﻿using Refit;
+﻿using System.Text;
+using Microsoft.Extensions.DependencyInjection;
 using Vertr.Clients.MoexApiClient;
 
 namespace Vetr.Moex.ApiClient.Tests;
 
 public class MoexApiClientTests
 {
-    private const string BaseUrl = "https://iss.moex.com/iss/";
+#pragma warning disable NUnit1032 // An IDisposable field/property should be Disposed in a TearDown method
+    private readonly IServiceProvider _serviceProvider;
+#pragma warning restore NUnit1032 // An IDisposable field/property should be Disposed in a TearDown method
+    private readonly IMoexApiClient _moexApiClient;
 
-    private IMoexApiClient _api;
-
-    [OneTimeSetUp]
-    public void OneTimeSetup()
+    public MoexApiClientTests()
     {
-        _api = RestService.For<IMoexApiClient>(BaseUrl);
+        var services = new ServiceCollection();
+        services.AddHttpClient();
+        services.AddMoexApiClient();
+
+        _serviceProvider = services.BuildServiceProvider();
+        _moexApiClient = _serviceProvider.GetRequiredService<IMoexApiClient>();
     }
 
     [Test]
-    public async Task CanGetSecurities()
+    public async Task CanGetFutureStaticData()
     {
-        var json = await _api.GetAllSecurities();
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        using var httpClient = new HttpClient();
+        var csv = await httpClient.GetStringAsync("https://iss.moex.com/iss/securities/SRH6.csv?iss.meta=on&iss.only=description");
+        Console.WriteLine(csv);
+    }
 
-        Assert.That(json, Is.Not.Empty);
+    [TestCase("SRH6")]
+    [TestCase("SBERF")]
+    public async Task CanGetSecurityInfoItems(string ticker)
+    {
+        var items = await _moexApiClient.GetSecurityInfo(ticker);
 
-        Console.WriteLine(json);
+        foreach (var item in items)
+        {
+            Console.WriteLine(item);
+        }
     }
 
     [Test]
-    public async Task CanGetMetadata()
+    public async Task CanGetFutureInfo()
     {
-        var json = await _api.GetMetadata();
+        var futureInfos = await _moexApiClient.GetFutureInfo("SRH6", "SRU6", "SRM6", "SBERF");
 
-        Assert.That(json, Is.Not.Empty);
-
-        Console.WriteLine(json);
+        foreach (var futureInfo in futureInfos)
+        {
+            Console.WriteLine(futureInfo);
+        }
     }
 
-    [Test]
-    public async Task CanGetRusfarCandles()
+    [TestCase("RUSFAR")]
+    public async Task CanGetIndexCandles(string ticker)
     {
-        var json = await _api.GetRusfarCandles();
+        var items = await _moexApiClient.GetIndexCandles(ticker);
 
-        Assert.That(json, Is.Not.Empty);
-
-        Console.WriteLine(json);
+        foreach (var item in items)
+        {
+            Console.WriteLine(item);
+        }
     }
 
-    [Test]
-    public async Task CanGetRusfarDetails()
+    [TestCase("RUSFAR")]
+    public async Task CanGetIndexRates(string ticker)
     {
-        var json = await _api.GetRusfarDetails();
+        var from = new DateOnly(2025, 12, 10);
+        var items = await _moexApiClient.GetIndexRates(ticker, from);
 
-        Assert.That(json, Is.Not.Empty);
-
-        Console.WriteLine(json);
+        foreach (var item in items)
+        {
+            Console.WriteLine(item);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" >
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
@@ -6,6 +6,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Vertr.Clients.MoexApiClient\Vertr.Clients.MoexApiClient.csproj" />
 		<ProjectReference Include="..\Vertr.Clients.TinvestGatewayApiClient\Vertr.Clients.TinvestGatewayApiClient.csproj" />
 		<ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
 	</ItemGroup>

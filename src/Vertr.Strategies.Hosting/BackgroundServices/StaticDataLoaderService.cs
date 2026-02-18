@@ -4,9 +4,9 @@ using Microsoft.Extensions.Logging;
 using Vertr.Clients.MoexApiClient;
 using Vertr.Common.Application.Abstractions;
 
-namespace Vertr.Strategies.FuturesArbitrage.Trading.BackgroundServices;
+namespace Vertr.Strategies.Hosting.BackgroundServices;
 
-internal sealed class StaticDataLoaderService : BackgroundService
+public sealed class StaticDataLoaderService : BackgroundService
 {
     private readonly IMoexApiClient _moexApiClient;
     private readonly ITradingGateway _tinvestGateway;

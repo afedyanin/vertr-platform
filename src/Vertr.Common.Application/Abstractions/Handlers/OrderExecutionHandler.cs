@@ -22,16 +22,11 @@ public class OrderExecutionHandler<TEvent> : IEventHandler<TEvent> where TEvent 
     {
         try
         {
-            // var tasks = new List<Task>();
-
             foreach (var request in data.OrderRequests)
             {
-                // tasks.Add(_tinvestGateway.PostMarketOrder(request!));
                 _logger.LogInformation("#{Sequence} Posting request: {Request}.", data.Sequence, request);
                 await _tinvestGateway.PostMarketOrder(request);
             }
-
-            // await Task.WhenAll(tasks);
 
             _logger.LogDebug("#{Sequence} OrderExecutionHandler executed.", data.Sequence);
         }

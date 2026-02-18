@@ -11,7 +11,7 @@ namespace Vertr.Clients.MoexApiClient.Internal;
 internal sealed class ApiClient : IMoexApiClient
 {
     private const string DateOnlyTemplate = "yyyy-MM-dd";
-    private const string BaseAddress = "https://iss.moex.com/iss/";
+    private const string BaseAddress = "http://iss.moex.com/iss/";
 
     private readonly HttpClient _httpClient;
     private readonly CsvConfiguration _csvConfiguration;

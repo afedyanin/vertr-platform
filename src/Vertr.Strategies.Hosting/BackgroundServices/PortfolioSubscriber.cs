@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -13,7 +12,7 @@ namespace Vertr.Strategies.Hosting.BackgroundServices;
 
 public class PortfolioSubscriber : RedisServiceBase
 {
-    private readonly ITradingGateway _tradingGateway;
+    private readonly IInstrumentsLocalStorage _instrumentsRepository;
     private readonly IPortfoliosLocalStorage _portfolioRepository;
     private readonly ILogger<PortfolioSubscriber> _logger;
 
@@ -28,7 +27,7 @@ public class PortfolioSubscriber : RedisServiceBase
         IConfiguration configuration) : base(serviceProvider, configuration)
     {
         _portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
-        _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
+        _instrumentsRepository = serviceProvider.GetRequiredService<IInstrumentsLocalStorage>();
 
         _portfolios = configuration.GetSection("Portfolios").Get<string[]>() ?? [];
         Debug.Assert(_portfolios.Length > 0);
@@ -39,16 +38,8 @@ public class PortfolioSubscriber : RedisServiceBase
     protected override async ValueTask OnBeforeStart(CancellationToken cancellationToken)
     {
         await base.OnBeforeStart(cancellationToken);
-        _instruments = await _tradingGateway.GetAllInstruments();
+        _instruments = _instrumentsRepository.GetAll();
         _portfolioRepository.Init(_portfolios);
-    }
-
-    protected override ValueTask OnBeforeStop()
-    {
-        var dump = DumpPortfolios(_portfolioRepository, _instruments);
-        _logger.LogWarning(dump);
-
-        return base.OnBeforeStop();
     }
 
     public override void HandleSubscription(RedisChannel channel, RedisValue message)
@@ -63,21 +54,12 @@ public class PortfolioSubscriber : RedisServiceBase
 
         _portfolioRepository.Update(portfolio);
         var portfolioName = _portfolioRepository.GetNameById(portfolio.Id);
-        _logger.LogInformation(portfolio.Dump(portfolioName, _instruments));
-    }
 
-    private static string DumpPortfolios(
-        IPortfoliosLocalStorage portfoliosLocalStorage,
-        Instrument[] instruments)
-    {
-        var portfolios = portfoliosLocalStorage.GetAll();
-        var sb = new StringBuilder();
-
-        foreach (var kvp in portfolios)
+        if (_instruments.Length == 0)
         {
-            sb.AppendLine(kvp.Value.Dump(kvp.Key, instruments));
+            _instruments = _instrumentsRepository.GetAll();
         }
 
-        return sb.ToString();
+        _logger.LogInformation(portfolio.Dump(portfolioName, _instruments));
     }
 }

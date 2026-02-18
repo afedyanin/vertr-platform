@@ -55,6 +55,12 @@ internal sealed class Program
         builder.Services.AddHostedService<StaticDataLoaderService>();
 
         var host = builder.Build();
+
+        var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
+        var appCleanup = new ApplicationCleanup(host.Services);
+
+        lifetime.ApplicationStopped.Register(appCleanup.CleanupAction);
+
         await host.RunAsync();
     }
 }

@@ -4,6 +4,7 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using Vertr.Clients.MoexApiClient.Extensions;
 using Vertr.Clients.MoexApiClient.Models;
+using Vertr.Common.Contracts;
 
 namespace Vertr.Clients.MoexApiClient.Internal;
 

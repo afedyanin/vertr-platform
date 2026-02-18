@@ -16,6 +16,9 @@ public static class ApplicationRegistrar
         services.AddSingleton<CandlesLocalStorage>();
         services.AddSingleton<ICandlesLocalStorage>(sp => sp.GetRequiredService<CandlesLocalStorage>());
 
+        services.AddSingleton<IIndexRatesRepository, IndexRatesLocalStorage>();
+        services.AddSingleton<IFutureInfoRepository, FutureInfoLocalStorage>();
+
         return services;
     }
 

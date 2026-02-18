@@ -4,13 +4,9 @@ namespace Vertr.Common.Application.Abstractions;
 
 public interface IFutureInfoRepository
 {
-    FutureInfo[] GetAll(string? tickerWildCard = null);
+    public FutureInfo[] GetAll(string? tickerWildCard = null);
 
-    FutureInfo Get(string ticker);
+    public FutureInfo? Get(string ticker);
 
-    Task Load(string[] tickers);
-
-    string ToJson();
-
-    Task FromJson(string json);
+    public void Load(FutureInfo[] futures);
 }

@@ -4,6 +4,7 @@ namespace Vertr.Common.Application.Abstractions;
 
 public interface IInstrumentsLocalStorage
 {
-    public Task<Instrument[]> GetAll();
-    public Task<Instrument?> GetById(Guid instrumentId);
+    public Instrument[] GetAll();
+    public Instrument? GetById(Guid instrumentId);
+    public void Load(Instrument[] instruments);
 }

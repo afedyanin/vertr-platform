@@ -1,4 +1,4 @@
-﻿namespace Vertr.Clients.MoexApiClient.Models;
+﻿namespace Vertr.Common.Contracts;
 
 public record class IndexRate
 {

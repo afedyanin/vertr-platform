@@ -105,7 +105,7 @@ internal sealed class PortfolioManager : IPortfolioManager
                     continue;
                 }
 
-                var instrument = await _instrumentRepository.GetById(position.InstrumentId);
+                var instrument = _instrumentRepository.GetById(position.InstrumentId);
 
                 if (instrument == null)
                 {

@@ -45,7 +45,7 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
                 continue;
             }
 
-            var instrument = await _instrumentsLocalStorage.GetById(kvp.Key);
+            var instrument = _instrumentsLocalStorage.GetById(kvp.Key);
             if (instrument == null)
             {
                 _logger.LogWarning("#{Sequence} Instrument is not found for InstrumentId={InstrumentId}", data.Sequence, kvp.Key);

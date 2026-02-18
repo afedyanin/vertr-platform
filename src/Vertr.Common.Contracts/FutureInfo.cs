@@ -1,18 +1,14 @@
-﻿using System.Text.Json;
+﻿namespace Vertr.Common.Contracts;
 
-namespace Vertr.Common.Contracts;
-
-public record class FutureInfo(
-    string ClassCode,
-    string Ticker,
-    DateOnly ExpDate,
-    DateOnly LastTradeDate,
-    decimal LotSize,
-    decimal PriceStep)
+public record class FutureInfo
 {
-    public string ToJson()
-        => JsonSerializer.Serialize(this, JsonOptions.DefaultOptions);
+    public required string Ticker { get; set; }
 
-    public static FutureInfo? FromJson(string jsonString)
-        => JsonSerializer.Deserialize<FutureInfo>(jsonString, JsonOptions.DefaultOptions);
+    public required string Name { get; set; }
+
+    public DateOnly ExpDate { get; set; }
+
+    public int LotSize { get; set; }
+
+    public required string Unit { get; set; }
 }

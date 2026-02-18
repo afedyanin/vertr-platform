@@ -11,6 +11,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Vertr.Clients.ForecastApiClient\Vertr.Clients.ForecastApiClient.csproj" />
+		<ProjectReference Include="..\Vertr.Clients.MoexApiClient\Vertr.Clients.MoexApiClient.csproj" />
 		<ProjectReference Include="..\Vertr.Clients.TinvestGatewayApiClient\Vertr.Clients.TinvestGatewayApiClient.csproj" />
 		<ProjectReference Include="..\Vertr.Common.Application\Vertr.Common.Application.csproj" />
 		<ProjectReference Include="..\Vertr.Strategies.FuturesArbitrage\Vertr.Strategies.FuturesArbitrage.csproj" />

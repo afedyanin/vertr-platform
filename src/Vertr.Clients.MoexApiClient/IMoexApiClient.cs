@@ -1,4 +1,5 @@
 ﻿using Vertr.Clients.MoexApiClient.Models;
+using Vertr.Common.Contracts;
 
 namespace Vertr.Clients.MoexApiClient;
 

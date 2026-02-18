@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 using Vertr.Clients.ForecastApiClient;
+using Vertr.Clients.MoexApiClient;
 using Vertr.Clients.TinvestGatewayApiClient;
 using Vertr.Common.Application;
 using Vertr.Common.Application.Configuration;
@@ -33,6 +34,8 @@ internal sealed class Program
         var forecastGatewayUrl = configuration.GetValue<string>("VertrForecastGateway:BaseAddress");
         Debug.Assert(!string.IsNullOrEmpty(forecastGatewayUrl));
         builder.Services.AddForecastApiClient(forecastGatewayUrl);
+
+        builder.Services.AddMoexApiClient();
 
         builder.Services
             .AddOptionsWithValidateOnStart<ThresholdSettings>()

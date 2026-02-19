@@ -13,7 +13,7 @@ public interface IPortfoliosLocalStorage
 
     public Portfolio? GetByName(string name);
 
-    public void Update(Portfolio portfolio);
+    public bool Update(Portfolio portfolio);
 
     public void Init(string[] precitors);
 }

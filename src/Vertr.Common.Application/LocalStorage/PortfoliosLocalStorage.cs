@@ -76,12 +76,15 @@ internal sealed class PortfoliosLocalStorage : IPortfoliosLocalStorage
         }
     }
 
-    public void Update(Portfolio portfolio)
+    public bool Update(Portfolio portfolio)
     {
-        if (_portfolios.ContainsKey(portfolio.Id))
+        if (!_portfolios.ContainsKey(portfolio.Id))
         {
-            _portfolios[portfolio.Id] = portfolio;
+            return false;
         }
+
+        _portfolios[portfolio.Id] = portfolio;
+        return true;
     }
 }
 

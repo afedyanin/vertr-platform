@@ -52,7 +52,14 @@ public class PortfolioSubscriber : RedisServiceBase
             return;
         }
 
-        _portfolioRepository.Update(portfolio);
+        var updated = _portfolioRepository.Update(portfolio);
+
+        if (!updated)
+        {
+            _logger.LogWarning("Unknown portfolio receved. Id={PortfolioId}", portfolio.Id);
+            return;
+        }
+
         var portfolioName = _portfolioRepository.GetNameById(portfolio.Id);
 
         if (_instruments.Length == 0)

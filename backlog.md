@@ -1,5 +1,24 @@
 # Backlog
 
+## 2026-02-20
+
+### Metrics
+
+- https://andrewlock.net/creating-and-consuming-metrics-with-system-diagnostics-metrics-apis/
+- https://andrewlock.net/creating-strongly-typed-metics-with-a-source-generator/
+- https://andrewlock.net/creating-standard-and-observable-instruments/
+
+```
+dotnet tool install -g dotnet-counters
+
+cd C:\Users\A\Documents\GitLab\vertr-platform\tests\Vertr.Experimental.MetricsApp\bin\Debug\net10.0
+
+.\Vertr.Experimental.MetricsApp.exe --urls https://localhost:7068
+
+dotnet-counters monitor --counters MyApp.Products -n Vertr.Experimental.MetricsApp
+
+```
+
 ## 2026-02-19
 
 - [ ] ИСС выбрасывает ексепшены на старте

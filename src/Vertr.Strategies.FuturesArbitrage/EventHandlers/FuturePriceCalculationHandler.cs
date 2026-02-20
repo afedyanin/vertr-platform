@@ -48,14 +48,6 @@ internal sealed class FuturePriceCalculationHandler : IEventHandler<OrderBookCha
                 continue;
             }
 
-            // TODO: Use different rates dependend on expDate
-            var rusfar = _ratesRepository.GetLast("RUSFAR");
-            if (rusfar == null)
-            {
-                _logger.LogError("#{Sequence}. RUSFAR rate is not found.", data.Sequence);
-                continue;
-            }
-
             var today = DateOnly.FromDateTime(DateTime.UtcNow);
             var expDate = futureInfo.ExpDate;
             var lotSize = futureInfo.LotSize;
@@ -64,6 +56,14 @@ internal sealed class FuturePriceCalculationHandler : IEventHandler<OrderBookCha
             if (daysToExpiry <= 0)
             {
                 _logger.LogError("#{Sequence}. Future={Ticker} is expired.", data.Sequence, instrument.Ticker);
+                continue;
+            }
+
+            var symbol = daysToExpiry >= 45 ? "RUSFAR3M" : "RUSFAR";
+            var rusfar = _ratesRepository.GetLast(symbol);
+            if (rusfar == null)
+            {
+                _logger.LogError("#{Sequence}. RUSFAR rate is not found.", data.Sequence);
                 continue;
             }
 

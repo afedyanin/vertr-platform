@@ -90,11 +90,11 @@ internal sealed class PortfolioManager : IPortfolioManager
         return reverseRequest;
     }
 
-    public async Task CloseAllPositions()
+    public async Task<IEnumerable<MarketOrderRequest>> CloseAllPositions()
     {
         var portfolios = _portfolioRepository.GetAll();
 
-        var tasks = new List<Task>();
+        var requests = new List<MarketOrderRequest>();
 
         foreach (var kvp in portfolios)
         {
@@ -135,12 +135,13 @@ internal sealed class PortfolioManager : IPortfolioManager
                     Direction = direction,
                 };
 
-                tasks.Add(_tinvestGateway.PostMarketOrder(closeRequest));
+                closeRequest.OrderId = await _tinvestGateway.PostMarketOrder(closeRequest);
+                requests.Add(closeRequest);
             }
         }
 
-        await Task.WhenAll(tasks);
         _logger.LogDebug("CloseAllPositions request executed.");
+        return requests;
     }
 }
 

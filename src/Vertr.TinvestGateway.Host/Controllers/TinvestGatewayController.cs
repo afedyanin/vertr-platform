@@ -59,8 +59,8 @@ public class TinvestGatewayController : ControllerBase
     public async Task<IActionResult> PostMarketOrder(MarketOrderRequest request)
     {
         var postOrderRequest = PostOrderRequest.FromMarketOrderRequest(request);
-        _ = await _orderExecutionGateway.PostOrder(postOrderRequest);
-        return Ok();
+        var response = await _orderExecutionGateway.PostOrder(postOrderRequest);
+        return Ok(response?.OrderId);
     }
 
     [HttpGet("order-state/{orderId}")]

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
-namespace Vertr.Common.Application.Abstractions.Handlers;
+namespace Vertr.Common.Application.Handlers;
 
 public class PortfolioPositionHandler<TEvent> : IEventHandler<TEvent> where TEvent : IMarketDataEvent
 {

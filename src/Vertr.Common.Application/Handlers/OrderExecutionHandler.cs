@@ -1,7 +1,8 @@
 ﻿
 using Microsoft.Extensions.Logging;
+using Vertr.Common.Application.Abstractions;
 
-namespace Vertr.Common.Application.Abstractions.Handlers;
+namespace Vertr.Common.Application.Handlers;
 
 public class OrderExecutionHandler<TEvent> : IEventHandler<TEvent> where TEvent : IMarketDataEvent
 {
@@ -25,7 +26,7 @@ public class OrderExecutionHandler<TEvent> : IEventHandler<TEvent> where TEvent 
             foreach (var request in data.OrderRequests)
             {
                 _logger.LogInformation("#{Sequence} Posting request: {Request}.", data.Sequence, request);
-                await _tinvestGateway.PostMarketOrder(request);
+                request.OrderId = await _tinvestGateway.PostMarketOrder(request);
             }
 
             _logger.LogDebug("#{Sequence} OrderExecutionHandler executed.", data.Sequence);

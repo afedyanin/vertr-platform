@@ -6,7 +6,7 @@ namespace Vertr.Clients.TinvestGatewayApiClient;
 public interface ITinvestGatewayClient
 {
     [Post("/api/tinvest/orders/market")]
-    public Task PostMarketOrder(MarketOrderRequest request);
+    public Task<string?> PostMarketOrder(MarketOrderRequest request);
 
     [Get("/api/instruments/all")]
     public Task<Instrument[]> GetAllInstruments();

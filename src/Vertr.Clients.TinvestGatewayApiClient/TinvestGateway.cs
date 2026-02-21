@@ -19,6 +19,6 @@ internal sealed class TinvestGateway : ITradingGateway
     public Task<Candle[]> GetCandles(Guid instrumentId, [Query] int maxItems = -1)
         => _gatewayClient.GetCandles(instrumentId, maxItems);
 
-    public Task PostMarketOrder(MarketOrderRequest request)
+    public Task<string?> PostMarketOrder(MarketOrderRequest request)
         => _gatewayClient.PostMarketOrder(request);
 }

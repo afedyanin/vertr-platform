@@ -5,7 +5,7 @@ namespace Vertr.Common.Application.Abstractions;
 
 public interface ITradingGateway
 {
-    public Task PostMarketOrder(MarketOrderRequest request);
+    public Task<string?> PostMarketOrder(MarketOrderRequest request);
 
     public Task<Instrument[]> GetAllInstruments();
 

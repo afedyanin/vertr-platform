@@ -8,5 +8,6 @@ public record class MarketOrderRequest
     public required Guid PortfolioId { get; init; }
     public required long QuantityLots { get; init; }
     public TradingDirection Direction { get; init; }
+    public string? OrderId { get; set; }
 }
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Application.Abstractions.Handlers;
+using Vertr.Common.Application.Handlers;
 using Vertr.Common.Application.LocalStorage;
 using Vertr.Strategies.CandlesForecast.Abstractions;
 using Vertr.Strategies.CandlesForecast.EventHandlers;

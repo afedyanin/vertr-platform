@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Application.Abstractions.Handlers;
+using Vertr.Common.Application.Handlers;
 using Vertr.Strategies.FuturesArbitrage.Abstractions;
 using Vertr.Strategies.FuturesArbitrage.EventHandlers;
 using Vertr.Strategies.FuturesArbitrage.Services;

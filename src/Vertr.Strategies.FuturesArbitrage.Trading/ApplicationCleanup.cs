@@ -39,7 +39,7 @@ public class ApplicationCleanup
         _logger.LogInformation("ApplicationStopped. Performing cleanup...");
 
         _logger.LogInformation("01 Closing all positions");
-        _portfolioManager.CloseAllPositions().GetAwaiter().GetResult();
+        var requests = _portfolioManager.CloseAllPositions().GetAwaiter().GetResult();
 
         _logger.LogInformation("02 Processing orders...");
         Task.Delay(5000, CancellationToken.None).GetAwaiter().GetResult();

@@ -81,8 +81,6 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
         _logger.LogInformation("#{Sequence} Signals={SignalCount}", data.Sequence, data.TradingSignals.Count);
     }
 
-    // TODO: Test it
-    // TODO: Move it to common lib
     internal static TradingDirection GetTradingDirection(decimal fairPrice, Quote marketQuote, double threshold)
     {
         // цена будет выше минимальной цены предложения

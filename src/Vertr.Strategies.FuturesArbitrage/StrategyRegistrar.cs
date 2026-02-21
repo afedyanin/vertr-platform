@@ -11,19 +11,19 @@ public static class StrategyRegistrar
 {
     public static IServiceCollection AddFutureArbitrageStrategy(this IServiceCollection services)
     {
-        // проверить, что Mid цена в стакане вышла за пределы стат. погрешности. Заполнить TradingDirection
+        // 10 проверить, что Mid цена в стакане вышла за пределы стат. погрешности. Заполнить TradingDirection
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, BaseAssetOrderBookHandler>();
 
-        // расчет теоретической цены набора фьючей
+        // 20 расчет теоретической цены набора фьючей
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, FuturePriceCalculationHandler>();
 
-        // сравнение теор. цены с ценами в стаканах по фьючам, генерация торговых сигналов
+        // 30 сравнение теор. цены с ценами в стаканах по фьючам, генерация торговых сигналов
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, FutureSignalsGenerator>();
 
-        // проверить позицию в портфеле на соответствие сигналу. Создать реквесты на открытие/разворот портфеля
+        // 800 проверить позицию в портфеле на соответствие сигналу. Создать реквесты на открытие/разворот портфеля
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, PortfolioPositionHandler<OrderBookChangedEvent>>();
 
-        // отправить маркет ордера в гейтвей
+        // 900 отправить маркет ордера в гейтвей
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, OrderExecutionHandler<OrderBookChangedEvent>>();
 
         services.AddSingleton<IFuturesProcessingPipeline, FuturesProcessingPipeline>();

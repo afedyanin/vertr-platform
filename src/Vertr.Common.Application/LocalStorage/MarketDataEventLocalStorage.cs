@@ -4,19 +4,19 @@ namespace Vertr.Common.Application.LocalStorage;
 
 internal sealed class MarketDataEventLocalStorage : IMarketDataEventLocalStorage
 {
+    private readonly Dictionary<int, IMarketDataEvent> _events = [];
 
     public IEnumerable<IMarketDataEvent> GetAll()
-    {
-        throw new NotImplementedException();
-    }
+        => _events.Values;
 
     public IMarketDataEvent? GetBySequence(int sequenceId)
     {
-        throw new NotImplementedException();
+        _events.TryGetValue(sequenceId, out var marketDataEvent);
+        return marketDataEvent;
     }
 
     public void Save(IMarketDataEvent marketDataEvent)
     {
-        throw new NotImplementedException();
+        _events[marketDataEvent.Sequence] = marketDataEvent;
     }
 }

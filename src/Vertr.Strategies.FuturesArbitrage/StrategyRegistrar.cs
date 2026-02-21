@@ -26,6 +26,9 @@ public static class StrategyRegistrar
         // 900 отправить маркет ордера в гейтвей
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, OrderExecutionHandler<OrderBookChangedEvent>>();
 
+        // 1010 сохранить евент
+        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, EventSavingHandler>();
+
         services.AddSingleton<IFuturesProcessingPipeline, FuturesProcessingPipeline>();
 
         return services;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Text;
-using System.Text.Json;
+using CsvHelper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
@@ -40,9 +41,7 @@ public class ApplicationCleanup
 
         _logger.LogInformation("01 Closing all positions");
 
-        // TODO Use this requests to collect trading stats info
-        //var requests = _portfolioManager.CloseAllPositions().GetAwaiter().GetResult();
-        _ = _portfolioManager.CloseAllPositions().GetAwaiter().GetResult();
+        var closePositionRequests = _portfolioManager.CloseAllPositions().GetAwaiter().GetResult();
 
         _logger.LogInformation("02 Processing orders...");
         Task.Delay(5000, CancellationToken.None).GetAwaiter().GetResult();
@@ -69,10 +68,28 @@ public class ApplicationCleanup
             }
         }
 
-        var tradingDump = DumpTradingStats(tradingStats);
-        _logger.LogWarning(tradingDump);
+        var tradingStatsFileName = $"trading_stats_{DateTime.UtcNow:O}.csv";
+        DumpTradingStats(tradingStats, tradingStatsFileName);
 
-        _logger.LogInformation("05 Cleanup completed.");
+        _logger.LogInformation("05 Dumping close positions stats...");
+
+        var closePositionOrderTrades = new List<OrderTrades>();
+        foreach (var closeRequest in closePositionRequests)
+        {
+            if (!string.IsNullOrEmpty(closeRequest.OrderId))
+            {
+                var orderTrades = _tradingGateway.FindOrderTrades(closeRequest.OrderId).GetAwaiter().GetResult();
+                if (orderTrades != null)
+                {
+                    closePositionOrderTrades.AddRange(orderTrades);
+                }
+            }
+        }
+
+        var closePositionsStatsFileName = $"trading_stats_{DateTime.UtcNow:O}.csv";
+        DumpClosePositionStats(closePositionOrderTrades, closePositionsStatsFileName);
+
+        _logger.LogInformation("06 Cleanup completed.");
     }
 
     private ReadOnlyDictionary<string, Portfolio> UpdatePortfoliosFromRedis(ReadOnlyDictionary<string, Portfolio> oldPortfolios)
@@ -106,16 +123,25 @@ public class ApplicationCleanup
         return sb.ToString();
     }
 
-    // TODO: Dump to csv file
-    private static string DumpTradingStats(IEnumerable<TradingStatsInfo> tradingStats)
+    private static void DumpTradingStats(IEnumerable<TradingStatsInfo> tradingStats, string fileName)
     {
-        var sb = new StringBuilder();
+        var records = TradingStatsCsvItem.Create(tradingStats);
 
-        foreach (var item in tradingStats)
+        using (var writer = new StreamWriter(fileName))
+        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
         {
-            sb.AppendLine(JsonSerializer.Serialize(item));
+            csv.WriteRecords(records);
         }
+    }
 
-        return sb.ToString();
+    public static void DumpClosePositionStats(IEnumerable<OrderTrades> orderTrades, string fileName)
+    {
+        var records = ClosePositionStatsCsvItem.Create(orderTrades);
+
+        using (var writer = new StreamWriter(fileName))
+        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+        {
+            csv.WriteRecords(records);
+        }
     }
 }

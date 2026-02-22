@@ -1,4 +1,4 @@
-using Vertr.TinvestGateway.Models.Orders;
+using Vertr.Common.Contracts;
 
 namespace Vertr.TinvestGateway.Repositories;
 

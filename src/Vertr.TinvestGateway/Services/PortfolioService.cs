@@ -3,7 +3,6 @@ using Vertr.Common.Application.Services;
 using Vertr.Common.Contracts;
 using Vertr.TinvestGateway.Abstractions;
 using Vertr.TinvestGateway.Models.Orders;
-using Vertr.TinvestGateway.Models.Orders.Enums;
 using Vertr.TinvestGateway.Repositories;
 
 namespace Vertr.TinvestGateway.Services;

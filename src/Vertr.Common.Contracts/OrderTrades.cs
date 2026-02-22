@@ -1,8 +1,6 @@
 using System.Text.Json;
-using Vertr.Common.Contracts;
-using Vertr.TinvestGateway.Models.Orders.Enums;
 
-namespace Vertr.TinvestGateway.Models.Orders;
+namespace Vertr.Common.Contracts;
 
 public record class OrderTrades
 {

@@ -13,4 +13,10 @@ public interface ITinvestGatewayClient
 
     [Get("/api/candles/{instrumentId}")]
     public Task<Candle[]> GetCandles(Guid instrumentId, [Query] int maxItems = -1);
+
+    [Get("/api/order-storage/trades")]
+    public Task<OrderTrades[]> FindOrderTrades([Query] string pattern);
+
+    [Get("/api/portfolio/{portfolioId}")]
+    public Task<Portfolio?> GetPortfolio(Guid portfolioId);
 }

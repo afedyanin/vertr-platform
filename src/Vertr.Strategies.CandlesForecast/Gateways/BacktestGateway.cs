@@ -48,6 +48,11 @@ internal sealed class BacktestGateway : ITradingGateway
         _historicCandlesProvider = historicCandlesProvider;
     }
 
+    public Task<OrderTrades[]> FindOrderTrades(string orderId)
+    {
+        throw new NotImplementedException();
+    }
+
     public Task<Instrument[]> GetAllInstruments()
         => Task.FromResult(Instruments);
 
@@ -55,6 +60,11 @@ internal sealed class BacktestGateway : ITradingGateway
     {
         var candles = _historicCandlesProvider.Get(instrumentId, skip: 0, take: maxItems > 0 ? maxItems : 0);
         return Task.FromResult(candles.ToArray());
+    }
+
+    public Task<Portfolio?> GetPortfolio(Guid portfolioId)
+    {
+        throw new NotImplementedException();
     }
 
     public Task<string?> PostMarketOrder(MarketOrderRequest request)

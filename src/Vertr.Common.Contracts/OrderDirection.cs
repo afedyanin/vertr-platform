@@ -1,4 +1,4 @@
-﻿namespace Vertr.TinvestGateway.Models.Orders.Enums;
+﻿namespace Vertr.Common.Contracts;
 
 public enum OrderDirection
 {

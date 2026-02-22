@@ -18,7 +18,6 @@ public static class ApplicationRegistrar
 
         services.AddSingleton<IIndexRatesRepository, IndexRatesLocalStorage>();
         services.AddSingleton<IFutureInfoRepository, FutureInfoLocalStorage>();
-        services.AddSingleton<IMarketDataEventLocalStorage, MarketDataEventLocalStorage>();
 
         return services;
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
+using Vertr.Strategies.FuturesArbitrage.Models;
 
 namespace Vertr.Strategies.FuturesArbitrage.EventHandlers;
 
@@ -9,16 +10,21 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
     private readonly IOrderBooksLocalStorage _orderBooksLocalStorage;
     private readonly IInstrumentsLocalStorage _instrumentsLocalStorage;
     private readonly ILogger<FutureSignalsGenerator> _logger;
+    private readonly IPortfoliosLocalStorage _portfolioRepository;
+
+    private const double Threshold = 0.0;
 
     public int HandlingOrder => 30;
 
     public FutureSignalsGenerator(
         IOrderBooksLocalStorage orderBooksLocalStorage,
         IInstrumentsLocalStorage instrumentsLocalStorage,
+        IPortfoliosLocalStorage portfolioRepository,
         ILogger<FutureSignalsGenerator> logger)
     {
         _orderBooksLocalStorage = orderBooksLocalStorage;
         _instrumentsLocalStorage = instrumentsLocalStorage;
+        _portfolioRepository = portfolioRepository;
         _logger = logger;
     }
 
@@ -61,7 +67,7 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
 
             _logger.LogInformation("#{Sequence} Fair={FairPrice:N4} B={Bid:N4} A={Ask:N4}", data.Sequence, fairPrice, quote.Bid, quote.Ask);
 
-            var direction = GetTradingDirection(fairPrice, quote, 0);
+            var direction = GetTradingDirection(fairPrice, quote, Threshold);
 
             if (direction == TradingDirection.Hold)
             {
@@ -76,6 +82,20 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
             };
 
             data.TradingSignals.Add(signal);
+
+            var assetInfo = new DerivedAssetInfo
+            {
+                InstrumentId = instrument.Id,
+                PortfolioId = _portfolioRepository.GetByName(instrument.Ticker)?.Id,
+                UpdatedAt = orderBook.UpdatedAt,
+                FairPrice = fairPrice,
+                MaxBid = orderBook.MaxBid,
+                MinAsk = orderBook.MinAsk,
+                Threshold = Threshold,
+                Direction = direction,
+            };
+
+            data.DerivedAssets.Add(assetInfo);
         }
 
         _logger.LogInformation("#{Sequence} Signals={SignalCount}", data.Sequence, data.TradingSignals.Count);

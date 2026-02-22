@@ -39,7 +39,10 @@ public class ApplicationCleanup
         _logger.LogInformation("ApplicationStopped. Performing cleanup...");
 
         _logger.LogInformation("01 Closing all positions");
-        var requests = _portfolioManager.CloseAllPositions().GetAwaiter().GetResult();
+
+        // TODO Use this requests to collect trading stats info
+        //var requests = _portfolioManager.CloseAllPositions().GetAwaiter().GetResult();
+        _ = _portfolioManager.CloseAllPositions().GetAwaiter().GetResult();
 
         _logger.LogInformation("02 Processing orders...");
         Task.Delay(5000, CancellationToken.None).GetAwaiter().GetResult();

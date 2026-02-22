@@ -1,5 +1,6 @@
 ﻿using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
+using Vertr.Strategies.FuturesArbitrage.Models;
 
 namespace Vertr.Strategies.FuturesArbitrage;
 
@@ -12,6 +13,8 @@ public record class OrderBookChangedEvent : IMarketDataEvent
     public TradingDirection TradingDirection { get; set; } = TradingDirection.Hold;
 
     public Dictionary<Guid, decimal?> FairPrices { get; set; } = [];
+
+    public List<DerivedAssetInfo> DerivedAssets { get; set; } = [];
 
     public List<TradingSignal> TradingSignals { get; } = [];
 

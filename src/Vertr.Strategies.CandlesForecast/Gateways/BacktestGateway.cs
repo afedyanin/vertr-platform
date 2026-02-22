@@ -57,7 +57,7 @@ internal sealed class BacktestGateway : ITradingGateway
         return Task.FromResult(candles.ToArray());
     }
 
-    public Task PostMarketOrder(MarketOrderRequest request)
+    public Task<string?> PostMarketOrder(MarketOrderRequest request)
     {
         var portfolio = _portfoliosLocalStorage.GetById(request.PortfolioId);
 
@@ -98,6 +98,6 @@ internal sealed class BacktestGateway : ITradingGateway
         portfolio = builder.Build();
         _portfoliosLocalStorage.Update(portfolio);
 
-        return Task.CompletedTask;
+        return Task.FromResult<string?>(string.Empty);
     }
 }

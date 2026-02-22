@@ -11,6 +11,8 @@ public static class StrategyRegistrar
 {
     public static IServiceCollection AddFutureArbitrageStrategy(this IServiceCollection services)
     {
+        services.AddSingleton<ITradingStatsLocalStorage, TradingStatsLocalStorage>();
+
         // 10 проверить, что Mid цена в стакане вышла за пределы стат. погрешности. Заполнить TradingDirection
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, BaseAssetOrderBookHandler>();
 
@@ -27,7 +29,7 @@ public static class StrategyRegistrar
         services.AddSingleton<IEventHandler<OrderBookChangedEvent>, OrderExecutionHandler<OrderBookChangedEvent>>();
 
         // 1010 сохранить евент
-        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, EventSavingHandler>();
+        services.AddSingleton<IEventHandler<OrderBookChangedEvent>, TradingStatsHandler>();
 
         services.AddSingleton<IFuturesProcessingPipeline, FuturesProcessingPipeline>();
 

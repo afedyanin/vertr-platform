@@ -1,10 +1,13 @@
-﻿using System.Text;
+﻿using System.Collections.ObjectModel;
+using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
-using Vertr.Common.Contracts;
 using Vertr.Common.Application.Extensions;
-using System.Collections.ObjectModel;
+using Vertr.Common.Contracts;
+using Vertr.Strategies.FuturesArbitrage.Abstractions;
+using Vertr.Strategies.FuturesArbitrage.Models;
 
 namespace Vertr.Strategies.FuturesArbitrage.Trading;
 
@@ -15,6 +18,7 @@ public class ApplicationCleanup
     private readonly ILogger<ApplicationCleanup> _logger;
     private readonly IInstrumentsLocalStorage _instrumentsRepository;
     private readonly ITradingGateway _tradingGateway;
+    private readonly ITradingStatsLocalStorage _tradingStatsLocalStorage;
 
     public Action CleanupAction => OnStop;
 
@@ -24,6 +28,7 @@ public class ApplicationCleanup
         _instrumentsRepository = serviceProvider.GetRequiredService<IInstrumentsLocalStorage>();
         _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
         _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
+        _tradingStatsLocalStorage = serviceProvider.GetRequiredService<ITradingStatsLocalStorage>();
 
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         _logger = loggerFactory.CreateLogger<ApplicationCleanup>();
@@ -49,7 +54,25 @@ public class ApplicationCleanup
         var dump = DumpPortfolios(portfolios, instruments);
         _logger.LogWarning(dump);
 
-        _logger.LogInformation("04 Cleanup completed.");
+        _logger.LogInformation("04 Dumping trading stats...");
+
+        var tradingStats = _tradingStatsLocalStorage.GetAll();
+        foreach (var item in tradingStats)
+        {
+            if (!string.IsNullOrEmpty(item.OrderExecutionInfo.OrderId))
+            {
+                var orderTrades = _tradingGateway.FindOrderTrades(item.OrderExecutionInfo.OrderId).GetAwaiter().GetResult();
+                if (orderTrades != null)
+                {
+                    item.OrderTrades = orderTrades;
+                }
+            }
+        }
+
+        var tradingDump = DumpTradingStats(tradingStats);
+        _logger.LogWarning(tradingDump);
+
+        _logger.LogInformation("05 Cleanup completed.");
     }
 
     private ReadOnlyDictionary<string, Portfolio> UpdatePortfoliosFromRedis(ReadOnlyDictionary<string, Portfolio> oldPortfolios)
@@ -78,6 +101,19 @@ public class ApplicationCleanup
         foreach (var kvp in portfolios)
         {
             sb.AppendLine(kvp.Value.Dump(kvp.Key, instruments));
+        }
+
+        return sb.ToString();
+    }
+
+    // TODO: Dump to csv file
+    private static string DumpTradingStats(IEnumerable<TradingStatsInfo> tradingStats)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var item in tradingStats)
+        {
+            sb.AppendLine(JsonSerializer.Serialize(item));
         }
 
         return sb.ToString();

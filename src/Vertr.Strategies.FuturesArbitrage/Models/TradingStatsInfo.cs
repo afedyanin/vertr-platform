@@ -12,7 +12,7 @@ public record class TradingStatsInfo
 
     public required OrderExecutionInfo OrderExecutionInfo { get; init; }
 
-    public TradeInfo? TradeInfo { get; init; }
+    public OrderTrades[] OrderTrades { get; set; } = [];
 }
 
 public record class BaseAssetInfo
@@ -43,13 +43,3 @@ public record class OrderExecutionInfo
     public string? OrderId { get; init; }
 }
 
-public record class TradeInfo
-{
-    public Guid InstrumentId { get; init; }
-    public string? OrderId { get; init; }
-    public string TradeId { get; init; } = string.Empty;
-    public TradingDirection Direction { get; init; }
-    public DateTime ExecutionTime { get; init; }
-    public decimal Price { get; init; }
-    public long Quantity { get; init; }
-}

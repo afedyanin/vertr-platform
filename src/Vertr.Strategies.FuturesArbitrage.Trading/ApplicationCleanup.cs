@@ -5,21 +5,16 @@ using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 using Vertr.Common.Application.Extensions;
 using System.Collections.ObjectModel;
-using StackExchange.Redis;
 
 namespace Vertr.Strategies.FuturesArbitrage.Trading;
 
 public class ApplicationCleanup
 {
-    private const string PortfoliosKey = "portfolios";
-
     private readonly IPortfoliosLocalStorage _portfolioRepository;
     private readonly IPortfolioManager _portfolioManager;
     private readonly ILogger<ApplicationCleanup> _logger;
     private readonly IInstrumentsLocalStorage _instrumentsRepository;
-    private readonly IConnectionMultiplexer _redis;
-
-    private IDatabase GetDatabase() => _redis.GetDatabase();
+    private readonly ITradingGateway _tradingGateway;
 
     public Action CleanupAction => OnStop;
 
@@ -28,7 +23,7 @@ public class ApplicationCleanup
         _portfolioRepository = serviceProvider.GetRequiredService<IPortfoliosLocalStorage>();
         _instrumentsRepository = serviceProvider.GetRequiredService<IInstrumentsLocalStorage>();
         _portfolioManager = serviceProvider.GetRequiredService<IPortfolioManager>();
-        _redis = serviceProvider.GetRequiredService<IConnectionMultiplexer>();
+        _tradingGateway = serviceProvider.GetRequiredService<ITradingGateway>();
 
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
         _logger = loggerFactory.CreateLogger<ApplicationCleanup>();
@@ -59,12 +54,11 @@ public class ApplicationCleanup
 
     private ReadOnlyDictionary<string, Portfolio> UpdatePortfoliosFromRedis(ReadOnlyDictionary<string, Portfolio> oldPortfolios)
     {
-        var updated = GetPortfoliosFromRedis();
         var res = new Dictionary<string, Portfolio>();
 
         foreach (var kvp in oldPortfolios)
         {
-            var found = updated.FirstOrDefault(p => p.Id == kvp.Value.Id);
+            var found = _tradingGateway.GetPortfolio(kvp.Value.Id).GetAwaiter().GetResult();
 
             if (found != null)
             {
@@ -73,30 +67,6 @@ public class ApplicationCleanup
         }
 
         return res.AsReadOnly();
-    }
-
-    private Portfolio[] GetPortfoliosFromRedis()
-    {
-        var entries = GetDatabase().HashGetAll(PortfoliosKey);
-        var res = new List<Portfolio>();
-
-        foreach (var entry in entries)
-        {
-            if (string.IsNullOrEmpty(entry.Value))
-            {
-                continue;
-            }
-
-            var portfollio = Portfolio.FromJson(entry.Value!);
-            if (portfollio == null)
-            {
-                continue;
-            }
-
-            res.Add(portfollio);
-        }
-
-        return [.. res];
     }
 
     private static string DumpPortfolios(

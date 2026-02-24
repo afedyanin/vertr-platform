@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 
@@ -43,6 +44,7 @@ internal sealed class PortfolioManager : IPortfolioManager
         }
 
         var instrumentId = signal.Instrument.Id;
+        Debug.Assert(instrumentId != Guid.Empty);
 
         var position = portfolio.Positions.FirstOrDefault(p => p.InstrumentId == instrumentId);
 

@@ -17,6 +17,6 @@ public interface ITinvestGatewayClient
     [Get("/api/order-storage/trades")]
     public Task<OrderTrades[]> FindOrderTrades([Query] string pattern);
 
-    [Get("/api/portfolio/{portfolioId}")]
+    [Get("/api/order-storage/portfolio/{portfolioId}")]
     public Task<Portfolio?> GetPortfolio(Guid portfolioId);
 }

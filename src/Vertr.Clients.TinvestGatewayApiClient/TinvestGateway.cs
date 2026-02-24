@@ -22,7 +22,7 @@ internal sealed class TinvestGateway : ITradingGateway
         => _gatewayClient.PostMarketOrder(request);
 
     public Task<OrderTrades[]> FindOrderTrades(string orderId)
-        => _gatewayClient.FindOrderTrades(orderId);
+        => _gatewayClient.FindOrderTrades($"{orderId}.*");
 
     public Task<Portfolio?> GetPortfolio(Guid portfolioId)
         => _gatewayClient.GetPortfolio(portfolioId);

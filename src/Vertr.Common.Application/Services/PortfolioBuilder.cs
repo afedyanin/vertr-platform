@@ -1,4 +1,5 @@
-﻿using Vertr.Common.Contracts;
+﻿using System.Diagnostics;
+using Vertr.Common.Contracts;
 
 namespace Vertr.Common.Application.Services;
 
@@ -8,6 +9,8 @@ public class PortfolioBuilder
     private readonly Dictionary<Guid, Position> _comissions = [];
     private readonly Dictionary<Guid, Position> _positions = [];
     private readonly Dictionary<string, Instrument> _instrumentsByTicker;
+
+    private readonly Guid _defaultCurrenctId = new Guid("a92e2e25-a698-45cc-a781-167cf465257c");
 
     public PortfolioBuilder(
         Portfolio portfolio,
@@ -66,10 +69,11 @@ public class PortfolioBuilder
 
     private void ApplyTrade(Trade trade, Guid instrumentId, TradingDirection direction)
     {
+        Debug.Assert(instrumentId != Guid.Empty);
         var qtySign = direction == TradingDirection.Sell ? -1 : 1;
 
         _instrumentsByTicker.TryGetValue(trade.Currency, out var currencyInstrument);
-        var currencyId = currencyInstrument?.Id ?? Guid.Empty;
+        var currencyId = currencyInstrument?.Id ?? _defaultCurrenctId;
 
         _positions.TryGetValue(instrumentId, out var positionEntry);
         _positions.TryGetValue(currencyId, out var moneyPositionEntry);

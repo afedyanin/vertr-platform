@@ -49,7 +49,7 @@ public class ApplicationCleanup
         _logger.LogInformation("03 Dumping portfolios...");
         var instruments = _instrumentsRepository.GetAll();
 
-        var portfolios = UpdatePortfoliosFromRedis(_portfolioRepository.GetAll());
+        var portfolios = UpdatePortfolios(_portfolioRepository.GetAll());
         var dump = DumpPortfolios(portfolios, instruments);
         _logger.LogWarning(dump);
 
@@ -68,7 +68,8 @@ public class ApplicationCleanup
             }
         }
 
-        var tradingStatsFileName = $"trading_stats_{DateTime.UtcNow:O}.csv";
+        var timeString = DateTime.UtcNow.ToString("O").Replace(":", "_");
+        var tradingStatsFileName = $"trading_stats_{timeString}.csv";
         DumpTradingStats(tradingStats, tradingStatsFileName);
 
         _logger.LogInformation("05 Dumping close positions stats...");
@@ -86,19 +87,21 @@ public class ApplicationCleanup
             }
         }
 
-        var closePositionsStatsFileName = $"trading_stats_{DateTime.UtcNow:O}.csv";
+        var closePositionsStatsFileName = $"close_positions_stats_{timeString}.csv";
         DumpClosePositionStats(closePositionOrderTrades, closePositionsStatsFileName);
 
         _logger.LogInformation("06 Cleanup completed.");
     }
 
-    private ReadOnlyDictionary<string, Portfolio> UpdatePortfoliosFromRedis(ReadOnlyDictionary<string, Portfolio> oldPortfolios)
+    private ReadOnlyDictionary<string, Portfolio> UpdatePortfolios(ReadOnlyDictionary<string, Portfolio> oldPortfolios)
     {
         var res = new Dictionary<string, Portfolio>();
 
         foreach (var kvp in oldPortfolios)
         {
-            var found = _tradingGateway.GetPortfolio(kvp.Value.Id).GetAwaiter().GetResult();
+            var portfolioId = kvp.Value.Id;
+            _logger.LogInformation("Getting portfolio Id={PortfolioId}.", portfolioId);
+            var found = _tradingGateway.GetPortfolio(portfolioId).GetAwaiter().GetResult();
 
             if (found != null)
             {

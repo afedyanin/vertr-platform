@@ -12,7 +12,7 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
     private readonly ILogger<FutureSignalsGenerator> _logger;
     private readonly IPortfoliosLocalStorage _portfolioRepository;
 
-    private const double Threshold = 0.0001;
+    private const double Threshold = 0.0002;
 
     public int HandlingOrder => 30;
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Vertr.Common.Application.Abstractions;
 using Vertr.Common.Contracts;
 using Vertr.Strategies.FuturesArbitrage.Models;
@@ -12,7 +13,7 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
     private readonly ILogger<FutureSignalsGenerator> _logger;
     private readonly IPortfoliosLocalStorage _portfolioRepository;
 
-    private const double Threshold = 0.0002;
+    private const double Threshold = 0.0001;
 
     public int HandlingOrder => 30;
 
@@ -65,11 +66,16 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
                 Ask = orderBook.MinAsk,
             };
 
-            _logger.LogInformation("#{Sequence} Fair={FairPrice:N4} B={Bid:N4} A={Ask:N4}", data.Sequence, fairPrice, quote.Bid, quote.Ask);
+            _logger.LogDebug("#{Sequence} Fair={FairPrice:N4} B={Bid:N4} A={Ask:N4}", data.Sequence, fairPrice, quote.Bid, quote.Ask);
 
             var direction = GetTradingDirection(fairPrice, quote, Threshold);
 
             if (direction == TradingDirection.Hold)
+            {
+                continue;
+            }
+
+            if (data.TradingDirection != direction)
             {
                 continue;
             }
@@ -103,6 +109,8 @@ internal sealed class FutureSignalsGenerator : IEventHandler<OrderBookChangedEve
 
     internal static TradingDirection GetTradingDirection(decimal fairPrice, Quote marketQuote, double threshold)
     {
+        Debug.Assert(marketQuote.Ask >= marketQuote.Bid);
+
         // цена будет выше минимальной цены предложения
         var askDelta = (double)((fairPrice - marketQuote.Ask) / marketQuote.Ask);
         if (askDelta >= threshold)

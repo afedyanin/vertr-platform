@@ -36,7 +36,7 @@ public class PortfolioPositionHandler<TEvent> : IEventHandler<TEvent> where TEve
             }
         }
 
-        _logger.LogDebug("#{Sequence} PortfolioPositionHandler executed. {OrdersCount} order requests added.", data.Sequence, data.OrderRequests.Count);
+        _logger.LogInformation("#{Sequence} PortfolioPositionHandler executed. {OrdersCount} order requests added.", data.Sequence, data.OrderRequests.Count);
         return ValueTask.CompletedTask;
     }
 }

@@ -71,7 +71,7 @@ internal sealed class PortfolioManager : IPortfolioManager
                 Direction = signal.Direction,
             };
 
-            _logger.LogDebug("Open position Request: QuantityLots={QuantityLots}", openRequest.QuantityLots);
+            _logger.LogInformation("Open position Request: QuantityLots={QuantityLots}", openRequest.QuantityLots);
             return openRequest;
         }
 
@@ -88,7 +88,7 @@ internal sealed class PortfolioManager : IPortfolioManager
             Direction = signal.Direction,
         };
 
-        _logger.LogDebug("Reverse position Request: QuantityLots={QuantityLots}", reverseRequest.QuantityLots);
+        _logger.LogInformation("Reverse position Request: QuantityLots={QuantityLots}", reverseRequest.QuantityLots);
         return reverseRequest;
     }
 

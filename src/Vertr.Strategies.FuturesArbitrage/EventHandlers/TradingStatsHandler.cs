@@ -49,6 +49,7 @@ internal sealed class TradingStatsHandler : IEventHandler<OrderBookChangedEvent>
 
             var tradingStatsInfo = new TradingStatsInfo
             {
+                Sequence = data.Sequence,
                 BaseAsset = baseAsset,
                 DerivedAsset = derivedAsset,
                 OrderExecutionInfo = ComposeOrderExecutionInfo(orderRequest),

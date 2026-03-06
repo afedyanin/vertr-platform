@@ -71,7 +71,7 @@ internal sealed class FuturePriceCalculationHandler : IEventHandler<OrderBookCha
             var fairPrice = GetFairPrice(spot, rusfar.Value, daysToExpiry);
             data.FairPrices[instrumentId] = fairPrice * lotSize; // check it
 
-            _logger.LogDebug("#{Sequence}. Future={Ticker} DaysToExpiry={DaysToExpiry} Rate={Rate} SpotPrice={SpotPrice} FairPrice={FairPrice}",
+            _logger.LogInformation("#{Sequence}. Future={Ticker} DaysToExpiry={DaysToExpiry} Rate={Rate} SpotPrice={SpotPrice} FairPrice={FairPrice}",
                 data.Sequence,
                 instrument.Ticker,
                 daysToExpiry,

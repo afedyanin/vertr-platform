@@ -27,7 +27,7 @@ internal sealed class PortfolioManager : IPortfolioManager
         _logger = logger;
     }
 
-    public MarketOrderRequest? HandleTradingSignal(TradingSignal signal)
+    public MarketOrderRequest? HandleTradingSignal(TradingSignal signal, bool reverseOnly = false)
     {
         if (signal.Direction == TradingDirection.Hold)
         {
@@ -61,6 +61,11 @@ internal sealed class PortfolioManager : IPortfolioManager
         // Open position
         if (position.Amount == default)
         {
+            if (reverseOnly)
+            {
+                return null;
+            }
+
             var openRequest = new MarketOrderRequest
             {
                 RequestId = Guid.NewGuid(),

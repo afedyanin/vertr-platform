@@ -23,4 +23,6 @@ public record class CandleReceivedEvent : IMarketDataEvent
     public List<TradingSignal> TradingSignals { get; } = [];
 
     public List<MarketOrderRequest> OrderRequests { get; } = [];
+
+    public TradingDirection TradingDirection => TradingDirection.Hold;
 }

@@ -28,11 +28,32 @@ public class PortfolioPositionHandler<TEvent> : IEventHandler<TEvent> where TEve
                 continue;
             }
 
-            var orderRequest = _portfolioManager.HandleTradingSignal(signal);
+            var orderRequest = _portfolioManager.HandleTradingSignal(signal, reverseOnly: false);
 
             if (orderRequest != null)
             {
                 data.OrderRequests.Add(orderRequest);
+                continue;
+            }
+
+            // force reverse signal by basic asset
+            // если открытая позиция производного актива не соответствует направлению сингала базового актива
+            // разворачиваем ее независимо от цен и стакана производного актива
+            if (data.TradingDirection != TradingDirection.Hold)
+            {
+                var reverseSignal = new TradingSignal
+                {
+                    Direction = data.TradingDirection,
+                    Instrument = signal.Instrument,
+                    PortfolioName = signal.PortfolioName,
+                };
+
+                var reverseOrderRequest = _portfolioManager.HandleTradingSignal(reverseSignal, reverseOnly: true);
+
+                if (reverseOrderRequest != null)
+                {
+                    data.OrderRequests.Add(reverseOrderRequest);
+                }
             }
         }
 
